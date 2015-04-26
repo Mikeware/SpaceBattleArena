@@ -1,5 +1,7 @@
 package ihs.apcs.spacebattle;
 
+import ihs.apcs.spacebattle.commands.IdleCommand;
+import ihs.apcs.spacebattle.commands.SelfDestructCommand;
 import ihs.apcs.spacebattle.commands.ShipCommand;
 import ihs.apcs.spacebattle.networking.*;
 import ihs.apcs.spacebattle.util.StringStringMap;
@@ -16,10 +18,12 @@ import javax.swing.*;
 public class GraphicalClient implements Runnable, Client {
 	private final boolean LOGGING = true;
 	
-	private int id;
+	private int netId;
 	private MwnpListener listener;
 	private MwnpMessenger messenger;
-	private Spaceship ship;
+	private String shipClassname;
+	private Spaceship<?> ship;
+	private Class<?> shipType;
 	
 	private String[] args;
 	private JFrame frame;
@@ -54,9 +58,10 @@ public class GraphicalClient implements Runnable, Client {
 			this.messenger.start();
 			
 			// Create ship
-			Class<?> shipType = Class.forName(args[1]);
+			this.shipClassname = args[1];
+			Class<?> shipType = Class.forName(this.shipClassname);
 			this.logMessage("Creating new " + shipType.getName());
-			this.ship = (Spaceship)shipType.getConstructor().newInstance();
+			this.ship = (Spaceship<?>)shipType.getConstructor().newInstance();
 			
 			System.out.println("Type QUIT to disconnect from server and end program");
 			Scanner kb = new Scanner(System.in);
@@ -87,7 +92,7 @@ public class GraphicalClient implements Runnable, Client {
 	public <T> void parseMessage(MwnpMessage msg) throws IOException, IllegalArgumentException, IllegalAccessException {
 		if (msg.getCommand().equals("MWNL2_ASSIGNMENT")) {
 			MwnpMessage dMsg = (MwnpMessage)msg;
-			this.id = ((Double)(dMsg.getData())).intValue();
+			this.netId = ((Double)(dMsg.getData())).intValue();
 		} else if (msg.getCommand().equals("MWNL2_AC")) {
 			System.err.println("Already connected from this IP address.  Exiting...");
 			System.exit(1);
@@ -97,16 +102,33 @@ public class GraphicalClient implements Runnable, Client {
 			int width = Integer.parseInt(map.get("WORLDWIDTH"));
 			int height = Integer.parseInt(map.get("WORLDHEIGHT"));
 			
+			MwnpMessage.RegisterGameType(map.get("GAMENAME"));
+			
 			RegistrationData data = ship.registerShip(numImages, width, height);
 			
-			MwnpMessage response = new MwnpMessage(new int[]{id, 0}, data);
+			MwnpMessage response = new MwnpMessage(new int[]{netId, 0}, data);
 			messenger.sendMessage(response);
 		} else if (msg.getCommand().equals("ENV")) {
-			Environment env = (Environment)msg.getData();
+			Environment<?> env = (Environment<?>)msg.getData();
 			
-			ShipCommand cmd = ship.getNextCommand(env);
-			MwnpMessage response = new MwnpMessage(new int[]{id, 0}, cmd);
-			messenger.sendMessage(response);
+			ShipCommand cmd = null;
+			try {
+				cmd = (ShipCommand)shipType.getMethod("getNextCommand",  Environment.class).invoke(ship,  env);
+			} catch (InvocationTargetException | NoSuchMethodException
+					| SecurityException ex) {
+				System.err.println("Error Invoking getNextCommand:");
+				System.err.println(ex.getMessage());
+				ex.printStackTrace(System.err);
+			}
+			
+			if (cmd == null) {
+				cmd = new IdleCommand(0.1);
+			} else if (cmd instanceof SelfDestructCommand) {
+				disconnect();
+			} else {
+				MwnpMessage response = new MwnpMessage(new int[]{netId, 0}, cmd);
+				messenger.sendMessage(response);
+			}
 		} else if (msg.getCommand().equals("ERROR")) {
 			System.out.println(msg.getData());
 		}
@@ -116,7 +138,7 @@ public class GraphicalClient implements Runnable, Client {
 		System.out.println("Attempting to disconnect...");
 		if (!disconnected) {
 			System.out.println("Sending disconnect message...");
-			MwnpMessage disconnect = new MwnpMessage(new int[]{id, 0}, "MWNL2_DISCONNECT", null);
+			MwnpMessage disconnect = new MwnpMessage(new int[]{netId, 0}, "MWNL2_DISCONNECT", null);
 			messenger.sendMessage(disconnect);
 			System.out.println("Ending listener...");
 			listener.end();

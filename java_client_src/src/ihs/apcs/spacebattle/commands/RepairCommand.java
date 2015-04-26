@@ -11,6 +11,7 @@ import ihs.apcs.spacebattle.commands.ShipCommand;
  *
  */
 public class RepairCommand extends ShipCommand {
+	@SuppressWarnings("unused")
 	private int AMT;
 	
 	/**

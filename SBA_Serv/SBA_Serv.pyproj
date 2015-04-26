@@ -13,7 +13,7 @@
     <Name>SBA_Serv</Name>
     <RootNamespace>SBA_Serv</RootNamespace>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>-c machine_laptest.cfg -2 kingofspace.cfg</CommandLineArguments>
+    <CommandLineArguments>-c machine_test.cfg</CommandLineArguments>
     <InterpreterPath />
     <InterpreterArguments />
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
@@ -84,6 +84,7 @@
     <Content Include="baubletournamentB.cfg" />
     <Content Include="GUI\ObjWrappers\GUIEntity.py" />
     <Content Include="baubletournamentA.cfg" />
+    <Content Include="machine_test.cfg" />
     <Content Include="radarworld.cfg" />
     <Content Include="test.cfg" />
     <Content Include="theater.cfg" />

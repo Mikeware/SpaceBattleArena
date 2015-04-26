@@ -5,7 +5,11 @@ Space Battle Arena is a ‘[Programming Game](http://en.wikipedia.org/wiki/Progr
 
 This has been a final project used in an Advanced Placement High School Computer Science course since 2012.  Students have been enthusiastic, excited, and engaged with learning to control a ship in a physical environment and comparing strategies against their fellow students in a fun competition.
 
-The question of why ‘Space Battle’ over an existing platform (like [Robocode](http://robocode.sourceforge.net/)) was brought up during our [Reach for the Stars](http://www.mikeware.com/2012/09/reach-for-the-stars-educating-the-next-generation-using-games/) talk.  The answer is that most programming games are built around a specific objective.  This means that while there may be varying strategies, eventually the problem can be solved and solutions available.  It also means that it will always be the same challenge.  For an educational context specifically, where word can travel fast and students may remain in proximity over multiple years, we wanted a system that could be extended, reused, and changed over time.  Space Battle was our test bed and proved this with the multiple different challenges we were able to run over the past few years.
+The question of why ‘Space Battle’ over an existing platform (like [Robocode](http://robocode.sourceforge.net/)) was brought up during our [Reach for the Stars](http://www.mikeware.com/2012/09/reach-for-the-stars-educating-the-next-generation-using-games/) talk.  The answer is that most programming games are built around a specific objective.  This means that while there may be varying strategies, eventually the problem can be solved and solutions available.  
+
+In addition, it means the challenge is fixed and always the same.  For an educational context specifically, where this is most students first exposure to a 'third-party' library.  We wanted a system which could ease them into new concepts that build on what they had learned throughout the course of the year.  
+
+Finally, allowing the system to be extensible and configurable, means that challenges and difficulty can be directly geared to a specific group of students abilities which can fluctuate from class to class.  Space Battle was our test bed and has proved successful with the multiple different challenges we have run over the past few years.
 
 Student Environment
 -------------------------
@@ -13,7 +17,7 @@ We use [jGRASP](http://www.jgrasp.org/) as our IDE of choice when working with H
 
 Documentation
 ------------------
-* Client Setup - jGRASP, Eclipse
+* Client Setup - [jGRASP](doc/jGRASP/jGRASPSetup.md), Eclipse
     * Add both GSon and SpaceBattle jars to classpath
     * Create a Ship which implements the Spaceship interface.
     * Execute the TextClient class of the SpaceBattle.jar file with two arguments:

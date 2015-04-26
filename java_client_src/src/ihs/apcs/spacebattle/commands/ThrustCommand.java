@@ -10,8 +10,11 @@ package ihs.apcs.spacebattle.commands;
  *
  */
 public class ThrustCommand extends ShipCommand {
+	@SuppressWarnings("unused")
 	private char DIR;
+	@SuppressWarnings("unused")
 	private double DUR;
+	@SuppressWarnings("unused")
 	private double PER;
 	
 	/**

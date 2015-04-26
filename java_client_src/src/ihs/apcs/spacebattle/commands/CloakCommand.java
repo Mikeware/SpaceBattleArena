@@ -11,6 +11,7 @@ package ihs.apcs.spacebattle.commands;
  *
  */
 public class CloakCommand extends ShipCommand {
+	@SuppressWarnings("unused")
 	private double DUR;
 	
 	/**

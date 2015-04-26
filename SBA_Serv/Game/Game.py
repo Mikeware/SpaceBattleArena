@@ -152,7 +152,7 @@ class BasicGame(object):
     # Called when a client is connected and appends this data to the default image number, world width and world height
     # Should at least return a key "GAMENAME" with the name of the game module
     def getInitialInfoParameters(self):
-        return {"GAMENAME": "None"}    
+        return {"GAMENAME": "Basic"}    
 
     """
     Called by GUI to display Player Info

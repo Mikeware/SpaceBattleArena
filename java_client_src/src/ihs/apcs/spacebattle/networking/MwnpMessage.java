@@ -1,6 +1,9 @@
 package ihs.apcs.spacebattle.networking;
 
+import java.lang.reflect.Type;
+
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import ihs.apcs.spacebattle.*;
 import ihs.apcs.spacebattle.commands.ShipCommand;
@@ -12,14 +15,36 @@ public class MwnpMessage {
 	private String command;
 	private Object data;
 	
-	private static StringMap<Class<?>> cmdDataTypes;
+	private static StringMap<Type> cmdDataTypes;
 	
 	static {
-		cmdDataTypes = new StringMap<Class<?>>();
+		cmdDataTypes = new StringMap<Type>();
 		cmdDataTypes.put("\"MWNL2_ASSIGNMENT\"", double.class);
 		cmdDataTypes.put("\"REQUEST\"", StringStringMap.class);
-		cmdDataTypes.put("\"ENV\"", Environment.class);
 		cmdDataTypes.put("\"ERROR\"", ErrorData.class);
+	}
+	
+	/**
+	 * Internal method used to register the type of Game Data to be received once the Server has told us the game we're playing.
+	 * @param gameType
+	 */
+	public static void RegisterGameType(String gameName)
+	{
+		switch (gameName)
+		{
+			case "BaubleHunt":
+				cmdDataTypes.put("\"ENV\"", new TypeToken<Environment<BaubleHuntGameInfo>>() {}.getType());
+				break;
+			case "BaubleHuntSCV":
+				cmdDataTypes.put("\"ENV\"", new TypeToken<Environment<BaubleHuntSCVGameInfo>>() {}.getType());
+				break;
+			case "KingOfTheBubble":
+				cmdDataTypes.put("\"ENV\"", new TypeToken<Environment<KingOfTheBubbleGameInfo>>() {}.getType());
+				break;
+			default:
+				cmdDataTypes.put("\"ENV\"", Environment.class);				
+				break;
+		}
 	}
 	
 	public MwnpMessage(int[] ids, String command, Object data) {
@@ -60,10 +85,10 @@ public class MwnpMessage {
 		String command = messageText.substring(id.length() + 1, messageText.indexOf('\"', messageText.indexOf('\"') + 1) + 1);
 
 		Gson gson = new Gson();
-		Class<?> dataType = cmdDataTypes.get(command);
+		Type dataType = cmdDataTypes.get(command);
 
 		if (dataType != null) {
-			String data = messageText.substring(id.length() + command.length() + 2);
+			String data = messageText.substring(id.length() + command.length() + 2);		
 			
 			return new MwnpMessage (
 					gson.fromJson(id, int[].class),
@@ -71,7 +96,7 @@ public class MwnpMessage {
 					gson.fromJson(data, dataType));
 		} else {
 			return new MwnpMessage (
-					gson.fromJson(id, int[].class),
+					gson.fromJson(id, int[].class), // TODO: handle [#, null] type message on broadcast of server closing 
 					gson.fromJson(command, String.class), 
 					null);			
 		}

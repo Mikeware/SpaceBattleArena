@@ -7,6 +7,7 @@ package ihs.apcs.spacebattle.commands;
  *
  */
 public class RotateCommand extends ShipCommand {
+	@SuppressWarnings("unused")
 	private int DEG;
 	
 	/**

@@ -21,7 +21,9 @@ package ihs.apcs.spacebattle.commands;
  * @author Brett Wortzman
  */
 public class RadarCommand extends ShipCommand {
+	@SuppressWarnings("unused")
 	private int LVL;
+	@SuppressWarnings("unused")
 	private int TARGET;
 	
 	/**

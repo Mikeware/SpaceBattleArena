@@ -3,17 +3,25 @@ package ihs.apcs.spacebattle;
 import java.util.*;
 
 /**
- * Represents the pertinent information to play the Bauble Hunt game.
+ * Bauble Hunt SCV is a more complex version of the Bauble Hunt game.  Baubles only count towards your score once they have been collected and returned to your Home Base.
+ * 
+ * You may store 5 Baubles on your ship at most.
+ * 
+ * Blue Bauble are worth 1 point.
+ * Golden Baubles are worth 3 points.
+ * Red Baubles are worth 5 points.
+ * 
+ * If your ship is destroyed, the Baubles it was carrying will be dropped.
+ * 
  * @author Brett Wortzman
  *
+ * @since 1.1
+ * @version 2.0
  */
-public class BaubleBattleGameInfo {
+public class BaubleHuntSCVGameInfo extends BasicGameInfo {
 	private double[] POSITION;
 	private double[][] BAUBLES;
-	private int SCORE;
 	private int COLLECTED;
-	private int HIGHSCORE;
-	private int DEATHS;
 	private int STORED;
 	private int STOREDVALUE;
 	
@@ -24,7 +32,7 @@ public class BaubleBattleGameInfo {
 	public Point getHomeBasePosition() { return new Point(POSITION); }
 	
 	/**
-	 * Gets a list of positions where there are baubles.  Not all
+	 * Gets a list of positions where there are high-value baubles.  Not all
 	 *   bauble positions are returned, but each position in the list
 	 *   has a bauble (unless it has been collected already).
 	 * @return a list of bauble positions
@@ -36,12 +44,6 @@ public class BaubleBattleGameInfo {
 		}
 		return result;
 	}
-	
-	/**
-	 * Gets your current score.
-	 * @return your current score
-	 */
-	public int getScore() { return SCORE; }
 	
 	/**
 	 * Gets the number of baubles collected and returned to your base.
@@ -61,18 +63,6 @@ public class BaubleBattleGameInfo {
 	 */
 	public int getBaublesCarriedValue() { return STOREDVALUE; }
 	
-	/**
-	 * Gets the current game leader's score.
-	 * @return the current game leader's score
-	 */
-	public int getHighScore() { return HIGHSCORE; }
-	
-	/**
-	 * Gets the number of times you have died in this game.
-	 * @return your number of deaths for this game 
-	 */
-	public int getNumDeaths() { return DEATHS; }
-
 	@Override
 	public String toString() {
 		return String.format("{Target: %s; Score: %d; Deaths: %d; High Score: %d}", getHomeBasePosition(), getScore(), getNumDeaths(), getHighScore());

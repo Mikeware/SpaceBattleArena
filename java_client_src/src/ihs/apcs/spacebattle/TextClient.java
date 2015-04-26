@@ -7,6 +7,7 @@ import ihs.apcs.spacebattle.util.StringStringMap;
 import java.util.*;
 import java.io.*;
 import java.text.*;
+import java.lang.reflect.InvocationTargetException;
 import java.net.*;
 
 /**
@@ -22,22 +23,36 @@ public class TextClient implements Client {
 	private int shipId = -1;
 	private MwnpListener listener;
 	private MwnpMessenger messenger;
-	private Spaceship ship;
+	private String shipClassname;
+	private Spaceship<?> ship;	
+	private Class<?> shipType;
 	
 	private boolean disconnected = false;
 	
 	private String shipSuffix = "";
 	
-	public TextClient() throws FileNotFoundException {
-		logStream = new PrintStream("client.log");
+	public TextClient(String classname) {
+		try {
+			logStream = new PrintStream("client.log");
+		} catch (FileNotFoundException ex) {
+			System.err.println("Could not write to 'client.log' file.");
+		}
+		shipClassname = classname;
 	}
 	
 	/**
 	 * @param args
 	 * @throws IOException 
 	 */
-	public static void main(String[] args) throws IOException {
-		TextClient client = new TextClient();
+	public static void main(String[] args) {
+		if (args == null || args.length < 2)
+		{		
+			System.err.println("Invalid parameters. Require IP Address and Class Name.");
+			return;
+		}
+		
+		System.out.println("Loading Ship " + args[1]);
+		TextClient client = new TextClient(args[1]);
 		try {
 			// Add disconnect hook
 			Runtime.getRuntime().addShutdownHook(new ShutdownHook(client));
@@ -56,11 +71,11 @@ public class TextClient implements Client {
 			client.logMessage("Starting messenger...");
 			client.messenger = new MwnpMessenger(client, server, "Messenger Thread");
 			client.messenger.start();
-			
-			// Create ship
-			Class<?> shipType = Class.forName(args[1]);
-			client.logMessage("Creating new " + shipType.getName());
-			client.ship = (Spaceship)shipType.getConstructor().newInstance();
+						
+			// Try and load ship
+			client.shipType = Class.forName(client.shipClassname);
+			client.logMessage("Creating new " + client.shipType.getName());			
+			client.ship = (Spaceship<?>)client.shipType.getConstructor().newInstance();
 			
 			System.out.println(args.length);
 			System.out.println(Arrays.toString(args));
@@ -81,14 +96,16 @@ public class TextClient implements Client {
 		} catch (ClassCastException ex) {
 			System.err.println("Specified ship type does not implement Spaceship.");
 			System.err.println(ex.getMessage());
-		} catch (ClassNotFoundException ex) {
-			System.err.println("Specified ship type not found.");
-			System.err.println(ex.getMessage());
 		} catch (Exception ex) {
 			System.err.println(ex.getMessage());
 			ex.printStackTrace();
 		} finally {
-			client.disconnect();
+			try {
+				client.disconnect();
+			} catch (IOException ex) {
+				System.err.println("Error while disconnecting:");
+				ex.printStackTrace(System.err);
+			}
 		}
 	}
 	
@@ -110,15 +127,16 @@ public class TextClient implements Client {
 			int numImages = Integer.parseInt(map.get("IMAGELENGTH"));
 			int width = Integer.parseInt(map.get("WORLDWIDTH"));
 			int height = Integer.parseInt(map.get("WORLDHEIGHT"));
-			// map.get("GAMENAME")
-			
+
+			MwnpMessage.RegisterGameType(map.get("GAMENAME"));			
+						
 			RegistrationData data = ship.registerShip(numImages, width, height);
 			data = new RegistrationData(data.getName() + shipSuffix, data.getColor(), data.getImage());
 			
 			MwnpMessage response = new MwnpMessage(new int[]{netId, 0}, data);
 			messenger.sendMessage(response);
 		} else if (msg.getCommand().equals("ENV")) {
-			Environment env = (Environment)msg.getData();
+			Environment<?> env = (Environment<?>)msg.getData();
 
 			// check for death
 			int currShipId = env.getShipStatus().getId();
@@ -132,7 +150,16 @@ public class TextClient implements Client {
 				shipId = currShipId;
 			}
 			
-			ShipCommand cmd = ship.getNextCommand(env);
+			ShipCommand cmd = null;
+			try {
+				// Need to invoke through reflection as compiler doesn't know what type of Environment is here
+				cmd = (ShipCommand)shipType.getMethod("getNextCommand", Environment.class).invoke(ship, env);
+			} catch (InvocationTargetException | NoSuchMethodException
+					| SecurityException ex) {
+				System.err.println("Error Invoking getNextCommand:");
+				System.err.println(ex.getMessage());
+				ex.printStackTrace(System.err);
+			}
 			if (cmd == null) {
 				cmd = new IdleCommand(0.1);
 			} else if (cmd instanceof SelfDestructCommand) {

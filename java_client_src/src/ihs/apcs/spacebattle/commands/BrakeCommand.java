@@ -9,6 +9,7 @@ package ihs.apcs.spacebattle.commands;
  * 
  */
 public class BrakeCommand extends ShipCommand {
+	@SuppressWarnings("unused")
 	private double PER;
 	
 	

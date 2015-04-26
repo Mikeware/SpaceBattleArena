@@ -9,14 +9,17 @@ import java.util.*;
  * method of the {@link ihs.apcs.spacebattle.Spaceship} class to inform the ship of 
  * the current state of the world.
  * @author Brett Wortzman
- *
+ * @version 2.0
+ * @since 1.0
+ * 
+ * @param <T> specify the corresponding Game class to that being played on the server.  Corresponds to the same class used by the {@link ihs.apcs.spacebattle.Spaceship} interface. 
  */
-public class Environment {
-	private String[] MESSAGES;
-	private int RADARLEVEL;
-	private RadarResults RADARDATA;
-	private ObjectStatus SHIPDATA;
-	private GameInfo GAMEDATA;
+public class Environment<T> {
+	protected String[] MESSAGES;
+	protected int RADARLEVEL;
+	protected RadarResults RADARDATA;
+	protected ObjectStatus SHIPDATA;
+	protected T GAMEDATA;
 		
 	/**
 	 * Gets a list of messages currently received.
@@ -48,7 +51,7 @@ public class Environment {
 	 * @return information about the current game, or null if no game
 	 *   is in progress
 	 */
-	public GameInfo getGameInfo() { return GAMEDATA; }
+	public T getGameInfo() { return GAMEDATA; }
 	
 	
 	public String toString() {
@@ -78,7 +81,7 @@ public class Environment {
 	 * @param other the Environment to compare to
 	 * @return true if the Environments are equal, false otherwise
 	 */
-	public boolean equals(Environment other) {
+	public boolean equals(Environment<T> other) {
 		try {
 			for (Field f : getClass().getDeclaredFields()) {
 				f.setAccessible(true);

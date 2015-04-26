@@ -7,6 +7,7 @@ package ihs.apcs.spacebattle.commands;
  *
  */
 public class FireTorpedoCommand extends ShipCommand {
+	@SuppressWarnings("unused")
 	private char DIR;
 
 	/**

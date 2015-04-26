@@ -3,36 +3,26 @@ package ihs.apcs.spacebattle;
 import java.util.*;
 
 /**
- * Represents the pertinent information to play the "King of the Bubble" game.
+ * "King of the Bubble" is a game where there are a number of 'Bubbles' in the world worth some amount of points.
+ * 
+ * By placing your ship within the Bubble, you will absorb its points.
+ * 
+ * When your ship is destroyed, you may drop a new Bubble in the world which represents some amount of the points you have (which are now lost).
+ * 
+ * Multiple ships within the same Bubble will drain it's points faster.  It is also possible to drain points from multiple Bubbles at the same time.
+ * 
+ * Bubbles will eventually start to shrink and disappear on their own.
+ * 
  * @author Brett Wortzman
  *
+ * @since 1.2
+ * @version 2.0
  */
-public class GameInfo {
+public class KingOfTheBubbleGameInfo  extends BasicGameInfo {
 	private double[][] BUBBLES;
-	private double SCORE;
-	private double HIGHSCORE;
-	private int DEATHS;
 	
 	private List<Point> bubblePositions;
-	
-	/**
-	 * Gets your current score.
-	 * @return your current score
-	 */
-	public double getScore() { return SCORE; }
-	
-	/**
-	 * Gets the current game leader's score.
-	 * @return the current game leader's score
-	 */
-	public double getHighScore() { return HIGHSCORE; }
-
-	/**
-	 * Gets the number of times you have died in this game.
-	 * @return your number of deaths for this game.
-	 */
-	public int getNumDeaths() { return DEATHS; }
-	
+		
 	/**
 	 * Gets the positions of all current bubbles in the world.  Note that it is only guaranteed
 	 *   that a bubble existed at this location when the {@link Environment} was created.  The 

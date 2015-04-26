@@ -13,6 +13,7 @@ package ihs.apcs.spacebattle.commands;
  *
  */
 public class RaiseShieldsCommand extends ShipCommand {
+	@SuppressWarnings("unused")
 	private double DUR;
 	
 	/**

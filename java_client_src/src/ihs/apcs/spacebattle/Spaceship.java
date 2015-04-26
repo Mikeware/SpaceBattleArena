@@ -20,9 +20,12 @@ import ihs.apcs.spacebattle.commands.ShipCommand;
  * </ol>  
  * 
  * @author Brett Wortzman
- *
+ * @version 2.0
+ * @since 1.0
+ * 
+ * @param <T> the Game class being used by the server.  Will correspond to the type of information retrieved by the {@link Environment} class.
  */
-public interface Spaceship {
+public interface Spaceship<T> {
 	/**
 	 * Registers a ship with the server so it can begin issuing commands.
 	 * @param numImages the number of images available for the ship's 
@@ -45,10 +48,12 @@ public interface Spaceship {
 	 * @param env the current environment provided by the server
 	 * @return a command to be executed by the ship
 	 */
-	public ShipCommand getNextCommand(Environment env);
+	public ShipCommand getNextCommand(Environment<T> env);
 	
 	/**
 	 * Notifies a ship that it has been destroyed and respawned.  Ships can use this to track their deaths.
+	 * 
+	 * @since 1.1
 	 */
 	public void shipDestroyed();
 	
