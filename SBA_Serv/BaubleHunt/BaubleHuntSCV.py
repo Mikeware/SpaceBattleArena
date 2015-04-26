@@ -266,7 +266,7 @@ class BaubleHuntSCVGame(BasicGame):
     def getExtraRadarInfo(self, obj, objdata):
         super(BaubleHuntSCVGame, self).getExtraRadarInfo(obj, objdata)
         if hasattr(obj, "player"):
-            objdata["BAUBLENUM"] = len(obj.player.carrying)
+            objdata["NUMSTORED"] = len(obj.player.carrying)
 
     def getPlayerStats(self, current=False):
         if current:
@@ -381,7 +381,7 @@ class Bauble(Entity):
         self.value = value
 
     def getExtraInfo(self, objData):
-        objData["BAUBLEVALUE"] = self.value
+        objData["VALUE"] = self.value
 
 class HomeBaseWrapper(GUIEntity):
     def __init__(self, obj, world):

@@ -15,6 +15,8 @@ import ihs.apcs.spacebattle.util.StringMap;
  *   and the status of other ships found by a level 5 (fully-detailed) radar sweep.
  * @author Brett Wortzman
  *
+ * @version 2.0
+ * @since 1.0
  */
 public class ObjectStatus {
 	// Fields
@@ -26,30 +28,42 @@ public class ObjectStatus {
 	private double SPEED;
 	private double MAXSPEED;
 	private double DIRECTION;
-	private double ROTATION; // Ship Only
-	private double ROTATIONSPEED; // Ship Only
-
-	private double SCORE; // Ship Only
+	private int MASS;
+	
 	private double CURHEALTH;
 	private double MAXHEALTH;
 	private double CURENERGY;
 	private double MAXENERGY;
 	private double ENERGYRECHARGERATE;
+
+	private double ROTATION; // Ship Only
+	private double ROTATIONSPEED; // Ship Only
 	private double CURSHIELD; // Ship Only
 	private double MAXSHIELD; // Ship Only
-
-	private int RADARRANGE; // Ship Only
-	private int MASS;
-	private double HITRADIUS; // Bubble Only
-	private int GRAVITY; // Planet/BlackHole Only
-	private int GRAVITYFIELDLENGTH; // Planet/BlackHole Only
+	private int RADARRANGE; // Ship Only	
 	
-	private double BUBBLEPOINTS; // Bubble Only
+	// Game Specific
+	private double VALUE; // Bubble, Bauble or Ship Only
+	private int NUMSTORED; // Ship Only - Number of Baubles Carried
+	private double HITRADIUS; // Bubble Only
+	
+	private int GRAVITY; // Planet/BlackHole Only
+	private int GRAVITYFIELDLENGTH; // Planet/BlackHole Only	
+	
 	private int OWNERID; // Torpedo/HomeBase Only
-	private String NAME;
+	
+	private String NAME; // If Turned on in Server Config
 	
 	// Getter methods
 	public int getId() { return ID; }
+	/**
+	 * String representation of the Type of Object.
+	 * 
+	 * Could be Ship, Planet, BlackHole, Asteroid, Torpedo,
+	 * Bauble, Bubble, or HomeBase.
+	 * 
+	 * @return
+	 */
 	public String getType() { return TYPE; }
 	public double getTimeAlive() { return TIMEALIVE; }
 
@@ -57,26 +71,39 @@ public class ObjectStatus {
 	public double getSpeed() { return SPEED; }
 	public double getMaxSpeed() { return MAXSPEED; }
 	public double getMovementDirection() { return DIRECTION; }
-	public double getOrientation() { return ROTATION; }
-	public double getRotationSpeed() { return ROTATIONSPEED; }
-
-	public double getScore() { return SCORE; }
+	public int getMass() { return MASS; }
+	
 	public double getHealth() { return CURHEALTH; }
 	public double getMaxHealth() { return MAXHEALTH; }
 	public double getEnergy() { return CURENERGY; }
 	public double getMaxEnergy() { return MAXENERGY; }
 	public double getRechargeRate() { return ENERGYRECHARGERATE; }
+	
+	// Ship Only
+	public double getOrientation() { return ROTATION; }
+	public double getRotationSpeed() { return ROTATIONSPEED; }
 	public double getShieldLevel() { return CURSHIELD; }
 	public double getMaxShield() { return MAXSHIELD; }
-
 	public int getRadarRange() { return RADARRANGE; }
-	public int getMass() { return MASS; }
+	
+	/**
+	 * Gets the point value worth of a Bubble, Bauble, or Ship.
+	 * @return
+	 */
+	public double getValue() { return VALUE; }
+	/**
+	 * Gets the number of cargo items carried by a Ship. 
+	 * @return
+	 */
+	public int getNumberStored() { return NUMSTORED; }
+	
 	public double getHitRadius() { return HITRADIUS; }
+	
 	public int getGravityStrength() { return GRAVITY; }
 	public int getGravityFieldLength() { return GRAVITYFIELDLENGTH; }
 	
-	public double getBubblePoints() { return BUBBLEPOINTS; }
 	public int getOwnerId() { return OWNERID; }
+	
 	public String getName() { return NAME; }
 	
 	public String toString() {

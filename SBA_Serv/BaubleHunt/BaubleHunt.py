@@ -243,4 +243,4 @@ class Bauble(Entity):
         self.value = 1
 
     def getExtraInfo(self, objData):
-        objData["BAUBLEVALUE"] = self.value
+        objData["VALUE"] = self.value

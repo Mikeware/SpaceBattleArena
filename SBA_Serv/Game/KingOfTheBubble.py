@@ -154,7 +154,7 @@ class KingOfTheBubbleGame(BasicGame):
     def getExtraRadarInfo(self, obj, objdata):
         super(KingOfTheBubbleGame, self).getExtraRadarInfo(obj, objdata)
         if hasattr(obj, "player"):
-            objdata["SCORE"] = obj.player.score
+            objdata["VALUE"] = obj.player.score
 
     def getPlayerStats(self, current=False):
         if current:
@@ -282,6 +282,6 @@ class Bubble(Entity):
             self.TTL = self.timealive - 1 # schedule this object for removal        
 
     def getExtraInfo(self, objData):
-        objData["BUBBLEPOINTS"] = (self.size - self.basesize)
+        objData["VALUE"] = (self.size - self.basesize)
         # Overwrite the 'radius' to show where you can be hit
         objData["HITRADIUS"] = self.size + 28
