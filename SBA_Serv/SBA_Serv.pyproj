@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{10cf3f02-b598-432b-bd4b-d9a8bd0b672a}</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <StartupFile>SBA_Serv.py</StartupFile>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <Name>SBA_Serv</Name>
+    <RootNamespace>SBA_Serv</RootNamespace>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <CommandLineArguments>-c machine_laptest.cfg -2 kingofspace.cfg</CommandLineArguments>
+    <InterpreterPath />
+    <InterpreterArguments />
+    <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="BaubleHunt\BaubleHuntSCV.py" />
+    <Compile Include="BaubleHunt\BaubleHunt.py" />
+    <Compile Include="BaubleHunt\__init__.py" />
+    <Compile Include="Game\AsteroidMiner.py" />
+    <Compile Include="Game\CombatExercise.py" />
+    <Compile Include="Game\Game.py" />
+    <Compile Include="Game\KingOfTheBubble.py" />
+    <Compile Include="Game\Players.py" />
+    <Compile Include="Game\__init__.py" />
+    <Compile Include="GUI\GraphicsCache.py" />
+    <Compile Include="GUI\Helpers.py" />
+    <Compile Include="GUI\main.py" />
+    <Compile Include="GUI\ObjWrappers\AsteroidWrapper.py" />
+    <Compile Include="GUI\ObjWrappers\PlanetWrapper.py" />
+    <Compile Include="GUI\ObjWrappers\ShipWrapper.py" />
+    <Compile Include="GUI\ObjWrappers\WeaponWrappers.py" />
+    <Compile Include="GUI\ObjWrappers\__init__.py" />
+    <Compile Include="GUI\SoundCache.py" />
+    <Compile Include="GUI\Star.py" />
+    <Compile Include="GUI\__init__.py" />
+    <Compile Include="ThreadStuff\ThreadSafe.py" />
+    <Compile Include="ThreadStuff\__init__.py" />
+    <Compile Include="SBA_Serv.py" />
+    <Compile Include="Server\NetworkCommands.py" />
+    <Compile Include="Server\MWNL2.py" />
+    <Compile Include="Server\rfs.py" />
+    <Compile Include="Server\WorldServer.py" />
+    <Compile Include="Server\__init__.py" />
+    <Compile Include="World\Commanding.py" />
+    <Compile Include="World\Entities.py" />
+    <Compile Include="World\Messaging.py" />
+    <Compile Include="World\WorldCommands.py" />
+    <Compile Include="World\WorldGenerator.py" />
+    <Compile Include="World\WorldMap.py" />
+    <Compile Include="World\WorldMath.py" />
+    <Compile Include="World\__init__.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="BaubleHunt" />
+    <Folder Include="GUI\" />
+    <Folder Include="GUI\Graphics\" />
+    <Folder Include="GUI\Graphics\Asteroids\" />
+    <Folder Include="GUI\Graphics\Backgrounds\" />
+    <Folder Include="GUI\Graphics\Mines\" />
+    <Folder Include="GUI\Graphics\Planets\" />
+    <Folder Include="GUI\Graphics\Ships\" />
+    <Folder Include="GUI\ObjWrappers\" />
+    <Folder Include="Game\" />
+    <Folder Include="ThreadStuff" />
+    <Folder Include="Server\" />
+    <Folder Include="ShipClasses\" />
+    <Folder Include="World\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="baubletournamentB.cfg" />
+    <Content Include="GUI\ObjWrappers\GUIEntity.py" />
+    <Content Include="baubletournamentA.cfg" />
+    <Content Include="radarworld.cfg" />
+    <Content Include="test.cfg" />
+    <Content Include="theater.cfg" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
+</Project>

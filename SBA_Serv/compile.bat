@@ -1,0 +1,1 @@
+@python newcompile.py py2exe

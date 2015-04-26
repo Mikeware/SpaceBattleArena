@@ -1,0 +1,419 @@
+
+import logging
+import random
+import math
+from pymunk import Vec2d
+from WorldMath import intpos
+import Entities
+#from Entities import Torpedo
+
+#TODO: Have Command Definition? List parameters?
+SHIP_CMD_THRUST = "THRST"
+SHIP_CMD_BRAKE = "BRAKE"
+SHIP_CMD_ROTATE = "ROT"
+SHIP_CMD_IDLE = "IDLE"
+SHIP_CMD_RADAR = "RADAR"
+
+SHIP_CMD_DEPLOY_LASER_BEACON = "DLBN"
+SHIP_CMD_DESTROY_ALL_BEACONS = "DAYLB"
+
+SHIP_CMD_ALL_STOP = "STOP"
+SHIP_CMD_WARP = "WARP"
+
+SHIP_CMD_TORPEDO = "FIRE"
+SHIP_CMD_MINE = "MINE"
+
+SHIP_CMD_SHIELD = "SHLD"
+SHIP_CMD_CLOAK = "CLOAK"
+
+SHIP_CMD_REPAIR = "REP"
+
+from Messaging import Command, OneTimeCommand
+
+def ConvertNetworkMessageToCommand(ship, cmdname, cmddict):
+    # Sanitize Network Input and Convert to Game Command
+    if isinstance(cmdname, unicode) and isinstance(cmddict, dict):
+        if cmdname == SHIP_CMD_THRUST:
+            if cmddict.has_key("DIR") and cmddict["DIR"] in [u'L',u'F',u'R',u'B']:
+                if cmddict.has_key("DUR") and isinstance(cmddict["DUR"], float) and cmddict["DUR"] >= 0.05:
+                    if cmddict.has_key("PER"):
+                        if isinstance(cmddict["PER"], float) and 0.1 <= cmddict["PER"] <= 1.0:
+                            return ThrustCommand(ship, cmddict["DIR"], cmddict["DUR"], cmddict["PER"])
+                        else:
+                            return "Percent Missing or Should Be Float 0.1 <= Arg <= 1.0"
+                    else:
+                        return ThrustCommand(ship, cmddict["DIR"], cmddict["DUR"])
+                    #eif
+                else:
+                    return "Duration Missing or Should be Float >= 0.05"
+                #eif
+            else:
+                return "Direction Missing or Should Be L, F, R, or B"
+            #eif
+        elif cmdname == SHIP_CMD_RADAR:
+            if cmddict.has_key("LVL") and isinstance(cmddict["LVL"], int) and 0 < cmddict["LVL"] <= 5:
+                if cmddict["LVL"] == 3:
+                    if cmddict.has_key("TARGET") and isinstance(cmddict["TARGET"], int) and cmddict["TARGET"] > 0:
+                        return RadarCommand(ship, cmddict["LVL"], cmddict["TARGET"])
+                    else:
+                        return "Target Missing or Should be Positive Int"
+                else:
+                    return RadarCommand(ship, cmddict["LVL"])
+                #eif
+            else:
+                return "Level Missing or Should be Int 0 < Arg <= 5"
+        elif cmdname == SHIP_CMD_BRAKE:
+            if cmddict.has_key("PER"):
+                if isinstance(cmddict["PER"], float) and 0.0 <= cmddict["PER"] < 1.0:
+                    return BrakeCommand(ship, cmddict["PER"])
+                else:
+                    return "Percent Missing or Should Be Float 0.0 <= Arg < 1.0"
+            else:
+                return BrakeCommand(ship, 0)
+            #eif
+        elif cmdname == SHIP_CMD_ALL_STOP:
+            return AllStopCommand(ship)
+        elif cmdname == SHIP_CMD_WARP:
+            if cmddict.has_key("DIST") and isinstance(cmddict["DIST"], float) and cmddict["DIST"] >= 0 and cmddict["DIST"] <= WarpCommand.MAXWARPDISTANCE:
+                return WarpCommand(ship, cmddict["DIST"])
+            elif cmddict.has_key("DIST"):
+                return "Distance must be a positive Float less than or equal to " + repr(WarpCommand.MAXWARPDISTANCE)
+            else:
+                return WarpCommand(ship)
+            #eif
+        elif cmdname == SHIP_CMD_ROTATE:
+            if cmddict.has_key("DEG") and isinstance(cmddict["DEG"], int):
+                if cmddict["DEG"] == 0:
+                    return "Degrees Must be Non-Zero"
+                
+                return RotateCommand(ship, cmddict["DEG"])
+            else:
+                return "Degrees Missing or Should Be Integer"
+            #eif
+        elif cmdname == SHIP_CMD_IDLE:
+            if cmddict.has_key("DUR"):
+                if isinstance(cmddict["DUR"], float) and cmddict["DUR"] > 0:
+                    return IdleCommand(ship, cmddict["DUR"])
+                else:
+                    return "Idle Duration Should Be a Positive Float"
+            else:
+                return IdleCommand(ship)
+            #eif
+        elif cmdname == SHIP_CMD_DEPLOY_LASER_BEACON:
+            return DeployLaserBeaconCommand(ship)
+        elif cmdname == SHIP_CMD_DESTROY_ALL_BEACONS:
+            return DestroyAllLaserBeaconsCommand(ship)
+        elif cmdname == SHIP_CMD_TORPEDO:
+            if cmddict.has_key("DIR") and cmddict["DIR"] in [u'F',u'B']:
+                return FireTorpedoCommand(ship, cmddict["DIR"])
+            else:
+                return "Firing a torpedo requires a direction 'F'orward or 'B'ackwards"
+            #eif
+        elif cmdname == SHIP_CMD_REPAIR:
+            if cmddict.has_key("AMT") and isinstance(cmddict["AMT"], int) and cmddict["AMT"] > 0:
+                return RepairCommand(ship, cmddict["AMT"])
+            else:
+                return "Repair amount must be a positive integer"
+        elif cmdname == SHIP_CMD_CLOAK:
+            if cmddict.has_key("DUR") and isinstance(cmddict["DUR"], float) and cmddict["DUR"] > 0:
+                return CloakCommand(ship, cmddict["DUR"])
+            else:
+                return "Cloak Command Needs a Positive Float for Duration"
+            #eif
+        elif cmdname == SHIP_CMD_SHIELD:
+            if cmddict.has_key("DUR") and isinstance(cmddict["DUR"], float) and cmddict["DUR"] > 0:
+                return RaiseShieldsCommand(ship, cmddict["DUR"])
+            else:
+                return "Shield Command Needs a Positive Float for Duration"
+            #eif
+        else:
+            return "Command " + repr(cmdname) + " Not Found"
+        #eif
+    else:
+        return "Command Format Not Recognized"
+    #eif
+
+class ThrustCommand(Command):
+    NAME = SHIP_CMD_THRUST
+
+    def __init__(self, obj, direction, duration, power=1.0):        
+        super(ThrustCommand, self).__init__(obj, ThrustCommand.NAME, duration)
+        #self.__pow = power
+        self.direction = direction
+        if direction == 'L':
+            self.__off = Vec2d(0, 1)
+        elif direction == 'R':
+            self.__off = Vec2d(0, -1)
+        elif direction == 'F':
+            self.__off = Vec2d(-1, 0)
+        elif direction == 'B':
+            self.__off = Vec2d(1, 0)
+        #eif
+        self.__off *= power
+        self.power = power
+        self.energycost = 3 * power
+
+    def getForceVector(self, force, rotation, t):
+        return (self.__off * force * t).rotated_degrees(-rotation)
+        """
+        x = (self.__off * force * t)
+        print "org:", x
+        x = x.rotated_degrees(-rotation)
+        print "rot:", x
+        return x
+        """
+
+    def execute(self, t):
+        self._obj.body.apply_impulse(self.getForceVector(self._obj.thrusterForce, self._obj.rotationAngle, t), (0,0))
+        #logging.debug("Executing Thrust on %s for %f", repr(obj), t)
+        
+    def __repr__(self):
+        return super(ThrustCommand, self).__repr__() + " DIR: " + self.direction + " POW: " + repr(self.power)
+
+class BrakeCommand(Command):
+    NAME = SHIP_CMD_BRAKE
+
+    def __init__(self, obj, percent):
+        super(BrakeCommand, self).__init__(obj, BrakeCommand.NAME, 15, block=True)
+        self.__target = self._obj.body.velocity.length * percent
+        if self.__target <= 0.000001:
+            self.__target = 0.000001
+        self.energycost = 4
+
+    def isComplete(self):
+        return self._obj.body.velocity.length <= self.__target
+
+    def execute(self, t):
+        amt = (self._obj.thrusterForce / self._obj.mass) * t
+        if amt < self._obj.body.velocity.length:
+            self._obj.body.velocity.length -= amt
+        else:
+            self._obj.body.velocity.length = 0.000001
+            
+class AllStopCommand(OneTimeCommand):
+    NAME = SHIP_CMD_ALL_STOP
+
+    def __init__(self, obj):
+        if obj.body.velocity.length < 1:
+            super(AllStopCommand, self).__init__(obj, AllStopCommand.NAME, 0)
+        else:
+            # TODO: TTL doesn't work here on a OneTimeCommand...
+            super(AllStopCommand, self).__init__(obj, AllStopCommand.NAME, 15, required=40)
+        #eif
+
+    def onetime(self):        
+        self._obj.body.velocity.length = 0.000001
+        self._obj.health /= 2
+            
+class WarpCommand(Command):
+    NAME = SHIP_CMD_WARP
+    MAXWARPDISTANCE = 400.0
+
+    def __init__(self, obj, distance=0.0):
+        super(WarpCommand, self).__init__(obj, WarpCommand.NAME, block=True, required=10)
+        self.__stage = 0
+        self.__time = 0.0
+        self.energycost = 9
+        if distance <= 0.1:
+            self.__mode = 0
+            self.__dest = (random.randint(-1000,1000), random.randint(-1000,1000))        
+            self.__deg = math.degrees(math.atan2(self.__dest[1], self.__dest[0])) - self._obj.rotationAngle
+            if self.__deg > 180:
+                self.__deg -= 360
+            elif self.__deg < -180:
+                self.__deg += 360
+            #eif
+            self.__cooldown = 5
+        else:
+            self.__mode = 1
+            self.__dest = (math.cos(math.radians(-self._obj.rotationAngle)) * distance,
+                           math.sin(math.radians(-self._obj.rotationAngle)) * distance)
+            self.__cooldown = (int)(distance / 50)
+
+    def isComplete(self):
+        return self.__stage == 2
+
+    def execute(self, t):
+        self.__time += t
+        if self.__mode == 1 and self.__time < 1:
+            return
+        elif self.__mode == 0 and not (-0.01 < self.__deg < 0.01):
+            if self.__deg < 0:
+                amt = -self._obj.rotationSpeed * t
+                if amt < self.__deg: amt = self.__deg            
+            else:
+                amt = self._obj.rotationSpeed * t
+                if amt > self.__deg: amt = self.__deg
+            self.__deg -= amt
+            self._obj.rotationAngle += amt
+            if self._obj.rotationAngle < 0: self._obj.rotationAngle += 360
+            elif self._obj.rotationAngle > 360: self._obj.rotationAngle -= 360
+        elif self.__stage == 0:
+            self._obj.player.sound = "WARP"
+            self._obj.body.position[0] += self.__dest[0]
+            self._obj.body.position[1] += self.__dest[1]
+            self.__stage = 1
+            self.__time = 1
+        elif self.__time - 1 >= self.__cooldown:
+            self.__stage = 2
+            
+    def __repr__(self):
+        return super(WarpCommand, self).__repr__() + " DEST: " + repr(self.__dest)
+            
+class RotateCommand(Command):
+    NAME = SHIP_CMD_ROTATE
+
+    def __init__(self, obj, degrees):
+        super(RotateCommand, self).__init__(obj, RotateCommand.NAME, block=True)        
+        # Limit to one go around?
+        #while degrees > 360:
+        #    degrees -= 360
+        #while degrees < -360:
+        #    degrees += 360
+        # Make sure we take optimal rotation
+        #if degrees > 180:
+        #    degrees -= 360
+        #elif degrees < -180:
+        #   degrees += 360
+        self.__deg = degrees
+        self.energycost = 2
+
+    def isComplete(self):
+        return -0.01 < self.__deg < 0.01
+
+    def execute(self, t):
+        if self.__deg < 0:
+            amt = -self._obj.rotationSpeed * t
+            if amt < self.__deg: amt = self.__deg            
+        else:
+            amt = self._obj.rotationSpeed * t
+            if amt > self.__deg: amt = self.__deg
+        self.__deg -= amt
+        self._obj.rotationAngle += amt
+        if self._obj.rotationAngle < 0: self._obj.rotationAngle += 360
+        elif self._obj.rotationAngle > 360: self._obj.rotationAngle -= 360
+        #logging.debug("Executing Rotate on %s for %f", repr(obj), t)
+        
+    def __repr__(self):
+        return super(RotateCommand, self).__repr__() + " DEG: " + repr(self.__deg)
+
+class IdleCommand(Command):
+    NAME = SHIP_CMD_IDLE
+
+    def __init__(self, obj, duration=0.0):
+        super(IdleCommand, self).__init__(obj, IdleCommand.NAME, duration, block=True)
+        self.energycost = 1
+
+class RadarCommand(Command):
+    NAME = SHIP_CMD_RADAR
+
+    def __init__(self, obj, level, target=-1):
+        self.level = level
+        self.target = target
+        if level == 1:
+            dur = 0.03
+        elif level == 2:
+            dur = 0.10
+        elif level == 3:
+            dur = 0.10
+        elif level == 4:
+            dur = 0.15
+        elif level == 5:
+            dur = 0.4
+        #eif
+        self.energycost = 6
+        super(RadarCommand, self).__init__(obj, RadarCommand.NAME, dur, block=True)
+        
+    def __repr__(self):
+        return super(RadarCommand, self).__repr__() + " LVL: " + repr(self.level) + " TAR: " + repr(self.target)
+
+class DeployLaserBeaconCommand(OneTimeCommand):
+    NAME = SHIP_CMD_DEPLOY_LASER_BEACON
+
+    def __init__(self, obj):
+        obj.lasernodes.append(intpos(obj.body.position))
+
+        super(DeployLaserBeaconCommand, self).__init__(obj, DeployLaserBeaconCommand.NAME)        
+
+class DestroyAllLaserBeaconsCommand(OneTimeCommand):
+    NAME = SHIP_CMD_DESTROY_ALL_BEACONS
+
+    def __init__(self, obj):
+        obj.lasernodes = []
+        
+        super(DestroyAllLaserBeaconsCommand, self).__init__(obj, DestroyAllLaserBeaconsCommand.NAME)
+
+class FireTorpedoCommand(OneTimeCommand):
+    NAME = SHIP_CMD_TORPEDO
+
+    def __init__(self, ship, direction):        
+        self.__direction = direction
+        super(FireTorpedoCommand, self).__init__(ship, FireTorpedoCommand.NAME, required=12)
+        
+    def onetime(self):        
+        self._obj.player.sound = "LASER"        
+        if self.__direction == 'F':
+            self._obj._world.append(Entities.Torpedo(self._obj.body.position, self._obj.rotationAngle, self._obj))
+        elif self.__direction == 'B':
+            self._obj._world.append(Entities.Torpedo(self._obj.body.position, self._obj.rotationAngle - 180, self._obj))
+        #eif
+
+class RepairCommand(Command):
+    NAME = SHIP_CMD_REPAIR
+
+    def __init__(self, obj, amount):                
+        super(RepairCommand, self).__init__(obj, RepairCommand.NAME)
+        self.left = amount
+        self.energycost = 8
+
+    def isComplete(self):
+        return -0.01 < self.left < 0.01
+
+    def execute(self, t):
+        if self.left > 0:
+            amt = 4 * t
+            if amt > self.left: amt = self.left
+        self.left -= amt
+        self._obj.health += amt
+        self._obj.shield += amt / self._obj.shieldConversionRate
+
+class CloakCommand(Command):
+    NAME = SHIP_CMD_CLOAK
+
+    def __init__(self, obj, duration):
+        super(CloakCommand, self).__init__(obj, CloakCommand.NAME, duration, block=False, required=15)
+        self.energycost = 2
+        self._obj.player.sound = "CLOAK"
+        self._done = False
+        
+    def isComplete(self):
+        if self._done:
+            self._obj.player.sound = "CLOAK"
+        return self._done
+        
+    def execute(self, t):
+        if self._obj.commandQueue.containstype(FireTorpedoCommand, True) or self._obj.commandQueue.containstype(RaiseShieldsCommand, True):
+            self._done = True
+
+class RaiseShieldsCommand(Command):
+    NAME = SHIP_CMD_SHIELD
+
+    def __init__(self, obj, duration):
+        super(RaiseShieldsCommand, self).__init__(obj, RaiseShieldsCommand.NAME, duration, required=20)
+        self.energycost = 4
+        self._done = False
+        self._sound = True
+
+    def isComplete(self):
+        return self._done
+
+    def execute(self, t):
+        if self._sound:
+            self._sound = False
+            self._obj.player.sound = "SHIELD"
+            
+        if self._obj.shield.value == 0:
+            self._done = True
+        elif self._obj.shield.value < self._obj.shield.maximum:
+            self._obj.shield += t * self._obj.energyRechargeRate * self._obj.shieldConversionRate
+            self._obj.energy -= t * self._obj.shieldConversionRate
