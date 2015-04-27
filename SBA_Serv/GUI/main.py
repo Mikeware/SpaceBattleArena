@@ -1,3 +1,7 @@
+"""
+Main Class to run GUI for Server
+"""
+
 import pygame, sys, random, logging, math, datetime
 from collections import deque
 from pygame.locals import *
@@ -285,10 +289,10 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                     else:
                         mousemode = None
                 elif event.key == K_k:
-                    if mousemode == "Kill":
+                    if mousemode == "Destroy":
                         mousemode = None
                     else:
-                        mousemode = "Kill"
+                        mousemode = "Destroy"
                 elif event.key == K_e:
                     if mousemode == "Explode":
                         mousemode = None
@@ -316,12 +320,12 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                     mousemode = None
                     zoomout = prevzoom
                     objects[trackshipid]._worldobj.body.position = (x, y)
-                elif mousemode == "Kill":
+                elif mousemode == "Destroy":
                     mousemode = None                
                     v = Vec2d(x, y)
                     for obj in objects:
                         if math.sqrt(obj._worldobj.body.position.get_dist_sqrd(v)) <= 32:
-                            logging.info("[GUI] Killing Object #%d", obj._worldobj.id)
+                            logging.info("[GUI] Destroying Object #%d", obj._worldobj.id)
                             if isinstance(obj, ShipGUI):
                                 obj._worldobj.killed = True
                             world.remove(obj._worldobj)
@@ -443,8 +447,8 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
             n = font.render("Tracking: " + objects[trackshipid]._worldobj.player.name, False, objects[trackshipid]._worldobj.player.color)
             windowSurface.blit(n, (resolution[0]/2-n.get_width()/2,resolution[1]-12))                          
 
-        if mousemode == "Kill":
-            ip = bigfont.render("KILL OBJECT BY CLICK", False, (255, 0, 0))
+        if mousemode == "Destroy":
+            ip = bigfont.render("DESTROY OBJECT BY CLICK", False, (255, 0, 0))
             windowSurface.blit(ip, (resolution[0]/2-ip.get_width()/2, resolution[1]/2-ip.get_height()/2))
         elif mousemode == "Explode":
             ip = bigfont.render("CLICK TO CAUSE EXPLOSION FORCE", False, (255, 0, 0))

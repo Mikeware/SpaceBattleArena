@@ -13,7 +13,7 @@
     <Name>SBA_Serv</Name>
     <RootNamespace>SBA_Serv</RootNamespace>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>-c machine_test.cfg</CommandLineArguments>
+    <CommandLineArguments>-c machine_test.cfg -2 baublehunt.cfg</CommandLineArguments>
     <InterpreterPath />
     <InterpreterArguments />
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
@@ -27,9 +27,8 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="BaubleHunt\BaubleHuntSCV.py" />
-    <Compile Include="BaubleHunt\BaubleHunt.py" />
-    <Compile Include="BaubleHunt\__init__.py" />
+    <Compile Include="Game\BaubleHuntSCV.py" />
+    <Compile Include="Game\BaubleHunt.py" />
     <Compile Include="Game\AsteroidMiner.py" />
     <Compile Include="Game\CombatExercise.py" />
     <Compile Include="Game\Game.py" />
@@ -65,7 +64,6 @@
     <Compile Include="World\__init__.py" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="BaubleHunt" />
     <Folder Include="GUI\" />
     <Folder Include="GUI\Graphics\" />
     <Folder Include="GUI\Graphics\Asteroids\" />
@@ -81,6 +79,7 @@
     <Folder Include="World\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="baublehunt.cfg" />
     <Content Include="baubletournamentB.cfg" />
     <Content Include="GUI\ObjWrappers\GUIEntity.py" />
     <Content Include="baubletournamentA.cfg" />

@@ -52,7 +52,7 @@ class BuildExe:
         self.project_url = "http://www.mikeware.com/"
  
         #Version of program
-        self.project_version = "0.95"
+        self.project_version = "1.0"
  
         #License of the program
         self.license = "Proprietary"
@@ -60,10 +60,10 @@ class BuildExe:
         #Auhor of program
         self.author_name = "Michael A. Hawker"
         self.author_email = "questions@mikeware.com"
-        self.copyright = "Copyright (c) 2012-2014 Michael A. Hawker."
+        self.copyright = "Copyright (c) 2012-2015 Michael A. Hawker."
  
         #Description
-        self.project_description = "MyApps Description"
+        self.project_description = "Space Battle Arena Programming Game"
  
         #Icon file (None will use pygame default icon)
         self.icon_file = None
@@ -85,8 +85,13 @@ class BuildExe:
         
         #DLL Excludes
         self.exclude_dll = ['']
-        #python scripts (strings) to be included, seperated by a comma
-        self.extra_scripts = []
+        #python scripts (strings) to be included, separated by a comma
+        games = glob.glob('Game\*.py')
+        games.remove('Game\__init__.py')
+        games.remove('Game\Game.py')
+        games.remove('Game\Players.py')
+        self.extra_scripts = ",".join(games).replace("\\", ".").replace(".py", "")
+        print self.extra_scripts
  
         #Zip file name (None will bundle files in exe instead of zip file)
         self.zipfile_name = "pylib.zip"

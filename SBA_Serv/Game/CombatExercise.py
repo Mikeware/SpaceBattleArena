@@ -9,6 +9,8 @@ import logging
 import pygame
 from operator import attrgetter
 
+# TODO
+
 # Game which keeps track of statistics about combat to score points
 # Each ship is worth a number of points when killed equal to how long its been alive (this.timealive)
 # When a ship has been killed and respawns there will be 100 'revenge' points available to the ship destroyed if they can destroy the ship

@@ -42,6 +42,8 @@ Documentation
 * Talks
     * [You Have Died of Dysentery: Games in Education Are Still Alive - PAXDev 2014](http://www.mikeware.com/2014/08/you-have-died-of-dysentery-games-in-education-are-still-alive/)
     * [Reach for the Stars - PAXDev 2012](http://www.mikeware.com/2012/09/reach-for-the-stars-educating-the-next-generation-using-games/)
+* Development
+    * [Adding a Subgame](doc/dev/AddSubgame.md)
 
 Development Tools
 ----------------------

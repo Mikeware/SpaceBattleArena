@@ -1,4 +1,4 @@
-from Game.Game import BasicGame, RoundTimer
+from Game import BasicGame, RoundTimer
 from World.WorldGenerator import ConfiguredWorld, addObjectAwayFromOthers
 from World.Entities import Entity, Ship
 from GUI.ObjWrappers.GUIEntity import GUIEntity

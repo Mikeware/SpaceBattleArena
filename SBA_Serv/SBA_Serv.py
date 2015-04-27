@@ -1,27 +1,32 @@
+"""
+Main Class to Start Server
+"""
+
 __author__ = "Michael A. Hawker"
-__copyright__ = "Copyright 2012-2014 Mikeware"
+__copyright__ = "Copyright 2012-2015 Mikeware"
 __license__ = "Proprietary"
-__version__ = "0.95"
+__version__ = "1.0"
 __email__ = "questions@mikeware.com"
-__status__ = "alpha"
+__status__ = "beta"
 
 title = "Space Battle Arena"
 titlever = title + " v" + __version__
 
 import logging
 
-import sys, traceback
+import sys, traceback, glob, os.path
 from GUI import main
+from importlib import import_module
 
 import Server.WorldServer as WorldServer
 import World.WorldMap as WorldMap
 from World.WorldGenerator import SimpleWorld
 from Game.Game import BasicGame
-from Game.CombatExercise import CombatExerciseGame
-from Game.KingOfTheBubble import KingOfTheBubbleGame
-from Game.AsteroidMiner import AsteroidMinerGame
-from BaubleHunt.BaubleHunt import BaubleHuntGame
-from BaubleHunt.BaubleHuntSCV import BaubleHuntSCVGame
+games = {}
+for mod in glob.glob("Game/*"):
+    mod = os.path.basename(os.path.splitext(mod)[0])
+    if mod not in ["__init__", "Game", "Players"]:
+        games[mod] = import_module("Game." + mod)
 
 from optparse import OptionParser
 from ConfigParser import ConfigParser
@@ -66,18 +71,13 @@ else:
         print "LOGGING DISABLED"          
     
     rungame = cfg.get("Game","rungame")
-    if rungame == "BaubleHunt":
-        game = BaubleHuntGame(cfg)
-    elif rungame == "BaubleHuntSCV":
-        game = BaubleHuntSCVGame(cfg)
-    elif rungame == "CombatExercise":
-        game = CombatExerciseGame(cfg)
-    elif rungame == "KingOfTheBubble":
-        game = KingOfTheBubbleGame(cfg)
-    elif rungame == "AsteroidMiner":
-        game = AsteroidMinerGame(cfg)
-    else:
+    if rungame == "BasicGame" or rungame == None or rungame.strip() == "" or not games.has_key(rungame):
+        logging.info("Running Basic Game")
         game = BasicGame(cfg)
+    else:
+        logging.info("Running Game " + rungame)
+        # grab the module we found above, and find the 'Game' class then execute it with the cfg as an argument
+        game = games[rungame].__dict__[rungame+"Game"](cfg)
     #eif
     
     logging.info("Starting Game Network Server...")
