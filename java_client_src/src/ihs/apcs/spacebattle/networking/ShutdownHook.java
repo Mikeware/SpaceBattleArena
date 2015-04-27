@@ -5,8 +5,6 @@ package ihs.apcs.spacebattle.networking;
 
 import java.io.IOException;
 
-import ihs.apcs.spacebattle.*;
-
 /**
  * @author Brett Wortzman
  *

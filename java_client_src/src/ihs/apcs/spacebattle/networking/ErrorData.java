@@ -1,4 +1,4 @@
-package ihs.apcs.spacebattle;
+package ihs.apcs.spacebattle.networking;
 
 import java.util.HashMap;
 

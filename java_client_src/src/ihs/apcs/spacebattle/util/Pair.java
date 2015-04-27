@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ihs.apcs.spacebattle;
+package ihs.apcs.spacebattle.util;
 
 /**
  * @author Brett Wortzman

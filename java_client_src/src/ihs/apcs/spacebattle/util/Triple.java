@@ -1,4 +1,4 @@
-package ihs.apcs.spacebattle;
+package ihs.apcs.spacebattle.util;
 
 public class Triple<T, U, V> {
 	private T first;

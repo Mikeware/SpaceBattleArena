@@ -1,7 +1,5 @@
 package ihs.apcs.spacebattle.networking;
 
-import ihs.apcs.spacebattle.Client;
-
 import java.io.*;
 import java.net.Socket;
 

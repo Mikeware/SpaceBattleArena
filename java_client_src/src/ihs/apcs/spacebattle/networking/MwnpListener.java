@@ -4,8 +4,6 @@ package ihs.apcs.spacebattle.networking;
 import java.net.*;
 import java.io.*;
 
-import ihs.apcs.spacebattle.*;
-
 public class MwnpListener extends Thread {
 	private InputStream inStream;
 	private Socket sock;

@@ -1,6 +1,4 @@
-package ihs.apcs.spacebattle;
-
-import ihs.apcs.spacebattle.networking.MwnpMessage;
+package ihs.apcs.spacebattle.networking;
 
 import java.io.IOException;
 
