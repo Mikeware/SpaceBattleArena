@@ -2,7 +2,7 @@ from Game import BasicGame, RoundTimer
 from World.WorldGenerator import ConfiguredWorld, addObjectAwayFromOthers
 from World.Entities import Entity, Ship
 from GUI.ObjWrappers.GUIEntity import GUIEntity
-from World.WorldMath import intpos, friendly_type, PlayerStat
+from World.WorldMath import intpos, friendly_type, PlayerStat, in_circle
 from GUI.GraphicsCache import Cache
 from GUI.Helpers import debugfont, wrapcircle, namefont
 import logging, random
@@ -16,13 +16,13 @@ from operator import attrgetter
 # Students must create a ship to navigate to the center of the world
 # Once there for a sufficient amount of time, they will be warped away, and must try again
 
-# TODO: Warp out of middle, check velocity is low (i.e. stopped), have target rings, if stopped closer to center = more points
-
 class FindTheMiddleGame(BasicGame):
     
     def __init__(self, cfgobj):
-        self.__objectiveradius = cfgobj.getint("FindTheMiddle", "objectiveradius")
+        self.__objectiveradii = eval(cfgobj.get("FindTheMiddle", "objectiveradii"))
+        self.__objectivepoints = eval(cfgobj.get("FindTheMiddle", "objectivepoints"))
         self.__objectivetime = float(cfgobj.getint("FindTheMiddle", "objectivetime"))
+        self.__objectivevelocity = cfgobj.getint("FindTheMiddle", "objectivevelocity")
 
         super(FindTheMiddleGame, self).__init__(cfgobj)
                 
@@ -32,6 +32,17 @@ class FindTheMiddleGame(BasicGame):
         world = super(FindTheMiddleGame, self).createWorld(pys)
         self.midpoint = (int(world.width / 2), int(world.height / 2))
         return world
+    
+    def getPlayerStartPosition(self, force=False):
+        # make sure player doesn't spawn in middle
+        pos = (random.randint(50, self.world.width - 50),
+               random.randint(50, self.world.height - 50))
+        x = 0
+        while (len(self.world.getObjectsInArea(pos, 75)) > 0 or in_circle(self.midpoint, self.__objectiveradii[-1], pos)) and x < 15:
+            x += 1
+            pos = (random.randint(50, self.world.width - 50),
+                   random.randint(50, self.world.height - 50))
+        return pos
 
     def GUICFG(self):
         super(FindTheMiddleGame, self).GUICFG()
@@ -93,20 +104,38 @@ class FindTheMiddleGame(BasicGame):
     def update(self, t):
         if self.hasStarted():
             ships = []
-            for obj in self.world.getObjectsInArea(self.midpoint, self.__objectiveradius + 28): # add the ship radius so it looks like you get points if you overlap
+            for obj in self.world.getObjectsInArea(self.midpoint, self.__objectiveradii[-1] + 28): # add the ship radius so it looks like you get points if you overlap
                 if isinstance(obj, Ship):
                     ships.append(obj)
         
             for ship in ships:
-                ship.player.time += t
-                if ship.player.time >= self.__objectivetime:
-                    #TODO: warp player
-                    ship.player.score += 1
-                    ship.player.time = 0
+                if ship.body.velocity.length < self.__objectivevelocity:
+                    ship.player.time += t
+                    if ship.player.time >= self.__objectivetime:
+                        x = 0
+                        for radius in self.__objectiveradii:
+                            if in_circle(self.midpoint, radius + 28, ship.body.position):                                
+                                break
+                            x += 1
+                        ship.body.position = self.getPlayerStartPosition()
+                        ship.player.score += self.__objectivepoints[x]
+                        ship.player.time = 0
 
     def drawInfo(self, surface, flags):
-        # Draw circle in middle of world        
-        pygame.draw.circle(surface, (0, 128, 255), self.midpoint, self.__objectiveradius, 2)
+        # Draw circles in middle of world
+        x = 1
+        inc = int(255 / len(self.__objectiveradii))
+        for radius in self.__objectiveradii:
+            pygame.draw.circle(surface, (0, inc * x, 255 - inc * x), self.midpoint, radius, len(self.__objectiveradii) - x + 1)
+            text = debugfont().render(repr(self.__objectivepoints[x-1]) + " Points", False, (128, 128, 128))
+            surface.blit(text, (self.midpoint[0]-text.get_width()/2, self.midpoint[1]-radius+18))
+            x += 1
+
+        for player in self._players.values():
+            if player.object != None and player.time > 0:
+                # draw time left in bubble
+                text = debugfont().render("%.1f" % (self.__objectivetime - player.time), False, player.color)
+                surface.blit(text, (player.object.body.position[0]+30, player.object.body.position[1]-4))
 
     def drawGameData(self, screen, flags):
         if self._tournament and self._tournamentinitialized:
@@ -123,6 +152,3 @@ class FindTheMiddleGame(BasicGame):
         self.resetWorld()
         
         super(FindTheMiddleGame, self).start()
-        
-        # start Bauble Spawn Timer
-        #self.newBaubleTimer()    

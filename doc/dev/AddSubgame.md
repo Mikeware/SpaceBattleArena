@@ -12,7 +12,11 @@ Everything to drive your Subgame from the Server can be encapsulated into a sing
 
 	It's easiest to start with an existing similar game as a template as many methods are required.  It's also suggested you inherit from the Basic Game which implements most of the base rules around how Space Battle works.
 
-2. 
+2. Make sure your file is named after your game and the name of your class is the name of your game + **Game**.  E.g. *AsteroidMiner.py* and *AsteroidMinerGame*
+
+3. Create a config file where the rungame setting is set to the name of your game.  E.g. **AsteroidMiner**.
+
+4. Read more about the specific game methods in the BasicGame documentation.
 
 Client Implementation
 -------------------------
