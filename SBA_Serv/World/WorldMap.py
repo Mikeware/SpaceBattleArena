@@ -175,6 +175,9 @@ class GameWorld(object):
                     if obj.TTL != None and obj.timealive > obj.TTL:
                         del self[obj]                        
                 #next            
+
+                # game time notification
+                self.__game.update(lasttime)
                 lasttime = time.time() - tstamp
                            
                 logging.debug("SEMAPHORE ACQ gameloop [%d]", thread.get_ident())

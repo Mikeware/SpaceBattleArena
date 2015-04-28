@@ -38,6 +38,7 @@ class BasicGame(object):
 
     def __init__(self, cfgobj):
         self.cfg = cfgobj
+        self.__started = False
         self.world = self.createWorld()
         self.world.registerObjectListener(self.worldAddRemoveObject)   
         self.server = None # set when server created
@@ -47,8 +48,7 @@ class BasicGame(object):
         self.__allowafterstart = cfgobj.getboolean("Game", "allowafterstart")
         self.__allowreentry = cfgobj.getboolean("Game", "allowreentry")
         self.__resetworldround = self.cfg.getboolean("Game", "resetworldeachround")
-        self.__disconnectplayersafterround = self.cfg.getboolean("Game", "disconnectplayersafterround") 
-        self.__started = False
+        self.__disconnectplayersafterround = self.cfg.getboolean("Game", "disconnectplayersafterround")         
         self.__roundtime = cfgobj.getint("Game", "roundtime")
         self.__timer = None
         # TODO: Create Tournament Class
@@ -146,7 +146,7 @@ class BasicGame(object):
     """
     Returns True when game has started
     """
-    def isStarted(self):
+    def hasStarted(self):
         return self.__started    
 
     # Called when a client is connected and appends this data to the default image number, world width and world height
@@ -191,7 +191,7 @@ class BasicGame(object):
         return False
 
     """
-    Called by registerPlayer to add custom attributes to players for games
+    Called by registerPlayer and newRoundForPlayer to add custom attributes to players for games
     """
     def addPlayerAttributes(self, player):
         return player
@@ -328,7 +328,7 @@ class BasicGame(object):
     It will have been created, but not added to the physics world yet, so no callback about it being added will have occured.
     """
     def newRoundForPlayer(self, player):
-        pass
+        return self.addPlayerAttributes(player)
 
     """
     Figures out where a random player should start in the world
@@ -411,6 +411,14 @@ class BasicGame(object):
     def getExtraRadarInfo(self, obj, objdata):
         if hasattr(obj, "player") and self.cfg.getboolean("Game", "radarname"):
             objdata["NAME"] = obj.player.name
+
+    """
+    Called by the World to notify the passage of time
+
+    Note: This is called from the core game loop, best not to delay much here
+    """
+    def update(self, t):
+        pass
 
     """
     Called by GUI to have game draw additional info on screen

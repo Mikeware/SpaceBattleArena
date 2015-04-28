@@ -29,11 +29,6 @@ class AsteroidMinerGame(BasicGame):
         
         return w
 
-    """ Thinking that Asteroid Miner just is a 'Basic' Game, no extra parameters needed, so use default class type on Client.
-    def getInitialInfoParameters(self):
-        return {"GAMENAME": "AsteroidMiner"}
-    """
-
     def registerPlayer(self, name, color, imgindex, netid):
         return super(AsteroidMinerGame, self).registerPlayer(name, color, imgindex, netid)
 

@@ -35,6 +35,6 @@ public class BasicGameInfo {
 
 	@Override
 	public String toString() {
-		return String.format("{Score: %d; Deaths: %d; High Score: %d}", getScore(), getNumDeaths(), getHighScore());
+		return String.format("{Score: %f; Deaths: %d; High Score: %f}", getScore(), getNumDeaths(), getHighScore());
 	}
 }

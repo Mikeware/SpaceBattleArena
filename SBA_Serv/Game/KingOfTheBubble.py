@@ -56,17 +56,11 @@ class KingOfTheBubbleGame(BasicGame):
     def registerPlayer(self, name, color, imgindex, netid):
         return super(KingOfTheBubbleGame, self).registerPlayer(name, color, imgindex, netid)
 
-    # TODO: remove, clean start procedure? Add to start??
     def addPlayerAttributes(self, player):
         player.score = self.__initialpoints
         player.deaths = 0
 
         return player
-
-    def newRoundForPlayer(self, player):
-        super(KingOfTheBubbleGame, self).newRoundForPlayer(player)
-        player.score = self.__initialpoints
-        player.deaths = 0
 
     def addBubbles(self, w, num, setpoints=None, pos=None, pname=None, force=False):
         logging.info("Adding %d Baubles (%s)", num, repr(force))

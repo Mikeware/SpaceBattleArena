@@ -42,7 +42,7 @@ public class MwnpMessage {
 				cmdDataTypes.put("\"ENV\"", new TypeToken<Environment<KingOfTheBubbleGameInfo>>() {}.getType());
 				break;
 			default:
-				cmdDataTypes.put("\"ENV\"", Environment.class);				
+				cmdDataTypes.put("\"ENV\"", new TypeToken<Environment<BasicGameInfo>>() {}.getType());				
 				break;
 		}
 	}

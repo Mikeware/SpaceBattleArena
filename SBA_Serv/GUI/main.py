@@ -224,7 +224,7 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
             elif event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     pygame.event.post(pygame.event.Event(QUIT))
-                elif event.key == K_SPACE and not game.isStarted():
+                elif event.key == K_SPACE and not game.hasStarted():
                     game.start()
                 elif event.key == K_d:
                     flags["DEBUG"] = not flags["DEBUG"]
@@ -397,7 +397,7 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
             ip = bigfont.render(ipaddress, False, (255, 255, 255))
             windowSurface.blit(ip, (resolution[0]/2-ip.get_width()/2,0))
 
-        if not game.isStarted():
+        if not game.hasStarted():
             ip = bigfont.render("Waiting For Start - Press Space", False, (255, 255, 255))
             windowSurface.blit(ip, (resolution[0]/2-ip.get_width()/2,resolution[1]/2-ip.get_height()/2))
             
