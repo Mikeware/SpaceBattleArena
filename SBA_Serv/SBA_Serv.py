@@ -22,11 +22,6 @@ import Server.WorldServer as WorldServer
 import World.WorldMap as WorldMap
 from World.WorldGenerator import SimpleWorld
 from Game.Game import BasicGame
-games = {}
-for mod in glob.glob("Game/*"):
-    mod = os.path.basename(os.path.splitext(mod)[0])
-    if mod not in ["__init__", "Game", "Players"]:
-        games[mod] = import_module("Game." + mod)
 
 from optparse import OptionParser
 from ConfigParser import ConfigParser
@@ -71,14 +66,23 @@ else:
         print "LOGGING DISABLED"          
     
     rungame = cfg.get("Game","rungame")
-    if rungame == "BasicGame" or rungame == None or rungame.strip() == "" or not games.has_key(rungame):
+
+    game = None
+    if rungame != "BasicGame" or rungame.strip() != "" or rungame != None:
+        mod = None
+        try:
+            mod = import_module("Game."+rungame)
+            game = mod.__dict__[rungame+"Game"](cfg)
+            logging.info("Running Game: " + rungame)
+        except:
+            pass #ignore
+    #eif
+    
+    if game == None or rungame == "BasicGame" or rungame == None or rungame.strip() == "":
         logging.info("Running Basic Game")
         game = BasicGame(cfg)
-    else:
-        logging.info("Running Game " + rungame)
-        # grab the module we found above, and find the 'Game' class then execute it with the cfg as an argument
-        game = games[rungame].__dict__[rungame+"Game"](cfg)
-    #eif
+
+    print "Game: ", game
     
     logging.info("Starting Game Network Server...")
 

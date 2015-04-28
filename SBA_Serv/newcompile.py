@@ -39,7 +39,7 @@ class pygame2exe(py2exe.build_exe.py2exe): #This hack make sure that pygame defa
         #Add font to list of extension to be copied
         extensions.append(Module("pygame.font", pygame_default_font))
         py2exe.build_exe.py2exe.copy_extensions(self, extensions)
- 
+
 class BuildExe:
     def __init__(self):
         #Name of starting .py
@@ -72,10 +72,12 @@ class BuildExe:
         pymunk_dir = os.path.dirname(pymunk.__file__)
 
         graphics = glob.glob(os.path.join('GUI\Graphics\*','*.png'))
-        extra_files = [os.path.join(pymunk_dir, 'chipmunk.dll')]
-
-        for f in graphics:
-            extra_files.append(f)
+        extra_files = self.find_data_files('GUI\Graphics', '*.png', recursive=True)
+        root = [os.path.join(pymunk_dir, 'chipmunk.dll'),
+                                  "run.bat",
+                                  "freesansbold.ttf"]
+        root += glob.glob("*.cfg")
+        extra_files += [('', root)]
         print extra_files
         self.extra_datas = extra_files
  
@@ -143,12 +145,14 @@ class BuildExe:
             self.icon_file = os.path.join(path, 'pygame.ico')
  
         #List all data files to add
+        """
         extra_datas = []
         for data in self.extra_datas:
             if os.path.isdir(data):
                 extra_datas.extend(self.find_data_files(data, '*'))
             else:
                 extra_datas.append(('.', [data]))
+        """
         
         setup(
             cmdclass = {'py2exe': pygame2exe},
@@ -171,7 +175,7 @@ class BuildExe:
                                   'dll_excludes': self.exclude_dll,
                                   'includes': self.extra_scripts} },
             zipfile = self.zipfile_name,
-            data_files = extra_datas,
+            data_files = self.extra_datas,
             dist_dir = self.dist_dir
             )
         
