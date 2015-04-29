@@ -52,7 +52,6 @@
     <Compile Include="SBA_Serv.py" />
     <Compile Include="Server\NetworkCommands.py" />
     <Compile Include="Server\MWNL2.py" />
-    <Compile Include="Server\rfs.py" />
     <Compile Include="Server\WorldServer.py" />
     <Compile Include="Server\__init__.py" />
     <Compile Include="World\Commanding.py" />

@@ -55,7 +55,7 @@ class BuildExe:
         self.project_version = "1.0"
  
         #License of the program
-        self.license = "Proprietary"
+        self.license = "GPLv2"
  
         #Auhor of program
         self.author_name = "Michael A. Hawker"
