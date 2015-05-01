@@ -11,7 +11,7 @@ In addition, it means the challenge is fixed and always the same.  For an educat
 
 Finally, allowing the system to be extensible and configurable, means that challenges and difficulty can be directly geared to a specific group of students abilities which can fluctuate from class to class.  Space Battle was our test bed and has proved successful with the multiple different challenges we have run over the past few years.
 
-Space Battle Arena is [licensed](LICENSE) under the GPLv2.
+Space Battle Arena is [licensed](LICENSE) under the GPLv2.  [Gson](https://github.com/google/gson) is licensed under the Apache license and provided for convenience in the [bin](bin/) directory.
 
 Student Environment
 -------------------------
@@ -59,9 +59,9 @@ Dependencies
 Space Battle was built against the following versions of libraries:
 
 * Java Client
-    * Gson 2.2
+    * [Gson 2.2](https://github.com/google/gson)
 * Python Server
-    * Python 2.7.9
-    * PyMunk 3.0.0
-    * PyGame 1.9.1
-    * Py2Exe 0.6.9 (for server executable build)
+    * [Python 2.7.9](https://www.python.org/downloads/release/python-279/)
+    * [PyMunk 3.0.0](https://pypi.python.org/pypi/pymunk/3.0.0)
+    * [PyGame 1.9.1](http://www.pygame.org/download.shtml)
+    * [Py2Exe 0.6.9](http://sourceforge.net/projects/py2exe/files/py2exe/0.6.9/) (for server executable build)
