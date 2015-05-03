@@ -10,10 +10,40 @@ body {
 
 /* General & 'Reset' Stuff */
 
-.container {
-  width: 90%;
-  max-width: 800px;
-  margin: 0 auto;
+@media all and (max-width: 1023px) and (min-width: 0px) {
+   .container {
+      width: 90%;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    aside {
+      width: 200px;
+    }
+}
+
+@media all and (max-width: 1899px) and (min-width: 1024px) {
+   .container {
+      width: 90%;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    aside {
+      width: 300px;
+    }
+}
+
+@media all and (min-width: 1900px) {
+   .container {
+      width: 90%;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    aside {
+      width: 300px;
+    }
 }
 
 section {
@@ -106,6 +136,21 @@ nav span:before {
   z-index: 100;
   position: fixed;
   width: 100%;
+}
+
+/* Sidebar
+*/
+
+aside {
+  float: left;
+  background: #222;
+  border: 5px solid #444;
+  padding: 5px 15px;
+  margin: 10px 20px;
+}
+
+aside .small {
+  font-size: 11px;
 }
 
 /* Main Content
