@@ -1,0 +1,23 @@
+---
+title: Client Setup
+---
+
+Client Setup
+========
+Any Java IDE should be able to be used for Space Battle Arena.
+
+We typically use jGRASP or Eclipse.
+
+The general process involves:
+
+1. Adding both the Gson and SpaceBattle .jar files to your classpath.
+2. Creating a Ship class which either extends the BasicSpaceship abstract class OR  
+implements the Spaceship<?> interface.
+3. Executes the TextClient's main method from the SpaceBattle.jar file with the following arguments:
+    1. IP address of the server
+    2. name of your Ship class
+
+You can see detailed tutorials for the following IDEs here:
+
+ * [jGRASP](jGRASP/jGRASPSetup.html)
+ * Eclipse

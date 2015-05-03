@@ -1,5 +1,7 @@
 Thumbs.db
+.jekyll-metadata
 *.suo
 *.log
+*.lock
 *.class
 *.pyc

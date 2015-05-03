@@ -1,3 +1,9 @@
+---
+title: jGRASP Client Environment Setup
+nav:
+ - { page: "../index.html", title: "Client Setup" }
+---
+
 jGRASP Client Environment Setup
 =====================
 
@@ -11,11 +17,9 @@ These instructions were prepared for [jGRASP](http://www.jgrasp.org/) 1.8 and ab
 Initial Environment Setup
 -----------------------------
 
-1. Create a Spaceship class:
+Create a Spaceship class:
 
-	```Java
-	
-import java.awt.Color;
+<pre><code>import java.awt.Color;
 
 import ihs.apcs.spacebattle.*;
 import ihs.apcs.spacebattle.commands.*;
@@ -30,7 +34,7 @@ public class ExampleShip extends BasicSpaceship {
     @Override
     public ShipCommand getNextCommand(BasicEnvironment env)
     {
-    	return new IdleCommand(0);
+        return new IdleCommand(0);
     }
     
     @Override
@@ -38,7 +42,7 @@ public class ExampleShip extends BasicSpaceship {
     {
     }
 }
-	```
+</code></pre>
 
 2. Adjust Workspace Classpath under Settings -> PATH/CLASSPATH -> Workspace:
 
