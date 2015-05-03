@@ -2,7 +2,8 @@ source: doc
 destination: ..\gh-pages
 timezone: America/Vancouver
 
-url: http://mikeware.github.io/SpaceBattleArena/
+baseurl: /SpaceBattleArena
+url: http://mikeware.github.io/SpaceBattleArena
 
 defaults:
   -
@@ -13,7 +14,7 @@ defaults:
       layout: "default"
   -
     scope:
-      path: "_posts"
+      path: ""
       type: "posts"
     values:
       layout: "post"
