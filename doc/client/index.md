@@ -19,4 +19,4 @@ The general process involves:
 implements the Spaceship<?> interface.
 3. Executes the TextClient's main method from the SpaceBattle.jar file with the following arguments:
     1. IP address of the server
-    2. name of your Ship class
+    2. name of your Java Ship class

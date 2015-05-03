@@ -39,7 +39,7 @@ public class ExampleShip extends BasicSpaceship {
     @Override
     public ShipCommand getNextCommand(BasicEnvironment env)
     {
-        return new IdleCommand(0);
+        return new IdleCommand(0.1);
     }
     
     @Override
@@ -49,15 +49,15 @@ public class ExampleShip extends BasicSpaceship {
 }
 </code></pre>
 
-2. Adjust Workspace Classpath under Settings -> PATH/CLASSPATH -> Workspace:
+1. Adjust Workspace Classpath under Settings -> PATH/CLASSPATH -> Workspace:
 
 	![Classpath Settings](Classpath.png)
 	
-3. Add Gson and SpaceBattle jars under the PATH -> CLASSPATHS tab:
+2. Add the **[gson-2.2.jar](http://github.com/Mikeware/SpaceBattleArena/blob/master/bin/gson-2.2.jar?raw=true)** and **[SpaceBattle.jar](http://github.com/Mikeware/SpaceBattleArena/blob/master/bin/SpaceBattle.jar?raw=true)** under the PATH -> CLASSPATHS tab:
 
 	![Jars in Classpath](AddJars.png)
 	
-4. Save and Compile your class.
+3. Save and Compile your class.
 
 <a name="execution"></a>Execution Instructions
 -------------------------

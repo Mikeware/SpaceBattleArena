@@ -16,7 +16,7 @@ In addition, it means the challenge is fixed and always the same.  For an educat
 
 Finally, allowing the system to be extensible and configurable, means that challenges and difficulty can be directly geared to a specific group of students abilities which can fluctuate from class to class.  Space Battle was our test bed and has proved successful with the multiple different challenges we have run over the past few years.
 
-Space Battle Arena is [licensed](LICENSE) under the GPLv2.  [Gson](https://github.com/google/gson) is licensed under the Apache license and provided for convenience in the [bin](bin/) directory.
+Space Battle Arena is [licensed](LICENSE) under the GPLv2.  [Gson](https://github.com/google/gson) is licensed under the Apache license and provided for convenience in the [bin](http://github.com/Mikeware/SpaceBattleArena/tree/master/bin/) directory.
 
 Student Environment
 -------------------------
@@ -26,33 +26,32 @@ We use [jGRASP](http://www.jgrasp.org/) as our IDE of choice when working with H
 
 Documentation
 ------------------
-* [Client Setup](client/index.html) - [jGRASP](client/jGRASP/index.html), Eclipse
-    * Add both GSon and SpaceBattle jars to classpath
-    * Create a Ship which implements the Spaceship interface.
-    * Execute the TextClient class of the SpaceBattle.jar file with two arguments:
-        1. IP address of the server
-        2. name of the Ship class
-* Server Setup
-    * Use the run.bat with the name of a config file
-* Server Configuration Notes
-* Server GUI Controls
-* Lesson Outlines
-    * Introduction and Setup
-    * 'Find the Middle'
-    * Shapes in Space
-    * Intro to Radar
-    * Finite State Machines
+* [Client Setup](client/index.html)
+    * [jGRASP](client/jGRASP/index.html)
+    * [Eclipse](client/Eclipse/index.html)
+* Server
+    * Server Setup
+    * Server Config
+    * Server Usage
+* Lessons
+    * 00 - Intro and Setup
+    * 01 - Find the Middle
+    * 02 - Shapes in Space
+    * 03 - Intro to Radar
+    * 04 - Finite State Machines
+    * 05 - Competitions
 * Guides
-    * World Coordinates and Rotations
+    * Physics
     * Objects
-    * Coding Call/Response
+    * Coding Paradigm
     * Your Ship's 'Computer'
+    * Commands
 * Competitions
     * Bauble Hunt
     * Asteroid Miner
     * Bauble Hunt SCV
     * King of the Bubble
-        * King of Space (Variant using King of the Bubble game parameters)
+        * King of Space (Variant)
 * Talks
     * [You Have Died of Dysentery: Games in Education Are Still Alive - PAXDev 2014](http://www.mikeware.com/2014/08/you-have-died-of-dysentery-games-in-education-are-still-alive/)
     * [Reach for the Stars - PAXDev 2012](http://www.mikeware.com/2012/09/reach-for-the-stars-educating-the-next-generation-using-games/)

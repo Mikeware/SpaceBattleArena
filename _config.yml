@@ -5,6 +5,8 @@ timezone: America/Vancouver
 baseurl: /SpaceBattleArena
 url: http://mikeware.github.io/SpaceBattleArena
 
+githuburl: https://www.github.com/Mikeware/SpaceBattleArena
+
 defaults:
   -
     scope:
