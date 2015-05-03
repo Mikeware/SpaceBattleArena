@@ -13,8 +13,8 @@ The full text of the license is available online: http://opensource.org/licenses
 """
 
 from Game import BasicGame, RoundTimer
-from World.WorldGenerator import ConfiguredWorld, addObjectAwayFromOthers
-from World.Entities import Entity, Ship
+from World.WorldGenerator import ConfiguredWorld, getPositionAwayFromOtherObjects
+from World.WorldEntities import Entity, Ship
 from GUI.ObjWrappers.GUIEntity import GUIEntity
 from World.WorldMath import intpos, friendly_type, PlayerStat
 from GUI.GraphicsCache import Cache
@@ -82,7 +82,7 @@ class CombatExerciseGame(BasicGame):
     def __addBauble(self, player, force=False):
         logging.info("Add Bauble (%s) for Player %d", repr(force), player.netid)
         # add player bauble
-        b = Bauble(addObjectAwayFromOthers(self.world, 80, 30, force))
+        b = Bauble(getPositionAwayFromOtherObjects(self.world, 80, 30, force))
         b.value = 3
 
         self.__baubles[player.netid] = b
@@ -93,7 +93,7 @@ class CombatExerciseGame(BasicGame):
     def __addBaubles(self, w, num, force=False):
         logging.info("Adding %d Baubles (%s)", num, repr(force))
         for i in xrange(num):
-            w.append(Bauble(addObjectAwayFromOthers(w, 100, 30, force)))
+            w.append(Bauble(getPositionAwayFromOtherObjects(w, 100, 30, force)))
         logging.info("Done Adding Baubles")
 
     def worldObjectPreCollision(self, shapes):

@@ -13,8 +13,8 @@ The full text of the license is available online: http://opensource.org/licenses
 """
 
 from Game import BasicGame, RoundTimer
-from World.WorldGenerator import ConfiguredWorld, addObjectAwayFromOthers
-from World.Entities import Entity, Ship
+from World.WorldGenerator import ConfiguredWorld, getPositionAwayFromOtherObjects
+from World.WorldEntities import Entity, Ship
 from GUI.ObjWrappers.GUIEntity import GUIEntity
 from World.WorldMath import intpos, friendly_type, PlayerStat
 from GUI.GraphicsCache import Cache
@@ -131,7 +131,7 @@ class BaubleHuntSCVGame(BasicGame):
                 if r < ent[0]:
                     v = ent[1]
                     break
-            b = Bauble(addObjectAwayFromOthers(w, 80, 30, force), v)
+            b = Bauble(getPositionAwayFromOtherObjects(w, 80, 30, force), v)
             if v == 5:
                 self.__baubles[b.id] = b
             w.append(b)

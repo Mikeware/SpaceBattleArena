@@ -3,7 +3,7 @@ import pygame, random
 from GUIEntity import GUIEntity
 from World.WorldMath import intpos
 from GUI.Helpers import wrapcircle, debugfont
-from World.Entities import BlackHole
+from World.WorldEntities import BlackHole
 from GUI.GraphicsCache import Cache
 
 class PlanetGUI(GUIEntity):

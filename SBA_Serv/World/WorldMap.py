@@ -17,7 +17,7 @@ import thread, threading, time, math
 import pymunk
 import traceback
 from WorldMath import in_circle, wrappos, intpos, friendly_type
-from World.Entities import Planet, Ship
+from World.WorldEntities import Planet, Ship
 from WorldCommands import CloakCommand
 from ThreadStuff.ThreadSafe import ThreadSafeDict
 

@@ -13,7 +13,7 @@ The full text of the license is available online: http://opensource.org/licenses
 """
 
 import Server.MWNL2, logging, random, time, traceback
-from World.Entities import Ship
+from World.WorldEntities import Ship
 from World.WorldCommands import ConvertNetworkMessageToCommand, RadarCommand
 from NetworkCommands import *
 

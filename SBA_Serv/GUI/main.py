@@ -24,7 +24,7 @@ from ObjWrappers.AsteroidWrapper import AsteroidGUI
 from ObjWrappers.WeaponWrappers import TorpedoGUI
 from Game.KingOfTheBubble import Bubble, KingOfTheBubbleGame
 from GraphicsCache import Cache
-from World.Entities import Ship, Planet, Asteroid, Torpedo, BlackHole
+from World.WorldEntities import Ship, Planet, Asteroid, Torpedo, BlackHole
 from Server.MWNL2 import getIPAddress
 from pymunk import Vec2d
 from ThreadStuff.ThreadSafe import ThreadSafeDict

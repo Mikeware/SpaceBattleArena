@@ -13,7 +13,7 @@ The full text of the license is available online: http://opensource.org/licenses
 """
 
 from World.WorldGenerator import ConfiguredWorld
-from World.Entities import Ship, BlackHole
+from World.WorldEntities import Ship, BlackHole
 from Players import Player
 import random, logging, time
 from World.WorldMath import friendly_type

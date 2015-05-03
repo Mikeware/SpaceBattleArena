@@ -1,6 +1,6 @@
 
 import pygame
-from World.Entities import Entity
+from World.WorldEntities import Entity
 from World.WorldMath import intpos
 from GUI.Helpers import wrapcircle, debugfont, namefont
 from GUI.GraphicsCache import Cache

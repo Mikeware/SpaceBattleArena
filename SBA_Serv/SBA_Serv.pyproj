@@ -55,7 +55,7 @@
     <Compile Include="Server\WorldServer.py" />
     <Compile Include="Server\__init__.py" />
     <Compile Include="World\Commanding.py" />
-    <Compile Include="World\Entities.py" />
+    <Compile Include="World\WorldEntities.py" />
     <Compile Include="World\Messaging.py" />
     <Compile Include="World\WorldCommands.py" />
     <Compile Include="World\WorldGenerator.py" />

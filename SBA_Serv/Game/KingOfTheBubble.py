@@ -13,8 +13,8 @@ The full text of the license is available online: http://opensource.org/licenses
 """
 
 from Game import BasicGame, RoundTimer
-from World.WorldGenerator import ConfiguredWorld, addObjectAwayFromOthers
-from World.Entities import Entity, Ship
+from World.WorldGenerator import ConfiguredWorld, getPositionAwayFromOtherObjects
+from World.WorldEntities import Entity, Ship
 from GUI.ObjWrappers.GUIEntity import GUIEntity
 from World.WorldMath import intpos, friendly_type, PlayerStat
 from GUI.GraphicsCache import Cache
@@ -83,7 +83,7 @@ class KingOfTheBubbleGame(BasicGame):
             if setpoints != None:
                 points = setpoints
             if pos == None:
-                npos = addObjectAwayFromOthers(w, 100, 30, force)
+                npos = getPositionAwayFromOtherObjects(w, 100, 30, force)
             else:
                 npos = pos
             bt = self.__bubbletime

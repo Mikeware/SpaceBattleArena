@@ -13,8 +13,8 @@ The full text of the license is available online: http://opensource.org/licenses
 """
 
 from Game import BasicGame, RoundTimer
-from World.WorldGenerator import ConfiguredWorld, addObjectAwayFromOthers
-from World.Entities import Entity, Ship
+from World.WorldGenerator import ConfiguredWorld, getPositionAwayFromOtherObjects
+from World.WorldEntities import Entity, Ship
 from GUI.ObjWrappers.GUIEntity import GUIEntity
 from World.WorldMath import intpos, friendly_type, PlayerStat, in_circle
 from GUI.GraphicsCache import Cache

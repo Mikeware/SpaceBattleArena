@@ -13,8 +13,8 @@ The full text of the license is available online: http://opensource.org/licenses
 """
 
 from Game import BasicGame, RoundTimer
-from World.WorldGenerator import ConfiguredWorld, addObjectAwayFromOthers
-from World.Entities import Entity, Ship, Asteroid, Torpedo
+from World.WorldGenerator import ConfiguredWorld, getPositionAwayFromOtherObjects
+from World.WorldEntities import Entity, Ship, Asteroid, Torpedo
 from GUI.ObjWrappers.GUIEntity import GUIEntity
 from World.WorldMath import intpos, friendly_type, PlayerStat
 from GUI.GraphicsCache import Cache
@@ -63,14 +63,14 @@ class AsteroidMinerGame(BasicGame):
     def __addAsteroid(self, force=False):
         logging.info("Add Asteroid (%s)", repr(force))
         # add player bauble
-        self.world.append(Asteroid(addObjectAwayFromOthers(self.world, 80, 30, force)))
+        self.world.append(Asteroid(getPositionAwayFromOtherObjects(self.world, 80, 30, force)))
 
         logging.info("Done Adding Asteroid")
 
     def __addAsteroids(self, w, num, force=False):
         logging.info("Adding %d Asteroids (%s)", num, repr(force))
         for i in xrange(num):
-            w.append(Asteroid(addObjectAwayFromOthers(w, 100, 30, force)))
+            w.append(Asteroid(getPositionAwayFromOtherObjects(w, 100, 30, force)))
         logging.info("Done Adding Asteroids")
 
     """
