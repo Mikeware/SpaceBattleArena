@@ -28,5 +28,13 @@ public class FireTorpedoCommand extends ShipCommand {
 	 * Gets the one-time energy cost to initiate this command.
 	 * @return the amount of energy consumed by initiating this command (12)
 	 */
-	public static int getInitialEnergyCost() { return 12; } 
+	public static int getInitialEnergyCost() { return 12; }
+	
+	/**
+	 * Fire Torpedo executes immediately.
+	 * 
+	 * @since 2.0
+	 * @return
+	 */
+	public static boolean executesImmediately() { return true; }
 }

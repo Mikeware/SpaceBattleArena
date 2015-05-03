@@ -20,3 +20,5 @@ implements the Spaceship<?> interface.
 3. Executes the TextClient's main method from the SpaceBattle.jar file with the following arguments:
     1. IP address of the server
     2. name of your Java Ship class
+
+We also have a complete set of <a href="java_doc/" target="_blank">Java Docs</a> available.

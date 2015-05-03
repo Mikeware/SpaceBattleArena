@@ -32,4 +32,12 @@ public class RepairCommand extends ShipCommand {
 	 * @return the amount of energy consumed per second while this command is executing (8)
 	 */
 	public static int getOngoingEnergyCost() { return 8; }
+	
+	/**
+	 * Repairing does not block the processing of other commands.
+	 * 
+	 * @since 2.0
+	 * @return
+	 */
+	public static boolean isBlocking() { return false; }
 }

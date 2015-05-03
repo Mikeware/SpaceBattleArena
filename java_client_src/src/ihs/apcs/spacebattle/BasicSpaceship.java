@@ -7,6 +7,8 @@ import ihs.apcs.spacebattle.commands.ShipCommand;
  * 
  * @author Michael A. Hawker
  *
+ * @since 2.0
+ * @version 1.0
  */
 public abstract class BasicSpaceship implements Spaceship<BasicGameInfo> {
 	

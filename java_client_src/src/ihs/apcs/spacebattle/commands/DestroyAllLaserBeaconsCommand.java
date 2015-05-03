@@ -15,5 +15,12 @@ public class DestroyAllLaserBeaconsCommand extends ShipCommand {
 	protected String getName() {
 		return "DAYLB";
 	}
-
+	
+	/**
+	 * Destroy Laser Beacons execute immediately.
+	 * 
+	 * @since 2.0
+	 * @return
+	 */
+	public static boolean executesImmediately() { return true; }
 }

@@ -5,6 +5,8 @@ package ihs.apcs.spacebattle;
  * 
  * @author Michael A. Hawker
  *
+ * @since 2.0
+ * @version 1.0
  */
 public class BasicEnvironment extends Environment<BasicGameInfo> {
 	

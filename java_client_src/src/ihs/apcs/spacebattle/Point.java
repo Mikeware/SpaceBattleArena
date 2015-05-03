@@ -58,7 +58,7 @@ public class Point {
 	 *   east (0 degrees) to a line containing both this and other.  
 	 *   <p>
 	 *   To determine the amount of rotation necessary to face the argument,
-	 *     a ship's current orientation should be subtracted from the result 
+	 *     a ship's current {@link ObjectStatus#getOrientation() orientation} should be subtracted from the result 
 	 *     of this method.
 	 * @param other the location to which to calculate the angle
 	 * @return the absolute angle from this to other 

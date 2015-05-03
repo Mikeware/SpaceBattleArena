@@ -24,6 +24,23 @@ public abstract class ShipCommand {
 	 */
 	public static int getOngoingEnergyCost() { return 0; }
 	
+	/**
+	 * Returns true if the Command will stop other commands from processing. (default true)
+	 * 
+	 * @since 2.0
+	 * @return
+	 */
+	public static boolean isBlocking() { return true; }
+	
+	/**
+	 * Returns true if the Command executes as soon as it is processed in the queue and does not delay for any period of time. (default false)
+	 * 
+	 * All commands which execute immediately are blocking commands; however, since they don't delay, there is not much impact to consider besides energy costs.
+	 * @since 2.0
+	 * @return
+	 */
+	public static boolean executesImmediately() { return false; }
+	
 	public ArrayList<Object> getMessage() throws IllegalArgumentException, IllegalAccessException {
 		ArrayList<Object> list = new ArrayList<Object>();
 		list.add(getName());

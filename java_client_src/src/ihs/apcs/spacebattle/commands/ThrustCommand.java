@@ -43,4 +43,12 @@ public class ThrustCommand extends ShipCommand {
 	 * @return the amount of energy consumed per second while this command is executing (3)
 	 */
 	public static int getOngoingEnergyCost() { return 3; }
+	
+	/**
+	 * Thrust commands don't prevent you from executing other commands.
+	 * 
+	 * If you want to wait for the Thrust to complete, you should issue an Idle command during your next cycle.
+	 * @return
+	 */
+	public static boolean isBlocking() { return false; }
 }

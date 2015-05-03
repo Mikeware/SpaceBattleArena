@@ -21,4 +21,11 @@ public class DeployLaserBeaconCommand extends ShipCommand {
 		return "DLBN";
 	}
 
+	/**
+	 * Deploy Laser Beacons executes immediately.
+	 * 
+	 * @since 2.0
+	 * @return
+	 */
+	public static boolean executesImmediately() { return true; }
 }

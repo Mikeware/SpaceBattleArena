@@ -24,4 +24,12 @@ public class AllStopCommand extends ShipCommand {
 	 * @return the amount of energy consumed by initiating this command (40)
 	 */
 	public static int getInitialEnergyCost() { return 40; }
+	
+	/**
+	 * AllStop executes immediately.
+	 * 
+	 * @since 2.0
+	 * @return
+	 */
+	public static boolean executesImmediately() { return true; }
 }

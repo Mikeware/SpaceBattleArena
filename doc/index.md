@@ -29,6 +29,7 @@ Documentation
 * [Client Setup](client/index.html)
     * [jGRASP](client/jGRASP/index.html)
     * [Eclipse](client/Eclipse/index.html)
+    * <a href="client/java_doc/" target="_blank">Java Docs</a>
 * Server
     * Server Setup
     * Server Config
