@@ -1,5 +1,6 @@
 ---
 title: Home
+layout: home
 ---
 
 Space Battle Arena
@@ -25,7 +26,7 @@ We use [jGRASP](http://www.jgrasp.org/) as our IDE of choice when working with H
 
 Documentation
 ------------------
-* [Client Setup](client/index.html) - [jGRASP](client/jGRASP/jGRASPSetup.html), Eclipse
+* [Client Setup](client/index.html) - [jGRASP](client/jGRASP/index.html), Eclipse
     * Add both GSon and SpaceBattle jars to classpath
     * Create a Ship which implements the Spaceship interface.
     * Execute the TextClient class of the SpaceBattle.jar file with two arguments:
@@ -41,12 +42,17 @@ Documentation
     * Shapes in Space
     * Intro to Radar
     * Finite State Machines
-    * Competitions
-        * Bauble Hunt
-        * Asteroid Miner
-        * Bauble Hunt SCV
-        * King of the Bubble
-            * King of Space (Variant using King of the Bubble game parameters)
+* Guides
+    * World Coordinates and Rotations
+    * Objects
+    * Coding Call/Response
+    * Your Ship's 'Computer'
+* Competitions
+    * Bauble Hunt
+    * Asteroid Miner
+    * Bauble Hunt SCV
+    * King of the Bubble
+        * King of Space (Variant using King of the Bubble game parameters)
 * Talks
     * [You Have Died of Dysentery: Games in Education Are Still Alive - PAXDev 2014](http://www.mikeware.com/2014/08/you-have-died-of-dysentery-games-in-education-are-still-alive/)
     * [Reach for the Stars - PAXDev 2012](http://www.mikeware.com/2012/09/reach-for-the-stars-educating-the-next-generation-using-games/)

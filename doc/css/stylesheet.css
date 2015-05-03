@@ -149,6 +149,12 @@ aside {
   margin: 10px 20px;
 }
 
+.aside-fixed {
+  z-index: 100;
+  position: fixed;
+  top: 64px;
+}
+
 aside .small {
   font-size: 11px;
 }

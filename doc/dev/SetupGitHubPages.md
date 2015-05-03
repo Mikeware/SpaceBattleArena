@@ -1,7 +1,7 @@
 ---
 title: Setup GitHub Pages
 nav:
- - { page: "index.html", title: "Development" }
+ - { url: "index.html", title: "Development" }
 ---
 
 Installing [Jekyll](http://jekyllrb.com/) Builder

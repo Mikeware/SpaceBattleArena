@@ -1,5 +1,8 @@
 ---
 title: Development
+outline-header: Common Development Task Guides
+outline:
+ - { url: "AddSubgame.html", title: "Adding a Subgame" }
 ---
 
 Development
@@ -30,6 +33,3 @@ Space Battle was built against the following versions of libraries:
 * Webpage
     * [See Setup GitHub Pages](SetupGitHubPages.html)
 
-Common Development Task Guides
------------------------------------------
-* [Add a Subgame](AddSubgame.html)

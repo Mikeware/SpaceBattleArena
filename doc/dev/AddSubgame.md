@@ -1,7 +1,7 @@
 ---
 title: Adding a Subgame
 nav:
- - { page: "index.html", title: "Development" }
+ - { url: "index.html", title: "Development" }
 ---
 Adding a Subgame to Space Battle
 =====================

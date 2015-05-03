@@ -1,20 +1,25 @@
 ---
 title: jGRASP Client Environment Setup
 nav:
- - { page: "../index.html", title: "Client Setup" }
+ - { url: "../index.html", title: "Client Setup" }
+outline-header: Outline
+outline:
+ - { url: "#overview", title: "Overview" }
+ - { url: "#environment", title: "Initial Environment Setup" }
+ - { url: "#execution", title: "Execution Instructions" }
 ---
 
 jGRASP Client Environment Setup
 =====================
 
-Overview
+<a name="overview"></a>Overview
 -----------
 
 This document provides instructions for setting up the Java environment for developing code which controls a ship in the [Space Battle Arena](http://battlearena.mikeware.com/) (SBA) programming game.
 
 These instructions were prepared for [jGRASP](http://www.jgrasp.org/) 1.8 and above.
 
-Initial Environment Setup
+<a name="environment"></a>Initial Environment Setup
 -----------------------------
 
 Create a Spaceship class:
@@ -54,7 +59,7 @@ public class ExampleShip extends BasicSpaceship {
 	
 4. Save and Compile your class.
 
-Execution Instructions
+<a name="execution"></a>Execution Instructions
 -------------------------
 
 **Note: Do not terminate the program through the jGRASP UI; instead, click in the console window and type 'QUIT' to gracefully close the connection.**
