@@ -41,6 +41,7 @@ header {
   border-bottom: 1px dashed #b5e853;
   padding: 20px 0;
   margin: 0 0 0px 0;
+  overflow: hidden;
 }
 
 header h1 {
@@ -78,7 +79,7 @@ header h2 {
 */
 
 nav {
-  background: rgba(0, 0, 0, 0.1);
+  background: #080808;
   width: 100%;
   border-bottom: 1px dashed #b5e853;
   padding: 10px 0 10px;
@@ -98,6 +99,13 @@ nav span:before {
   margin-left: -37px;
   margin-right: 21px;
   line-height: 16px;
+}
+
+.navbar-fixed {
+  top: 0;
+  z-index: 100;
+  position: fixed;
+  width: 100%;
 }
 
 /* Main Content
@@ -215,7 +223,7 @@ hr {
 */
 
 footer {
-  background: rgba(0, 0, 0, 0.1);
+  background: #080808;
   width: 100%;
   border-top: 1px dashed #b5e853;
   padding: 10px 0 40px;
