@@ -65,10 +65,11 @@ else:
     # SimpleWorld((worldwidth, worldheight), numplanet, numblackhole, numasteroid)
     
     if not options.nolog:
+        logformat='%(asctime)s|%(relativeCreated)d|%(levelname)s|%(threadName)s|%(module)s|%(lineno)d|%(funcName)s|%(message)s'
         if options.verbose:
-            logging.basicConfig(level=logging.DEBUG, filename=options.logfilename)
+            logging.basicConfig(level=logging.DEBUG, filename=options.logfilename, format=logformat)
         else:
-            logging.basicConfig(level=logging.INFO, filename=options.logfilename)
+            logging.basicConfig(level=logging.INFO, filename=options.logfilename, format=logformat)
         #eif
         logging.info("Starting " + titlever)
         logging.info("Logging to " + options.logfilename + " Verbose: " + str(options.verbose))

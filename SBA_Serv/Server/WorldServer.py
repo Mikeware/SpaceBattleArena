@@ -135,7 +135,7 @@ class WorldServer(object):
                     scmd = None
                 else:
                     logging.info("Processing Ship #%d Command %s", ship.id, repr(scmd))
-                    logging.info("Ship Queue #%d %s", ship.id, repr(ship.commandQueue))
+                    logging.info("Ship Queue Before #%d %s", ship.id, repr(ship.commandQueue))
                     if ship.commandQueue.isBlockingCommandOnTop():
                         logging.error("CHEAT: %d, %s", ship.id, repr(ship.commandQueue))
                         print "CHEAT ", ship.id                        
@@ -145,6 +145,8 @@ class WorldServer(object):
                         #logging.error("%s", repr(ship.commandQueue))                       
                         ship.commandQueue.append(scmd)
                         #ship.commandQueue.update(0)
+
+                        logging.info("Ship Queue After #%d %s", ship.id, repr(ship.commandQueue))
 
                         # block server response on a blocking command...
                         #if scmd.blocking
