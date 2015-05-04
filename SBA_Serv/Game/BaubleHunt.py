@@ -14,7 +14,8 @@ The full text of the license is available online: http://opensource.org/licenses
 
 from Game import BasicGame, RoundTimer
 from World.WorldGenerator import ConfiguredWorld, getPositionAwayFromOtherObjects
-from World.WorldEntities import Entity, Ship
+from World.Entities import PhysicalRound, Entity
+from World.WorldEntities import Ship
 from GUI.ObjWrappers.GUIEntity import GUIEntity
 from World.WorldMath import intpos, friendly_type, PlayerStat
 from GUI.GraphicsCache import Cache
@@ -242,13 +243,13 @@ class BaubleWrapper(GUIEntity):
 
         super(BaubleWrapper, self).draw(surface, flags)
 
-class Bauble(Entity):
+class Bauble(PhysicalRound):
     WRAPPERCLASS = BaubleWrapper
     """
     Baubles are small prizes worth different amounts of points
     """
     def __init__(self, pos):
-        super(Bauble, self).__init__(2000, 8, pos)
+        super(Bauble, self).__init__(8, 2000, pos)
         self.shape.elasticity = 0.8
         self.health = PlayerStat(0)
 

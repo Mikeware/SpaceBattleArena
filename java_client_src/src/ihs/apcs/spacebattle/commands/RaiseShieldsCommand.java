@@ -41,4 +41,11 @@ public class RaiseShieldsCommand extends ShipCommand {
 	 * @return the amount of energy consumed per second while this command is executing (4)
 	 */
 	public static int getOngoingEnergyCost() { return 4; }
+	
+	/**
+	 * Raising Shields does not block the processing of other commands.
+	 * 
+	 * @return
+	 */
+	public static boolean isBlocking() { return false; }
 }

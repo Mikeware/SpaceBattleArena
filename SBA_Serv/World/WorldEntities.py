@@ -12,67 +12,21 @@ You should have received a copy of the GNU General Public License along with thi
 The full text of the license is available online: http://opensource.org/licenses/GPL-2.0
 """
 
-import random, pymunk, math, logging
+import random
+import pymunk
+import math
+import logging
 
 from Messaging import MessageQueue
 from Commanding import CommandSystem
 from WorldMath import PlayerStat
+from Entities import PhysicalRound
 
-class PhysicalRound(object):
-    IDs = random.randint(100, 200)
-
-    def __init__(self, mass, radius, pos):
-        self.id = PhysicalRound.IDs
-        PhysicalRound.IDs += random.randint(1, 8)
-        self.mass = mass
-        self.radius = radius
-        self.inertia = pymunk.moment_for_circle(mass, 0, radius, (0, 0))
-        self.body = pymunk.Body(mass, self.inertia)
-        self.body.position = pos
-        self.shape = pymunk.Circle(self.body, radius, (0, 0))
-        self.destroyed = False
-        self.TTL = None
-        self.explodable = True
-
-    def addToSpace(self, space):
-        self.shape.id = self.id
-        space.add(self.body, self.shape)
-
-    def removeFromSpace(self, space):
-        if hasattr(self.shape, "id"):
-            logging.info("Removing Shape #%d", self.shape.id)
-        else:
-            logging.error("Shape doesn't have ID for Object #%d", self.id)
-        #eif
-        space.remove(self.shape, self.body)
-
-class Entity(PhysicalRound):
-    """Describes the basic properties for any entities in the game world"""
-
-    def __init__(self, mass, radius, pos):
-        super(Entity, self).__init__(mass, radius, pos)
-        self.messageQueue = MessageQueue()
-        self.health = PlayerStat(100)
-        self.energy = PlayerStat(0)
-        self.energyRechargeRate = 0 # Amount of Energy Recovered Per Second
-        self.timealive = 0
-
-    def update(self, t):
-        self.timealive += t
-        #self.energy += self.energyRechargeRate * t
-        #self.position = self.velocity.updatePosition(self.position, t)
-
-    """
-    Should add keys to objData for extra properties object has over base
-    """
-    def getExtraInfo(self, objData):
-        pass
-
-class Ship(Entity):
+class Ship(PhysicalRound):
     """Describes a ship"""
 
     def __init__(self, pos, world):
-        super(Ship, self).__init__(500, 28, pos)
+        super(Ship, self).__init__(28, 500, pos)
         self._world = world
         self.energyRechargeRate = 4
 
@@ -121,7 +75,7 @@ class Ship(Entity):
         objData["CURSHIELD"] = self.shield.value
         objData["MAXSHIELD"] = self.shield.maximum
 
-class Planet(Entity):
+class Planet(PhysicalRound):
     """
     Planets have stockpiles of energy which slowly recharge overtime
     Player's can leach energy off of a planet at twice their Energy Recharge Rate (Recover Energy Twice as Fast)
@@ -129,9 +83,10 @@ class Planet(Entity):
     """
     EnergyRechargeRateFactor = 2
 
-    def __init__(self, pos, mass=-1, radius=60):
-        if mass == -1: mass = 150000 + random.randint(0, 50000)
-        super(Planet, self).__init__(mass, radius, pos)
+    def __init__(self, pos, radius=60, mass=-1):
+        if mass == -1: mass = pymunk.inf
+        super(Planet, self).__init__(radius, mass, pos)
+
         #self.energyRechargeRate = 1
         #self.energy = PlayerStat(random.randint(50, 200))
 
@@ -156,20 +111,20 @@ class BlackHole(Planet):
     BlackHoles are similar to planets however have no resources and have stronger gravity fields
     """
     def __init__(self, pos):
-        super(BlackHole, self).__init__(pos, 400000, 16)
+        super(BlackHole, self).__init__(pos, 16)
         self.gravity = 20 + random.randint(32, 48)
         self.gravityFieldLength = 48 + random.randint(16, 160)
 
         self.resources = PlayerStat(0)
 
-class Asteroid(Entity):
+class Asteroid(PhysicalRound):
     """
     Asteroids are given an initial random direction and speed and will travel in that direction forever until disrupted...
     """
 
     def __init__(self, pos):
         #TODO: Make Asteroids of different sizes
-        super(Asteroid, self).__init__(random.randint(1500, 3500), 16, pos)
+        super(Asteroid, self).__init__(16, random.randint(1500, 3500), pos)
         self.shape.elasticity = 0.8
         self.health = PlayerStat(self.mass / 15.0)
 
@@ -179,14 +134,14 @@ class Asteroid(Entity):
         v = random.randint(20000, 40000)
         self.body.apply_impulse((random.randint(-1, 1) * v, random.randint(-1, 1) * v), (0,0))
 
-class Torpedo(Entity):
+class Torpedo(PhysicalRound):
     """
     Torpedos are weapons which are launched from ships at a given position and direction
     """
     def __init__(self, pos, direction, owner=None):
         pos = (pos[0] + math.cos(math.radians(-direction)) * 32,
                pos[1] + math.sin(math.radians(-direction)) * 32)
-        super(Torpedo, self).__init__(60, 6, pos)
+        super(Torpedo, self).__init__(6, 60, pos)
         self.TTL = 4 # Torpedos last 4 seconds
         self.shape.elasticity = 0.8
         self.health = PlayerStat(1)

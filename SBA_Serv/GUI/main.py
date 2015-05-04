@@ -262,12 +262,12 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                     zoomout = not zoomout
                 elif event.key == K_m:
                     mouselock = not mouselock
-                elif event.key == K_PAGEUP:
+                elif event.key == K_PAGEUP and len(shipids) > 0:
                     if trackshipid == None: 
                         trackshipid = shipids[0]
                     else:
                         trackshipid = shipids[shipids.index(trackshipid) - 1]
-                elif event.key == K_PAGEDOWN:
+                elif event.key == K_PAGEDOWN and len(shipids) > 0:
                     if trackshipid == None: 
                         trackshipid = shipids[-1]
                     else:

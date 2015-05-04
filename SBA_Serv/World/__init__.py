@@ -1,1 +1,1 @@
-__all__ = ["Entities", "Messaging","Commanding","WorldMath","WorldCommands","WorldGenerator","WorldMap"]
+__all__ = ["Entities","WorldEntities","Messaging","Commanding","WorldMath","WorldCommands","WorldGenerator","WorldMap"]

@@ -85,7 +85,9 @@ else:
             game = mod.__dict__[rungame+"Game"](cfg)
             logging.info("Running Game: " + rungame)
         except:
-            pass #ignore
+            logging.error("Could not start Game " + rungame)
+            logging.error(traceback.format_exc())
+            print traceback.format_exc()        
     #eif
     
     if game == None or rungame == "BasicGame" or rungame == None or rungame.strip() == "":

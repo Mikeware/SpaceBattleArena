@@ -17,7 +17,7 @@ import random
 import math
 from pymunk import Vec2d
 from WorldMath import intpos
-import Entities
+import WorldEntities
 #from Entities import Torpedo
 
 #TODO: Have Command Definition? List parameters?
@@ -366,9 +366,9 @@ class FireTorpedoCommand(OneTimeCommand):
     def onetime(self):        
         self._obj.player.sound = "LASER"        
         if self.__direction == 'F':
-            self._obj._world.append(Entities.Torpedo(self._obj.body.position, self._obj.rotationAngle, self._obj))
+            self._obj._world.append(WorldEntities.Torpedo(self._obj.body.position, self._obj.rotationAngle, self._obj))
         elif self.__direction == 'B':
-            self._obj._world.append(Entities.Torpedo(self._obj.body.position, self._obj.rotationAngle - 180, self._obj))
+            self._obj._world.append(WorldEntities.Torpedo(self._obj.body.position, self._obj.rotationAngle - 180, self._obj))
         #eif
 
 class RepairCommand(Command):
