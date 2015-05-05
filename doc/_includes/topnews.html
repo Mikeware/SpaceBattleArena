@@ -2,7 +2,7 @@
     <h1>News</h1>
     <ul>
     {% for post in site.posts limit: 3 %}
-        <li><a href="{{ post.url }}">{{ post.title }}</a><br/><span class="small">{{ post.abstract }}</br>- {{ post.date | date_to_long_string }}</span></br></br></li>
+        <li><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a><br/><span class="small">{{ post.abstract }}</br>- {{ post.date | date_to_long_string }}</span></br></br></li>
     {% endfor %}
     </ul>
     
