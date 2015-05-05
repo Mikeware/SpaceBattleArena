@@ -167,7 +167,19 @@ aside .small {
   -webkit-font-smoothing: antialiased;
 }
 section img {
-  max-width: 100%
+  max-width: 100%  
+}
+
+#main_content .left{
+    float: left;
+    padding-right: 16px;
+    padding-bottom: 8px;
+}
+
+#main_content .right{
+    float: right;
+    padding-left: 16px;
+    padding-bottom: 8px;
 }
 
 h1, h2, h3, h4, h5, h6 {
