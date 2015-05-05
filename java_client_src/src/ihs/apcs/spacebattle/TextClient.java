@@ -101,6 +101,7 @@ public class TextClient implements Client {
 			// Wait for termination command
 			System.out.println("Type QUIT to disconnect from server and end program");
 			Scanner kb = new Scanner(System.in);
+			// TODO: Be able to break-out of this loop and end program when the client receives a disconnect message
 			while (kb.hasNextLine() && !kb.nextLine().equalsIgnoreCase("QUIT"));
 			kb.close();
 		} catch (IOException ex) {
@@ -147,7 +148,7 @@ public class TextClient implements Client {
 			RegistrationData data = ship.registerShip(numImages, width, height);
 			data = new RegistrationData(data.getName() + shipSuffix, data.getColor(), data.getImage());
 			
-			MwnpMessage response = new MwnpMessage(new int[]{netId, 0}, data);
+			MwnpMessage response = new MwnpMessage(new Integer[]{netId, 0}, data);
 			messenger.sendMessage(response);
 		} else if (msg.getCommand().equals("ENV")) {
 			Environment<?> env = (Environment<?>)msg.getData();
@@ -179,7 +180,7 @@ public class TextClient implements Client {
 			} else if (cmd instanceof SelfDestructCommand) {
 				disconnect();
 			} else {
-				MwnpMessage response = new MwnpMessage(new int[]{netId, 0}, cmd);
+				MwnpMessage response = new MwnpMessage(new Integer[]{netId, 0}, cmd);
 				messenger.sendMessage(response);
 			}
 		} else if (msg.getCommand().equals("ERROR")) {
@@ -195,7 +196,7 @@ public class TextClient implements Client {
 		System.out.println("Attempting to disconnect...");
 		if (!disconnected) {
 			logMessage("Sending disconnect message...");
-			MwnpMessage disconnect = new MwnpMessage(new int[]{netId, 0}, "MWNL2_DISCONNECT", null);
+			MwnpMessage disconnect = new MwnpMessage(new Integer[]{netId, 0}, "MWNL2_DISCONNECT", null);
 			messenger.sendMessage(disconnect);
 			logMessage("Ending listener...");
 			listener.end();

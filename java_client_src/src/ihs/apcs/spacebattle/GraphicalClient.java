@@ -120,7 +120,7 @@ public class GraphicalClient implements Runnable, Client {
 			
 			RegistrationData data = ship.registerShip(numImages, width, height);
 			
-			MwnpMessage response = new MwnpMessage(new int[]{netId, 0}, data);
+			MwnpMessage response = new MwnpMessage(new Integer[]{netId, 0}, data);
 			messenger.sendMessage(response);
 		} else if (msg.getCommand().equals("ENV")) {
 			Environment<?> env = (Environment<?>)msg.getData();
@@ -140,7 +140,7 @@ public class GraphicalClient implements Runnable, Client {
 			} else if (cmd instanceof SelfDestructCommand) {
 				disconnect();
 			} else {
-				MwnpMessage response = new MwnpMessage(new int[]{netId, 0}, cmd);
+				MwnpMessage response = new MwnpMessage(new Integer[]{netId, 0}, cmd);
 				messenger.sendMessage(response);
 			}
 		} else if (msg.getCommand().equals("ERROR")) {
@@ -152,7 +152,7 @@ public class GraphicalClient implements Runnable, Client {
 		System.out.println("Attempting to disconnect...");
 		if (!disconnected) {
 			System.out.println("Sending disconnect message...");
-			MwnpMessage disconnect = new MwnpMessage(new int[]{netId, 0}, "MWNL2_DISCONNECT", null);
+			MwnpMessage disconnect = new MwnpMessage(new Integer[]{netId, 0}, "MWNL2_DISCONNECT", null);
 			messenger.sendMessage(disconnect);
 			System.out.println("Ending listener...");
 			listener.end();

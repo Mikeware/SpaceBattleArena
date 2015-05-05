@@ -11,7 +11,7 @@ import ihs.apcs.spacebattle.util.StringMap;
 import ihs.apcs.spacebattle.util.StringStringMap;
 
 public class MwnpMessage {
-	private int[] ids;
+	private Integer[] ids;
 	private String command;
 	private Object data;
 	
@@ -47,26 +47,26 @@ public class MwnpMessage {
 		}
 	}
 	
-	public MwnpMessage(int[] ids, String command, Object data) {
+	public MwnpMessage(Integer[] ids, String command, Object data) {
 		this.ids = ids;
 		this.command = command;
 		this.data = data;
 	}
 	
-	public MwnpMessage(int[] ids, ShipCommand cmd) throws IllegalArgumentException, IllegalAccessException {
+	public MwnpMessage(Integer[] ids, ShipCommand cmd) throws IllegalArgumentException, IllegalAccessException {
 		this.ids = ids;
 		this.command = "SCMD";
 		this.data = cmd.getMessage();
 	}
 	
-	public MwnpMessage(int[] ids, RegistrationData regData) {
+	public MwnpMessage(Integer[] ids, RegistrationData regData) {
 		this.ids = ids;
 		this.command = "REGISTER";
 		this.data = regData;
 	}
 	
-	public int getSenderId() { return ids[0]; }
-	public int getReceiverId() { return ids[1]; }
+	public Integer getSenderId() { return ids[0]; }
+	public Integer getReceiverId() { return ids[1]; }
 	public String getCommand() { return command; }
 	public Object getData() { return data; }
 	
@@ -91,12 +91,12 @@ public class MwnpMessage {
 			String data = messageText.substring(id.length() + command.length() + 2);		
 			
 			return new MwnpMessage (
-					gson.fromJson(id, int[].class),
+					gson.fromJson(id, Integer[].class),
 					gson.fromJson(command, String.class), 
 					gson.fromJson(data, dataType));
 		} else {
 			return new MwnpMessage (
-					gson.fromJson(id, int[].class), // TODO: handle [#, null] type message on broadcast of server closing 
+					gson.fromJson(id, Integer[].class), 
 					gson.fromJson(command, String.class), 
 					null);			
 		}
