@@ -13,7 +13,7 @@ The full text of the license is available online: http://opensource.org/licenses
 """
 
 from World.WorldGenerator import ConfiguredWorld
-from World.WorldEntities import Ship, BlackHole
+from World.WorldEntities import Ship, BlackHole, Nebula
 from Players import Player
 import random, logging, time
 from World.WorldMath import friendly_type
@@ -255,8 +255,9 @@ class BasicGame(object):
     """
     def worldObjectPreCollision(self, shapes):
         for shape in shapes:
-            if isinstance(self.world[shape.id], BlackHole):
-                return [ False, [] ]                
+            obj = self.world[shape.id]
+            if isinstance(obj, BlackHole) or isinstance(obj, Nebula):
+                return [ False, [] ]
 
     """
     Called by the physics engine when two objects collide

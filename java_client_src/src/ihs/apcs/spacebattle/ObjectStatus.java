@@ -36,7 +36,7 @@ public class ObjectStatus {
 	private double MAXENERGY;
 	private double ENERGYRECHARGERATE;
 
-	private double ROTATION; // Ship Only
+	private double ROTATION; // Ship,Nebula Only
 	private double ROTATIONSPEED; // Ship Only
 	private double CURSHIELD; // Ship Only
 	private double MAXSHIELD; // Ship Only
@@ -45,10 +45,11 @@ public class ObjectStatus {
 	// Game Specific
 	private double VALUE; // Bubble, Bauble or Ship Only
 	private int NUMSTORED; // Ship Only - Number of Baubles Carried
-	private double HITRADIUS; // Bubble Only
+	private double HITRADIUS; // Round Only
 	
-	private int GRAVITY; // Planet/BlackHole Only
-	private int GRAVITYFIELDLENGTH; // Planet/BlackHole Only	
+	private int PULL; // Planet/BlackHole/Nebula Only
+	private int MAJOR; // Planet/BlackHole/Nebula Only
+	private int MINOR; // Planet/BlackHole/Nebula Only
 	
 	private int OWNERID; // Torpedo/HomeBase Only
 	
@@ -135,7 +136,7 @@ public class ObjectStatus {
 	
 	// Ship Only
 	/**
-	 * Gets the current Orientation of a Ship.
+	 * Gets the current Orientation of a Ship or Nebula.
 	 * @return
 	 */
 	public double getOrientation() { return ROTATION; }
@@ -173,21 +174,31 @@ public class ObjectStatus {
 	public int getNumberStored() { return NUMSTORED; }
 	
 	/**
-	 * Gets the radius of the object needed for collision detection. This tells you an object's size.
+	 * Gets the radius of the object needed for collision detection. This tells you an object's radius.
 	 * @return
 	 */
 	public double getHitRadius() { return HITRADIUS; }
 	
 	/**
-	 * Gets the strength of the gravity of a Planet or BlackHole. A higher number represents a stronger pull.
+	 * Gets the strength of the gravity or drag of a Planet, BlackHole or Nebula. A higher number represents a stronger effect.
 	 * @return
 	 */
-	public int getGravityStrength() { return GRAVITY; }
+	public int getPullStrength() { return PULL; }
 	/**
-	 * Gets the radius around a Planet or BlackHole that will cause a gravity effect.
+	 * Gets the length of a Planet, BlackHole, or Nebula on its major axis.  For Planets and BlackHoles, the Major and Minor lengths will be the same.
+	 * <p>
+	 * For Planets and BlackHoles this length represents the size of the gravitational field around it.  The {@link #getPullStrength()} method will tell you how much it will effect your ship.
+	 * <p>
+	 * For Nebula this length is oriented in the Nebula's direction/rotation and represents its size.  If your ship is in the Nebula, it will slow down based on the {@link #getPullStrength()} amount.
 	 * @return
 	 */
-	public int getGravityFieldLength() { return GRAVITYFIELDLENGTH; }
+	public int getAxisMajorLength() { return MAJOR; }
+	
+	/**
+	 * Gets the length from the center of a Nebula that is perpendicular to the direction/rotation of the Nebula.
+	 * @return
+	 */
+	public int getAxisMinorLength() { return MINOR; }
 	
 	/**
 	 * Gets the ID of the Owner of this object.  This could be who fired a Torpedo or who owns a HomeBase.

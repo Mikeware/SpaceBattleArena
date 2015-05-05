@@ -15,16 +15,18 @@ The full text of the license is available online: http://opensource.org/licenses
 import pygame, sys, random, logging, math, datetime
 from collections import deque
 from pygame.locals import *
+from operator import attrgetter
 
 from World.WorldMap import GameWorld
 
 from ObjWrappers.ShipWrapper import ShipGUI
+from ObjWrappers.NebulaWrapper import NebulaGUI
 from ObjWrappers.PlanetWrapper import PlanetGUI
 from ObjWrappers.AsteroidWrapper import AsteroidGUI
 from ObjWrappers.WeaponWrappers import TorpedoGUI
 from Game.KingOfTheBubble import Bubble, KingOfTheBubbleGame
 from GraphicsCache import Cache
-from World.WorldEntities import Ship, Planet, Asteroid, Torpedo, BlackHole
+from World.WorldEntities import Ship, Planet, Asteroid, Torpedo, BlackHole, Nebula
 from Server.MWNL2 import getIPAddress
 from pymunk import Vec2d
 from ThreadStuff.ThreadSafe import ThreadSafeDict
@@ -83,6 +85,7 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
     #shipw.ship.velocity.magnitude = 5
 
     # World Registration
+    bgobjects = ThreadSafeDict() # items we want always in the background
     objects = ThreadSafeDict()
     shipids = []
     trackshipid = None
@@ -90,39 +93,49 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
         logging.debug("GUI: Add/Remove Obj %s (%s) [%d]", repr(obj), repr(added), thread.get_ident())
         try:
             if added:
+                # TODO: #18 - Clean-up this by auto creating wrapper on name...
                 if isinstance(obj, Ship):
-                    logging.debug("GUI: Adding Ship")
+                    logging.debug("GUI: Adding Ship #%d", obj.id)
                     objects[obj.id] = ShipGUI(obj, world)
                     shipids.append(obj.id)
-                    logging.debug("GUI: Added Ship")
+                    logging.debug("GUI: Added Ship #%d", obj.id)
+                elif isinstance(obj, Nebula):
+                    logging.debug("GUI: Adding Nebula #%d", obj.id)
+                    bgobjects[obj.id] = NebulaGUI(obj, world)
+                    logging.debug("GUI: Added Nebula #%d", obj.id)
                 elif isinstance(obj, Planet):
-                    logging.debug("GUI: Adding Planet")
-                    objects[obj.id] = PlanetGUI(obj, world)
-                    logging.debug("GUI: Added Planet")
+                    logging.debug("GUI: Adding Planet #%d", obj.id)
+                    bgobjects[obj.id] = PlanetGUI(obj, world)
+                    logging.debug("GUI: Added Planet #%d", obj.id)
                 elif isinstance(obj, Asteroid):
-                    logging.debug("GUI: Adding Asteroid")
+                    logging.debug("GUI: Adding Asteroid #%d", obj.id)
                     objects[obj.id] = AsteroidGUI(obj, world)
-                    logging.debug("GUI: Added Asteroid")
+                    logging.debug("GUI: Added Asteroid #%d", obj.id)
                 elif isinstance(obj, Torpedo):
-                    logging.debug("GUI: Adding Torpedo")
+                    logging.debug("GUI: Adding Torpedo #%d", obj.id)
                     objects[obj.id] = TorpedoGUI(obj, world)
-                    logging.debug("GUI: Added Torpedo")
+                    logging.debug("GUI: Added Torpedo #%d", obj.id)
                 else:
-                    logging.debug("GUI: Adding %s", repr(obj))
+                    logging.debug("GUI: Adding %s #%d", repr(obj), obj.id)
                     objects[obj.id] = obj.WRAPPERCLASS(obj, world)
-                    logging.debug("GUI: Added %s", repr(obj))
+                    logging.debug("GUI: Added %s %%d", repr(obj), obj.id)
                 #eif
             else:
                 if isinstance(obj, Ship):
-                    logging.debug("GUI: Ship Dying")
+                    logging.debug("GUI: Ship #%d Dying", obj.id)
                     ship = objects.get(obj.id, None)
                     if ship != None:
                         ship.dying = True
-                        logging.debug("GUI: Ship Set Dying")
+                        logging.debug("GUI: Ship #%d Set Dying", obj.id)
                 elif obj.id in objects:
-                    logging.debug("GUI: Removing Object")
+                    logging.debug("GUI: Removing Object #%d", obj.id)
                     del objects[obj.id]
-                    logging.debug("GUI: Removed Object")
+                    logging.debug("GUI: Removed Object #%d", obj.id)
+                elif obj.id in bgobjects:
+                    logging.debug("GUI: Removing BG Object #%d", obj.id)
+                    del bgobjects[obj.id]
+                    logging.debug("GUI: Removed BG Object #%d", obj.id)
+                #eif
             #eif
         except:
             logging.error("GUI ERROR")
@@ -195,12 +208,6 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
     notexit = True
     while notexit:
         t = pygame.time.get_ticks() / 1000.0
-        #windowSurface.fill(colorBlack)
-
-        #shipw.draw(windowSurface)
-
-        #shipw.ship.rotationAngle += 1
-        #shipw.ship.update(t)
 
         #for star in stars:
         #    star.draw(windowSurface)
@@ -213,7 +220,14 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
         #for x in xrange(offsetx, resolution[0], 512):
         #    for y in xrange(offsety, resolution[1], 512):
         #        worldsurface.blit(spacetexture, (x, y))
+
+        # draw background items first in specific z-order
+        for obj in sorted(bgobjects.values(), key=attrgetter('zorder')):
+            obj.draw(worldsurface, flags)
+            if obj.dead:
+                del bgobjects[obj._worldobj.id]
        
+        # draw active objects
         for obj in objects:
             obj.draw(worldsurface, flags)
             if hasattr(obj._worldobj, "player") and obj._worldobj.player.sound != None:
@@ -333,13 +347,14 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                 elif mousemode == "Destroy":
                     mousemode = None                
                     v = Vec2d(x, y)
-                    for obj in objects:
-                        if math.sqrt(obj._worldobj.body.position.get_dist_sqrd(v)) <= 32:
-                            logging.info("[GUI] Destroying Object #%d", obj._worldobj.id)
-                            if isinstance(obj, ShipGUI):
-                                obj._worldobj.killed = True
-                            world.remove(obj._worldobj)
-                            break
+                    for lst in objects, bgobjects:
+                        for obj in lst:
+                            if math.sqrt(obj._worldobj.body.position.get_dist_sqrd(v)) <= 32:
+                                logging.info("[GUI] Destroying Object #%d", obj._worldobj.id)
+                                if isinstance(obj, ShipGUI):
+                                    obj._worldobj.killed = True
+                                world.remove(obj._worldobj)
+                                break
                 elif mousemode == "Explode":
                     mousemode = None                
                     world.causeExplosion((x, y), 256, 1000)

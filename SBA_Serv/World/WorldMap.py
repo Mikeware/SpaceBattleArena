@@ -17,7 +17,7 @@ import thread, threading, time, math
 import pymunk
 import traceback
 from WorldMath import in_circle, wrappos, intpos, friendly_type
-from World.WorldEntities import Planet, Ship
+from World.WorldEntities import Planet, Ship, Nebula
 from WorldCommands import CloakCommand
 from ThreadStuff.ThreadSafe import ThreadSafeDict
 
@@ -39,6 +39,7 @@ class GameWorld(object):
         self.__objects = ThreadSafeDict()
         self.__addremovesem = threading.Semaphore()
         self.__planets = []
+        self.__nebulas = []
         self.__objectListener = []
         self.__toremove = []
         self.__toadd = []        
@@ -126,6 +127,8 @@ class GameWorld(object):
             added = True
             if isinstance(item, Planet):
                 self.__planets.append(item)
+            elif isinstance(item, Nebula):
+                self.__nebulas.append(item)
         self.__addremovesem.release()
         logging.debug("SEMAPHORE REL append [%d]", thread.get_ident())                
         if added:
@@ -153,6 +156,8 @@ class GameWorld(object):
             del self.__objects[key.id]
             if key in self.__planets:
                 self.__planets.remove(key)
+            elif key in self.__nebulas:
+                self.__nebulas.remove(key)
         self.__addremovesem.release()           
         logging.debug("SEMAPHORE REL delitem [%d]", thread.get_ident())
 
@@ -164,6 +169,15 @@ class GameWorld(object):
                     self.__space.step(MINIMUM_GAMESTEP_TIME) # Advance Physics Engine
                 
                 tstamp = time.time()
+                # find objects in nebulas
+                for neb in self.__nebulas:
+                    for shape in self.__space.shape_query(neb.shape):
+                        # Set value to two, so that if we're still in the nebula
+                        # for another loop, that we don't toggle in/out of nebula between slices
+                        # across threads
+                        self[shape.id].in_nebula = [2, neb]
+
+                # update all game objects
                 for obj in self: # self is dictionary
                     # Wrap Object in World
                     if obj.body.position[0] < 0:
@@ -180,11 +194,18 @@ class GameWorld(object):
                         for planet in self.__planets:
                             for point in wrappos(obj.body.position, planet.gravityFieldLength, self.size):
                                 if in_circle(planet.body.position, planet.gravityFieldLength, point):                        
-                                    obj.body.apply_impulse((point - planet.body.position) * -planet.gravity * lasttime, (0,0))
+                                    obj.body.apply_impulse((point - planet.body.position) * -planet.pull * lasttime, (0,0))
                                     break
                     
                     # Update and Run Commands
                     obj.update(lasttime)
+                    if obj.in_nebula != None:
+                        # slow down objects in Nebula
+                        if obj.body.velocity.length > 0.1:
+                            obj.body.velocity.length -= (obj.in_nebula[1].pull / obj.mass) * lasttime
+                        obj.in_nebula[0] -= 1 # decrement count
+                        if obj.in_nebula[0] <= 0:
+                            obj.in_nebula = None
 
                     if obj.TTL != None and obj.timealive > obj.TTL:
                         del self[obj]                        
@@ -192,6 +213,8 @@ class GameWorld(object):
 
                 # game time notification
                 self.__game.update(lasttime)
+
+                # update time
                 lasttime = time.time() - tstamp
                            
                 logging.debug("SEMAPHORE ACQ gameloop [%d]", thread.get_ident())
@@ -257,7 +280,7 @@ class GameWorld(object):
         objData["MAXENERGY"] = obj.energy.maximum
         objData["ENERGYRECHARGERATE"] = obj.energyRechargeRate
         objData["MASS"] = obj.mass
-        objData["HITRADIUS"] = obj.radius
+        objData["HITRADIUS"] = obj.radius #TODO: Move to entites that have this i.e. physicalround?
         objData["TIMEALIVE"] = obj.timealive
 
         obj.getExtraInfo(objData)

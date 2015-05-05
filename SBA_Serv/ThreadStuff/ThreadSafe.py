@@ -1,10 +1,13 @@
 
 class ThreadSafeDict(dict):
-        def __init__(self, *args):
-                dict.__init__(self, args)
+    def __init__(self, *args):
+        dict.__init__(self, args)
 
-        def __iter__(self):
-                return ThreadSafeDictIterator(self)
+    def __iter__(self):
+        return ThreadSafeDictIterator(self)
+
+    def iteritems(self):
+        return ThreadSafeDictIterator(self)
 
 """
         def append(self, i):

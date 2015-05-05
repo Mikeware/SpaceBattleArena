@@ -30,6 +30,8 @@ class Entity(object):
         self.energyRechargeRate = 0 # Amount of Energy Recovered Per Second
         self.timealive = 0
 
+        self.in_nebula = None
+
     def update(self, t):
         """Called each game frame to update the object
 
@@ -65,7 +67,8 @@ class PhysicsCore(Entity):
     """
     def __init__(self, mass, pos):
         super(PhysicsCore, self).__init__()
-        self._constructPhysics(mass, pos)        
+        self._constructPhysics(mass, pos)
+        self.body.position = pos
         
         self.destroyed = False
         self.TTL = None
@@ -93,7 +96,10 @@ class PhysicsCore(Entity):
 class PhysicalRound(PhysicsCore):
     """Round Entity.
 
-    This is a Physical Entity which is a shape that is round.
+    This is a Physical Entity which has a shape that is round.
+
+    Attributes:
+        radius: integer radois of the object.
     """
     def __init__(self, radius, mass, pos):
         self.radius = radius
@@ -106,5 +112,44 @@ class PhysicalRound(PhysicsCore):
         self.mass = mass
         self.inertia = pymunk.moment_for_circle(mass, 0, self.radius, (0, 0))
         self.body = pymunk.Body(mass, self.inertia)
-        self.body.position = pos
         self.shape = pymunk.Circle(self.body, self.radius, (0, 0))
+
+class PhysicalPoly(PhysicsCore):
+    """Polygon Entity.
+
+    This is a Physical Entity which has a shape that is a closed polygon.
+
+    Attributes:
+        points: list of tuples representing points on the polygon.
+    """
+    def __init__(self, pointlist, mass, pos):
+        self.points = pointlist
+        super(PhysicalPoly, self).__init__(mass, pos)
+
+    def _constructPhysics(self, mass, pos):
+        self.mass = mass
+        self.inertia = pymunk.moment_for_poly(mass, self.points)
+        self.body = pymunk.Body(mass, self.inertia)
+        self.shape = pymunk.Poly(self.body, self.points)
+
+class PhysicalEllipse(PhysicalPoly):
+    """Elliptical Entity.
+
+    This is a Physical Entity which has a shape that is an elliptical.
+
+    Attributes:
+        major: length of ellipse along its angle from center point to edge
+        minor: length of ellipse perpendicular to its angle from the center point to edge
+    """
+    def __init__(self, size, mass, pos, segments=16):
+        a = size[0] / 2
+        b = size[1] / 2
+        self.major = a
+        self.minor = b
+        self.radius = b + int((a - b) / 2) # HACK: expect all objects to have radius
+        points = []
+        ang = math.pi * 2 / segments
+        for seg in xrange(0, segments):
+            points.append((a * math.cos(seg * ang), b * math.sin(seg * ang)))
+
+        super(PhysicalEllipse, self).__init__(points, mass, pos)

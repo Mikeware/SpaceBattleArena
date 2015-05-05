@@ -78,6 +78,8 @@ else:
     
     rungame = cfg.get("Game","rungame")
 
+    print "Attempting to Load Game: ", rungame
+
     game = None
     if rungame != "BasicGame" or rungame.strip() != "" or rungame != None:
         mod = None

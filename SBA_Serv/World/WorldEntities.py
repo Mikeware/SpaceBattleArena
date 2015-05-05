@@ -20,7 +20,7 @@ import logging
 from Messaging import MessageQueue
 from Commanding import CommandSystem
 from WorldMath import PlayerStat
-from Entities import PhysicalRound
+from Entities import PhysicalRound, PhysicalEllipse
 
 class Ship(PhysicalRound):
     """Describes a ship"""
@@ -75,15 +75,48 @@ class Ship(PhysicalRound):
         objData["CURSHIELD"] = self.shield.value
         objData["MAXSHIELD"] = self.shield.maximum
 
+class Nebula(PhysicalEllipse):
+    """
+    Nebulas are an odd shape.
+
+    They impose a 'friction' on objects and TODO: reduce radar range?
+    """
+    def __init__(self, pos, size=(384, 256), pull=2000, mass=-1):
+        if mass == -1: mass = pymunk.inf
+        super(Nebula, self).__init__(size, mass, pos)
+
+        self.body.angle = math.radians(random.randint(-30, 30))
+
+        # Everything in Group 1 won't hit anything else in Group 1
+        self.shape.group = 1
+        
+        # Nebulas can't be moved by explosions
+        self.explodable = False
+        
+        self.health = PlayerStat(0)
+        self.pull = pull
+        #self.resources = PlayerStat(random.randint(500, 2000))
+
+    def getExtraInfo(self, objData):
+        objData["PULL"] = self.pull
+
+        # Overrides
+        objData["DIRECTION"] = -math.degrees(obj.body.angle)
+        objData["ROTATION"] = -math.degrees(obj.body.angle)
+
+        objData["MAJOR"] = self.major
+        objData["MINOR"] = self.minor
+
 class Planet(PhysicalRound):
     """
+    TODO:
     Planets have stockpiles of energy which slowly recharge overtime
     Player's can leach energy off of a planet at twice their Energy Recharge Rate (Recover Energy Twice as Fast)
     Planet's also have resources which can be mined, as the planet's resources are mined, the planet recovers energy less
     """
     EnergyRechargeRateFactor = 2
 
-    def __init__(self, pos, radius=60, mass=-1):
+    def __init__(self, pos, size=128, pull=15, radius=60, mass=-1):
         if mass == -1: mass = pymunk.inf
         super(Planet, self).__init__(radius, mass, pos)
 
@@ -98,24 +131,24 @@ class Planet(PhysicalRound):
         
         # Planet specific
         self.health = PlayerStat(0)
-        self.gravity = random.randint(5, 25)
-        self.gravityFieldLength = 96 + random.randint(16, 96)
+        self.pull = pull
+        self.gravityFieldLength = size
         #self.resources = PlayerStat(random.randint(500, 2000))
 
     def getExtraInfo(self, objData):
-        objData["GRAVITY"] = self.gravity
-        objData["GRAVITYFIELDLENGTH"] = self.gravityFieldLength
+        objData["PULL"] = self.pull
+
+        objData["MAJOR"] = self.gravityFieldLength
+        objData["MINOR"] = self.gravityFieldLength
 
 class BlackHole(Planet):
     """
     BlackHoles are similar to planets however have no resources and have stronger gravity fields
     """
-    def __init__(self, pos):
-        super(BlackHole, self).__init__(pos, 16)
-        self.gravity = 20 + random.randint(32, 48)
-        self.gravityFieldLength = 48 + random.randint(16, 160)
+    def __init__(self, pos, size=96, pull=64):
+        super(BlackHole, self).__init__(pos, size, pull, 16)
 
-        self.resources = PlayerStat(0)
+        #self.resources = PlayerStat(0)
 
 class Asteroid(PhysicalRound):
     """

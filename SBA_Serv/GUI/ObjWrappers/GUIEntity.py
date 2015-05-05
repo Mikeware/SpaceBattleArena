@@ -14,19 +14,33 @@ class GUIEntity(object):
         self._world = world
         self.dying = False
         self.dead = False
+        if self._worldobj.__dict__.has_key("points"):
+            self._dist = int(max(self._worldobj.points[0]))
+        elif self._worldobj.__dict__.has_key("radius"):
+            self._dist = int(self._worldobj.radius)
+        else:
+            self._dist = 16
+
         if GUIEntity._healthbar == None:
             GUIEntity._healthbar = Cache().getImage("HUD/Health")
             GUIEntity._energybar = Cache().getImage("HUD/Energy")
 
     def draw(self, surface, flags):        
         bp = intpos(self._worldobj.body.position)
-        if flags["DEBUG"]:                        
+        if flags["DEBUG"]:
             # position text
-            surface.blit(debugfont().render(repr((bp[0], bp[1])), False, (192, 192, 192)), (bp[0]-30, bp[1]-self._worldobj.radius-30))
+            surface.blit(debugfont().render(repr((bp[0], bp[1])), False, (192, 192, 192)), (bp[0]-30, bp[1]-self._dist-30))
             # id text
-            surface.blit(debugfont().render("#"+str(self._worldobj.id), False, (192, 192, 192)), (bp[0]-4, bp[1]+self._worldobj.radius+4))
+            surface.blit(debugfont().render("#"+str(self._worldobj.id), False, (192, 192, 192)), (bp[0]-4, bp[1]+self._dist+4))
             # collision circle
-            wrapcircle(surface, (192, 192, 192), bp, self._worldobj.radius, self._world.size, 2)
+            if self._worldobj.__dict__.has_key("points"): #Polygon
+                self.draw_poly(surface, (192, 192, 192), bp, self._worldobj.shape.get_points(), 2)
+            else: 
+                wrapcircle(surface, (192, 192, 192), bp, self._dist, self._world.size, 2)
+
+            if self._worldobj.in_nebula != None:
+                wrapcircle(surface, (255, 64, 64), bp, self._dist, self._world.size, 4)
+
             # velocity vector
             pygame.draw.line(surface, (255, 0, 0), bp, self._worldobj.body.velocity + bp) # Velocity
 
@@ -46,6 +60,10 @@ class GUIEntity(object):
             if flags["DEBUG"]:
                 surface.blit(debugfont().render(repr(int(100 * self._worldobj.energy.percent)), False, (255, 255, 255)), (bp[0]+18, bp[1] + 24))
             surface.blit(GUIEntity._energybar, (bp[0]-15, bp[1] + 27), pygame.Rect(0, 0, 30 * self._worldobj.energy.percent, 3))
+
+    def draw_poly(self, surface, color, position, points, width=1):
+        points += [points[0]]
+        pygame.draw.lines(surface, color, False, points, width)
 
     def __eq__(self, other):
         if isinstance(self, GUIEntity) and isinstance(other, GUIEntity):

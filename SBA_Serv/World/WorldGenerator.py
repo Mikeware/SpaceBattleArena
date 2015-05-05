@@ -3,7 +3,7 @@ Module with functions related to World Generation. (i.e. placement of Planets, B
 """
 
 from World.WorldMap import GameWorld
-from World.WorldEntities import Planet, BlackHole, Asteroid
+from World.WorldEntities import Planet, BlackHole, Asteroid, Nebula
 import random
 
 def getPositionAwayFromOtherObjects(world, radius, edgebuffer, force=False):
@@ -71,12 +71,17 @@ def ConfiguredWorld(game, cfg, pys=True):
     """
     world = GameWorld(game, (cfg.getint("World","width"), cfg.getint("World","height")), pys)
 
+    av_sizes = eval(cfg.get("Nebula", "sizes"))
+    for neb in xrange(cfg.getint("Nebula", "number")):
+        world.append(Nebula(getPositionAwayFromOtherObjects(world, 30, 30), random.choice(av_sizes), cfg_rand_min_max(cfg, "Nebula", "pull")))
+    #next ast
+
     for p in xrange(cfg.getint("Planet", "number")):
-        world.append(Planet(getPositionAwayFromOtherObjects(world, 200, 100)))
+        world.append(Planet(getPositionAwayFromOtherObjects(world, 200, 100), cfg_rand_min_max(cfg, "Planet", "range"), cfg_rand_min_max(cfg, "Planet", "pull")))
     #next p 
 
     for bh in xrange(cfg.getint("BlackHole", "number")):
-        world.append(BlackHole(getPositionAwayFromOtherObjects(world, 250, 100)))
+        world.append(BlackHole(getPositionAwayFromOtherObjects(world, 250, 100), cfg_rand_min_max(cfg, "BlackHole", "range"), cfg_rand_min_max(cfg, "BlackHole", "pull")))
     #next bh
 
     for ast in xrange(cfg.getint("Asteroid", "number")):
@@ -86,3 +91,15 @@ def ConfiguredWorld(game, cfg, pys=True):
     #world.append(Planet((100, 100)))
 
     return world
+
+def cfg_rand_min_max(cfg, section, option):
+    """Helper method to generate a random int for a config option.
+
+    Config option should be in the form of option_min = value and option_max = value.
+
+    Args:
+        cfg: ConfigParser object.
+        section: Configuration section name.
+        option: Configuration option name.
+    """
+    return random.randint(cfg.getint(section, option+"_min"), cfg.getint(section, option+"_max"))

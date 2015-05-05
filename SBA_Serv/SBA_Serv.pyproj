@@ -13,7 +13,7 @@
     <Name>SBA_Serv</Name>
     <RootNamespace>SBA_Serv</RootNamespace>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>-c machine_test.cfg -2 findthemiddle.cfg</CommandLineArguments>
+    <CommandLineArguments>-c machine_test_larger.cfg -2 findthemiddle.cfg</CommandLineArguments>
     <InterpreterPath />
     <InterpreterArguments />
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
@@ -40,6 +40,7 @@
     <Compile Include="GUI\Helpers.py" />
     <Compile Include="GUI\main.py" />
     <Compile Include="GUI\ObjWrappers\AsteroidWrapper.py" />
+    <Compile Include="GUI\ObjWrappers\NebulaWrapper.py" />
     <Compile Include="GUI\ObjWrappers\PlanetWrapper.py" />
     <Compile Include="GUI\ObjWrappers\ShipWrapper.py" />
     <Compile Include="GUI\ObjWrappers\WeaponWrappers.py" />
@@ -86,6 +87,7 @@
     <Content Include="baubletournamentB.cfg" />
     <Content Include="GUI\ObjWrappers\GUIEntity.py" />
     <Content Include="baubletournamentA.cfg" />
+    <Content Include="machine_test_larger.cfg" />
     <Content Include="machine_test.cfg" />
     <Content Include="findthemiddle.cfg" />
     <Content Include="radarworld.cfg" />
