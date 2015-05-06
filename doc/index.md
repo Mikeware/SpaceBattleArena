@@ -8,6 +8,8 @@ Space Battle Arena
 
 Space Battle Arena is a ‘[Programming Game](http://en.wikipedia.org/wiki/Programming_game)‘ where you must write code (in Java) to autonomously control a space ship to accomplish specified objectives.  
 
+<img src="{{ site.baseurl }}/img/SpaceBattleArena.png" alt="Space Battle Arena" class="right"/>
+
 This has been a final project used in an Advanced Placement High School Computer Science course since 2012.  Students have been enthusiastic, excited, challenged, and engaged with learning to control a ship in a physical environment and comparing strategies against their fellow students in a fun competition.
 
 The question of why ‘Space Battle’ over an existing platform (like [Robocode](http://robocode.sourceforge.net/)) was brought up during our [Reach for the Stars](http://www.mikeware.com/2012/09/reach-for-the-stars-educating-the-next-generation-using-games/) talk.  The answer is that most programming games are built around a specific objective.  This means that while there may be varying strategies, eventually the problem can be solved and solutions available.  
@@ -30,10 +32,10 @@ Documentation
     * [jGRASP](client/jGRASP/index.html)
     * [Eclipse](client/Eclipse/index.html)
     * <a href="client/java_doc/" target="_blank">Java Docs</a>
-* Server
-    * Server Setup
-    * Server Config
-    * Server Usage
+* [Server Information](server/index.html)
+    * [Server Setup](server/setup.html)
+    * [Server Config](server/config.html)
+    * [Server Usage/Shortcuts](server/usage.html)
 * Lessons
     * 00 - Intro and Setup
     * 01 - Find the Middle
