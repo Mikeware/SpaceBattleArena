@@ -376,6 +376,9 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                     #xoffset = -(((event.pos[0] - resolution[0]/2) % 16)*16 * scalefactorx)
                     #yoffset = -(((event.pos[1] - resolution[1]/2) % 16)*16 * scalefactory)
                     offsetx, offsety = centerViewOnWorld((event.pos[0]*scalefactorx, event.pos[1]*scalefactory))
+                else:
+                    # recenter on new click
+                    offsetx, offsety = centerViewOnWorld((event.pos[0]*scalefactorx, event.pos[1]*scalefactory))
                     
         # Tracks a ship on screen
         if len(shipids) == 0 or trackshipid not in objects: 
