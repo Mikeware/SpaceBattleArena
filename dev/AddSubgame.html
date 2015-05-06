@@ -52,27 +52,19 @@
       <section id="main_content">
         <h1 id="adding-a-subgame-to-space-battle">Adding a Subgame to Space Battle</h1>
 
-<p>This document will explain how to add a custom Subgame to the Space Battle system.  Unfortunately, Space Battle can’t be extended from an external library at this time, however, adding Subgames is relatively encapsulated and explained in detail below.</p>
+<p>This document will explain how to add a custom Subgame to the Space Battle system.  Unfortunately, Space Battle can&#39;t be extended from an external library at this time, however, adding Subgames is relatively encapsulated and explained in detail below.</p>
 
 <h2 id="server-implementation">Server Implementation</h2>
 
 <p>Everything to drive your Subgame from the Server can be encapsulated into a single file.</p>
 
 <ol>
-  <li>
-    <p>Create a new .py file in the <em>Game</em> sub-folder in the Server project.</p>
+<li><p>Create a new .py file in the <em>Game</em> sub-folder in the Server project.</p>
 
-    <p>It’s easiest to start with an existing similar game as a template as many methods are required.  It’s also suggested you inherit from the Basic Game which implements most of the base rules around how Space Battle works.</p>
-  </li>
-  <li>
-    <p>Make sure your file is named after your game and the name of your class is the name of your game + <strong>Game</strong>.  E.g. <em>AsteroidMiner.py</em> and <em>AsteroidMinerGame</em></p>
-  </li>
-  <li>
-    <p>Create a config file where the rungame setting is set to the name of your game.  E.g. <strong>AsteroidMiner</strong>.</p>
-  </li>
-  <li>
-    <p>Read more about the specific game methods in the BasicGame documentation.</p>
-  </li>
+<p>It&#39;s easiest to start with an existing similar game as a template as many methods are required.  It&#39;s also suggested you inherit from the Basic Game which implements most of the base rules around how Space Battle works.</p></li>
+<li><p>Make sure your file is named after your game and the name of your class is the name of your game + <strong>Game</strong>.  E.g. <em>AsteroidMiner.py</em> and <em>AsteroidMinerGame</em></p></li>
+<li><p>Create a config file where the rungame setting is set to the name of your game.  E.g. <strong>AsteroidMiner</strong>.</p></li>
+<li><p>Read more about the specific game methods in the BasicGame documentation.</p></li>
 </ol>
 
 <h2 id="client-implementation">Client Implementation</h2>
@@ -80,25 +72,15 @@
 <p>If your game is <em>non-basic</em> (requires players have more information than Score, Highscore, and Deaths) perform the following steps:</p>
 
 <ol>
-  <li>
-    <p>Add a <strong>GameInfo</strong> class with a prefix of your game’s name.  This can then be used when constructing a Spaceship as a Generic type.</p>
-  </li>
-  <li>
-    <p>In the <em>MwnpMessage.java</em> class, add to the switch statement in the <em>RegisterGameType</em> static method with the game name returned by the server as the string key and construct the appropriate <em>TypeToken</em> similar to the existing entries, but using your GameInfo class instead.</p>
-  </li>
-  <li>
-    <p>It is recommended you reuse the existing game specific values on the <strong>ObjectStatus</strong>, such as <em>VALUE</em>, <em>NUMSTORED</em>, <em>HITRADIUS</em>, <em>OWNERID</em>, <em>NAME</em>.  If you require an additional property, add it here.  </p>
+<li><p>Add a <strong>GameInfo</strong> class with a prefix of your game&#39;s name.  This can then be used when constructing a Spaceship as a Generic type.</p></li>
+<li><p>In the <em>MwnpMessage.java</em> class, add to the switch statement in the <em>RegisterGameType</em> static method with the game name returned by the server as the string key and construct the appropriate <em>TypeToken</em> similar to the existing entries, but using your GameInfo class instead.</p></li>
+<li><p>It is recommended you reuse the existing game specific values on the <strong>ObjectStatus</strong>, such as <em>VALUE</em>, <em>NUMSTORED</em>, <em>HITRADIUS</em>, <em>OWNERID</em>, <em>NAME</em>.  If you require an additional property, add it here.  </p>
 
-    <p>Note: The <em>NAME</em> property usually stores the NAME of a player, but this can be turned off in the Config file if you wish to not have a conflict/overlap and reuse it for some other purpose</p>
+<p>Note: The <em>NAME</em> property usually stores the NAME of a player, but this can be turned off in the Config file if you wish to not have a conflict/overlap and reuse it for some other purpose</p>
 
-    <p>Remember that if you create a custom object, you have the full set of standard properties available as well, and the ‘Type’ property will be automatically populated with the Class name of your object from the Server.</p>
-  </li>
-  <li>
-    <p>Add any new commands required for your game to the Commands package.</p>
-  </li>
-  <li>
-    <p>Recompile the SpaceBattle.jar.</p>
-  </li>
+<p>Remember that if you create a custom object, you have the full set of standard properties available as well, and the &#39;Type&#39; property will be automatically populated with the Class name of your object from the Server.</p></li>
+<li><p>Add any new commands required for your game to the Commands package.</p></li>
+<li><p>Recompile the SpaceBattle.jar.</p></li>
 </ol>
 
       </section>

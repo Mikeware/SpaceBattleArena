@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/print.css" media="print">
+
+    <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="/SpaceBattleArena/js/main.js"></script>
+    
+    <title>Space Battle Arena by Mikeware</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>Space Battle Arena</h1>
+        <h2>A Programming Game in Java for AP CS Students.</h2>
+
+        <section id="downloads">
+          <a href="https://www.github.com/Mikeware/SpaceBattleArena/blob/master/bin/SpaceBattle.jar?raw=true" class="btn">Download Client Jar</a>
+          <a href="https://www.github.com/Mikeware/SpaceBattleArena/blob/master/bin/SBAserver.zip?raw=true" class="btn">Download Server (Windows)</a>
+          <a href="https://www.github.com/Mikeware/SpaceBattleArena" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            
+            <span><a href="/SpaceBattleArena/index.html">Home</a></span>
+            
+            
+            
+                
+                    &nbsp<span><a href="index.html">Server Information</a></span>
+                
+            
+            <span>Server Usage / Shortcuts</span>
+        </div>
+    </nav>
+    
+
+    
+<aside>
+    <h1>Outline</h1>
+    <ul>
+    
+        <li><a href="#overview">Overview</a></li>
+    
+        <li><a href="#shortcuts">Keyboard Shortcuts</a></li>
+    
+        <li><a href="#debug">Debug Mode</a></li>
+    
+        <li><a href="#tracking">Tracking Modes</a></li>
+    
+        <li><a href="#god">'God' Modes</a></li>
+    
+    </ul>
+</aside>
+
+
+
+    <div class="container">
+      <section id="main_content">
+        <h1 id="server-usage-/-shortcuts">Server Usage / Shortcuts</h1>
+
+<h2 id="overview"><a name="overview"></a>Overview</h2>
+
+<p>The server is a graphical client which is a window into the universe and displays what is occurring.</p>
+
+<p>It has many functions to help interpret what is occurring, manipulate the world, or display general types of information about games and tournaments.</p>
+
+<p>The following information will explain keyboard shortcuts as well as various information about the different types of modes and features available.</p>
+
+<!-- Tables Generated with http://www.tablesgenerator.com/markdown_tables -->
+
+<h2 id="keyboard-shortcuts"><a name="shortcuts"></a>Keyboard Shortcuts</h2>
+
+<h3 id="display-toggles">Display Toggles</h3>
+
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>I</strong></td>
+<td>IP Address</td>
+</tr>
+<tr>
+<td><strong>P</strong></td>
+<td>List of Connected Players</td>
+</tr>
+<tr>
+<td><strong>S</strong></td>
+<td>Stats on Objects</td>
+</tr>
+<tr>
+<td><strong>N</strong></td>
+<td>Name on Ships</td>
+</tr>
+<tr>
+<td><strong>G</strong></td>
+<td>Game Info</td>
+</tr>
+<tr>
+<td><strong>T</strong></td>
+<td>Tournament Bracket</td>
+</tr>
+<tr>
+<td><strong>R</strong></td>
+<td>Round Time</td>
+</tr>
+</tbody></table>
+
+<h3 id="general-keys">General Keys</h3>
+
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>ESC</strong></td>
+<td>Quit</td>
+</tr>
+<tr>
+<td><strong>Space</strong></td>
+<td>Start Game / Round (see <em>Game:autostart</em> setting)</td>
+</tr>
+</tbody></table>
+
+<h3 id="debug-keys">Debug Keys</h3>
+
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>D</strong></td>
+<td>Debug Mode</td>
+</tr>
+<tr>
+<td><strong>L</strong></td>
+<td>In Debug Mode, Toggles Log Message Display</td>
+</tr>
+</tbody></table>
+
+<h3 id="view-keys">View Keys</h3>
+
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>Z</strong></td>
+<td>Toggle Zoom</td>
+</tr>
+<tr>
+<td><strong>Up/Down/Left/Right</strong></td>
+<td>Pan the View when Zoomed In</td>
+</tr>
+<tr>
+<td><strong>M</strong></td>
+<td>Toggle Scrolling with Mouse on Edge of Window</td>
+</tr>
+<tr>
+<td><strong>MOUSEDOWN</strong></td>
+<td>Zoom In / Re-center View</td>
+</tr>
+</tbody></table>
+
+<h3 id="tracking-modes">Tracking Modes</h3>
+
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>PageDown/PageUp</strong></td>
+<td>Track Next/Previous Ship</td>
+</tr>
+<tr>
+<td><strong>END</strong></td>
+<td>Stop Ship Tracking</td>
+</tr>
+<tr>
+<td><strong>Y</strong></td>
+<td>Toggle Dynamic Ship Tracking</td>
+</tr>
+</tbody></table>
+
+<h3 id="&#39;god&#39;-commands">&#39;God&#39; Commands</h3>
+
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>A</strong></td>
+<td>Add Object Mode</td>
+</tr>
+<tr>
+<td><strong>K</strong></td>
+<td>Destroy Object Mode</td>
+</tr>
+<tr>
+<td><strong>E</strong></td>
+<td>Explosion Mode</td>
+</tr>
+<tr>
+<td><strong>V</strong></td>
+<td>Move Ship Mode</td>
+</tr>
+</tbody></table>
+
+<h2 id="debug-mode"><a name="debug"></a>Debug Mode</h2>
+
+<p>Debug mode is useful for getting more insight into what may be occurring between some objects in the world.  Yellow circles show the Radar Range of ships.  Blue circles show the Gravity Wells of Planets and Black Holes.  Red lines from the ship show its Velocity vector.</p>
+
+<h2 id="tracking-modes"><a name="tracking"></a>Tracking Modes</h2>
+
+<p>Using PageUp/PageDown, you can select a specific ship to track.  In this mode when zoomed in, the camera will continue to follow the specified ship.  Also, in debug mode with logging turned on, only output for this ship will be shown.</p>
+
+<p>The Dynamic camera mode will switch between ships to show whoever happens to have the highest score in the current game.</p>
+
+<h2 id="&#39;god&#39;-modes"><a name="god"></a>&#39;God&#39; Modes</h2>
+
+<p>There are four independent modes that allow you to manipulate the SBA world while it is running.  </p>
+
+<p>The first command &#39;A&#39; allows you to add objects such as Asteroids, Planets, Black Holes, and Bubbles (if playing King of the Bubble).</p>
+
+<p>The next command &#39;K&#39; allows you to click on any object in the world to destroy it.</p>
+
+<p>The next command &#39;E&#39; will cause an explosion force with the clicked location being the origin.  Everything within a nearby radius will have an outwardly force applied to it.</p>
+
+<p>The finally command &#39;V&#39; only works on whichever ship is currently being tracked (see above).  When activated, the ship will be moved to the clicked location.</p>
+
+      </section>
+    </div>
+
+
+		<footer>
+		  <div class="container">
+		    <div class="owner">
+		      <p><a href="https://github.com/Mikeware" class="avatar"><img src="https://avatars3.githubusercontent.com/u/8961203?v=3&s=48" width="48" height="48"/></a> <a href="https://github.com/Mikeware">Mikeware</a> maintains <a href="https://github.com/Mikeware/SpaceBattleArena">Space Battle Arena</a></p>
+		    </div>
+		    <div class="creds">
+			  <small>This page generated using <a href="https://pages.github.com/">GitHub Pages</a> themes and <a href="http://www.jekyllrb.com/">Jekyll</a>.</small>
+		    </div>
+		  </div>
+		</footer>
+
+		  <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-39650553-3");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>

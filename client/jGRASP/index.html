@@ -65,13 +65,13 @@
       <section id="main_content">
         <h1 id="jgrasp-client-environment-setup">jGRASP Client Environment Setup</h1>
 
-<h2 id="a-nameoverviewaoverview"><a name="overview"></a>Overview</h2>
+<h2 id="overview"><a name="overview"></a>Overview</h2>
 
 <p>This document provides instructions for setting up the Java environment for developing code which controls a ship in the <a href="http://battlearena.mikeware.com/">Space Battle Arena</a> (SBA) programming game.</p>
 
 <p>These instructions were prepared for <a href="http://www.jgrasp.org/">jGRASP</a> 1.8 and above.</p>
 
-<h2 id="a-nameenvironmentainitial-environment-setup"><a name="environment"></a>Initial Environment Setup</h2>
+<h2 id="initial-environment-setup"><a name="environment"></a>Initial Environment Setup</h2>
 
 <p>Create a Spaceship class:</p>
 
@@ -101,57 +101,37 @@ public class ExampleShip extends BasicSpaceship {
 </code></pre>
 
 <ol>
-  <li>
-    <p>Adjust Workspace Classpath under Settings -&gt; PATH/CLASSPATH -&gt; Workspace:</p>
+<li><p>Adjust Workspace Classpath under Settings -&gt; PATH/CLASSPATH -&gt; Workspace:</p>
 
-    <p><img src="Classpath.png" alt="Classpath Settings" /></p>
-  </li>
-  <li>
-    <p>Add the <strong><a href="http://github.com/Mikeware/SpaceBattleArena/blob/master/bin/gson-2.2.jar?raw=true">gson-2.2.jar</a></strong> and <strong><a href="http://github.com/Mikeware/SpaceBattleArena/blob/master/bin/SpaceBattle.jar?raw=true">SpaceBattle.jar</a></strong> under the PATH -&gt; CLASSPATHS tab:</p>
+<p><img src="Classpath.png" alt="Classpath Settings"></p></li>
+<li><p>Add the <strong><a href="http://github.com/Mikeware/SpaceBattleArena/blob/master/bin/gson-2.2.jar?raw=true">gson-2.2.jar</a></strong> and <strong><a href="http://github.com/Mikeware/SpaceBattleArena/blob/master/bin/SpaceBattle.jar?raw=true">SpaceBattle.jar</a></strong> under the PATH -&gt; CLASSPATHS tab:</p>
 
-    <p><img src="AddJars.png" alt="Jars in Classpath" /></p>
-  </li>
-  <li>
-    <p>Save and Compile your class.</p>
-  </li>
+<p><img src="AddJars.png" alt="Jars in Classpath"></p></li>
+<li><p>Save and Compile your class.</p></li>
 </ol>
 
-<h2 id="a-nameexecutionaexecution-instructions"><a name="execution"></a>Execution Instructions</h2>
+<h2 id="execution-instructions"><a name="execution"></a>Execution Instructions</h2>
 
-<p><strong>Note: Do not terminate the program through the jGRASP UI; instead, click in the console window and type ‘QUIT’ to gracefully close the connection.</strong></p>
+<p><strong>Note: Do not terminate the program through the jGRASP UI; instead, click in the console window and type &#39;QUIT&#39; to gracefully close the connection.</strong></p>
 
 <ol>
-  <li>
-    <p>Invoke a Static Method on a Named Class from the Build -&gt; Java Workbench menu:</p>
+<li><p>Invoke a Static Method on a Named Class from the Build -&gt; Java Workbench menu:</p>
 
-    <p><img src="InvokeStatic1.png" alt="Invoke Static Method on Named Class" /></p>
-  </li>
-  <li>
-    <p>Type in a Class Name of ‘ihs.apcs.spacebattle.TextClient’ (in subsequent times, it should be selectable from the drop-down list):</p>
+<p><img src="InvokeStatic1.png" alt="Invoke Static Method on Named Class"></p></li>
+<li><p>Type in a Class Name of &#39;ihs.apcs.spacebattle.TextClient&#39; (in subsequent times, it should be selectable from the drop-down list):</p>
 
-    <p><img src="InvokeStatic2.png" alt="Class Name ihs.apcs.spacebattle.TextClient" /></p>
-  </li>
-  <li>
-    <p>Select the main method in the list.</p>
-  </li>
-  <li>
-    <p>Type in the Parameters box the Server IP address and your <em>Java Class</em> name in quotes with a comma in-between (also selectable from the drop-down list in subsequent runs):</p>
+<p><img src="InvokeStatic2.png" alt="Class Name ihs.apcs.spacebattle.TextClient"></p></li>
+<li><p>Select the main method in the list.</p></li>
+<li><p>Type in the Parameters box the Server IP address and your <em>Java Class</em> name in quotes with a comma in-between (also selectable from the drop-down list in subsequent runs):</p>
 
-    <p><img src="InvokeStatic3.png" alt="Invoke Method Dialog" /></p>
+<p><img src="InvokeStatic3.png" alt="Invoke Method Dialog"></p>
 
-    <p>e.g. “127.0.0.1”,”ExampleShip”</p>
-  </li>
-  <li>
-    <p>Check the ‘Don’t Show Result Dialog’.</p>
-  </li>
-  <li>
-    <p>Hit the ‘Invoke’ button and then the ‘Close’ button.  </p>
-  </li>
-  <li>
-    <p>Type ‘QUIT’ in the output window to disconnect your ship:</p>
+<p>e.g. &quot;127.0.0.1&quot;,&quot;ExampleShip&quot;</p></li>
+<li><p>Check the &#39;Don&#39;t Show Result Dialog&#39;.</p></li>
+<li><p>Hit the &#39;Invoke&#39; button and then the &#39;Close&#39; button.  </p></li>
+<li><p>Type &#39;QUIT&#39; in the output window to disconnect your ship:</p>
 
-    <p><img src="Disconnect.png" alt="Output Window" /></p>
-  </li>
+<p><img src="Disconnect.png" alt="Output Window"></p></li>
 </ol>
 
       </section>

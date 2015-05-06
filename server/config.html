@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/print.css" media="print">
+
+    <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="/SpaceBattleArena/js/main.js"></script>
+    
+    <title>Space Battle Arena by Mikeware</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>Space Battle Arena</h1>
+        <h2>A Programming Game in Java for AP CS Students.</h2>
+
+        <section id="downloads">
+          <a href="https://www.github.com/Mikeware/SpaceBattleArena/blob/master/bin/SpaceBattle.jar?raw=true" class="btn">Download Client Jar</a>
+          <a href="https://www.github.com/Mikeware/SpaceBattleArena/blob/master/bin/SBAserver.zip?raw=true" class="btn">Download Server (Windows)</a>
+          <a href="https://www.github.com/Mikeware/SpaceBattleArena" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            
+            <span><a href="/SpaceBattleArena/index.html">Home</a></span>
+            
+            
+            
+                
+                    &nbsp<span><a href="index.html">Server Information</a></span>
+                
+            
+            <span>Server Configuration</span>
+        </div>
+    </nav>
+    
+
+    
+<aside>
+    <h1>Outline</h1>
+    <ul>
+    
+        <li><a href="#overview">Overview</a></li>
+    
+        <li><a href="#format">Format</a></li>
+    
+        <li><a href="#screen">[Screen]</a></li>
+    
+        <li><a href="#world">[World]</a></li>
+    
+        <li><a href="#server">[Server]</a></li>
+    
+        <li><a href="#asteroid">[Asteroid]</a></li>
+    
+        <li><a href="#planet">[Planet]</a></li>
+    
+        <li><a href="#blackhole">[BlackHole]</a></li>
+    
+        <li><a href="#nebula">[Nebula]</a></li>
+    
+        <li><a href="#game">[Game]</a></li>
+    
+    </ul>
+</aside>
+
+
+
+    <div class="container">
+      <section id="main_content">
+        <h1 id="server-configuration">Server Configuration</h1>
+
+<h2 id="overview"><a name="overview"></a>Overview</h2>
+
+<p>Space Battle Arena is highly configurable.  SBA uses a standard type of configuration file format to set options for how the server should run and behave.  </p>
+
+<p>SBA comes with a set of configuration files for different purposes.  However, you&#39;ll probably want to create your own configuration file to represent the settings of your machine and its display (see the <a href="#screen">[Screen]</a> section below).</p>
+
+<p>The <strong>run</strong> command mentioned in the server <a href="setup.html">setup</a> page can take an optional second config file.  This can be handy to use one config to keep your standard options and a second one to use for any game or activity of the day.</p>
+
+<p>In fact the configuration examples provided with the server do just that and setup a &#39;machine&#39; file to specify the size of the window and then a &#39;lesson&#39; file to use for the activity of the day in class.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">run machine_test.cfg lesson_findthemiddle.cfg
+</code></pre></div>
+<h2 id="format"><a name="format"></a>Format</h2>
+
+<p>The configuration file is composed of a number of sections with each section containing one or more options.  It follows the format:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">[Section Name]
+option1name = value
+option2name = value
+
+[Section 2 Name]
+optionname = value
+
+etc...
+</code></pre></div>
+<p>The rest of this chapter will be comprised of headers for each of the <em>section</em> names and then sub-headers for each <em>option</em> (and its type) and then a paragraph listing its purpose and possible values.</p>
+
+<p>Possible value types include integer, boolean, string, and percent:</p>
+
+<ul>
+<li>Integers will be zero or positive only.</li>
+<li>Booleans will either be <strong>true</strong> or <strong>false</strong>.</li>
+<li>String values will be provided without quotation marks and possible values will be specified in the specific option listing.</li>
+<li>Percent values are decimal values between 0.0 and 1.0.  These may be part of a set which is expected to total 1.0.</li>
+</ul>
+
+<p>You may also see advanced constructs such as Tuples in parenthesis () or Lists in [], but if you are familiar with <a href="http://json.org/">JSON</a> formatting, then it shouldn&#39;t be hard to follow.</p>
+
+<h2 id="[screen]"><a name="screen"></a>[Screen]</h2>
+
+<p>This section contains options pertaining to the graphical window created to run the SBA server.  It will affect how SBA is presented to you.</p>
+
+<h3 id="horz_res-=-integer">horz_res = integer</h3>
+
+<p>Specifies the horizontal resolution of the SBA window (in pixels).  This should match your monitor resolution if you plan to run the game in fullscreen.</p>
+
+<h3 id="vert_res-=-integer">vert_res = integer</h3>
+
+<p>Specifies the vertical resolution of the SBA window (in pixels).  This should match your monitor resolution if you plan to run the game in fullscreen.</p>
+
+<h3 id="fullscreen-=-boolean">fullscreen = boolean</h3>
+
+<p>Specifies whether or not SBA should run fullscreen or in a window.</p>
+
+<h3 id="showstats-=-boolean">showstats = boolean</h3>
+
+<p>If this option is enabled, the server will start with some basic GUI options already enabled showing statistics about a player’s ship</p>
+
+<h2 id="[world]"><a name="world"></a>[World]</h2>
+
+<p>This section contains options for how large the universe is.  These options should be set to be <em>at least</em> as large as the Screen options, but can be larger.  <em>It is generally recommended that they are each 1.5 or 2 times the value of their corresponding Screen values.</em></p>
+
+<h3 id="width-=-integer">width = integer</h3>
+
+<p>Horizontal length of the universe in pixels.</p>
+
+<h3 id="height-=-integer">height = integer</h3>
+
+<p>Vertical length of the universe in pixels.</p>
+
+<h2 id="[server]"><a name="server"></a>[Server]</h2>
+
+<p>This section of options controls how the server should behave and accept connections from clients.</p>
+
+<h3 id="multipleconnections-=-boolean">multipleconnections = boolean</h3>
+
+<p>This option when enabled allows the same client machine to be connected to the server more than once.  Otherwise, each IP address is only allowed to connect a single time to a server instance.  This can cause issues if a client’s connection unexpectedly terminates.</p>
+
+<h3 id="port-=-integer">port = integer</h3>
+
+<p>The TCP/IP port that the server should run on.  If this is changed from the default (<strong>2012</strong>), then a third parameter of a port number must be passed in when running the TextClient class from a Java client.</p>
+
+<h3 id="maximages-=-integer">maximages = integer</h3>
+
+<p>This specifies the number of images that can be used for ships in the <em>GUI\Graphics\Ships</em> directory.  Use an existing ship image as a template to create more ship images.  Each frame of a ship should be contained in a 64x64 pixel square within the image.  The top row of images show a normal ship, the bottom a cloaked ship.  The first image is neutral, then left thruster firing, front thrusters, right thruster, back thruster, all thrusters (braking), and warping.</p>
+
+<h2 id="[asteroid]"><a name="asteroid"></a>[Asteroid]</h2>
+
+<p>Asteroids are flying debris in space.  They start off with a set amount of momentum and will continue flying in space until impacting ships or destroyed by torpedos.</p>
+
+<h3 id="number-=-integer">number = integer</h3>
+
+<p>The number of asteroids to generate in the universe.</p>
+
+<h2 id="[planet]"><a name="planet"></a>[Planet]</h2>
+
+<p>Planets have gravity wells which can pull ships towards them.  They are solid and will cause damage to ships that impact them.</p>
+
+<h3 id="number-=-integer">number = integer</h3>
+
+<p>The number of planets to generate in the universe.</p>
+
+<h3 id="range_min-=-integer">range_min = integer</h3>
+
+<p>see range_max</p>
+
+<h3 id="range_max-=-integer">range_max = integer</h3>
+
+<p>These two range values correspond to the distance away from a planet&#39;s center that its gravity field should pull ships in.  A random value will be generated between the <strong>range_min</strong> and <strong>range_max</strong> values.  These are typically <strong>112</strong> and <strong>192</strong>.</p>
+
+<h3 id="pull_min-=-integer">pull_min = integer</h3>
+
+<p>see pull_max</p>
+
+<h3 id="pull_max-=-integer">pull_max = integer</h3>
+
+<p>These two values correspond to the amount of pull the gravity will have on ships.  Larger values mean ships will get pulled in quicker and will have a harder time escaping.  A random value will be generated between <strong>pull_min</strong> and <strong>pull_max</strong>.  These are typically <strong>8</strong> and <strong>24</strong>.</p>
+
+<h2 id="[blackhole]"><a name="blackhole"></a>[BlackHole]</h2>
+
+<p>Black Holes have stronger gravity wells than planets, but can be passed through their center.  They are harder to escape from.</p>
+
+<p>They have the exact same configuration values as <a href="#planet">Planets</a>.  However, the default range values are <strong>64</strong> and <strong>208</strong>.  The default pull values are <strong>52</strong> and <strong>72</strong>.</p>
+
+<h2 id="[nebula]"><a name="nebula"></a>[Nebula]</h2>
+
+<p>Nebulas are a celestial body which impart a drag effect on ships causing them to slow down or eventually stop if they are not thrusting.</p>
+
+<h3 id="number-=-integer">number = integer</h3>
+
+<p>The number of Nebulas to generate in the universe.</p>
+
+<h3 id="sizes-=-list-of-tuples">sizes = list of tuples</h3>
+
+<p>This is a list of the available sizes of nebulas.  The tuple pair is the total length of the <strong>major</strong> and <strong>minor</strong> axes of an ellipse.  There also needs to be a corresponding image in the <em>GUI\Graphics\Nebula</em> folder with the name <strong>NebulaMAJORxMINOR</strong> where &#39;MAJOR&#39; and &#39;MINOR&#39; are replaced with the values of the size of the Nebula.  These values should be placed in a list.  E.g.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">sizes=[(512,128),(384,256)]
+</code></pre></div>
+<h3 id="pull_min-=-integer">pull_min = integer</h3>
+
+<p>see pull_max</p>
+
+<h3 id="pull_max-=-integer">pull_max = integer</h3>
+
+<p>These two values correspond to the amount of pull the drag will have on ships.  Larger values mean ships will slow down faster.  It&#39;d best not to make these values higher than the Ship&#39;s Thruster force of 3500.  A random value will be generated between <strong>pull_min</strong> and <strong>pull_max</strong>.  These are typically <strong>1750</strong> and <strong>2500</strong>.</p>
+
+<h2 id="[game]"><a name="game"></a>[Game]</h2>
+
+<p>Main options for the behavior of the simulation and which tournament rules should be applied.</p>
+
+<h3 id="sound-=-boolean">sound = boolean</h3>
+
+<p>Determines if sounds should be played or not.</p>
+
+<h3 id="autostart-=-boolean">autostart = boolean</h3>
+
+<p>When set to true the game/round will automatically start when the server is run.  Otherwise, it will wait for you to press the space key.</p>
+
+<h3 id="allowafterstart-=-boolean">allowafterstart = boolean</h3>
+
+<p>Can players join the server after the game has already started?</p>
+
+<h3 id="allowreentry-=-boolean">allowreentry = boolean</h3>
+
+<p>Can a player join the server again if they had connected previously and disconnected?</p>
+
+<h3 id="collisions-=-boolean">collisions = boolean</h3>
+
+<p>Turn collision detection on/off in the physics engine.  Useful for introductions to the world without worrying about actual interference.</p>
+
+<h3 id="disconnectplayersafterround-=-boolean">disconnectplayersafterround = boolean</h3>
+
+<p>Should clients be disconnected from the server after they have completed a round?</p>
+
+<h3 id="radarname-=-boolean">radarname = boolean</h3>
+
+<p>Determines if the name of the ship can be obtained through a Radar Command or not.</p>
+
+<h3 id="tournament-=-boolean">tournament = boolean</h3>
+
+<p>Should the game be run in a tournament setting where connected players are split into a number of groups.  Each winner of the game in a group proceeds to a final bracket to determine a winner.  Each round will automatically be paired, timed, and calculated.  Just hit space to start each round.</p>
+
+<h3 id="tournamentgroups-=-integer">tournamentgroups = integer</h3>
+
+<p>How many groups should the number of clients connected be broken into for the tournament?  E.g. Setting this value to 5 and having 30 clients connected would result in 5 rounds of 6 players each and a final round with the winners of each group.  Raising this number to higher values requires more vertical real-estate for the tournament display board.</p>
+
+<h3 id="roundtime-=-integer">roundtime = integer</h3>
+
+<p>How long each game round should last in seconds.</p>
+
+<h3 id="resetworldeachround-=-boolean">resetworldeachround = boolean</h3>
+
+<p>Should the world be cleared of all objects and recreated between each round of play?</p>
+
+<h3 id="rungame-=-string">rungame = string</h3>
+
+<p>Name of the game to be played on the server.  See more info in the Competitions section about running games.</p>
+
+<p>To just have a standard universe running, use <strong>BasicGame</strong>.</p>
+
+      </section>
+    </div>
+
+
+		<footer>
+		  <div class="container">
+		    <div class="owner">
+		      <p><a href="https://github.com/Mikeware" class="avatar"><img src="https://avatars3.githubusercontent.com/u/8961203?v=3&s=48" width="48" height="48"/></a> <a href="https://github.com/Mikeware">Mikeware</a> maintains <a href="https://github.com/Mikeware/SpaceBattleArena">Space Battle Arena</a></p>
+		    </div>
+		    <div class="creds">
+			  <small>This page generated using <a href="https://pages.github.com/">GitHub Pages</a> themes and <a href="http://www.jekyllrb.com/">Jekyll</a>.</small>
+		    </div>
+		  </div>
+		</footer>
+
+		  <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-39650553-3");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>

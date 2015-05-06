@@ -67,60 +67,40 @@
       <section id="main_content">
         <h1 id="eclipse-client-environment-setup">Eclipse Client Environment Setup</h1>
 
-<h2 id="a-nameoverviewaoverview"><a name="overview"></a>Overview</h2>
+<h2 id="overview"><a name="overview"></a>Overview</h2>
 
 <p>This document provides instructions for setting up the Java environment for developing code which controls a ship in the <a href="http://battlearena.mikeware.com/">Space Battle Arena</a> (SBA) programming game.</p>
 
 <p>These instructions were prepared for <a href="http://www.eclipse.org/">Eclipse</a> Luna Service Release 2 (4.4.2) and above.</p>
 
-<h2 id="a-nameenvironmentainitial-environment-setup"><a name="environment"></a>Initial Environment Setup</h2>
+<h2 id="initial-environment-setup"><a name="environment"></a>Initial Environment Setup</h2>
 
 <ol>
-  <li>
-    <p>Create a new <strong>Java Project</strong> in the <em>Package Exploerer</em>:</p>
+<li><p>Create a new <strong>Java Project</strong> in the <em>Package Exploerer</em>:</p>
 
-    <p><img src="NewJavaProject.png" alt="Add Java Project" /></p>
-  </li>
-  <li>
-    <p>Make sure to give your Project a name and to select <strong>Use project folder as root for sources and class files</strong>:</p>
+<p><img src="NewJavaProject.png" alt="Add Java Project"></p></li>
+<li><p>Make sure to give your Project a name and to select <strong>Use project folder as root for sources and class files</strong>:</p>
 
-    <p><img src="NewJavaProjectDialog1.png" alt="Project Settings" /></p>
-  </li>
-  <li>
-    <p>Click <strong>Next</strong>.</p>
-  </li>
-  <li>
-    <p>Click on the <strong>Libraries</strong> tab.	</p>
-  </li>
-  <li>
-    <p>Click on <strong>Add External JARs</strong>.</p>
-  </li>
-  <li>
-    <p>Select both the <strong><a href="http://github.com/Mikeware/SpaceBattleArena/blob/master/bin/gson-2.2.jar?raw=true">gson-2.2.jar</a></strong> and <strong><a href="http://github.com/Mikeware/SpaceBattleArena/blob/master/bin/SpaceBattle.jar?raw=true">SpaceBattle.jar</a></strong> which you should have downloaded:</p>
+<p><img src="NewJavaProjectDialog1.png" alt="Project Settings"></p></li>
+<li><p>Click <strong>Next</strong>.</p></li>
+<li><p>Click on the <strong>Libraries</strong> tab.  </p></li>
+<li><p>Click on <strong>Add External JARs</strong>.</p></li>
+<li><p>Select both the <strong><a href="http://github.com/Mikeware/SpaceBattleArena/blob/master/bin/gson-2.2.jar?raw=true">gson-2.2.jar</a></strong> and <strong><a href="http://github.com/Mikeware/SpaceBattleArena/blob/master/bin/SpaceBattle.jar?raw=true">SpaceBattle.jar</a></strong> which you should have downloaded:</p>
 
-    <p><img src="NewJavaProjectDialog2.png" alt="Libraries Tab" /></p>
-  </li>
-  <li>
-    <p>Click <strong>Finish</strong></p>
-  </li>
+<p><img src="NewJavaProjectDialog2.png" alt="Libraries Tab"></p></li>
+<li><p>Click <strong>Finish</strong></p></li>
 </ol>
 
-<h2 id="a-nameclasssetupaclass-setup"><a name="classsetup"></a>Class Setup</h2>
+<h2 id="class-setup"><a name="classsetup"></a>Class Setup</h2>
 
 <ol>
-  <li>
-    <p>Right-click and add a new <strong>Class</strong> to your new project:</p>
+<li><p>Right-click and add a new <strong>Class</strong> to your new project:</p>
 
-    <p><img src="AddClass.png" alt="Add Class" /></p>
-  </li>
-  <li>
-    <p>Give you Ship a Name and select the <strong>BasicSpaceship</strong> as the Superclass:</p>
+<p><img src="AddClass.png" alt="Add Class"></p></li>
+<li><p>Give you Ship a Name and select the <strong>BasicSpaceship</strong> as the Superclass:</p>
 
-    <p><img src="AddClassDialog.png" alt="Add Class Dialog" /></p>
-  </li>
-  <li>
-    <p>Click <strong>Finish</strong></p>
-  </li>
+<p><img src="AddClassDialog.png" alt="Add Class Dialog"></p></li>
+<li><p>Click <strong>Finish</strong></p></li>
 </ol>
 
 <p>Fill in some basics to your Spaceship class:</p>
@@ -149,42 +129,31 @@ public class ExampleShip extends BasicSpaceship {
     }
 }
 </code></pre>
+    
 
-<h2 id="a-nameexecutionaexecution-instructions"><a name="execution"></a>Execution Instructions</h2>
+<h2 id="execution-instructions"><a name="execution"></a>Execution Instructions</h2>
 
-<p><strong>Note: Do not terminate the program through the Eclipse UI; instead, click in the console window and type ‘QUIT’ to gracefully close the connection.</strong></p>
+<p><strong>Note: Do not terminate the program through the Eclipse UI; instead, click in the console window and type &#39;QUIT&#39; to gracefully close the connection.</strong></p>
 
 <ol>
-  <li>
-    <p>Open up your <strong>Run Configurations</strong>:</p>
+<li><p>Open up your <strong>Run Configurations</strong>:</p>
 
-    <p><img src="RunConfigurations.png" alt="Run Configurations" /></p>
-  </li>
-  <li>
-    <p>Create a new configuration under Java Application:</p>
+<p><img src="RunConfigurations.png" alt="Run Configurations"></p></li>
+<li><p>Create a new configuration under Java Application:</p>
 
-    <p><img src="NewConfiguration.png" alt="New Configuration" /></p>
-  </li>
-  <li>
-    <p>Select a <strong>Main class</strong> of <em>ihs.apcs.spacebattle.TextClient</em>:</p>
+<p><img src="NewConfiguration.png" alt="New Configuration"></p></li>
+<li><p>Select a <strong>Main class</strong> of <em>ihs.apcs.spacebattle.TextClient</em>:</p>
 
-    <p><img src="RunConfigurationDialog.png" alt="Run Configuration Main Class" /></p>
-  </li>
-  <li>
-    <p>Click the <strong>Arguments</strong> tab and enter the IP address of the server and your <em>Java Class</em> name with a space in-between:</p>
+<p><img src="RunConfigurationDialog.png" alt="Run Configuration Main Class"></p></li>
+<li><p>Click the <strong>Arguments</strong> tab and enter the IP address of the server and your <em>Java Class</em> name with a space in-between:</p>
 
-    <p><img src="RunArguments.png" alt="Program Arguments" /></p>
+<p><img src="RunArguments.png" alt="Program Arguments"></p>
 
-    <p>e.g. 127.0.0.1 MyFirstShip</p>
-  </li>
-  <li>
-    <p>Click <strong>Apply</strong> and <strong>Run</strong>.</p>
-  </li>
-  <li>
-    <p>Type ‘QUIT’ in the <strong>Console</strong> window to disconnect your ship:</p>
+<p>e.g. 127.0.0.1 MyFirstShip</p></li>
+<li><p>Click <strong>Apply</strong> and <strong>Run</strong>.</p></li>
+<li><p>Type &#39;QUIT&#39; in the <strong>Console</strong> window to disconnect your ship:</p>
 
-    <p><img src="Disconnect.png" alt="Output Window" /></p>
-  </li>
+<p><img src="Disconnect.png" alt="Output Window"></p></li>
 </ol>
 
       </section>
