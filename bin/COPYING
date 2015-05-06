@@ -8,6 +8,20 @@ You should have received a copy of the GNU General Public License along with thi
 
 The full text of the license is available online: http://opensource.org/licenses/GPL-2.0
 
+
+Server - GUI\Graphics and GUI\Sounds
+------------------------------------
+IMPORTANT NOTE: 
+
+The GUI\Sounds directory contains sounds which are licensed for distribution with this project; however, they are not licensed for general distribution.  
+
+Therefore, you may **not** redistribute the sounds outside the confines of this project.
+
+All GUI\Graphics files were created by the project owner with the exception of the GUI\Graphics\Ships\ship*.png files.
+
+These ships were created by our students of previous years and contributed with their permission.
+
+
 Gson-2.2.jar and Gson-2.2-javadoc.jar are third-party libraries from Google licensed under the Apache license.
 ---------------------------------------------------------------------------------------------------------------
 Copyright 2008 Google Inc. 

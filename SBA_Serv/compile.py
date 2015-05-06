@@ -73,7 +73,7 @@ class BuildExe:
         #Extra files/dirs copied to game
         pymunk_dir = os.path.dirname(pymunk.__file__)
 
-        extra_files = self.find_data_files('GUI\\Graphics', '*.png', recursive=True)
+        extra_files = self.find_data_files('GUI\\', '*.png', '*.wav', recursive=True)
         root = [os.path.join(pymunk_dir, 'chipmunk.dll'),
                                   "run.bat",
                                   "freesansbold.ttf"]
