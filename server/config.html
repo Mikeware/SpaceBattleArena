@@ -54,7 +54,7 @@
     
         <li><a href="#format">Format</a></li>
     
-        <li><a href="#screen">[Screen]</a></li>
+        <li><a href="#application">[Application]</a></li>
     
         <li><a href="#world">[World]</a></li>
     
@@ -70,6 +70,8 @@
     
         <li><a href="#game">[Game]</a></li>
     
+        <li><a href="#tournament">[Tournament]</a></li>
+    
     </ul>
 </aside>
 
@@ -83,12 +85,12 @@
 
 <p>Space Battle Arena is highly configurable.  SBA uses a standard type of configuration file format to set options for how the server should run and behave.  </p>
 
-<p>SBA comes with a set of configuration files for different purposes.  However, you&#39;ll probably want to create your own configuration file to represent the settings of your machine and its display (see the <a href="#screen">[Screen]</a> section below).</p>
+<p>SBA comes with a set of configuration files for different purposes.  However, you&#39;ll probably want to create your own configuration file to represent the settings of your machine and its display (see the <a href="#application">[Application]</a> section below).</p>
 
-<p>The <strong>run</strong> command mentioned in the server <a href="setup.html">setup</a> page can take an optional second config file.  This can be handy to use one config to keep your standard options and a second one to use for any game or activity of the day.</p>
+<p>As mentioned in the server <a href="setup.html">setup</a> page, the server can optionally take any number of additional config files.  This can be handy to use one config to keep your standard options and a second one to use for any game or activity of the day.</p>
 
 <p>In fact the configuration examples provided with the server do just that and setup a &#39;machine&#39; file to specify the size of the window and then a &#39;lesson&#39; file to use for the activity of the day in class.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">run machine_test.cfg lesson_findthemiddle.cfg
+<div class="highlight"><pre><code class="language-text" data-lang="text">SBA_Serv machine_test.cfg lesson_findthemiddle.cfg
 </code></pre></div>
 <h2 id="format"><a name="format"></a>Format</h2>
 
@@ -115,9 +117,15 @@ etc...
 
 <p>You may also see advanced constructs such as Tuples in parenthesis () or Lists in [], but if you are familiar with <a href="http://json.org/">JSON</a> formatting, then it shouldn&#39;t be hard to follow.</p>
 
-<h2 id="[screen]"><a name="screen"></a>[Screen]</h2>
+<p><em>See the default.cfg file for the list of default configuration values.</em></p>
+
+<h2 id="[application]"><a name="application"></a>[Application]</h2>
 
 <p>This section contains options pertaining to the graphical window created to run the SBA server.  It will affect how SBA is presented to you.</p>
+
+<h3 id="fullscreen-=-boolean">fullscreen = boolean</h3>
+
+<p>Specifies whether or not SBA should run fullscreen or in a window.  <strong>Note</strong>: you should make sure that the horizontal and vertical resolutions match your displays resolution values OR you can set <em>both</em> <strong>horz_res</strong> and <strong>vert_res</strong> to <strong>0</strong> for your display resolution to be <em>automatically</em> detected.</p>
 
 <h3 id="horz_res-=-integer">horz_res = integer</h3>
 
@@ -127,41 +135,60 @@ etc...
 
 <p>Specifies the vertical resolution of the SBA window (in pixels).  This should match your monitor resolution if you plan to run the game in fullscreen.</p>
 
-<h3 id="fullscreen-=-boolean">fullscreen = boolean</h3>
+<h3 id="sound-=-boolean">sound = boolean</h3>
 
-<p>Specifies whether or not SBA should run fullscreen or in a window.</p>
+<p>Determines if sounds should be played or not.</p>
 
 <h3 id="showstats-=-boolean">showstats = boolean</h3>
 
-<p>If this option is enabled, the server will start with some basic GUI options already enabled showing statistics about a player’s ship</p>
+<p>If this option is enabled, the server will start with some basic GUI options already enabled showing statistics about a player’s ship.</p>
+
+<h3 id="ship_images-=-integer">ship_images = integer</h3>
+
+<p>This specifies the number of images that can be used for ships in the <em>GUI\Graphics\Ships</em> directory.  Use an existing ship image as a template to create more ship images.  Each frame of a ship should be contained in a 64x64 pixel square within the image.  The top row of images show a normal ship, the bottom a cloaked ship.  The first image is neutral, then left thruster firing, front thrusters, right thruster, back thruster, all thrusters (braking), and warping.</p>
 
 <h2 id="[world]"><a name="world"></a>[World]</h2>
 
 <p>This section contains options for how large the universe is.  These options should be set to be <em>at least</em> as large as the Screen options, but can be larger.  <em>It is generally recommended that they are each 1.5 or 2 times the value of their corresponding Screen values.</em></p>
 
+<h3 id="collisions-=-boolean">collisions = boolean</h3>
+
+<p>Turn collision detection on/off in the physics engine.  Useful for introductions to the world without worrying about actual interference.  <strong>Note:</strong> Most non-basic games won&#39;t work without this option on.</p>
+
 <h3 id="width-=-integer">width = integer</h3>
 
-<p>Horizontal length of the universe in pixels.</p>
+<p>Horizontal length of the universe in pixels. <em>Alternately, you can specify &quot;x&quot; and a number to multiply the horizontal resolution value by your number for the world width.</em></p>
 
 <h3 id="height-=-integer">height = integer</h3>
 
-<p>Vertical length of the universe in pixels.</p>
+<p>Vertical length of the universe in pixels. <em>Alternately, you can specify &quot;x&quot; and a number to multiply the vertical resolution value by your number for the world height.</em></p>
+
+<h3 id="radar_include_name-=-boolean">radar_include_name = boolean</h3>
+
+<p>Determines if the name of the ship can be obtained through a Radar Command or not.</p>
 
 <h2 id="[server]"><a name="server"></a>[Server]</h2>
 
 <p>This section of options controls how the server should behave and accept connections from clients.</p>
 
-<h3 id="multipleconnections-=-boolean">multipleconnections = boolean</h3>
-
-<p>This option when enabled allows the same client machine to be connected to the server more than once.  Otherwise, each IP address is only allowed to connect a single time to a server instance.  This can cause issues if a client’s connection unexpectedly terminates.</p>
-
 <h3 id="port-=-integer">port = integer</h3>
 
 <p>The TCP/IP port that the server should run on.  If this is changed from the default (<strong>2012</strong>), then a third parameter of a port number must be passed in when running the TextClient class from a Java client.</p>
 
-<h3 id="maximages-=-integer">maximages = integer</h3>
+<h3 id="multiple_connections-=-boolean">multiple_connections = boolean</h3>
 
-<p>This specifies the number of images that can be used for ships in the <em>GUI\Graphics\Ships</em> directory.  Use an existing ship image as a template to create more ship images.  Each frame of a ship should be contained in a 64x64 pixel square within the image.  The top row of images show a normal ship, the bottom a cloaked ship.  The first image is neutral, then left thruster firing, front thrusters, right thruster, back thruster, all thrusters (braking), and warping.</p>
+<p>This option when enabled allows the same client machine to be connected to the server more than once.  Otherwise, each IP address is only allowed to connect a single time to a server instance.  This can cause issues if a client’s connection unexpectedly terminates.</p>
+
+<h3 id="allow_re-entry-=-boolean">allow_re-entry = boolean</h3>
+
+<p>Can a player join the server again if they had connected previously and disconnected?</p>
+
+<h3 id="disable_commands-=-string">disable_commands = string</h3>
+
+<p>Comma separated list of ship commands to disable on the server.  E.g.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">disable_commands = WarpCommand,FireTorpedoCommand
+</code></pre></div>
+<p>A list of commands can be found in the Command chapter. When a command is invoked that has been disabled, it is simply ignored. A message should return to the client, but they will get a new environment and their ship should continue running.  Its state might just not be what was expected.</p>
 
 <h2 id="[asteroid]"><a name="asteroid"></a>[Asteroid]</h2>
 
@@ -226,55 +253,43 @@ etc...
 
 <p>Main options for the behavior of the simulation and which tournament rules should be applied.</p>
 
-<h3 id="sound-=-boolean">sound = boolean</h3>
+<h3 id="game-=-string">game = string</h3>
 
-<p>Determines if sounds should be played or not.</p>
+<p>Name of the game to be played on the server.  See more info in the Competitions chapter about running games.</p>
 
-<h3 id="autostart-=-boolean">autostart = boolean</h3>
+<p>To just have a standard universe running, use <strong>BasicGame</strong>.</p>
+
+<h3 id="auto_start-=-boolean">auto_start = boolean</h3>
 
 <p>When set to true the game/round will automatically start when the server is run.  Otherwise, it will wait for you to press the space key.</p>
 
-<h3 id="allowafterstart-=-boolean">allowafterstart = boolean</h3>
+<h3 id="allow_after_start-=-boolean">allow_after_start = boolean</h3>
 
 <p>Can players join the server after the game has already started?</p>
 
-<h3 id="allowreentry-=-boolean">allowreentry = boolean</h3>
+<h2 id="[tournament]"><a name="tournament"></a>[Tournament]</h2>
 
-<p>Can a player join the server again if they had connected previously and disconnected?</p>
-
-<h3 id="collisions-=-boolean">collisions = boolean</h3>
-
-<p>Turn collision detection on/off in the physics engine.  Useful for introductions to the world without worrying about actual interference.</p>
-
-<h3 id="disconnectplayersafterround-=-boolean">disconnectplayersafterround = boolean</h3>
-
-<p>Should clients be disconnected from the server after they have completed a round?</p>
-
-<h3 id="radarname-=-boolean">radarname = boolean</h3>
-
-<p>Determines if the name of the ship can be obtained through a Radar Command or not.</p>
+<p>Tournaments are run for more advanced games and divide players into groups to compete for a top score.  Then the top player from each round will advance to a final round.  This section defines settings related to running tournaments.  See more info in the Competitions chapter.</p>
 
 <h3 id="tournament-=-boolean">tournament = boolean</h3>
 
 <p>Should the game be run in a tournament setting where connected players are split into a number of groups.  Each winner of the game in a group proceeds to a final bracket to determine a winner.  Each round will automatically be paired, timed, and calculated.  Just hit space to start each round.</p>
 
-<h3 id="tournamentgroups-=-integer">tournamentgroups = integer</h3>
+<h3 id="tournament_groups-=-integer">tournament_groups = integer</h3>
 
 <p>How many groups should the number of clients connected be broken into for the tournament?  E.g. Setting this value to 5 and having 30 clients connected would result in 5 rounds of 6 players each and a final round with the winners of each group.  Raising this number to higher values requires more vertical real-estate for the tournament display board.</p>
 
-<h3 id="roundtime-=-integer">roundtime = integer</h3>
+<h3 id="round_time-=-integer">round_time = integer</h3>
 
 <p>How long each game round should last in seconds.</p>
 
-<h3 id="resetworldeachround-=-boolean">resetworldeachround = boolean</h3>
+<h3 id="reset_world_each_round-=-boolean">reset_world_each_round = boolean</h3>
 
 <p>Should the world be cleared of all objects and recreated between each round of play?</p>
 
-<h3 id="rungame-=-string">rungame = string</h3>
+<h3 id="disconnect_players_after_round-=-boolean">disconnect_players_after_round = boolean</h3>
 
-<p>Name of the game to be played on the server.  See more info in the Competitions section about running games.</p>
-
-<p>To just have a standard universe running, use <strong>BasicGame</strong>.</p>
+<p>Should clients be disconnected from the server after they have completed a round? <strong>Note:</strong> this should not be turned on when running a multi-round tournament.</p>
 
       </section>
     </div>
