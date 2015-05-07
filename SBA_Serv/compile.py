@@ -75,7 +75,6 @@ class BuildExe:
 
         extra_files = self.find_data_files('GUI\\', '*.png', '*.wav', recursive=True)
         root = [os.path.join(pymunk_dir, 'chipmunk.dll'),
-                                  "run.bat",
                                   "freesansbold.ttf"]
         root += glob.glob("*.cfg")
         extra_files += [('', root)]

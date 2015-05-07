@@ -24,12 +24,12 @@ class WorldServer(object):
     def __init__(self, port, game):
         print "Server Started at IP: " + Server.MWNL2.getIPAddress()
         self.__port = port
-        self.__maximages = game.cfg.getint("Server", "maximages")
+        self.__maximages = game.cfg.getint("Application", "ship_images")
         self.__net = Server.MWNL2.MWNL_Init(port, self.__serverCallback)
-        self.__net.host(game.cfg.getboolean("Server", "multipleconnections"))
+        self.__net.host(game.cfg.getboolean("Server", "multiple_connections"))
         self.__game = game
-        if game.cfg.has_option("Server", "disablecommands"):
-            self.__badcmds = game.cfg.get("Server", "disablecommands").split(",")
+        if game.cfg.has_option("Server", "disable_commands"):
+            self.__badcmds = game.cfg.get("Server", "disable_commands").split(",")
         else:
             self.__badcmds = None
         #eif

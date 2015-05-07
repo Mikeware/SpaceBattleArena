@@ -36,52 +36,87 @@ from Game.Game import BasicGame
 from optparse import OptionParser
 from ConfigParser import ConfigParser
 
-parser = OptionParser()
-parser.add_option("-c", "--config", type="string", dest="configfile",
-                  help="specify configuration file used to configure game server")
-parser.add_option("-2", "--config2", type="string", dest="configfile2",
-                  help="specify a secondary configuration file to override defaults")
-parser.add_option("-g", "--headless", action="store_true", dest="headless", default=False,
-                  help="use to run the server without the GUI")
+parser = OptionParser(usage="Usage: %prog [options] [config_file] [more_config_files...]\n\nYou should pass at least one config file to the server. Additional config files will override/add to the options in the base file.")
+parser.add_option("-n", "--nolog", action="store_true", dest="nolog", default=False,
+                  help="turns logging off")
 parser.add_option("-v", "--verbose", action="store_true", dest="verbose", default=False,
                   help="turns logging to DEBUG (from INFO)")
 parser.add_option("-l", "--logfile", action="store", dest="logfilename", default="SBA_Serv.log",
                   help="specifies the file to log info to")
-parser.add_option("-n", "--nolog", action="store_true", dest="nolog", default=False,
-                  help="turns logging off")
+"""
+parser.add_option("-g", "--headless", action="store_true", dest="headless", default=False,
+                  help="use to run the server without the GUI")
+"""
 #TODO: Add verbosity...
 
 (options, args) = parser.parse_args()
 
 if len(sys.argv) == 1:
     parser.print_help()
-else:
-    cfg = ConfigParser()
-    cfg.readfp(open(options.configfile))
-    if options.configfile2:
-        cfg.read(options.configfile2)
-    
-    # School Server Project Resolution is 1280x1024
-    # SimpleWorld((worldwidth, worldheight), numplanet, numblackhole, numasteroid)
-    
-    if not options.nolog:
-        logformat='%(asctime)s|%(relativeCreated)d|%(levelname)s|%(threadName)s|%(module)s|%(lineno)d|%(funcName)s|%(message)s'
-        if options.verbose:
-            logging.basicConfig(level=logging.DEBUG, filename=options.logfilename, format=logformat)
-        else:
-            logging.basicConfig(level=logging.INFO, filename=options.logfilename, format=logformat)
-        #eif
-        logging.info("Starting " + titlever)
-        logging.info("Logging to " + options.logfilename + " Verbose: " + str(options.verbose))
+
+    print "\n---\nIt is recommended to run Space Battle Arena with customized configuration.\nSee http://mikeware.github.io/SpaceBattleArena/server\n---\n\n"
+
+if not options.nolog:
+    logformat='%(asctime)s|%(relativeCreated)d|%(levelname)s|%(threadName)s|%(module)s|%(lineno)d|%(funcName)s|%(message)s'
+    if options.verbose:
+        logging.basicConfig(level=logging.DEBUG, filename=options.logfilename, format=logformat)
     else:
-        print "LOGGING DISABLED"          
+        logging.basicConfig(level=logging.INFO, filename=options.logfilename, format=logformat)
+    #eif
+    logging.info("Starting " + titlever)
+    logging.info("Logging to " + options.logfilename + " Verbose: " + str(options.verbose))
+else:
+    print " -- LOGGING DISABLED -- "
     
-    rungame = cfg.get("Game","rungame")
+defaults = False
+cfg = ConfigParser()
+try:
+    cfg.readfp(open('default.cfg'))
+    defaults = True
+    logging.info("Loaded Default Configuration File")
+except:
+    logging.error("Couldn't find default config file.")
+    print "Couldn't load 'default.cfg' file, exiting..."
+
+if defaults:
+    loaded_cfg_files = cfg.read(args)
+
+    logging.info("Loaded Configuration Files: %s", repr(loaded_cfg_files))
+
+    if loaded_cfg_files == []:
+        print "Loaded Default Configuration"
+    else:
+        print "Loaded Configuration:\n\t", "\n\t".join(loaded_cfg_files)
+        print
+
+    resolution = (cfg.getint("Application", "horz_res"), cfg.getint("Application", "vert_res"))
+
+    # enable fullscreen resolution detection
+    if resolution == (0, 0):
+        resolution = None
+    
+    # See if we've specified we want relative world size to resolution
+    width = cfg.get("World", "width")
+    height = cfg.get("World", "height")
+    if width.find("x") != -1 or height.find("x") != -1:
+        if resolution == None:
+            logging.info("Detecting Resolution...")
+            import pygame
+            pygame.display.init()
+            resolution = pygame.display.list_modes()[0]
+            logging.info("Using Resolution %s", repr(resolution))
+
+        if width.find("x") != -1:
+            cfg.set("World", "width", str(int(resolution[0] * float(width.replace("x",""))))) # as per doc, need to cast back to store as string, will unbox as int again later
+        if height.find("x") != -1:
+            cfg.set("World", "height", str(int(resolution[1] * float(height.replace("x","")))))
+
+    rungame = cfg.get("Game","game")
 
     print "Attempting to Load Game: ", rungame
 
     game = None
-    if rungame != "BasicGame" or rungame.strip() != "" or rungame != None:
+    if rungame != "BasicGame" and rungame != None and rungame.strip() != "":
         mod = None
         try:
             mod = import_module("Game."+rungame)
@@ -104,12 +139,12 @@ else:
     server = WorldServer.WorldServer(cfg.getint("Server", "port"), game)
 
     try:
-        if options.headless:
-            logging.info("Running Headless without GUI")
+        #if options.headless:
+            #logging.info("Running Headless without GUI")
             #TODO: Set World Size Here?
-        else:
-            # startGame(title, world, fullscreen?, (xres, yres))
-            main.startGame(titlever, game, cfg.getboolean("Screen", "fullscreen"), (cfg.getint("Screen", "horz_res"), cfg.getint("Screen", "vert_res")), cfg.getboolean("Screen", "showstats"), cfg.getboolean("Game", "sound"))
+        #else:
+        #startGame(title, game, fullscreen:bool, (xres, yres), showstats:bool, sound:bool)
+        main.startGame(titlever, game, cfg.getboolean("Application", "fullscreen"), resolution, cfg.getboolean("Application", "showstats"), cfg.getboolean("Application", "sound"))
     except:
         logging.error(traceback.format_exc())
         print traceback.format_exc()
@@ -117,3 +152,4 @@ else:
     logging.debug("End of Main")
     server.disconnectAll()
     logging.debug("All done?")
+#eif

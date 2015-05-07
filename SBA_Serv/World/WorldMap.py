@@ -46,6 +46,7 @@ class GameWorld(object):
         self.__active = True
         self.__pys = pys
 
+        logging.info("Initialized World of size %s, starting game loop...", repr(worldsize))
         if pys:
             thread.start_new_thread(self.__THREAD__gameloop, ())
 

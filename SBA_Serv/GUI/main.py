@@ -67,12 +67,10 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
     
     ipaddress = getIPAddress()
 
-    largestAvailableScreenSize = pygame.display.list_modes()[0]
-    #world = GameWorld(largestAvailableScreenSize)
-    if resolution != None:
-        largestAvailableScreenSize = resolution
+    if resolution == None:
+        resolution = pygame.display.list_modes()[0]
 
-    windowSurface = pygame.display.set_mode(largestAvailableScreenSize, (pygame.FULLSCREEN * fullscreen) | pygame.HWSURFACE | pygame.DOUBLEBUF)
+    windowSurface = pygame.display.set_mode(resolution, (pygame.FULLSCREEN * fullscreen) | pygame.HWSURFACE | pygame.DOUBLEBUF)
     pygame.display.set_caption(windowcaption)
 
     logging.debug("Game GUI CFG...")
@@ -190,8 +188,8 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
     prevzoom = zoomout
     showip = True
     showplayerlist = showstats
-    showroundtime = game.cfg.getboolean("Game", "tournament")
-    tournamentinfo = game.cfg.getboolean("Game", "tournament")
+    showroundtime = game.cfg.getboolean("Tournament", "tournament")
+    tournamentinfo = game.cfg.getboolean("Tournament", "tournament")
     
     flags = {"DEBUG":False,
              "STATS":showstats,

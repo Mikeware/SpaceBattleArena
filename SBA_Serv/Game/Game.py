@@ -57,19 +57,19 @@ class BasicGame(object):
         self.server = None # set when server created
         self.__teams = ThreadSafeDict()
         self._players = ThreadSafeDict()
-        self.__autostart = cfgobj.getboolean("Game", "autostart")
-        self.__allowafterstart = cfgobj.getboolean("Game", "allowafterstart")
-        self.__allowreentry = cfgobj.getboolean("Game", "allowreentry")
-        self.__resetworldround = self.cfg.getboolean("Game", "resetworldeachround")
-        self.__disconnectplayersafterround = self.cfg.getboolean("Game", "disconnectplayersafterround")         
-        self.__roundtime = cfgobj.getint("Game", "roundtime")
+        self.__autostart = cfgobj.getboolean("Game", "auto_start")
+        self.__allowafterstart = cfgobj.getboolean("Game", "allow_after_start")
+        self.__allowreentry = cfgobj.getboolean("Server", "allow_re-entry")
+        self.__resetworldround = self.cfg.getboolean("Tournament", "reset_world_each_round")
+        self.__disconnectplayersafterround = self.cfg.getboolean("Tournament", "disconnect_players_after_round")         
+        self.__roundtime = cfgobj.getint("Tournament", "round_time")
         self.__timer = None
         # TODO: Create Tournament Class
-        self._tournament = cfgobj.getboolean("Game", "tournament")
+        self._tournament = cfgobj.getboolean("Tournament", "tournament")
         self._tournamentinitialized = False
         if self._tournament:
             self.__autostart = False
-        self._tournamentnumgroups = cfgobj.getint("Game", "tournamentgroups")        
+        self._tournamentnumgroups = cfgobj.getint("Tournament", "tournament_groups")        
         self._tournamentgroups = []
         self._tournamentcurrentgroup = 0
         self._tournamentfinalgroup = []
@@ -113,7 +113,7 @@ class BasicGame(object):
             self.resetWorld()
 
         # overwritten by allowafterstart
-        self.__autostart = self.cfg.getboolean("Game", "autostart")
+        self.__autostart = self.cfg.getboolean("Game", "auto_start")
         # TODO: figure out a better way to tie these together
         if self._tournament:
             self.__autostart = False
@@ -324,7 +324,7 @@ class BasicGame(object):
         self._players[netid].object.player = self._players[netid]
         self._players[netid].roundover = False
 
-        if not self.cfg.getboolean("Game", "collisions"):
+        if not self.cfg.getboolean("World", "collisions"):
             self._players[netid].object.shape.group = 1
 
         if roundstart:
@@ -423,7 +423,7 @@ class BasicGame(object):
     Called by the World when the obj is being radared
     """
     def getExtraRadarInfo(self, obj, objdata):
-        if hasattr(obj, "player") and self.cfg.getboolean("Game", "radarname"):
+        if hasattr(obj, "player") and self.cfg.getboolean("World", "radar_include_name"):
             objdata["NAME"] = obj.player.name
 
     """

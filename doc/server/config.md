@@ -6,7 +6,7 @@ outline-header: Outline
 outline:
  - { url: "#overview", title: "Overview" }
  - { url: "#format", title: "Format" }
- - { url: "#screen", title: "[Screen]" }
+ - { url: "#application", title: "[Application]" }
  - { url: "#world", title: "[World]" }
  - { url: "#server", title: "[Server]" }
  - { url: "#asteroid", title: "[Asteroid]" }
@@ -14,6 +14,7 @@ outline:
  - { url: "#blackhole", title: "[BlackHole]" }
  - { url: "#nebula", title: "[Nebula]" }
  - { url: "#game", title: "[Game]" }
+ - { url: "#tournament", title: "[Tournament]" }
 ---
 
 Server Configuration
@@ -24,13 +25,13 @@ Server Configuration
 
 Space Battle Arena is highly configurable.  SBA uses a standard type of configuration file format to set options for how the server should run and behave.  
 
-SBA comes with a set of configuration files for different purposes.  However, you'll probably want to create your own configuration file to represent the settings of your machine and its display (see the [[Screen]](#screen) section below).
+SBA comes with a set of configuration files for different purposes.  However, you'll probably want to create your own configuration file to represent the settings of your machine and its display (see the [[Application]](#application) section below).
 
-The **run** command mentioned in the server [setup](setup.html) page can take an optional second config file.  This can be handy to use one config to keep your standard options and a second one to use for any game or activity of the day.
+As mentioned in the server [setup](setup.html) page, the server can optionally take any number of additional config files.  This can be handy to use one config to keep your standard options and a second one to use for any game or activity of the day.
 
 In fact the configuration examples provided with the server do just that and setup a 'machine' file to specify the size of the window and then a 'lesson' file to use for the activity of the day in class.
 
-	run machine_test.cfg lesson_findthemiddle.cfg
+	SBA_Serv machine_test.cfg lesson_findthemiddle.cfg
 
 
 <a name="format"></a>Format
@@ -58,10 +59,15 @@ Possible value types include integer, boolean, string, and percent:
 
 You may also see advanced constructs such as Tuples in parenthesis () or Lists in [], but if you are familiar with [JSON](http://json.org/) formatting, then it shouldn't be hard to follow.
 
+*See the default.cfg file for the list of default configuration values.*
 
-<a name="screen"></a>[Screen]
+
+<a name="application"></a>[Application]
 ---------------------------------------
 This section contains options pertaining to the graphical window created to run the SBA server.  It will affect how SBA is presented to you.
+
+###fullscreen = boolean
+Specifies whether or not SBA should run fullscreen or in a window.  **Note**: you should make sure that the horizontal and vertical resolutions match your displays resolution values OR you can set *both* **horz_res** and **vert_res** to **0** for your display resolution to be *automatically* detected.
 
 ###horz_res = integer
 Specifies the horizontal resolution of the SBA window (in pixels).  This should match your monitor resolution if you plan to run the game in fullscreen.
@@ -69,36 +75,52 @@ Specifies the horizontal resolution of the SBA window (in pixels).  This should 
 ###vert_res = integer
 Specifies the vertical resolution of the SBA window (in pixels).  This should match your monitor resolution if you plan to run the game in fullscreen.
 
-###fullscreen = boolean
-Specifies whether or not SBA should run fullscreen or in a window.
+###sound = boolean
+Determines if sounds should be played or not.
 
 ###showstats = boolean
-If this option is enabled, the server will start with some basic GUI options already enabled showing statistics about a player’s ship
+If this option is enabled, the server will start with some basic GUI options already enabled showing statistics about a player’s ship.
+
+###ship_images = integer
+This specifies the number of images that can be used for ships in the *GUI\Graphics\Ships* directory.  Use an existing ship image as a template to create more ship images.  Each frame of a ship should be contained in a 64x64 pixel square within the image.  The top row of images show a normal ship, the bottom a cloaked ship.  The first image is neutral, then left thruster firing, front thrusters, right thruster, back thruster, all thrusters (braking), and warping.
 
 
 <a name="world"></a>[World]
 ---------------------------------------
 This section contains options for how large the universe is.  These options should be set to be *at least* as large as the Screen options, but can be larger.  *It is generally recommended that they are each 1.5 or 2 times the value of their corresponding Screen values.*
 
+###collisions = boolean
+Turn collision detection on/off in the physics engine.  Useful for introductions to the world without worrying about actual interference.  **Note:** Most non-basic games won't work without this option on.
+
 ###width = integer
-Horizontal length of the universe in pixels.
+Horizontal length of the universe in pixels. *Alternately, you can specify "x" and a number to multiply the horizontal resolution value by your number for the world width.*
 
 ###height = integer
-Vertical length of the universe in pixels.
+Vertical length of the universe in pixels. *Alternately, you can specify "x" and a number to multiply the vertical resolution value by your number for the world height.*
+
+###radar_include_name = boolean
+Determines if the name of the ship can be obtained through a Radar Command or not.
 
 
 <a name="server"></a>[Server]
 ---------------------------------------
 This section of options controls how the server should behave and accept connections from clients.
 
-###multipleconnections = boolean
-This option when enabled allows the same client machine to be connected to the server more than once.  Otherwise, each IP address is only allowed to connect a single time to a server instance.  This can cause issues if a client’s connection unexpectedly terminates.
-
 ###port = integer
 The TCP/IP port that the server should run on.  If this is changed from the default (**2012**), then a third parameter of a port number must be passed in when running the TextClient class from a Java client.
 
-###maximages = integer
-This specifies the number of images that can be used for ships in the *GUI\Graphics\Ships* directory.  Use an existing ship image as a template to create more ship images.  Each frame of a ship should be contained in a 64x64 pixel square within the image.  The top row of images show a normal ship, the bottom a cloaked ship.  The first image is neutral, then left thruster firing, front thrusters, right thruster, back thruster, all thrusters (braking), and warping.
+###multiple_connections = boolean
+This option when enabled allows the same client machine to be connected to the server more than once.  Otherwise, each IP address is only allowed to connect a single time to a server instance.  This can cause issues if a client’s connection unexpectedly terminates.
+
+###allow_re-entry = boolean
+Can a player join the server again if they had connected previously and disconnected?
+
+###disable_commands = string
+Comma separated list of ship commands to disable on the server.  E.g.
+
+	disable_commands = WarpCommand,FireTorpedoCommand
+	
+A list of commands can be found in the Command chapter. When a command is invoked that has been disabled, it is simply ignored. A message should return to the client, but they will get a new environment and their ship should continue running.  Its state might just not be what was expected.
 
 
 <a name="asteroid"></a>[Asteroid]
@@ -159,40 +181,33 @@ These two values correspond to the amount of pull the drag will have on ships.  
 ---------------------------------------
 Main options for the behavior of the simulation and which tournament rules should be applied.
 
-###sound = boolean
-Determines if sounds should be played or not.
+###game = string
+Name of the game to be played on the server.  See more info in the Competitions chapter about running games.
 
-###autostart = boolean
+To just have a standard universe running, use **BasicGame**.
+
+###auto_start = boolean
 When set to true the game/round will automatically start when the server is run.  Otherwise, it will wait for you to press the space key.
 
-###allowafterstart = boolean
+###allow_after_start = boolean
 Can players join the server after the game has already started?
 
-###allowreentry = boolean
-Can a player join the server again if they had connected previously and disconnected?
 
-###collisions = boolean
-Turn collision detection on/off in the physics engine.  Useful for introductions to the world without worrying about actual interference.
-
-###disconnectplayersafterround = boolean
-Should clients be disconnected from the server after they have completed a round?
-
-###radarname = boolean
-Determines if the name of the ship can be obtained through a Radar Command or not.
+<a name="tournament"></a>[Tournament]
+---------------------------------------
+Tournaments are run for more advanced games and divide players into groups to compete for a top score.  Then the top player from each round will advance to a final round.  This section defines settings related to running tournaments.  See more info in the Competitions chapter.
 
 ###tournament = boolean
 Should the game be run in a tournament setting where connected players are split into a number of groups.  Each winner of the game in a group proceeds to a final bracket to determine a winner.  Each round will automatically be paired, timed, and calculated.  Just hit space to start each round.
 
-###tournamentgroups = integer
+###tournament_groups = integer
 How many groups should the number of clients connected be broken into for the tournament?  E.g. Setting this value to 5 and having 30 clients connected would result in 5 rounds of 6 players each and a final round with the winners of each group.  Raising this number to higher values requires more vertical real-estate for the tournament display board.
 
-###roundtime = integer
+###round_time = integer
 How long each game round should last in seconds.
 
-###resetworldeachround = boolean
+###reset_world_each_round = boolean
 Should the world be cleared of all objects and recreated between each round of play?
 
-###rungame = string
-Name of the game to be played on the server.  See more info in the Competitions section about running games.
-
-To just have a standard universe running, use **BasicGame**.
+###disconnect_players_after_round = boolean
+Should clients be disconnected from the server after they have completed a round? **Note:** this should not be turned on when running a multi-round tournament.

@@ -30,15 +30,17 @@ This should be the default behavior when right-clicking on the archive file and 
 
 *The server is best run from the command-line in order to pass in the required configuration file parameters.*
 
+However, for an initial test, just double-clicking the executable should bring it up.
+
 Navigate to the directory where the server was extracted.  And open the command prompt.
 
 This can be done from Windows Explorer’s left folder tree pane, by right-clicking on the directory while holding the Shift key on the keyboard.  Then select the **Open Command Window Here** option.
 
 Then type:
 
-	run <configfile>
+	SBA_Serv [configfile]
 
-E.g. 'run machine_test.cfg'
+E.g. 'SBA_Serv machine_test.cfg'
 
 This should spit out some text and then load a new window and start the server:
 
@@ -52,25 +54,21 @@ In the [next chapter](config.html), we'll explore the configuration file itself 
 
 **Note:** By default, the server creates a .log file which contains information about what has occurred during the session.  This can be turned off using the additional parameters described in the next section.  Otherwise, you may want to delete it occasionally or before each run.  It is useful to provide this file when requesting any support.
 
-<a name="run"></a>(Advanced) Command-line Parameters
+<a name="run"></a>Command-line Parameters (Advanced)
 -----------------------------
 
-To use the advanced parameters, call the actual server executable 'SBA_Serv' on the command-line.
+There are some extra options available for the server as well. It is also possible to pass in any number of configuration files to the server.
 
-	Usage: SBA_Serv.exe [options]
+Each extra configuration file passed in will override or add to the configuration file before it. Therefore files passed in last (on the right) have the highest precedence.
+
+	Usage: SBA_Serv.exe [options] [config_file] [more_config_files...]
+
+	You should pass at least one config file to the server. Additional config files
+	will override/add to the options in the base file.
 	
 	Options:
 	  -h, --help            show this help message and exit
-	  -c CONFIGFILE, --config=CONFIGFILE
-	                        specify configuration file used to configure game
-	                        server
-	  -2 CONFIGFILE2, --config2=CONFIGFILE2
-	                        specify a secondary configuration file to override
-	                        defaults
-	  -g, --headless        use to run the server without the GUI
+	  -n, --nolog           turns logging off
 	  -v, --verbose         turns logging to DEBUG (from INFO)
 	  -l LOGFILENAME, --logfile=LOGFILENAME
 	                        specifies the file to log info to
-	  -n, --nolog           turns logging off
-  
- 

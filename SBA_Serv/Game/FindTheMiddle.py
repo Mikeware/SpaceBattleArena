@@ -34,10 +34,10 @@ from operator import attrgetter
 class FindTheMiddleGame(BasicGame):
     
     def __init__(self, cfgobj):
-        self.__objectiveradii = eval(cfgobj.get("FindTheMiddle", "objectiveradii"))
-        self.__objectivepoints = eval(cfgobj.get("FindTheMiddle", "objectivepoints"))
-        self.__objectivetime = float(cfgobj.getint("FindTheMiddle", "objectivetime"))
-        self.__objectivevelocity = cfgobj.getint("FindTheMiddle", "objectivevelocity")
+        self.__objectiveradii = eval(cfgobj.get("FindTheMiddle", "objective_radii"))
+        self.__objectivepoints = eval(cfgobj.get("FindTheMiddle", "objective_points"))
+        self.__objectivetime = float(cfgobj.getint("FindTheMiddle", "objective_time"))
+        self.__objectivevelocity = cfgobj.getint("FindTheMiddle", "objective_velocity")
 
         super(FindTheMiddleGame, self).__init__(cfgobj)
                 
