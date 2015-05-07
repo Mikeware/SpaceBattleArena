@@ -58,37 +58,38 @@ def SimpleWorld(game, size, numplanets=1, numblackholes=0, numasteroids=2):
 
     return world
 
-def ConfiguredWorld(game, cfg, pys=True):
+def ConfiguredWorld(game, cfg, pys=True, empty=False):
     """Generates a World from a Configuration Object.
 
     Args:
         game: Game object.
         cfg: ConfigParser object.
         pys: Physics flag.
+        empty: if you want to populate the world with objects (used for testing)
 
     Returns:
         new World object.
     """
     world = GameWorld(game, (cfg.getint("World","width"), cfg.getint("World","height")), pys)
 
-    av_sizes = eval(cfg.get("Nebula", "sizes"))
-    for neb in xrange(cfg.getint("Nebula", "number")):
-        world.append(Nebula(getPositionAwayFromOtherObjects(world, 30, 30), random.choice(av_sizes), cfg_rand_min_max(cfg, "Nebula", "pull")))
-    #next ast
+    if not empty:
+        av_sizes = eval(cfg.get("Nebula", "sizes"))
+        for neb in xrange(cfg.getint("Nebula", "number")):
+            world.append(Nebula(getPositionAwayFromOtherObjects(world, 30, 30), random.choice(av_sizes), cfg_rand_min_max(cfg, "Nebula", "pull")))
+        #next ast
 
-    for p in xrange(cfg.getint("Planet", "number")):
-        world.append(Planet(getPositionAwayFromOtherObjects(world, 200, 100), cfg_rand_min_max(cfg, "Planet", "range"), cfg_rand_min_max(cfg, "Planet", "pull")))
-    #next p 
+        for p in xrange(cfg.getint("Planet", "number")):
+            world.append(Planet(getPositionAwayFromOtherObjects(world, 200, 100), cfg_rand_min_max(cfg, "Planet", "range"), cfg_rand_min_max(cfg, "Planet", "pull")))
+        #next p 
 
-    for bh in xrange(cfg.getint("BlackHole", "number")):
-        world.append(BlackHole(getPositionAwayFromOtherObjects(world, 250, 100), cfg_rand_min_max(cfg, "BlackHole", "range"), cfg_rand_min_max(cfg, "BlackHole", "pull")))
-    #next bh
+        for bh in xrange(cfg.getint("BlackHole", "number")):
+            world.append(BlackHole(getPositionAwayFromOtherObjects(world, 250, 100), cfg_rand_min_max(cfg, "BlackHole", "range"), cfg_rand_min_max(cfg, "BlackHole", "pull")))
+        #next bh
 
-    for ast in xrange(cfg.getint("Asteroid", "number")):
-        world.append(Asteroid(getPositionAwayFromOtherObjects(world, 100, 30)))
-    #next ast
-
-    #world.append(Planet((100, 100)))
+        for ast in xrange(cfg.getint("Asteroid", "number")):
+            world.append(Asteroid(getPositionAwayFromOtherObjects(world, 100, 30)))
+        #next ast
+    #eif
 
     return world
 

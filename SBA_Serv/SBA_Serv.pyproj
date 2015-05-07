@@ -54,6 +54,7 @@
     <Compile Include="GUI\SoundCache.py" />
     <Compile Include="GUI\Star.py" />
     <Compile Include="GUI\__init__.py" />
+    <Compile Include="SBA_UT.py" />
     <Compile Include="ThreadStuff\ThreadSafe.py" />
     <Compile Include="ThreadStuff\__init__.py" />
     <Compile Include="SBA_Serv.py" />
@@ -91,6 +92,7 @@
   <ItemGroup>
     <Content Include="baublehunt.cfg" />
     <Content Include="baubletournamentB.cfg" />
+    <Content Include="test.cfg" />
     <Content Include="GUI\ObjWrappers\GUIEntity.py" />
     <Content Include="baubletournamentA.cfg" />
     <Content Include="default.cfg" />
@@ -101,7 +103,7 @@
     <Content Include="machine_test.cfg" />
     <Content Include="findthemiddle.cfg" />
     <Content Include="radarworld.cfg" />
-    <Content Include="test.cfg" />
+    <Content Include="baublescvold.cfg" />
   </ItemGroup>
   <Import Project="$(PtvsTargetsFile)" Condition="Exists($(PtvsTargetsFile))" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="!Exists($(PtvsTargetsFile))" />

@@ -48,7 +48,7 @@ class MessageLogHandler(logging.Handler):
         if self.filter == None or (self.filter != None and str(record.message).find(self.filter) != -1):
             self.messages.append(record.message)
 
-def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=False, sound=False):    
+def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=False, sound=False, testcase=None):    
     logging.info("Initiating PyGame...")
 
     world = game.world
@@ -204,7 +204,12 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
     obj = None
     
     notexit = True
-    while notexit:
+
+    # In test case we only care about test being done
+    if testcase != None:
+        notexit = False
+
+    while notexit or not testcase.donetest:
         t = pygame.time.get_ticks() / 1000.0
 
         #for star in stars:
