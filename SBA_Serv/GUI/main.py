@@ -209,7 +209,7 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
     if testcase != None:
         notexit = False
 
-    while notexit or not testcase.donetest:
+    while notexit or (testcase != None and not testcase.donetest):
         t = pygame.time.get_ticks() / 1000.0
 
         #for star in stars:
