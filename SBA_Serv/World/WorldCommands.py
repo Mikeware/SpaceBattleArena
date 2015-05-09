@@ -24,6 +24,7 @@ import WorldEntities
 SHIP_CMD_THRUST = "THRST"
 SHIP_CMD_BRAKE = "BRAKE"
 SHIP_CMD_ROTATE = "ROT"
+SHIP_CMD_STEER = "STEER"
 SHIP_CMD_IDLE = "IDLE"
 SHIP_CMD_RADAR = "RADAR"
 
@@ -100,6 +101,15 @@ def ConvertNetworkMessageToCommand(ship, cmdname, cmddict):
                     return "Degrees Must be Non-Zero"
                 
                 return RotateCommand(ship, cmddict["DEG"])
+            else:
+                return "Degrees Missing or Should Be Integer"
+            #eif
+        elif cmdname == SHIP_CMD_STEER:
+            if cmddict.has_key("DEG") and isinstance(cmddict["DEG"], int):
+                if cmddict["DEG"] == 0:
+                    return "Degrees Must be Non-Zero"
+                
+                return SteerCommand(ship, cmddict["DEG"])
             else:
                 return "Degrees Missing or Should Be Integer"
             #eif
@@ -219,10 +229,19 @@ class AllStopCommand(OneTimeCommand):
         self._obj.health /= 2
             
 class WarpCommand(Command):
+    """
+
+    __mode (0 = Random, 1 = Directed)
+    If directed, wait 1 second.
+    If random, rotate to destination.
+    Then __stage 0 = play sound and move, go to stage 1
+    stage 1 = cooldown timer
+    stage 2 = terminate command
+    """
     NAME = SHIP_CMD_WARP
     MAXWARPDISTANCE = 400.0
 
-    def __init__(self, obj, distance=0.0):
+    def __init__(self, obj, distance=0.0):        
         super(WarpCommand, self).__init__(obj, WarpCommand.NAME, block=True, required=10)
         self.__stage = 0
         self.__time = 0.0
@@ -305,10 +324,36 @@ class RotateCommand(Command):
         self._obj.rotationAngle += amt
         if self._obj.rotationAngle < 0: self._obj.rotationAngle += 360
         elif self._obj.rotationAngle > 360: self._obj.rotationAngle -= 360
-        #logging.debug("Executing Rotate on %s for %f", repr(obj), t)
+        #logging.debug("Executing Rotate on #%d for %f", self._obj.id, t)
         
     def __repr__(self):
         return super(RotateCommand, self).__repr__() + " DEG: " + repr(self.__deg)
+
+class SteerCommand(Command):
+    NAME = SHIP_CMD_STEER
+
+    def __init__(self, obj, degrees):
+        super(SteerCommand, self).__init__(obj, SteerCommand.NAME, block=True)        
+
+        self.__deg = -degrees # Physics rotations is opposite
+        self.energycost = 4
+
+    def isComplete(self):
+        return -0.01 < self.__deg < 0.01
+
+    def execute(self, t):
+        if self.__deg < 0:
+            amt = -self._obj.rotationSpeed * t / 4
+            if amt < self.__deg: amt = self.__deg            
+        else:
+            amt = self._obj.rotationSpeed * t / 4
+            if amt > self.__deg: amt = self.__deg
+        self.__deg -= amt
+        self._obj.body.velocity.angle_degrees += amt
+        #logging.debug("Executing Steering on #%d for %f", self._obj.id, t)
+        
+    def __repr__(self):
+        return super(SteerCommand, self).__repr__() + " DEG: " + repr(self.__deg)
 
 class IdleCommand(Command):
     NAME = SHIP_CMD_IDLE
