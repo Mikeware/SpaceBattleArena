@@ -50,6 +50,9 @@ class GameWorld(object):
         if pys:
             thread.start_new_thread(self.__THREAD__gameloop, ())
 
+    def mid_point(self, xoff = 0, yoff = 0):
+        return intpos((self.width / 2 + xoff, self.height / 2 + yoff))
+
     def endGameLoop(self):
         self.__active = False
             

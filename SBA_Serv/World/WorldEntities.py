@@ -27,7 +27,7 @@ class Ship(PhysicalRound):
 
     def __init__(self, pos, world):
         super(Ship, self).__init__(28, 500, pos)
-        self._world = world
+        self._world = world # NOTE: The ONLY reason this is here/needed is because the ship is creating a Torpedo from it's command system...
         self.energyRechargeRate = 4
 
         self.body.velocity_limit = 100
