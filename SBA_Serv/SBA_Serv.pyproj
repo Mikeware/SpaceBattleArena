@@ -62,6 +62,9 @@
     <Compile Include="Server\MWNL2.py" />
     <Compile Include="Server\WorldServer.py" />
     <Compile Include="Server\__init__.py" />
+    <Compile Include="World\AIShips.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="World\Commanding.py" />
     <Compile Include="World\Entities.py">
       <SubType>Code</SubType>
