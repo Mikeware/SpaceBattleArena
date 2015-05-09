@@ -242,7 +242,7 @@ class WarpCommand(Command):
     MAXWARPDISTANCE = 400.0
 
     def __init__(self, obj, distance=0.0):        
-        super(WarpCommand, self).__init__(obj, WarpCommand.NAME, block=True, required=10)
+        super(WarpCommand, self).__init__(obj, WarpCommand.NAME, 11, block=True, required=10) #maximum duration of warp is 10.5
         self.__stage = 0
         self.__time = 0.0
         self.energycost = 9
@@ -333,7 +333,7 @@ class SteerCommand(Command):
     NAME = SHIP_CMD_STEER
 
     def __init__(self, obj, degrees):
-        super(SteerCommand, self).__init__(obj, SteerCommand.NAME, block=True)        
+        super(SteerCommand, self).__init__(obj, SteerCommand.NAME, 13, block=True) # 12 should be enough to do a circle
 
         self.__deg = -degrees # Physics rotations is opposite
         self.energycost = 4
@@ -420,7 +420,7 @@ class RepairCommand(Command):
     NAME = SHIP_CMD_REPAIR
 
     def __init__(self, obj, amount):                
-        super(RepairCommand, self).__init__(obj, RepairCommand.NAME)
+        super(RepairCommand, self).__init__(obj, RepairCommand.NAME, float(amount) / 4)
         self.left = amount
         self.energycost = 8
 
