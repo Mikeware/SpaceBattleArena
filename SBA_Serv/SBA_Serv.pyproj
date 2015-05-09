@@ -54,7 +54,19 @@
     <Compile Include="GUI\SoundCache.py" />
     <Compile Include="GUI\Star.py" />
     <Compile Include="GUI\__init__.py" />
-    <Compile Include="SBA_UT.py" />
+    <Compile Include="Tests\ServerTestCases.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tests\TestCaseRigging.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tests\ShapeTestCases.py" />
+    <Compile Include="Tests\ThrustSteeringTestCases.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tests\WorldTestCases.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ThreadStuff\ThreadSafe.py" />
     <Compile Include="ThreadStuff\__init__.py" />
     <Compile Include="SBA_Serv.py" />
@@ -87,6 +99,7 @@
     <Folder Include="GUI\Graphics\Ships\" />
     <Folder Include="GUI\ObjWrappers\" />
     <Folder Include="Game\" />
+    <Folder Include="Tests\" />
     <Folder Include="ThreadStuff" />
     <Folder Include="Server\" />
     <Folder Include="ShipClasses\" />
