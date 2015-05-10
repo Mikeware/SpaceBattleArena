@@ -1,7 +1,10 @@
 /**
  * 
  */
-package ihs.apcs.spacebattle;
+package ihs.apcs.spacebattle.games;
+
+import ihs.apcs.spacebattle.BasicGameInfo;
+import ihs.apcs.spacebattle.Point;
 
 /**
  * BaubleHunt is a game where you must collect Baubles within the world for points.

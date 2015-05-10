@@ -2,6 +2,7 @@ import java.awt.Color;
 
 import ihs.apcs.spacebattle.*;
 import ihs.apcs.spacebattle.commands.*;
+import ihs.apcs.spacebattle.games.KingOfTheBubbleGameInfo;
 
 /**
  * Example 'Dummy' Ship for "King of The Bubble" game.

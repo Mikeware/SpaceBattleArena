@@ -1,4 +1,7 @@
-package ihs.apcs.spacebattle;
+package ihs.apcs.spacebattle.games;
+
+import ihs.apcs.spacebattle.BasicGameInfo;
+import ihs.apcs.spacebattle.Point;
 
 import java.util.*;
 

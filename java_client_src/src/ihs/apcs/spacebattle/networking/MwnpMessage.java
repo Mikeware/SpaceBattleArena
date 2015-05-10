@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken;
 
 import ihs.apcs.spacebattle.*;
 import ihs.apcs.spacebattle.commands.ShipCommand;
+import ihs.apcs.spacebattle.games.*;
 import ihs.apcs.spacebattle.util.StringMap;
 import ihs.apcs.spacebattle.util.StringStringMap;
 

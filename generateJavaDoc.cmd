@@ -1,1 +1,1 @@
-javadoc -public -sourcepath java_client_src\src -classpath "java_client_src\*;java_client_src\bin" -d doc\client\java_doc -windowtitle "IHS AP CS Space Battle" -doctitle "IHS AP CS Space Battle" ihs.apcs.spacebattle ihs.apcs.spacebattle.commands
+javadoc -public -sourcepath java_client_src\src -classpath "java_client_src\*;java_client_src\bin" -d doc\client\java_doc -windowtitle "IHS AP CS Space Battle" -doctitle "IHS AP CS Space Battle" ihs.apcs.spacebattle ihs.apcs.spacebattle.commands ihs.apcs.spacebattle.games
