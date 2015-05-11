@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/print.css" media="print">
+
+    <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="/SpaceBattleArena/js/main.js"></script>
+    
+    <title>Space Battle Arena by Mikeware</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>Space Battle Arena</h1>
+        <h2>A Programming Game in Java for AP CS Students.</h2>
+
+        <section id="downloads">
+          <a href="https://www.github.com/Mikeware/SpaceBattleArena/blob/master/bin/SpaceBattle.jar?raw=true" class="btn">Download Client Jar</a>
+          <a href="https://www.github.com/Mikeware/SpaceBattleArena/blob/master/bin/SBAserver.zip?raw=true" class="btn">Download Server (Windows)</a>
+          <a href="https://www.github.com/Mikeware/SpaceBattleArena" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            
+            <span><a href="/SpaceBattleArena/index.html">Home</a></span>
+            
+            
+            
+                
+                    &nbsp<span><a href="index.html">Competitions</a></span>
+                
+            
+            <span>King of the Bubble</span>
+        </div>
+    </nav>
+    
+
+    
+<aside>
+    <h1>Outline</h1>
+    <ul>
+    
+        <li><a href="#overview">Overview</a></li>
+    
+        <li><a href="#config">Configuration</a></li>
+    
+        <li><a href="#kos">King of Space</a></li>
+    
+    </ul>
+</aside>
+
+
+
+    <div class="container">
+      <section id="main_content">
+        <h1 id="king-of-the-bubble">King of the Bubble</h1>
+
+<h2 id="overview"><a name="overview"></a>Overview</h2>
+
+<p><strong>King of the Bubble</strong> is a game where there are a number of &#39;Bubbles&#39; in the world worth some amount of points.</p>
+
+<p>By placing your ship within the Bubble, you will absorb its points.</p>
+
+<p>When your ship is destroyed, you may drop a new Bubble in the world which represents some amount of the points you have (which are now lost).  If you are close enough to an existing bubble, your points will instead be added to that bubble.</p>
+
+<p>Multiple ships within the same Bubble will drain its points faster.  It is also possible to drain points from multiple Bubbles at the same time.</p>
+
+<p>Bubbles will eventually start to shrink and disappear on their own at which point a new one will spawn in a different location.</p>
+
+<p>Players will be given the location of some bubbles in the world.</p>
+
+<h2 id="configuration"><a name="config"></a>Configuration</h2>
+
+<h3 id="bubble_radius_min-=-int">bubble_radius_min = int</h3>
+
+<p>The radius of the bubble when it worth 0 points.  The bubble point value is added to this base radius to determine its size.  See bubble_points_min and max.</p>
+
+<h3 id="bubble_points_min-=-int">bubble_points_min = int</h3>
+
+<p>The minimum number of points a generated bubble can be worth.</p>
+
+<h3 id="bubble_points_max-=-int">bubble_points_max = int</h3>
+
+<p>The maximum number of points a generated bubble can be worth.</p>
+
+<h3 id="bubble_points_drain_speed-=-int">bubble_points_drain_speed = int</h3>
+
+<p>How many points per second a single ship can drain from a bubble (ship&#39;s absorption rate).  If multiple ships are in a bubble, they can each drain points from it at this same rate.</p>
+
+<h3 id="bubble_number_max-=-int">bubble_number_max = int</h3>
+
+<p>Maximum number of generated bubbles to exist in the world at a time.  (Does not effect a player dropping a bubble unless it didn&#39;t meet the threshold for points.)  If this value is reached, a new bubble will not try to spawn until another one disappears.</p>
+
+<h3 id="bubble_time_alive_min-=-int">bubble_time_alive_min = int</h3>
+
+<p>Minimum time for a bubble to live before it starts to shrink.  If this is zero, a bubble will stay around indefinitely on its own without player interaction.</p>
+
+<h3 id="bubble_time_alive_variance-=-int">bubble_time_alive_variance = int</h3>
+
+<p>A random value between 0 and this number will be added to the minimum <strong>bubble_time_alive_min</strong> value to determine the total time for each bubble to remain before shrinking.  This value is ignored if bubble_time_alive_min is zero.</p>
+
+<h3 id="steal_points_min-=-int">steal_points_min = int</h3>
+
+<p>The minimum number of points for a player to lose when destroyed.  This is also the minimum threshold for a new bubble to be created from a player, though points will always be added to an existing nearby bubble if that is the case.</p>
+
+<h3 id="steal_points_percent-=-int">steal_points_percent = int</h3>
+
+<p>Value between 0 and 100 to represent the percentage of points a player loses when their ship is destroyed.</p>
+
+<h2 id="king-of-space"><a name="kos"></a>King of Space</h2>
+
+<p><strong>King of Space</strong> is a variant of King of the Bubble in which no Bubbles exist in the world by default.  Instead every player starts with an initial number of points (100).  And Bubbles can only be harvested from other players in the world.</p>
+
+<p>Bubbles also will disappear much more quickly, making this variant much more like a dog-fight.</p>
+
+      </section>
+    </div>
+
+
+		<footer>
+		  <div class="container">
+		    <div class="owner">
+		      <p><a href="https://github.com/Mikeware" class="avatar"><img src="https://avatars3.githubusercontent.com/u/8961203?v=3&s=48" width="48" height="48"/></a> <a href="https://github.com/Mikeware">Mikeware</a> maintains <a href="https://github.com/Mikeware/SpaceBattleArena">Space Battle Arena</a></p>
+		    </div>
+		    <div class="creds">
+			  <small>This page generated using <a href="https://pages.github.com/">GitHub Pages</a> themes and <a href="http://www.jekyllrb.com/">Jekyll</a>.</small>
+		    </div>
+		  </div>
+		</footer>
+
+		  <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-39650553-3");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>

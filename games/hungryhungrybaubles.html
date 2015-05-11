@@ -36,57 +36,75 @@
             
             
             
-            <span>News</span>
+                
+                    &nbsp<span><a href="index.html">Competitions</a></span>
+                
+            
+            <span>Hungry Hungry Baubles</span>
         </div>
     </nav>
     
 
-    <aside>
-    <h1>News</h1>
+    
+<aside>
+    <h1>Outline</h1>
     <ul>
     
-        <li><a href="/SpaceBattleArena/2015/05/11/Space-Battle-Arena-V1-Release.html">Space Battle Arena V1 Release</a><br/><span class="small">First Official V1 Release.</br>- 11 May 2015</span></br></br></li>
+        <li><a href="#overview">Overview</a></li>
     
-        <li><a href="/SpaceBattleArena/2015/05/05/Nebulas.html">Nebulas</a><br/><span class="small">The new celestial body arrives.</br>- 05 May 2015</span></br></br></li>
-    
-        <li><a href="/SpaceBattleArena/2015/05/02/Website.html">Website</a><br/><span class="small">Website posted.</br>- 02 May 2015</span></br></br></li>
+        <li><a href="#config">Configuration</a></li>
     
     </ul>
-    
-    <a href="/SpaceBattleArena/news.html" class="small">Archive</a>
 </aside>
+
 
 
     <div class="container">
       <section id="main_content">
-        <h1>News</h1>
-        <ul>
-        
-            <li><a href="/SpaceBattleArena/2015/05/11/Space-Battle-Arena-V1-Release.html">Space Battle Arena V1 Release</a> - 11 May 2015</br>
-            <p>At the start of our 4th season of Space Battle, we are releasing it to the open source world.  Look for more info on the website to come in the next few days. You can download it through the links above.</p>
+        <h1 id="hungry-hungry-baubles">Hungry Hungry Baubles</h1>
 
-            </br>
-            </li>
-        
-            <li><a href="/SpaceBattleArena/2015/05/05/Nebulas.html">Nebulas</a> - 05 May 2015</br>
-            <p><img src="/SpaceBattleArena/img/obj/Nebula.png" alt="" class="left"/> <strong>Nebulas</strong> will add a bit more beauty and depth to our barren space.</p>
+<h2 id="overview"><a name="overview"></a>Overview</h2>
 
-            </br>
-            </li>
-        
-            <li><a href="/SpaceBattleArena/2015/05/02/Website.html">Website</a> - 02 May 2015</br>
-            <p>Today, we worked on creating the outline for our website here at <a href="http://mikeware.github.io/SpaceBattleArena/">http://mikeware.github.io/SpaceBattleArena/</a>.  More content will be coming over the next few weeks.</p>
+<p><strong>Hungry Hungry Baubles</strong> is a game where you must try and collect as many baubles as you can before time runs out.</p>
 
-            </br>
-            </li>
-        
-            <li><a href="/SpaceBattleArena/2015/04/28/Initial-GitHub-Upload.html">Initial GitHub Commit</a> - 28 April 2015</br>
-            <p>Today, we uploaded the initial public version of Space Battle Arena to GitHub.  Bear with us as we continue to make some initial tweaks before the <em>official</em> V1 release and update documentation.</p>
+<p>Every bauble is worth 1 point.</p>
 
-            </br>
-            </li>
-        
-        </ul>
+<p>However, every player is also provided the location of a <strong>golden</strong> bauble.  If they collect it they will earn <strong>5 points</strong>.</p>
+
+<p>If they happen to collect someone else&#39;s golden bauble it&#39;s only worth 3 points.</p>
+
+<p>The default configuration also specifies that you lose 4 points when dying.</p>
+
+<h2 id="configuration"><a name="config"></a>Configuration</h2>
+
+<h3 id="bauble_initial-=-int">bauble_initial = int</h3>
+
+<p>Number of initial baubles to place in the world.</p>
+
+<h3 id="bauble_per_player-=-int">bauble_per_player = int</h3>
+
+<p>How many extra baubles should be added every time a player joins.</p>
+
+<h3 id="bauble_timer-=-int">bauble_timer = int</h3>
+
+<p>How long before more baubles should be spawned in the world (in seconds).</p>
+
+<h3 id="bauble_timer_spawns-=-int">bauble_timer_spawns = int</h3>
+
+<p>How many baubles should spawn when the timer expires.</p>
+
+<h3 id="bauble_points_blue-=-int">bauble_points_blue = int</h3>
+
+<p>How many points is the standard bauble worth. <strong>Note:</strong> <em>modifying the point values requires that adequate images be placed in the GUI/Graphics/Games folder to represent that value.</em></p>
+
+<h3 id="bauble_points_gold-=-int">bauble_points_gold = int</h3>
+
+<p>How many points is a golden bauble worth.</p>
+
+<h3 id="bauble_points_extra-=-int">bauble_points_extra = int</h3>
+
+<p>How many extra points is your specific golden bauble worth to you.</p>
+
       </section>
     </div>
 

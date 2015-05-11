@@ -263,9 +263,43 @@ etc...
 
 <p>When set to true the game/round will automatically start when the server is run.  Otherwise, it will wait for you to press the space key.</p>
 
+<p>This value is set to <em>false</em> if tournament is set to <em>true</em>.</p>
+
 <h3 id="allow_after_start-=-boolean">allow_after_start = boolean</h3>
 
 <p>Can players join the server after the game has already started?</p>
+
+<h3 id="disconnect_on_death-=-boolean">disconnect_on_death = boolean</h3>
+
+<p>Determines if a player will be completely disconnected from the server when they die.</p>
+
+<h3 id="reset_score_on_death-=-boolean">reset_score_on_death = boolean</h3>
+
+<p>Will a player&#39;s score reset to 0 when they die.</p>
+
+<h3 id="points_lost_on_death-=-positive-integer">points_lost_on_death = positive integer</h3>
+
+<p>Number of points a player loses when they die. Should be a <strong>positive</strong> integer or zero.</p>
+
+<h3 id="points_initial-=-positive-integer">points_initial = positive integer</h3>
+
+<p>Number of points each player should start with.  Should be a <strong>positive</strong> integer or zero.</p>
+
+<h3 id="primary_victory_attr-=-string">primary_victory_attr = string</h3>
+
+<p>This represents what the primary victory condition should be.  For basic games, this will either be <strong>score</strong> or <strong>bestscore</strong>.  Which either represents their current score or the best score they&#39;ve achieved between deaths.  Other games may have other attributes which can be inspected.</p>
+
+<h3 id="primary_victory_highest-=-boolean">primary_victory_highest = boolean</h3>
+
+<p>Represents if the primary victory condition is sorted from highest to lowest (this is usually the case).</p>
+
+<h3 id="secondary_victory_attr-=-string">secondary_victory_attr = string</h3>
+
+<p>This represents what should break ties on the primary victory condition.  For basic games, this is usually <strong>deaths</strong>, but could also be <strong>bestscore</strong> for instance.</p>
+
+<h3 id="secondary_victory_highest-=-boolean">secondary_victory_highest = boolean</h3>
+
+<p>Represents if the secondary victory condition is sorted from highest to lowest.  For instance, if you wanted least deaths to be the tie-breaker, then you would set the secondary victory condition to be <strong>deaths</strong> and this value to be <strong>false</strong>.</p>
 
 <h2 id="[tournament]"><a name="tournament"></a>[Tournament]</h2>
 
@@ -279,6 +313,10 @@ etc...
 
 <p>How many groups should the number of clients connected be broken into for the tournament?  E.g. Setting this value to 5 and having 30 clients connected would result in 5 rounds of 6 players each and a final round with the winners of each group.  Raising this number to higher values requires more vertical real-estate for the tournament display board.</p>
 
+<h3 id="number_to_final_round-=-integer">number_to_final_round = integer</h3>
+
+<p>How many players from each preliminary round should advance to the final round. i.e. The top X players will be taken into the final round where X is this options value.</p>
+
 <h3 id="round_time-=-integer">round_time = integer</h3>
 
 <p>How long each game round should last in seconds.</p>
@@ -286,10 +324,6 @@ etc...
 <h3 id="reset_world_each_round-=-boolean">reset_world_each_round = boolean</h3>
 
 <p>Should the world be cleared of all objects and recreated between each round of play?</p>
-
-<h3 id="disconnect_players_after_round-=-boolean">disconnect_players_after_round = boolean</h3>
-
-<p>Should clients be disconnected from the server after they have completed a round? <strong>Note:</strong> this should not be turned on when running a multi-round tournament.</p>
 
       </section>
     </div>

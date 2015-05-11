@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/print.css" media="print">
+
+    <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="/SpaceBattleArena/js/main.js"></script>
+    
+    <title>Space Battle Arena by Mikeware</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>Space Battle Arena</h1>
+        <h2>A Programming Game in Java for AP CS Students.</h2>
+
+        <section id="downloads">
+          <a href="https://www.github.com/Mikeware/SpaceBattleArena/blob/master/bin/SpaceBattle.jar?raw=true" class="btn">Download Client Jar</a>
+          <a href="https://www.github.com/Mikeware/SpaceBattleArena/blob/master/bin/SBAserver.zip?raw=true" class="btn">Download Server (Windows)</a>
+          <a href="https://www.github.com/Mikeware/SpaceBattleArena" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            
+            <span><a href="/SpaceBattleArena/index.html">Home</a></span>
+            
+            
+            
+                
+                    &nbsp<span><a href="index.html">Competitions</a></span>
+                
+            
+            <span>Bauble Hunt</span>
+        </div>
+    </nav>
+    
+
+    
+<aside>
+    <h1>Outline</h1>
+    <ul>
+    
+        <li><a href="#overview">Overview</a></li>
+    
+        <li><a href="#config">Configuration</a></li>
+    
+    </ul>
+</aside>
+
+
+
+    <div class="container">
+      <section id="main_content">
+        <h1 id="bauble-hunt">Bauble Hunt</h1>
+
+<h2 id="overview"><a name="overview"></a>Overview</h2>
+
+<p><strong>Bauble Hunt</strong> is a more complex version of the <a href="hungryhungrybaubles.html">Hungry Hungry Baubles</a> game.  </p>
+
+<p>Every player has a <strong>home base</strong> and baubles <em>only count</em> towards your score once they have been collected and returned to your Home Base.</p>
+
+<p>You may store 5 Baubles on your ship at most.</p>
+
+<p>Blue Bauble are worth 1 point.
+Golden Baubles are worth 3 points.
+Red Baubles are worth 5 points.</p>
+
+<p>If your ship is destroyed, the Baubles it was carrying will be dropped.</p>
+
+<p>You will be provided a list of locations for where valuable baubles are located.</p>
+
+<p>In the case of a tie, who ever has the fewest baubles collected will be the winner (i.e. density of points is rewarded in a tie).</p>
+
+<h2 id="configuration"><a name="config"></a>Configuration</h2>
+
+<h3 id="bauble_initial-=-int">bauble_initial = int</h3>
+
+<p>Number of initial baubles to place in the world.</p>
+
+<h3 id="bauble_per_player-=-int">bauble_per_player = int</h3>
+
+<p>How many extra baubles should be added every time a player joins.</p>
+
+<h3 id="bauble_timer-=-int">bauble_timer = int</h3>
+
+<p>How long before more baubles should be spawned in the world (in seconds).</p>
+
+<h3 id="bauble_timer_spawns-=-int">bauble_timer_spawns = int</h3>
+
+<p>How many baubles should spawn when the timer expires.</p>
+
+<h3 id="ship_cargo_size-=-int">ship_cargo_size = int</h3>
+
+<p>The maximum number of baubles each ship can carry.</p>
+
+<h3 id="bauble_percent_blue-=-float">bauble_percent_blue = float</h3>
+
+<p>The percentage of baubles which should generate as blue from [0.0-1.0].  The total of <strong>bauble_percent_blue</strong>, <strong>bauble_percent_yellow</strong>, and <strong>bauble_percent_red</strong> should equal 1.0.</p>
+
+<h3 id="bauble_points_blue-=-int">bauble_points_blue = int</h3>
+
+<p>How many points is the standard bauble worth. <strong>Note:</strong> <em>modifying the point values requires that adequate images be placed in the GUI/Graphics/Games folder to represent that value.</em></p>
+
+<h3 id="bauble_percent_gold-=-float">bauble_percent_gold = float</h3>
+
+<p>The percentage of baubles which should generate as gold from [0.0-1.0].  The total of <strong>bauble_percent_blue</strong>, <strong>bauble_percent_yellow</strong>, and <strong>bauble_percent_red</strong> should equal 1.0.</p>
+
+<h3 id="bauble_points_gold-=-int">bauble_points_gold = int</h3>
+
+<p>How many points is a golden bauble worth.</p>
+
+<h3 id="bauble_percent_red-=-float">bauble_percent_red = float</h3>
+
+<p>The percentage of baubles which should generate as red from [0.0-1.0].  The total of <strong>bauble_percent_blue</strong>, <strong>bauble_percent_yellow</strong>, and <strong>bauble_percent_red</strong> should equal 1.0.</p>
+
+<h3 id="bauble_points_red-=-int">bauble_points_red = int</h3>
+
+<p>How many points is a red bauble worth.</p>
+
+      </section>
+    </div>
+
+
+		<footer>
+		  <div class="container">
+		    <div class="owner">
+		      <p><a href="https://github.com/Mikeware" class="avatar"><img src="https://avatars3.githubusercontent.com/u/8961203?v=3&s=48" width="48" height="48"/></a> <a href="https://github.com/Mikeware">Mikeware</a> maintains <a href="https://github.com/Mikeware/SpaceBattleArena">Space Battle Arena</a></p>
+		    </div>
+		    <div class="creds">
+			  <small>This page generated using <a href="https://pages.github.com/">GitHub Pages</a> themes and <a href="http://www.jekyllrb.com/">Jekyll</a>.</small>
+		    </div>
+		  </div>
+		</footer>
+
+		  <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-39650553-3");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>

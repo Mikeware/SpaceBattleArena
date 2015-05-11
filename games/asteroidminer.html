@@ -36,57 +36,59 @@
             
             
             
-            <span>News</span>
+                
+                    &nbsp<span><a href="index.html">Competitions</a></span>
+                
+                    &nbsp<span><a href="basic.html">Basic Games</a></span>
+                
+            
+            <span>Asteroid Miner</span>
         </div>
     </nav>
     
 
-    <aside>
-    <h1>News</h1>
+    
+<aside>
+    <h1>Outline</h1>
     <ul>
     
-        <li><a href="/SpaceBattleArena/2015/05/11/Space-Battle-Arena-V1-Release.html">Space Battle Arena V1 Release</a><br/><span class="small">First Official V1 Release.</br>- 11 May 2015</span></br></br></li>
+        <li><a href="#overview">Overview</a></li>
     
-        <li><a href="/SpaceBattleArena/2015/05/05/Nebulas.html">Nebulas</a><br/><span class="small">The new celestial body arrives.</br>- 05 May 2015</span></br></br></li>
-    
-        <li><a href="/SpaceBattleArena/2015/05/02/Website.html">Website</a><br/><span class="small">Website posted.</br>- 02 May 2015</span></br></br></li>
+        <li><a href="#config">Configuration</a></li>
     
     </ul>
-    
-    <a href="/SpaceBattleArena/news.html" class="small">Archive</a>
 </aside>
+
 
 
     <div class="container">
       <section id="main_content">
-        <h1>News</h1>
-        <ul>
-        
-            <li><a href="/SpaceBattleArena/2015/05/11/Space-Battle-Arena-V1-Release.html">Space Battle Arena V1 Release</a> - 11 May 2015</br>
-            <p>At the start of our 4th season of Space Battle, we are releasing it to the open source world.  Look for more info on the website to come in the next few days. You can download it through the links above.</p>
+        <h1 id="asteroid-miner-[basic-game]">Asteroid Miner [Basic Game]</h1>
 
-            </br>
-            </li>
-        
-            <li><a href="/SpaceBattleArena/2015/05/05/Nebulas.html">Nebulas</a> - 05 May 2015</br>
-            <p><img src="/SpaceBattleArena/img/obj/Nebula.png" alt="" class="left"/> <strong>Nebulas</strong> will add a bit more beauty and depth to our barren space.</p>
+<h2 id="overview"><a name="overview"></a>Overview</h2>
 
-            </br>
-            </li>
-        
-            <li><a href="/SpaceBattleArena/2015/05/02/Website.html">Website</a> - 02 May 2015</br>
-            <p>Today, we worked on creating the outline for our website here at <a href="http://mikeware.github.io/SpaceBattleArena/">http://mikeware.github.io/SpaceBattleArena/</a>.  More content will be coming over the next few weeks.</p>
+<p><strong>Asteroid Miner</strong> is a basic game which is a great way to introduce locating objects.</p>
 
-            </br>
-            </li>
-        
-            <li><a href="/SpaceBattleArena/2015/04/28/Initial-GitHub-Upload.html">Initial GitHub Commit</a> - 28 April 2015</br>
-            <p>Today, we uploaded the initial public version of Space Battle Arena to GitHub.  Bear with us as we continue to make some initial tweaks before the <em>official</em> V1 release and update documentation.</p>
+<p>Players must destroy asteroids using torpedoes or by ramming into them with their ships.  Each asteroid is worth 2 points if destroyed with a torpedo or 1 point if rammed.</p>
 
-            </br>
-            </li>
-        
-        </ul>
+<h2 id="configuration"><a name="config"></a>Configuration</h2>
+
+<h3 id="points_torpedo-=-int">points_torpedo = int</h3>
+
+<p>Number of points for destroying an asteroid with a torpedo.</p>
+
+<h3 id="points_ship-=-int">points_ship = int</h3>
+
+<p>Number of points for destroying an asteroid with a ship (without destroying your ship).</p>
+
+<h3 id="spawn_time-=-int">spawn_time = int</h3>
+
+<p>How long between asteroid spawns.</p>
+
+<h3 id="spawn_number-=-int">spawn_number = int</h3>
+
+<p>How many asteroids to spawn at the interval above.</p>
+
       </section>
     </div>
 
