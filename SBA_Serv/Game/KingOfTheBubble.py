@@ -36,20 +36,18 @@ class KingOfTheBubbleGame(BasicGame):
     
     def __init__(self, cfgobj):
         self.__bubbles = {}
-        self.__sizebase = float(cfgobj.getint("KingOfTheBubble", "bubbleminradius"))
-        self.__sizemin = cfgobj.getint("KingOfTheBubble", "bubbleminpoints")
-        self.__sizemax = cfgobj.getint("KingOfTheBubble", "bubblemaxpoints")
-        self.__pointspeed = cfgobj.getint("KingOfTheBubble", "bubblepointspeed")
-        self.__maxbubbles = cfgobj.getint("KingOfTheBubble", "numbubbles")
-        self.__bubbletime = cfgobj.getint("KingOfTheBubble", "bubbletime")
-        self.__bubbletimevar = cfgobj.getint("KingOfTheBubble", "bubbletimevar")
+        self.__sizebase = float(cfgobj.getint("KingOfTheBubble", "bubble_radius_min"))
+        self.__sizemin = cfgobj.getint("KingOfTheBubble", "bubble_points_min")
+        self.__sizemax = cfgobj.getint("KingOfTheBubble", "bubble_points_max")
+        self.__pointspeed = cfgobj.getint("KingOfTheBubble", "bubble_points_drain_speed")
+        self.__maxbubbles = cfgobj.getint("KingOfTheBubble", "bubble_number_max")
+        self.__bubbletime = cfgobj.getint("KingOfTheBubble", "bubble_time_alive_min")
+        self.__bubbletimevar = cfgobj.getint("KingOfTheBubble", "bubble_time_alive_variance")
 
         super(KingOfTheBubbleGame, self).__init__(cfgobj)
         
-        self.__pointatleast = self.cfg.getint("KingOfTheBubble", "stealminpoints")
-        self.__pointpercent = float(self.cfg.getint("KingOfTheBubble", "stealpercent"))
-
-    
+        self.__pointatleast = self.cfg.getint("KingOfTheBubble", "steal_points_min")
+        self.__pointpercent = float(self.cfg.getint("KingOfTheBubble", "steal_points_percent"))
 
     def world_create(self, pys=True):
         w = ConfiguredWorld(self, self.cfg, pys)
@@ -63,7 +61,7 @@ class KingOfTheBubbleGame(BasicGame):
         return {"GAMENAME": "KingOfTheBubble"}
 
     def addBubbles(self, w, num, setpoints=None, pos=None, pname=None, force=False):
-        logging.info("Adding %d Baubles (%s)", num, repr(force))
+        logging.info("Adding %d Bubbles (%s)", num, repr(force))
         for i in xrange(num):
             points = random.randint(self.__sizemin, self.__sizemax)
             if setpoints != None:
@@ -83,7 +81,7 @@ class KingOfTheBubbleGame(BasicGame):
             # The Whole Lifecycle of the Game and Rounds needs to be redefined for V2
             w.append(b)
             self.__bubbles[b.id] = b
-        logging.info("Done Adding Baubles")
+        logging.info("Done Adding Bubbles")
 
     def player_died(self, player, gone):
         # calculate points to lose
@@ -206,7 +204,7 @@ class Bubble(PhysicalRound):
         if self.timetoshrink > 0 and self.timealive > self.timetoshrink and len(ships) == 0:
             self.size -= (t * self.pointspeed)
         
-        if self.size <= 50.0:
+        if self.size <= self.basesize:
             self.TTL = self.timealive - 1 # schedule this object for removal        
 
     def getExtraInfo(self, objData):

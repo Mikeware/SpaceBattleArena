@@ -1,32 +1,73 @@
-/**
- * 
- */
 package ihs.apcs.spacebattle.games;
 
 import ihs.apcs.spacebattle.BasicGameInfo;
 import ihs.apcs.spacebattle.Point;
 
+import java.util.*;
+
 /**
- * BaubleHunt is a game where you must collect Baubles within the world for points.
+ * Bauble Hunt is a more complex version of the Hungry Hungry Baubles game.  Baubles only count towards your score once they have been collected and returned to your Home Base.
+ * <p>
+ * You may store 5 Baubles on your ship at most.
+ * <p>
+ * Blue Bauble are worth 1 point.<p>
+ * Golden Baubles are worth 3 points.<p>
+ * Red Baubles are worth 5 points.
+ * <p>
+ * If your ship is destroyed, the Baubles it was carrying will be dropped.
  * 
- * There are regular Baubles and 'Golden' Baubles.  
- * 
- * Regular Baubles are worth 1 point.
- * Golden Baubles are worth 3 points.
- * 
- * You are assigned a specific Golden Bauble, if you collect it, it's worth an additional 2 points.  You will be then assigned another Golden Bauble to collect. 
- * 
- * @author Michael A. Hawker
+ * @author Brett Wortzman
  *
- * @since 2.0
- * @version 1.0
+ * @since 1.1
+ * @version 2.0
  */
 public class BaubleHuntGameInfo extends BasicGameInfo {
 	private double[] POSITION;
+	private double[][] BAUBLES;
+	private int COLLECTED;
+	private int STORED;
+	private int STOREDVALUE;
 	
 	/**
-	 * Gets the position of your assigned golden Bauble.
-	 * @return the position of your golden Bauble
+	 * Gets the position of your home base.
+	 * @return the position of your home base
 	 */
-	public Point getGoldenBaublePosition() { return new Point(POSITION); }
+	public Point getHomeBasePosition() { return new Point(POSITION); }
+	
+	/**
+	 * Gets a list of positions where there are high-value baubles.  Not all
+	 *   bauble positions are returned, but each position in the list
+	 *   has a bauble (unless it has been collected already).
+	 * @return a list of bauble positions
+	 */
+	public List<Point> getBaublePositions() {
+		List<Point> result = new ArrayList<Point>();
+		for (double[] pos : BAUBLES) {
+			result.add(new Point(pos));
+		}
+		return result;
+	}
+	
+	/**
+	 * Gets the number of baubles collected and returned to your base.
+	 * @return the number of baubles return to base
+	 */
+	public int getNumCollected() { return COLLECTED; }
+	
+	/**
+	 * Gets the number of baubles currently carried by your ship (maximum of 5).
+	 * @return the number of baubles carried by your ship
+	 */
+	public int getNumBaublesCarried() { return STORED; }
+	
+	/**
+	 * Gets the value of the baubles being carried by your ship (maximum of 25). 
+	 * @return the value of the baubles carried by your ship
+	 */
+	public int getBaublesCarriedValue() { return STOREDVALUE; }
+	
+	@Override
+	public String toString() {
+		return String.format("{Target: %s; Score: %f; Deaths: %d; High Score: %f}", getHomeBasePosition(), getScore(), getNumDeaths(), getHighScore());
+	}
 }

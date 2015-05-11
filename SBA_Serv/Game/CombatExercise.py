@@ -76,3 +76,9 @@ class CombatExerciseGame(BasicGame):
 
         super(CombatExerciseGame, self).world_add_remove_object(wobj, added)
 
+    def gui_draw_game_world_info(self, surface, flags):
+        for player in self.game_get_current_player_list().values():
+            if player.object != None:
+                # draw time alive by player
+                text = self._dfont.render("%.1f" % player.object.timealive, False, player.color)
+                surface.blit(text, (player.object.body.position[0]+30, player.object.body.position[1]-4))

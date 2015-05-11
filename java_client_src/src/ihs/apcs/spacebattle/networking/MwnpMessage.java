@@ -33,11 +33,11 @@ public class MwnpMessage {
 	{
 		switch (gameName)
 		{
+			case "HungryHungryBaubles":
+				cmdDataTypes.put("\"ENV\"", new TypeToken<Environment<HungryHungryBaublesGameInfo>>() {}.getType());
+				break;
 			case "BaubleHunt":
 				cmdDataTypes.put("\"ENV\"", new TypeToken<Environment<BaubleHuntGameInfo>>() {}.getType());
-				break;
-			case "BaubleHuntSCV":
-				cmdDataTypes.put("\"ENV\"", new TypeToken<Environment<BaubleHuntSCVGameInfo>>() {}.getType());
 				break;
 			case "KingOfTheBubble":
 				cmdDataTypes.put("\"ENV\"", new TypeToken<Environment<KingOfTheBubbleGameInfo>>() {}.getType());

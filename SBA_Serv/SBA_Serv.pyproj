@@ -33,8 +33,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="compile.py" />
-    <Compile Include="Game\BaubleHuntSCV.py" />
     <Compile Include="Game\BaubleHunt.py" />
+    <Compile Include="Game\HungryHungryBaubles.py" />
     <Compile Include="Game\AsteroidMiner.py" />
     <Compile Include="Game\CombatExercise.py" />
     <Compile Include="Game\Survivor.py" />
@@ -117,7 +117,7 @@
   <ItemGroup>
     <Content Include="basicgame_asteroid.cfg" />
     <Content Include="basicgame_survivor.cfg" />
-    <Content Include="game_baublehunt.cfg" />
+    <Content Include="game_hungryhungrybaubles.cfg" />
     <Content Include="game_kingofspace.cfg" />
     <Content Include="game_kingofthebubble.cfg" />
     <Content Include="radarworld_2014.cfg" />
@@ -134,7 +134,7 @@
     <Content Include="machine_test.cfg" />
     <Content Include="basicgame_findthemiddle.cfg" />
     <Content Include="radarworld.cfg" />
-    <Content Include="game_baublehuntscv.cfg" />
+    <Content Include="game_baublehunt.cfg" />
     <Content Include="basicgame_combatexercise.cfg" />
     <Content Include="tournament.cfg" />
   </ItemGroup>

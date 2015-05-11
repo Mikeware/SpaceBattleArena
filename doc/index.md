@@ -49,16 +49,16 @@ Documentation
     * Coding Paradigm
     * Your Ship's 'Computer'
     * Commands
-* Competitions
-    * 'Basic' Games
-        * Find The Middle
-        * Survivor
-        * Asteroid Miner
-        * Combat Exercise
-    * Bauble Hunt  
-    * Bauble Hunt SCV
-    * King of the Bubble
-        * King of Space (Variant)
+* [Competitions](games/index.html)
+    * ['Basic' Games](games/basic.html)
+        * [Find The Middle](games/findthemiddle.html)
+        * [Survivor](games/survivor.html)
+        * [Asteroid Miner](games/asteroidminer.html)
+        * [Combat Exercise](games/combatexercise.html)
+    * [Hungry Hungry Baubles](games/hungryhungrybaubles.html)
+    * [Bauble Hunt](games/baublehunt.html)
+    * [King of the Bubble](games/kingofthebubble.html)
+        * [King of Space (Variant)](games/kingofthebubble.html#kos)
 * Talks
     * [You Have Died of Dysentery: Games in Education Are Still Alive - PAXDev 2014](http://www.mikeware.com/2014/08/you-have-died-of-dysentery-games-in-education-are-still-alive/)
     * [Reach for the Stars - PAXDev 2012](http://www.mikeware.com/2012/09/reach-for-the-stars-educating-the-next-generation-using-games/)

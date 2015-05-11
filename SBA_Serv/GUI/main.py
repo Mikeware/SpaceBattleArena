@@ -505,7 +505,13 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
         pygame.display.update()
         fpsClock.tick(30) # keep in sync with physics engine?
 
-    #TODO: Add Logging
+    #TODO: Add Logging???
+
+    # close out a game 
+    logging.info("Ending Game")
+    game._tournament = True # force it to not restart timers again
+    game.round_over()
+
     logging.info("Ending World")
     print "Ending World"
     game.world.endGameLoop()

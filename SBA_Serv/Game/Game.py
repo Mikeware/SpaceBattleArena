@@ -234,15 +234,18 @@ class BasicGame(object):
 
         logging.info("[Game] Stats: %s", repr(self.laststats))
 
-        if not self._tournamentfinalround:
-            # get winner(s)
-            for x in xrange(self.cfg.getint("Tournament", "number_to_final_round")):
-                logging.info("Adding player to final round %s stats: %s", self.__leaderboard_cache[x].name, self.laststats[x])
-                self._player_add_to_final_round(self.__leaderboard_cache[x])
-            #next
-        else:
-            logging.info("Final Round Winner %s stats: %s", self._leader.name, self.laststats[0])
-            self._tournamentfinalwinner = self._leader
+        if len(self.laststats) > 0:
+            if not self._tournamentfinalround:
+                # get winner(s)
+                for x in xrange(self.cfg.getint("Tournament", "number_to_final_round")):
+                    logging.info("Adding player to final round %s stats: %s", self.__leaderboard_cache[x].name, self.laststats[x])
+                    self._player_add_to_final_round(self.__leaderboard_cache[x])
+                #next
+            else:
+                logging.info("Final Round Winner %s stats: %s", self._leader.name, self.laststats[0])
+                self._tournamentfinalwinner = self._leader
+            #eif
+        #eif
         
         self.__timer = None
         for player in self._players:

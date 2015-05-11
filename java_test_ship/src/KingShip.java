@@ -24,7 +24,7 @@ public class KingShip implements Spaceship<KingOfTheBubbleGameInfo> {
 
 	@Override
 	public ShipCommand getNextCommand(Environment<KingOfTheBubbleGameInfo> env) {
-		System.out.println("Score: " + env.getGameInfo().getScore());
+		System.out.println("Score: " + env.getGameInfo().getScore() + " there are " + env.getGameInfo().getBubblePositions().size() + " bubbles in the world.");
 		if (env.getShipStatus().getEnergy() > WarpCommand.getInitialEnergyCost() * 2)
 		{
 			return new WarpCommand();

@@ -7,13 +7,13 @@ import java.util.*;
 
 /**
  * "King of the Bubble" is a game where there are a number of 'Bubbles' in the world worth some amount of points.
- * 
+ * <p>
  * By placing your ship within the Bubble, you will absorb its points.
- * 
+ * <p>
  * When your ship is destroyed, you may drop a new Bubble in the world which represents some amount of the points you have (which are now lost).
- * 
+ * <p>
  * Multiple ships within the same Bubble will drain it's points faster.  It is also possible to drain points from multiple Bubbles at the same time.
- * 
+ * <p>
  * Bubbles will eventually start to shrink and disappear on their own.
  * 
  * @author Brett Wortzman
