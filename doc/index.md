@@ -36,8 +36,8 @@ Documentation
     * [Server Setup](server/setup.html)
     * [Server Config](server/config.html)
     * [Server Usage/Shortcuts](server/usage.html)
-* Lessons
-    * 00 - Intro and Setup
+* [Lessons](lessons/index.html)
+    * 00 - [Intro and Setup](lessons/intro.html)
     * 01 - Find the Middle
     * 02 - Shapes in Space
     * 03 - Intro to Radar
