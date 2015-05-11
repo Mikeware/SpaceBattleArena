@@ -68,6 +68,6 @@ public class BaubleHuntSCVGameInfo extends BasicGameInfo {
 	
 	@Override
 	public String toString() {
-		return String.format("{Target: %s; Score: %d; Deaths: %d; High Score: %d}", getHomeBasePosition(), getScore(), getNumDeaths(), getHighScore());
+		return String.format("{Target: %s; Score: %f; Deaths: %d; High Score: %f}", getHomeBasePosition(), getScore(), getNumDeaths(), getHighScore());
 	}
 }
