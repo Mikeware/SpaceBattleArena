@@ -19,7 +19,10 @@ public class ShutdownHook extends Thread {
 	public void run() { 
 		try {
 			System.out.println("Shutting down...");
-			client.disconnect();
+			if (!client.isDisconnected())
+			{
+				client.disconnect();
+			}
 		} catch (IOException e) {
 			System.err.println("Shutdown error...");
 			System.err.println(e.getMessage());

@@ -100,9 +100,16 @@ public class TextClient implements Client {
 			
 			// Wait for termination command
 			System.out.println("Type QUIT to disconnect from server and end program");
-			Scanner kb = new Scanner(System.in);
+			BufferedReader kb = new BufferedReader(new InputStreamReader(System.in));
 			// TODO: Be able to break-out of this loop and end program when the client receives a disconnect message
-			while (kb.hasNextLine() && !kb.nextLine().equalsIgnoreCase("QUIT"));
+			while (!client.disconnected) {
+				if (kb.ready()) {
+					String input = kb.readLine();
+					if (input.equalsIgnoreCase("quit")) {
+						break;
+					}
+				}
+			}
 			kb.close();
 		} catch (IOException ex) {
 			System.err.println("Server connection failed.");
@@ -193,9 +200,10 @@ public class TextClient implements Client {
 		}
 	}
 	
-	public void disconnect() throws IOException {
-		System.out.println("Attempting to disconnect...");
+	public void disconnect() throws IOException {		
 		if (!disconnected) {
+			System.out.println("Attempting to disconnect...");
+			
 			logMessage("Sending disconnect message...");
 			MwnpMessage disconnect = new MwnpMessage(new Integer[]{netId, 0}, "MWNL2_DISCONNECT", null);
 			messenger.sendMessage(disconnect);
@@ -203,9 +211,14 @@ public class TextClient implements Client {
 			listener.end();
 			logMessage("Ending messenger...");
 			messenger.end();
-		}
-		disconnected = true;
-		System.out.println("Disconnect complete.");
+			
+			disconnected = true;
+			System.out.println("Disconnect complete.");
+		}		
+	}
+	
+	public boolean isDisconnected(){
+		return this.disconnected;
 	}
 	
 	public void logMessage(String message) {

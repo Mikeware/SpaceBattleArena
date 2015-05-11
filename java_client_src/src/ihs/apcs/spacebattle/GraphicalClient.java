@@ -163,6 +163,10 @@ public class GraphicalClient implements Runnable, Client {
 		System.out.println("Disconnect complete.");
 	}
 	
+	public boolean isDisconnected(){
+		return this.disconnected;
+	}
+	
 	public void logMessage(String message) {
 		if (LOGGING) {
 			Calendar now = Calendar.getInstance();
