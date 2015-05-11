@@ -204,6 +204,7 @@ public class TextClient implements Client {
 				System.err.println("Error Invoking getNextCommand:");
 				System.err.println(ex.getMessage());
 				ex.printStackTrace(System.err);
+				disconnect();
 			}
 			if (cmd == null) {
 				cmd = new IdleCommand(0.1);
