@@ -40,16 +40,9 @@ class BaubleHuntSCVGame(BasicGame):
         
         super(BaubleHuntSCVGame, self).__init__(cfgobj)
 
-        self.__highscore = 0
-        self.__deathpenalty = self.cfg.getint("BaubleHunt", "deathpenalty")
         self.__maxcarry = self.cfg.getint("BaubleHuntSCV", "maxcarry")
 
-    def GUICFG(self):
-        super(BaubleHuntSCVGame, self).GUICFG()
-
-        self.__dfont = debugfont()
-
-    def createWorld(self, pys=True):
+    def world_create(self, pys=True):
         w = ConfiguredWorld(self, self.cfg, pys)
         
         # Add some initial small Baubles
@@ -57,11 +50,8 @@ class BaubleHuntSCVGame(BasicGame):
 
         return w
 
-    def getInitialInfoParameters(self):
+    def game_get_info(self):
         return {"GAMENAME": "BaubleHuntSCV"}
-
-    def registerPlayer(self, name, color, imgindex, netid):
-        return super(BaubleHuntSCVGame, self).registerPlayer(name, color, imgindex, netid)
 
     def playerDisconnected(self, netid):
         if netid in self.__bases:
@@ -69,30 +59,26 @@ class BaubleHuntSCVGame(BasicGame):
             self.world.remove(self.__bases[netid])
             del self.__bases[netid]
         else:
-            logging.info("Trying to remove player %d that was already disconnected?", netid)
+            logging.error("Trying to remove player %d that was already disconnected?", netid)
         return super(BaubleHuntSCVGame, self).playerDisconnected(netid)
 
-    def resetWorld(self):
+    def _world_reset(self):
         self.__bases = ThreadSafeDict()
         self.__baubles = ThreadSafeDict()
-        super(BaubleHuntSCVGame, self).resetWorld()
+        super(BaubleHuntSCVGame, self)._world_reset()
 
-    # TODO: remove, clean start procedure? Add to start??
-    def addPlayerAttributes(self, player):
-        player.score = 0
-        player.deaths = 0
-        player.totalcollected = 0
+    def player_added(self, player, reason):
+        super(BaubleHuntSCVGame, self).player_added(player, reason)
         player.carrying = []
-        player.homebase = None
+        if reason == BasicGame._ADD_REASON_REGISTER_:
+            player.totalcollected = 0
+        elif reason == BasicGame._ADD_REASON_START_:
+            player.totalcollected = 0            
 
-        return player
-
-    def newRoundForPlayer(self, player):
-        super(BaubleHuntSCVGame, self).newRoundForPlayer(player)
-        player = self.addPlayerAttributes(player)
-
-        self.__addHomeBase(player)
-        self.__addBaubles(self.world, self.cfg.getint("BaubleHunt", "extrabaublesperplayer"))
+            self.__addHomeBase(player)
+            self.__addBaubles(self.world, self.cfg.getint("BaubleHunt", "extrabaublesperplayer"))
+        elif self.__bases.has_key(nid):
+            self.__bases[nid].newOwner(player.object)
 
     def __addHomeBase(self, player, force=False):
         logging.info("Add HomeBase (%s) for Player %d", repr(force), player.netid)
@@ -100,7 +86,6 @@ class BaubleHuntSCVGame(BasicGame):
         b = HomeBase(self.getHomeBasePosition(), player.object)
 
         self.__bases[player.netid] = b
-        player.homebase = b
         
         self.world.append(b)
         logging.info("Done Adding HomeBase")
@@ -138,7 +123,7 @@ class BaubleHuntSCVGame(BasicGame):
             w.append(b)
         logging.info("Done Adding Baubles")
 
-    def worldObjectPreCollision(self, shapes):
+    def world_physics_pre_collision(self, shapes):
         types = []
         objs = []
         for shape in shapes:
@@ -186,7 +171,7 @@ class BaubleHuntSCVGame(BasicGame):
         elif "HomeBase" in types or "Bauble" in types:
             return [ False, [] ]
         
-        return super(BaubleHuntSCVGame, self).worldObjectPreCollision(shapes)
+        return super(BaubleHuntSCVGame, self).world_physics_pre_collision(shapes)
 
     def collectBaubles(self, ship, para):
         logging.info("Collected Baubles Ship #%d", ship.id)
@@ -212,7 +197,7 @@ class BaubleHuntSCVGame(BasicGame):
         home = para[0]
         logging.info("Player Depositing Baubles #%d", ship.id)
         for b in ship.player.carrying:
-            ship.player.score += b.value
+            self.player_update_score(ship.player, b.value)
             home.stored += b.value
         ship.player.totalcollected += len(ship.player.carrying)
         
@@ -220,48 +205,25 @@ class BaubleHuntSCVGame(BasicGame):
             ship.player.sound = "COLLECT"
             
         ship.player.carrying = []
-                
-        if ship.player.score > self.__highscore:
-            self.__highscore = ship.player.score
-            logging.info("New Highscore: %s %d", ship.player.name, self.__highscore)
-        
-    def worldAddRemoveObject(self, wobj, added):        
-        if isinstance(wobj, Ship) and (wobj.disconnected or wobj.killed):
-            logging.info("BH Add Object - Ship Disconnected(%s): #%d (%s) [%d]", repr(added), wobj.id, friendly_type(wobj), thread.get_ident())
-            if self.__bases.has_key(wobj.player.netid):
-                self.world.remove(self.__bases[wobj.player.netid])
-                del self.__bases[wobj.player.netid]
-            return super(BaubleHuntSCVGame, self).worldAddRemoveObject(wobj, added)               
-        if not added and isinstance(wobj, Ship) and wobj.player.netid in self._players:
-            logging.info("BH Add Object - Ship Destroyed #%d [%d]", wobj.id, thread.get_ident())
-            nid = wobj.player.netid           
+     
+    def player_died(self, player, gone):
+        # if ship destroyed, put baubles stored back
+        for b in player.carrying:
+            b.body.position = (player.object.body.position[0] + random.randint(-10, 10), player.object.body.position[1] + random.randint(-10, 10))
+            if b.value == 5:
+                self.__baubles[b.id] = b
+            self.world.append(b)
 
-            # if ship destroyed, put baubles stored back
-            for b in self._players[nid].carrying:
-                b.body.position = (self._players[nid].object.body.position[0] + random.randint(-10, 10), self._players[nid].object.body.position[1] + random.randint(-10, 10))
-                if b.value == 5:
-                    self.__baubles[b.id] = b
-                self.world.append(b)
-                
-            #clear list of carried baubles!
-            self._players[nid].carrying = []
+        self.world.causeExplosion(player.object.body.position, 32, 1000)
 
-            self.world.causeExplosion(self._players[nid].object.body.position, 32, 1000)
+        # Remove player's base if they're gone
+        if gone and self.__bases.has_key(player.netid):
+            self.world.remove(self.__bases[player.netid])
+            del self.__bases[player.netid]
 
-            self._players[nid].object = None                     
+        return super(BaubleHuntSCVGame, self).player_died(player, gone)
 
-            self._players[nid].score -= self.__deathpenalty
-            self._players[nid].deaths += 1
-            if self._players[nid].score < 0:
-                self._players[nid].score = 0
-
-            # readd
-            newship = self._addShipForPlayer(nid)
-            
-            if self.__bases.has_key(nid):
-                self.__bases[nid].newOwner(newship)
-
-    def getExtraEnvironment(self, player):
+    def game_get_extra_environment(self, player):
         if player.netid in self.__bases: # Check if Player still around?
             v = 0
             for b in player.carrying:
@@ -269,79 +231,47 @@ class BaubleHuntSCVGame(BasicGame):
             baubles = []
             for b in self.__baubles:
                 baubles.append(intpos(b.body.position))
-            return {"POSITION": intpos(self.__bases[player.netid].body.position), "BAUBLES": baubles,
-                    "SCORE": player.score, "HIGHSCORE": self.__highscore, "DEATHS": player.deaths, 
-                    "STORED": len(player.carrying), "STOREDVALUE": v, "COLLECTED": player.totalcollected}
+
+            env = super(BaubleHuntSCVGame, self).game_get_extra_environment(player)
+            env.update({"POSITION": intpos(self.__bases[player.netid].body.position), "BAUBLES": baubles,
+                        "STORED": len(player.carrying), "STOREDVALUE": v, "COLLECTED": player.totalcollected})
+
+            return env
         else:
             return {}
-
-    """
-    Called by the World when the obj is being radared
-    """
-    def getExtraRadarInfo(self, obj, objdata):
-        super(BaubleHuntSCVGame, self).getExtraRadarInfo(obj, objdata)
+    
+    def game_get_extra_radar_info(self, obj, objdata):
+        """
+        Called by the World when the obj is being radared
+        """
+        super(BaubleHuntSCVGame, self).game_get_extra_radar_info(obj, objdata)
         if hasattr(obj, "player"):
             objdata["NUMSTORED"] = len(obj.player.carrying)
 
-    def getPlayerStats(self, current=False):
-        if current:
-            p = self.getCurrentPlayers() #.itervalues()
-        else:
-            p = self._players.itervalues()
-        #eif
-        stat = sorted(p, key=attrgetter("totalcollected"))
-        stat = sorted(stat, key=attrgetter("score"), reverse=True)
-        sstat = []
-        for player in stat:
-            sstat.append(str(player.score) + " " + str(player.totalcollected) + " : " + player.name)
-        return sstat
-        
-        #stat.append("Player "+player.name + ": "+str(player.score))
+    def player_get_stat_string(self, player):
+        return str(int(player.score)) + " in " + str(player.totalcollected) + " : " + player.name + " cl " + str(len(player.carrying))
 
-    def roundOver(self):
+    def round_over(self):
         logging.info("Round Over")
         self.__btimer.cancel() # prevent more baubles from being spawned!
 
-        stat = sorted(self.getCurrentPlayers(), key=attrgetter("totalcollected"))
-        stat = sorted(stat, key=attrgetter("score"), reverse=True)
+        super(BaubleHuntSCVGame, self).round_over()
 
-        if not self._tournamentfinalround:
-            # get winner
-            for x in xrange(self.cfg.getint("BaubleHunt", "numtofinalround")):
-                logging.info("Adding player to final round %s", stat[x].name)
-                self.addPlayerToFinalRound(stat[x])
-            #next
-        else:
-            #TODO: Clean up
-            logging.info("Final Round Winner %s", stat[0].name)
-            self._tournamentfinalwinner = stat[0]
-
-        super(BaubleHuntSCVGame, self).roundOver()
-
-    def drawInfo(self, surface, flags):
+    def gui_draw_game_world_info(self, surface, flags):
         for player in self._players:
             if player.object != None:
-                # draw line between player and HomeBase
+                # draw number of objects carried
                 text = debugfont().render(repr(len(player.carrying)), False, player.color)
                 surface.blit(text, (player.object.body.position[0]+30, player.object.body.position[1]-4))
+                # draw line between player and HomeBase
                 if flags["DEBUG"] and self.__bases.has_key(player.netid):
                     pygame.draw.line(surface, player.color, intpos(player.object.body.position), intpos(self.__bases[player.netid].body.position))                
 
         # draw number of baubles carried by player
 
-    def drawGameData(self, screen, flags):
-        if self._tournament and self._tournamentinitialized:
-            super(BaubleHuntSCVGame, self).drawGameData(screen, flags)
-            stat = sorted(self.getCurrentPlayers(), key=attrgetter("totalcollected"))
-            stat = sorted(stat, key=attrgetter("score"), reverse=True)
-            x = len(stat) - 1
-            for player in stat:                
-                screen.blit(self.__dfont.render(str(player.score) + " : " + str(player.totalcollected) + " " + player.name, False, (255, 192, 192)), (screen.get_width()-300, screen.get_height() - 64 - 12*x))
-                x -= 1
-
-    def start(self):
+    def round_start(self):
         logging.info("Game Start")
-        super(BaubleHuntSCVGame, self).start()
+        super(BaubleHuntSCVGame, self).round_start()
 
         # start Bauble Spawn Timer
         self.newBaubleTimer()    
@@ -357,19 +287,6 @@ class BaubleHuntSCVGame(BasicGame):
         self.__addBaubles(self.world, self.cfg.getint("BaubleHunt", "baublesperspawn"))
         
         self.newBaubleTimer()
-
-    """
-    def start(self):
-        super(BaubleHuntSCVGame, self).start()
-
-        for player in self.getCurrentPlayers():
-            player.score = 0
-            player.deaths = 0
-
-            self.__addBauble(player)
-            self.__addBaubles(self.world, self.cfg.getint("BaubleHunt", "extrabaublesperplayer"))
-    """
-
 
 class BaubleWrapper(GUIEntity):
     def __init__(self, obj, world):

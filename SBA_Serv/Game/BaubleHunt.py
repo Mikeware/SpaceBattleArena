@@ -30,15 +30,8 @@ class BaubleHuntGame(BasicGame):
         super(BaubleHuntGame, self).__init__(cfgobj)
 
         self.__baubles = {}
-        self.__highscore = 0
-        self.__deathpenalty = self.cfg.getint("BaubleHunt", "deathpenalty")
 
-    def GUICFG(self):
-        super(BaubleHuntGame, self).GUICFG()
-
-        self.__dfont = debugfont()
-
-    def createWorld(self, pys=True):
+    def world_create(self, pys=True):
         w = ConfiguredWorld(self, self.cfg, pys)
         
         # Add some initial small Baubles
@@ -46,26 +39,15 @@ class BaubleHuntGame(BasicGame):
 
         return w
 
-    def getInitialInfoParameters(self):
+    def game_get_info(self):
         return {"GAMENAME": "BaubleHunt"}
 
-    def registerPlayer(self, name, color, imgindex, netid):
-        return super(BaubleHuntGame, self).registerPlayer(name, color, imgindex, netid)
+    def player_added(self, player, reason):
+        super(BaubleHuntGame, self).player_added(player, reason)
 
-    # TODO: remove, clean start procedure? Add to start??
-    def addPlayerAttributes(self, player):
-        player.score = 0
-        player.deaths = 0
-
-        return player
-
-    def newRoundForPlayer(self, player):
-        super(BaubleHuntGame, self).newRoundForPlayer(player)
-        player.score = 0
-        player.deaths = 0
-
-        self.__addBauble(player)
-        self.__addBaubles(self.world, self.cfg.getint("BaubleHunt", "extrabaublesperplayer"))
+        if reason == BasicGame._ADD_REASON_START_:
+            self.__addBauble(player)
+            self.__addBaubles(self.world, self.cfg.getint("BaubleHunt", "extrabaublesperplayer"))
 
     def __addBauble(self, player, force=False):
         logging.info("Add Bauble (%s) for Player %d", repr(force), player.netid)
@@ -84,7 +66,7 @@ class BaubleHuntGame(BasicGame):
             w.append(Bauble(getPositionAwayFromOtherObjects(w, 100, 30, force)))
         logging.info("Done Adding Baubles")
 
-    def worldObjectPreCollision(self, shapes):
+    def world_physics_pre_collision(self, shapes):
         types = []
         objs = []
         for shape in shapes:
@@ -109,7 +91,7 @@ class BaubleHuntGame(BasicGame):
             # collect own Bauble?
             if bauble == self.__baubles[ship.player.netid]:
                 logging.info("Collected Own Bauble #%d", ship.id)
-                ship.player.score += 2
+                self.player_update_score(ship.player, 2)
 
                 # add new bauble
                 self.__addBauble(ship.player, True)
@@ -127,85 +109,31 @@ class BaubleHuntGame(BasicGame):
                 logging.info("Collected Regular Bauble #%d", ship.id)
                 self.__addBaubles(self.world, 1, True)
             #eif
-            ship.player.score += bauble.value
+            self.player_update_score(ship.player, bauble.value)
             bauble.destroyed = True
             self.world.remove(bauble)
-        if ship.player.score > self.__highscore:
-            self.__highscore = ship.player.score
+
         logging.info("Done Collecting Baubles #%d", ship.id)
 
-    def worldAddRemoveObject(self, wobj, added):
-        logging.debug("BH Add Object(%s): #%d (%s)", repr(added), wobj.id, friendly_type(wobj))
-        if isinstance(wobj, Ship) and (wobj.disconnected or wobj.killed):
-            return super(BaubleHuntGame, self).worldAddRemoveObject(wobj, added)               
-        if not added and isinstance(wobj, Ship) and wobj.player.netid in self._players:
-            nid = wobj.player.netid
+    def game_get_extra_environment(self, player):
+        env = super(BaubleHuntGame, self).game_get_extra_environment(player)
+        env["POSITION"] = intpos(self.__baubles[player.netid].body.position)
 
-            self._players[nid].object = None                     
+        return env
 
-            self._players[nid].score -= self.__deathpenalty
-            self._players[nid].deaths += 1
-            if self._players[nid].score < 0:
-                self._players[nid].score = 0
-
-            # readd
-            self._addShipForPlayer(nid, True)
-
-    def getExtraEnvironment(self, player):
-        return {"POSITION": intpos(self.__baubles[player.netid].body.position), "SCORE": player.score, "HIGHSCORE": self.__highscore, "DEATHS": player.deaths}
-
-    def getPlayerStats(self, current=False):
-        if current:
-            p = self.getCurrentPlayers() #.itervalues()
-        else:
-            p = self._players.itervalues()
-        #eif
-        stat = sorted(p, key=attrgetter("deaths"))
-        stat = sorted(stat, key=attrgetter("score"), reverse=True)
-        sstat = []
-        for player in stat:
-            sstat.append(str(player.score) + " " + str(player.deaths) + " : " + player.name)
-        return sstat
-        
-        #stat.append("Player "+player.name + ": "+str(player.score))
-
-    def roundOver(self):
+    def round_over(self):
         self.__btimer.cancel() # prevent more baubles from being spawned!
 
-        stat = sorted(self.getCurrentPlayers(), key=attrgetter("deaths"))
-        stat = sorted(stat, key=attrgetter("score"), reverse=True)
+        super(BaubleHuntGame, self).round_over()
 
-        if not self._tournamentfinalround:
-            # get winner
-            for x in xrange(self.cfg.getint("BaubleHunt", "numtofinalround")):
-                logging.info("Adding player to final round %s", stat[x].name)
-                self.addPlayerToFinalRound(stat[x])
-            #next
-        else:
-            #TODO: Clean up
-            logging.info("Final Round Winner %s", stat[0].name)
-            self._tournamentfinalwinner = stat[0]
-
-        super(BaubleHuntGame, self).roundOver()
-
-    def drawInfo(self, surface, flags):
+    def gui_draw_game_world_info(self, surface, flags):
         for player in self._players.values():
             if player.object != None:
                 # draw line between player and Bauble
                 pygame.draw.line(surface, player.color, intpos(player.object.body.position), intpos(self.__baubles[player.netid].body.position))
 
-    def drawGameData(self, screen, flags):
-        if self._tournament and self._tournamentinitialized:
-            super(BaubleHuntGame, self).drawGameData(screen, flags)
-            stat = sorted(self.getCurrentPlayers(), key=attrgetter("deaths"))
-            stat = sorted(stat, key=attrgetter("score"), reverse=True)
-            x = len(stat) - 1
-            for player in stat:                
-                screen.blit(self.__dfont.render(str(player.score) + " : " + str(player.deaths) + " " + player.name, False, (255, 192, 192)), (screen.get_width()-300, screen.get_height() - 64 - 12*x))
-                x -= 1
-
-    def start(self):
-        super(BaubleHuntGame, self).start()
+    def round_start(self):
+        super(BaubleHuntGame, self).round_start()
 
         # start Bauble Spawn Timer
         self.newBaubleTimer()    
@@ -218,18 +146,6 @@ class BaubleHuntGame(BasicGame):
         self.__addBaubles(self.world, self.cfg.getint("BaubleHunt", "baublesperspawn"))
         
         self.newBaubleTimer()
-
-    """
-    def start(self):
-        super(BaubleHuntGame, self).start()
-
-        for player in self.getCurrentPlayers():
-            player.score = 0
-            player.deaths = 0
-
-            self.__addBauble(player)
-            self.__addBaubles(self.world, self.cfg.getint("BaubleHunt", "extrabaublesperplayer"))
-    """
 
 
 class BaubleWrapper(GUIEntity):

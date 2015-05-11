@@ -1,5 +1,6 @@
 Thumbs.db
 .jekyll-metadata
+/TestResults/
 *.suo
 *.log
 *.lock

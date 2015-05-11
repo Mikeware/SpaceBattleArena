@@ -46,18 +46,12 @@ class KingOfTheBubbleGame(BasicGame):
 
         super(KingOfTheBubbleGame, self).__init__(cfgobj)
         
-        self.__highscore = 0
-        #self.__deathpenalty = self.cfg.getint("KingOfTheBubble", "deathpenalty")
-        self.__initialpoints = self.cfg.getint("KingOfTheBubble", "initialpoints")
         self.__pointatleast = self.cfg.getint("KingOfTheBubble", "stealminpoints")
         self.__pointpercent = float(self.cfg.getint("KingOfTheBubble", "stealpercent"))
 
-    def GUICFG(self):
-        super(KingOfTheBubbleGame, self).GUICFG()
+    
 
-        self.__dfont = debugfont()
-
-    def createWorld(self, pys=True):
+    def world_create(self, pys=True):
         w = ConfiguredWorld(self, self.cfg, pys)
         
         # Add some initial small Baubles
@@ -65,17 +59,8 @@ class KingOfTheBubbleGame(BasicGame):
 
         return w
 
-    def getInitialInfoParameters(self):
+    def game_get_info(self):
         return {"GAMENAME": "KingOfTheBubble"}
-
-    def registerPlayer(self, name, color, imgindex, netid):
-        return super(KingOfTheBubbleGame, self).registerPlayer(name, color, imgindex, netid)
-
-    def addPlayerAttributes(self, player):
-        player.score = self.__initialpoints
-        player.deaths = 0
-
-        return player
 
     def addBubbles(self, w, num, setpoints=None, pos=None, pname=None, force=False):
         logging.info("Adding %d Baubles (%s)", num, repr(force))
@@ -92,56 +77,46 @@ class KingOfTheBubbleGame(BasicGame):
                 bt += random.randint(0, self.__bubbletimevar)
             if hasattr(self, "world"):
                 # NOTE: This doesn't follow the paradigm, but we need the latest reference to the world as this gets screwed up resetting the world...
-                b = Bubble(npos, self.__sizebase, points, self.__pointspeed, bt, pname, self.world) 
+                b = Bubble(npos, self.__sizebase, points, self.__pointspeed, bt, pname, self.world, self) 
             else:
-                b = Bubble(npos, self.__sizebase, points, self.__pointspeed, bt, pname, w) # this should only be the case for the initial world
+                b = Bubble(npos, self.__sizebase, points, self.__pointspeed, bt, pname, w, self) # this should only be the case for the initial world
             # The Whole Lifecycle of the Game and Rounds needs to be redefined for V2
             w.append(b)
             self.__bubbles[b.id] = b
         logging.info("Done Adding Baubles")
 
-    def worldAddRemoveObject(self, wobj, added):
+    def player_died(self, player, gone):
+        # calculate points to lose
+        addyum = player.score * (self.__pointpercent / 100.0) > self.__pointatleast
+        stealpoints = max(player.score * (self.__pointpercent / 100.0), self.__pointatleast)
+        self.player_update_score(player, -stealpoints)
+            
+        # see if a Bubble is near us
+        added = False
+        for obj in self.world.getObjectsInArea(player.object.body.position, 64): # look within a certain range of a ship area
+            if isinstance(obj, Bubble) and obj.TTL == None:
+                added = True
+                obj.size += stealpoints
+                obj.pname = player.name
+                break
+
+        if not added and addyum:            
+            self.addBubbles(self.world, 1, stealpoints, intpos(player.object.body.position), player.name)
+
+        super(KingOfTheBubbleGame, self).player_died(player, gone)
+
+    def world_add_remove_object(self, wobj, added):
         logging.debug("BH Add Object(%s): #%d (%s)", repr(added), wobj.id, friendly_type(wobj))
-        if isinstance(wobj, Ship) and (wobj.disconnected or wobj.killed):
-            return super(KingOfTheBubbleGame, self).worldAddRemoveObject(wobj, added)               
-        if not added and isinstance(wobj, Ship) and wobj.player.netid in self._players:
-            nid = wobj.player.netid
-
-            self._players[nid].object = None                     
-
-            # calculate points to lose
-            addyum = self._players[nid].score * (self.__pointpercent / 100.0) > self.__pointatleast
-            stealpoints = max(self._players[nid].score * (self.__pointpercent / 100.0), self.__pointatleast)            
-            self._players[nid].score -= stealpoints
-            
-            # see if a Bubble is near us
-            added = False
-            for obj in self.world.getObjectsInArea(wobj.body.position, 64): # look within a certain range of a ship area
-                if isinstance(obj, Bubble) and obj.TTL == None:
-                    added = True
-                    obj.size += stealpoints
-                    obj.pname = self._players[nid].name
-                    break
-
-            if not added and addyum:            
-                self.addBubbles(self.world, 1, stealpoints, intpos(wobj.body.position), self._players[nid].name)
-            
-            #self._players[nid].score -= self.__deathpenalty
-            self._players[nid].deaths += 1
-            if self._players[nid].score < 0:
-                self._players[nid].score = 0
-
-            # readd
-            self._addShipForPlayer(nid, True)
-        
         if isinstance(wobj, Bubble) and not added:
             del self.__bubbles[wobj.id]
             # Bubble was removed, we should add a new one
             if len(self.__bubbles) < self.__maxbubbles:
                 self.addBubbles(self.world, 1)
 
+        super(KingOfTheBubbleGame, self).world_add_remove_object(wobj, added)
+
     # Ignore anything that hits a bubble
-    def worldObjectPreCollision(self, shapes):
+    def world_physics_pre_collision(self, shapes):
         types = []
         objs = []
         for shape in shapes:
@@ -151,79 +126,22 @@ class KingOfTheBubbleGame(BasicGame):
         if "Bubble" in types:
             return [ False, [] ]
             
-        return super(KingOfTheBubbleGame, self).worldObjectPreCollision(shapes)
+        return super(KingOfTheBubbleGame, self).world_physics_pre_collision(shapes)
         
-    def getExtraEnvironment(self, player):
+    def game_get_extra_environment(self, player):
         bub = []
         for b in self.__bubbles.values():
             bub.append(intpos(b.body.position))
 
-        return {"BUBBLES": bub, "SCORE": player.score, "HIGHSCORE": self.__highscore, "DEATHS": player.deaths}
+        env = super(KingOfTheBubbleGame, self).game_get_extra_environment(player)
+        env["BUBBLES"] = bub
+
+        return env
         
-    def getExtraRadarInfo(self, obj, objdata):
-        super(KingOfTheBubbleGame, self).getExtraRadarInfo(obj, objdata)
+    def game_get_extra_radar_info(self, obj, objdata):
+        super(KingOfTheBubbleGame, self).game_get_extra_radar_info(obj, objdata)
         if hasattr(obj, "player"):
             objdata["VALUE"] = obj.player.score
-
-    def getPlayerStats(self, current=False):
-        if current:
-            p = self.getCurrentPlayers() #.itervalues()
-        else:
-            p = self._players.itervalues()
-        #eif
-        stat = sorted(p, key=attrgetter("deaths"))
-        stat = sorted(stat, key=attrgetter("score"), reverse=True)
-        sstat = []
-        for player in stat:
-            sstat.append(("%.1f" % player.score) + " " + str(player.deaths) + " : " + player.name)
-        return sstat
-        
-        #stat.append("Player "+player.name + ": "+str(player.score))
-
-    def roundOver(self):
-        #self.__btimer.cancel() # prevent more baubles from being spawned!
-
-        stat = sorted(self.getCurrentPlayers(), key=attrgetter("deaths"))
-        stat = sorted(stat, key=attrgetter("score"), reverse=True)
-
-        if not self._tournamentfinalround:
-            # get winner
-            for x in xrange(self.cfg.getint("KingOfTheBubble", "numtofinalround")):
-                logging.info("Adding player to final round %s %d", stat[x].name, stat[x].score)
-                self.addPlayerToFinalRound(stat[x])
-            #next
-        else:
-            #TODO: Clean up
-            logging.info("Final Round Winner %s %d", stat[0].name, stat[0].score)
-            self._tournamentfinalwinner = stat[0]
-
-        super(KingOfTheBubbleGame, self).roundOver()
-
-    def drawInfo(self, surface, flags):
-        pass
-        #for player in self._players.values():
-        #    if player.object != None:
-        #        # draw line between player and Bauble
-        #        pygame.draw.line(surface, player.color, intpos(player.object.body.position), intpos(self.__baubles[player.netid].body.position))
-
-    def drawGameData(self, screen, flags):
-        if self._tournament and self._tournamentinitialized:
-            super(KingOfTheBubbleGame, self).drawGameData(screen, flags)
-            stat = sorted(self.getCurrentPlayers(), key=attrgetter("deaths"))
-            stat = sorted(stat, key=attrgetter("score"), reverse=True)
-            x = len(stat) - 1
-            for player in stat:                
-                screen.blit(self.__dfont.render(("%.1f" % player.score) + " : " + str(player.deaths) + " " + player.name, False, (255, 192, 192)), (screen.get_width()-300, screen.get_height() - 64 - 12*x))
-                x -= 1
-
-    def start(self):
-        # reset world so bubbles start fresh - TODO: think about how to do this better... (as will reset twice each time now)
-        self.resetWorld()
-        
-        super(KingOfTheBubbleGame, self).start()
-        
-        # start Bauble Spawn Timer
-        #self.newBaubleTimer()    
 
 class BubbleWrapper(GUIEntity):
     def __init__(self, obj, world):
@@ -250,7 +168,7 @@ class Bubble(PhysicalRound):
     """
     Baubles are small prizes worth different amounts of points
     """
-    def __init__(self, pos, basesize, size, speed, time, pname, world):
+    def __init__(self, pos, basesize, size, speed, time, pname, world, game):
         super(Bubble, self).__init__(2, 2000, pos)
         self.shape.elasticity = 0.8
         self.health = PlayerStat(0)
@@ -267,6 +185,7 @@ class Bubble(PhysicalRound):
         
         self.pointspeed = speed
         self.__world = world
+        self.__game = game
         
     def update(self, t):
         super(Bubble, self).update(t)         
@@ -277,7 +196,7 @@ class Bubble(PhysicalRound):
                 ships.append(obj)
         
         for ship in ships:
-            ship.player.score += (t * self.pointspeed)
+            self.__game.player_update_score(ship.player, t * self.pointspeed)
             #logging.info("Player %s getting points %d", ship.player.name, ship.player.score)
         
         self.size -= (t * self.pointspeed * len(ships))

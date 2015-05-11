@@ -63,10 +63,10 @@ class WorldServer(object):
             #logging.debug("Got Info from " + repr(sender) + " " + repr(cmd))        
             if cmd[0] == Server.MWNL2.MWNL_CMD_CLIENT_CONNECTED:
                 p = {"IMAGELENGTH": self.__maximages, "WORLDWIDTH": self.__game.world.width, "WORLDHEIGHT": self.__game.world.height}
-                p.update(self.__game.getInitialInfoParameters())
+                p.update(self.__game.game_get_info())
                 self.__net.send(MWNL_CMD_REQUEST, p, sender)
             elif cmd[0] == Server.MWNL2.MWNL_CMD_DISCONNECT:
-                self.__game.playerDisconnected(sender)
+                self.__game.server_disconnect_player(sender)
             elif cmd[0] == MWNL_CMD_REGISTER:
                 data = cmd[1]
                 if isinstance(data["NAME"], unicode):
@@ -79,7 +79,7 @@ class WorldServer(object):
                     teamname = "BLANK STRING " + str(random.randint(0, 999999))
                 #eif
                 
-                if self.__game.hasPlayer(teamname):
+                if self.__game.player_get_by_name(teamname) != None:
                     self.sendErrorMessage(cmd, "Player already playing game.", sender)
                 else:
                     c = []
@@ -109,13 +109,17 @@ class WorldServer(object):
 
                     logging.debug("Trying to Register Player: " + teamname + " with color " + repr(c) + " and image " + repr(ii))
                     
-                    if not self.__game.registerPlayer(teamname, c, ii, sender):
+                    if not self.__game.server_register_player(teamname, c, ii, sender):
                         self.sendErrorMessage(cmd, "Game already started or does not allow reentry.", sender)
                 #eif
             elif cmd[0] == MWNL_CMD_SHIPCMD:
                 # TODO: Deal with case where we get a command after a disconnect???
-                ship = self.__game.getPlayerByNetId(sender).object
-                self.__game.getPlayerByNetId(sender).waiting = False
+                player = self.__game.player_get_by_network_id(sender)
+                if player == None:
+                    return
+
+                ship = player.object
+                player.waiting = False
                 # TODO: propogate this down below more too?
                 if ship == None: 
                     return
@@ -127,6 +131,7 @@ class WorldServer(object):
                     scmd = ConvertNetworkMessageToCommand(ship, cmd[1][0], {})
 
                 if scmd == None or isinstance(scmd, str):
+                    # TODO: Insert Game Hook Here?
                     logging.error("Bad Command #%d: %s", ship.id, repr(scmd))
                     self.sendErrorMessage(cmd[1], "Invalid Ship Command: " + repr(scmd), sender)
                     scmd = None
@@ -171,7 +176,7 @@ class WorldServer(object):
 
                 if not ship.destroyed:
                     logging.info("Send Environment to #%d (net %d)", ship.id, sender)
-                    self.__game.getPlayerByNetId(sender).waiting = True
+                    player.waiting = True
                     self.__net.send(MWNL_CMD_ENVIRONMENT, self.__game.world.getEnvironment(ship, radar, target), sender)
                 else:
                     logging.debug("Ship #%d Destroyed, won't send environment", ship.id)

@@ -25,7 +25,7 @@ class ShapesTestCase(SBAGUITestCase):
 
     def test_rect(self):
         center = self.game.world.mid_point(0)
-        self.ship = AIShip_SetListLoop("Rectangle", center, self.game.world, [
+        self.ship = AIShip_SetListLoop("Rectangle", center, self.game, [
                 "DeployLaserBeaconCommand(self)",
                 "ThrustCommand(self, 'B', 3.5)",
                 "IdleCommand(self, 4)",
@@ -35,7 +35,6 @@ class ShapesTestCase(SBAGUITestCase):
                 "DeployLaserBeaconCommand(self)"
             ], 4)
         self.ship.rotationAngle = 90
-        self.game.world.append(self.ship)
         
         while len(self.ship.cmdlist) > 0:
             time.sleep(0.02)
@@ -47,7 +46,7 @@ class ShapesTestCase(SBAGUITestCase):
         self.assertAlmostEqual(float(self.ship.body.position[1]), center[1], None, "Ship Y not the same as Start", 3)
 
     def test_spiral(self):
-        self.ship = AIShip_SetListLoop("Spiral", self.game.world.mid_point(0), self.game.world, [
+        self.ship = AIShip_SetListLoop("Spiral", self.game.world.mid_point(0), self.game, [
                 "DeployLaserBeaconCommand(self)",
                 "ThrustCommand(self, 'B', 0.5)",
                 "RotateCommand(self, 20)",
@@ -55,7 +54,6 @@ class ShapesTestCase(SBAGUITestCase):
                 "DeployLaserBeaconCommand(self)"
             ])
         self.ship.rotationAngle = 90
-        self.game.world.append(self.ship)
         
         time.sleep(40)
 

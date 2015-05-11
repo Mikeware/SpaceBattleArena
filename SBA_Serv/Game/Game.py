@@ -21,6 +21,8 @@ from World.WorldCommands import RaiseShieldsCommand
 from threading import Thread
 from ThreadStuff.ThreadSafe import ThreadSafeDict
 import pygame, thread
+from GUI.Helpers import debugfont
+from operator import attrgetter
 
 class RoundTimer(Thread):
     def __init__(self, seconds, callback):
@@ -43,32 +45,56 @@ class RoundTimer(Thread):
 
 class BasicGame(object):
     """
-    Container Class which keeps track of world, teams
-    and dictates the game rules in effect
-    Handles Delegation between Network on World???
-    What allowed Commands in Game Rules?
-    """   
+    The BasicGame defines all notions of the basic mechanics of Space Battle as well as an infrastructure to build upon.
+
+    The BasicGame provides information about a player's 'score', 'bestscore', 'deaths' by default.
+    It also keeps track of the 'highscore' in a variety of manners and can run a tournament to advance players to a final round.
+
+    Public Attributes:
+        world: world object
+        server: server object
+        laststats: previous rounds scores
+
+    Protected Attributes:
+        _players: dictionary of players keyed by their network id (player.netid)
+        _tournament: boolean True if playing tournament
+        _tournamentinitialized: boolean True if tournament has been setup
+        _highscore: current highscore of the game based on primary_victory_attr
+        _leader: current leader of the game
+    """
+    _ADD_REASON_REGISTER_ = 0
+    _ADD_REASON_START_ = 1
+    _ADD_REASON_RESPAWN_ = 2
 
     def __init__(self, cfgobj):
         self.cfg = cfgobj
         self.__started = False
-        self.world = self.createWorld()
-        self.world.registerObjectListener(self.worldAddRemoveObject)   
-        self.server = None # set when server created
-        self.__teams = ThreadSafeDict()
-        self._players = ThreadSafeDict()
+
+        # Load Config
         self.__autostart = cfgobj.getboolean("Game", "auto_start")
         self.__allowafterstart = cfgobj.getboolean("Game", "allow_after_start")
         self.__allowreentry = cfgobj.getboolean("Server", "allow_re-entry")
         self.__resetworldround = self.cfg.getboolean("Tournament", "reset_world_each_round")
-        self.__disconnectplayersafterround = self.cfg.getboolean("Tournament", "disconnect_players_after_round")         
         self.__roundtime = cfgobj.getint("Tournament", "round_time")
-        self.__timer = None
+
+        self._disconnect_on_death = cfgobj.getboolean("Game", "disconnect_on_death")
+        self._reset_score_on_death = cfgobj.getboolean("Game", "reset_score_on_death")
+        self._points_lost_on_death = cfgobj.getint("Game", "points_lost_on_death")
+        self._points_initial = cfgobj.getint("Game", "points_initial")        
+
+        self._primary_victory = cfgobj.get("Game", "primary_victory_attr")
+        self._primary_victory_high = cfgobj.getboolean("Game", "primary_victory_highest")
+
+        self._secondary_victory = cfgobj.get("Game", "secondary_victory_attr")
+        self._secondary_victory_high = cfgobj.getboolean("Game", "secondary_victory_highest")     
+        
         # TODO: Create Tournament Class
         self._tournament = cfgobj.getboolean("Tournament", "tournament")
         self._tournamentinitialized = False
         if self._tournament:
             self.__autostart = False
+        else:
+            self.__roundtime = 0 # don't want to return a big round time set in a config, if it's not used.
         self._tournamentnumgroups = cfgobj.getint("Tournament", "tournament_groups")        
         self._tournamentgroups = []
         self._tournamentcurrentgroup = 0
@@ -76,291 +102,48 @@ class BasicGame(object):
         self._tournamentfinalround = False
         self._tournamentfinalwinner = None
         self.laststats = None
-        #self.__gamerules = gamerules
-        if self.__autostart:
-            self.start()
+        self._highscore = 0 # highest score achieved during game
+        self._leader = None # player object of who's in lead
 
-    def GUICFG(self):
-        self._tfont = pygame.font.Font("freesansbold.ttf", 18)
+        self.server = None # set when server created
+        self.__teams = ThreadSafeDict()
+        self._players = ThreadSafeDict()
+        self.__aiships = ThreadSafeDict()
+        self.__timer = None
+        
+        self.__leaderboard_cache = self.game_get_current_player_list()
+
+        # Load World
+        self.world = self.world_create()
+        self.world.registerObjectListener(self.world_add_remove_object)   
+
+        if self.__autostart:
+            self.round_start()
             
-    def _startRoundTimer(self):
+    #region Round/Timing Functions
+    def _round_start_timer(self):
+        """
+        Called automatically by round_start.
+        """
         if self.__roundtime > 0 and self._tournament:
-            self.__timer = RoundTimer(self.__roundtime, self.roundOver)
+            self.__timer = RoundTimer(self.__roundtime, self.round_over)
             self.__timer.start()        
 
-    def getRoundTimeRemaining(self):
+    def round_get_time_remaining(self):
+        """
+        Returns the amount of time remaining in a tournament round or zero
+        """
         if self.__timer == None:
             return 0
 
         return self.__timer.timeLeft
 
-    def roundOver(self):
-        logging.debug("[Game] Round Over")
-        
-        # Get Stats for only the players in the round
-        self.laststats = self.getPlayerStats(current=True)
-        
-        logging.info("[Game] Stats: %s", repr(self.laststats))
-        
-        self.__timer = None
-        for player in self._players:
-            player.roundover = True
-            if player.object != None:
-                player.object.killed = True            
-                self.world.remove(player.object)
+    def round_start(self):
+        """
+        Called by GUI client to start a synchronized game start, or automatically when the game is initialized if auto_start = true
 
-        if self.__resetworldround:
-            self.resetWorld()
-
-        # overwritten by allowafterstart
-        self.__autostart = self.cfg.getboolean("Game", "auto_start")
-        # TODO: figure out a better way to tie these together
-        if self._tournament:
-            self.__autostart = False
-            self._tournamentcurrentgroup += 1
-            logging.debug("[Tournament] Group Number Now %d", self._tournamentcurrentgroup)
-        if not self.__autostart:
-            # If not autostart, wait for next round to start
-            self.__started = False
-        else:
-            self.start()
-
-    """
-    Called by constructor to create world
-    """
-    def createWorld(self, pys=True):
-        return ConfiguredWorld(self, self.cfg, pys)
-
-    """
-    Recreates a world...?
-    """
-    def resetWorld(self):
-        # Remove All Objects
-        #for obj in self.world:
-        #    self.world.remove(obj)
-
-        # Create new world
-        #self.world = None
-        #self.world = self.createWorld()
-        #self.world.registerObjectListener(self.worldAddRemoveObject)
-        self.world.newWorld(self.createWorld(False))
-
-        # Copy objects from new world to original world
-        #objlist = []
-        #for obj in w:
-        #    objlist.append(obj)
-
-        #for obj in objlist:
-        #    w.remove(obj) # need to remove object from space before adding to another
-        #    self.world.append(obj)
-
-        #w = None
-
-    """
-    Returns True when game has started
-    """
-    def hasStarted(self):
-        return self.__started    
-
-    # Called when a client is connected and appends this data to the default image number, world width and world height
-    # Should at least return a key "GAMENAME" with the name of the game module
-    def getInitialInfoParameters(self):
-        return {"GAMENAME": "Basic"}    
-
-    """
-    Called by GUI to display Player Info
-    """
-    def getPlayerStats(self, current=False):
-        if current:
-            p = self._players
-        else:
-            p = self.getCurrentPlayers()
-        #eif
-        stat = []
-        for player in p:
-            stat.append("Player "+player.name)
-        return stat
-
-    """
-    Called by the server when a new client registration message is received
-    Has all information pertaining to a player entity
-    """
-    def registerPlayer(self, name, color, imgindex, netid):        
-        if not self._players.has_key(netid):
-            if (self.__started and self.__allowafterstart) or not self.__started:
-                # create new player
-                #
-                p = Player(name, color, imgindex, netid, None)
-                p = self.addPlayerAttributes(p)
-                self._players[netid] = p
-
-                if self.__autostart:
-                    self._addShipForPlayer(netid, roundstart=True)                                   
-
-                logging.info("Registering Player: %s %d", name, netid)
-                    
-                return True
-
-        return False
-
-    """
-    Called by registerPlayer and newRoundForPlayer to add custom attributes to players for games
-    """
-    def addPlayerAttributes(self, player):
-        return player
-
-    """
-    Called by the server when a disconnect message is received by a player's client
-    """
-    def playerDisconnected(self, netid):        
-        for player in self._players:
-            if player.netid == netid and player.object != None:
-                logging.debug("Player %s Disconnected", player.name)
-                player.object.disconnected = True
-                self.world.remove(player.object)
-                player.object = None
-
-                if self.__allowreentry:
-                    if self._players.has_key(player.netid):
-                        del self._players[player.netid] # should be handled by world part
-                    return True
-
-        logging.debug("Couldn't find player with netid %d to disconnect", netid);
-        return False
-
-    """
-    Called by world when a ship is destroyed
-    """
-    def worldAddRemoveObject(self, wobj, added):
-        logging.debug("[Game] Add Object(%s): #%d (%s)", repr(added), wobj.id, friendly_type(wobj))
-        if not added and isinstance(wobj, Ship) and wobj.player.netid in self._players:
-            nid = wobj.player.netid
-
-            self._players[nid].object = None                     
-
-            r = self._players[nid].roundover
-
-            if not r or (r and self.__disconnectplayersafterround):
-                if self.__allowreentry:
-                    del self._players[nid]
-
-                self.server.sendDisconnect(nid)
-
-    """
-    Called by the physics engine when two objects just touch
-
-    return [T/F, [[func, obj, para...]... ] ]
-
-    return False to not process collision
-    """
-    def worldObjectPreCollision(self, shapes):
-        for shape in shapes:
-            obj = self.world[shape.id]
-            if isinstance(obj, BlackHole) or isinstance(obj, Nebula):
-                return [ False, [] ]
-
-    """
-    Called by the physics engine when two objects collide
-
-    Return [[func, obj, para...]...]
-    """
-    def worldObjectCollision(self, shapes, damage):
-        r = []
-        for shape in shapes:
-            #print shape.id, ":",
-            gobj = self.world[shape.id]
-            if isinstance(gobj, Ship) and gobj.commandQueue.containstype(RaiseShieldsCommand) and gobj.shield.value > 0:
-                gobj.shield -= damage * gobj.shieldDamageReduction
-                gobj.health -= damage * (1.0 - gobj.shieldDamageReduction)
-            else:
-                gobj.health -= damage
-            #eif
-
-            if gobj.health.maximum > 0 and gobj.health.value <= 0:
-                gobj.killedby = None
-                r.append([self.worldObjectAfterCollision, gobj, damage])
-                if len(shapes) == 2:
-                    for s2 in shapes:
-                        if s2 != shape:
-                            gobj.killedby = self.world[s2.id]
-                            break
-                #space.add_post_step_callback(self.worldObjectAfterCollision, gobj, damage)
-                if isinstance(gobj, Ship):
-                    gobj.player.sound = "EXPLODE"
-            elif isinstance(gobj, Ship):
-                gobj.player.sound = "HIT"
-            #eif
-        if r == []: return None
-        return r
-
-    def worldObjectAfterCollision(self, dobj, para):
-        strength = para[0] / 75.0
-        logging.info("Destroying Object: #%d, Force: %d [%d]", dobj.id, strength, thread.get_ident())
-        dobj.destroyed = True
-
-        self.world.causeExplosion(dobj.body.position, dobj.radius * 5, strength / 75.0, True) #Force in physics step
-
-        self.world.remove(dobj)
-
-    # returns true if the game already has a player with this name
-    def hasPlayer(self, name):
-        for player in self._players.values():
-            if player.name == name:
-                return True 
-
-        return False    
-    
-    def getPlayerByNetId(self, netid):
-        return self._players[netid]    
-
-    """
-    Called internally when a player registers if autostart is true, or when start is called
-
-    Also, sends initial environment to start RPC loop with client
-    """
-    def _addShipForPlayer(self, netid, force=False, roundstart=False):        
-        self._players[netid].object = Ship(self.getPlayerStartPosition(True), self.world)        
-        logging.info("Adding Ship for Player %d (%s) id #%d with Name %s", netid, repr(force), self._players[netid].object.id, self._players[netid].name)
-        self._players[netid].object.player = self._players[netid]
-        self._players[netid].roundover = False
-
-        if not self.cfg.getboolean("World", "collisions"):
-            self._players[netid].object.shape.group = 1
-
-        if roundstart:
-            self.newRoundForPlayer(self._players[netid])
-
-        self.world.append(self._players[netid].object)
-
-        logging.info("Sending New Ship #%d Environment Info", self._players[netid].object.id)
-        if not self._players[netid].waiting:
-            self.server.sendEnvironment(self._players[netid].object, netid)
-        return self._players[netid].object
-
-    """
-    Called when a new ship is added to the world for the first time as the round starts
-    It will have been created, but not added to the physics world yet, so no callback about it being added will have occured.
-    """
-    def newRoundForPlayer(self, player):
-        return self.addPlayerAttributes(player)
-
-    """
-    Figures out where a random player should start in the world
-    """
-    def getPlayerStartPosition(self, force=False):
-        pos = (random.randint(100, self.world.width - 100),
-               random.randint(100, self.world.height - 100))
-        x = 0
-        while len(self.world.getObjectsInArea(pos, 150)) > 0 and x < 15:
-            x += 1
-            pos = (random.randint(100, self.world.width - 100),
-                   random.randint(100, self.world.height - 100))
-        return pos
-
-    """
-    Called by GUI client to start a synchronized game start
-    """
-    def start(self):
+        Called every time a new round starts or once if a tournament is not being played.
+        """
         if not self.__started:
             logging.info("Starting Game")
             self.__started = True
@@ -384,20 +167,341 @@ class BasicGame(object):
                     logging.info("[Tournament] Final Round")
                     self._tournamentfinalround = True
                 #eif
+            
+
+                # we'll reset the world here so it's "fresh" and ready as soon as the game starts
+                if self.__resetworldround:
+                    self._world_reset()
             #eif
 
-            for player in self.getCurrentPlayers():
-                self._addShipForPlayer(player.netid, roundstart = True)
+            for player in self.game_get_current_player_list():
+                self._game_add_ship_for_player(player.netid, roundstart=True)
             #next
 
-            self._startRoundTimer()       
+            self._round_start_timer()   
+
+    
+    def player_added(self, player, reason):
+        """
+        player_added is called in three separate cases
+            0) When the server first registers a ship on the server and adds them to the game
+            1) When a round starts and a player is added to the game round
+            2) When a player dies and is respawned in the world.
             
-    """
-    Returns a list of player objects for players in the current round
-    Returns all players if no tournament running
-    """
-    def getCurrentPlayers(self):
+        cases 0 and 1 may occur one after another if auto_start is set to true. 
+
+        The ship object will have been created, but not added to the physics world yet, so no callback to world_add_remove_object may have occured yet.
+        This is also before any commands are requested for the player (i.e. before the first environment is sent).
+
+        You should add and initialize any new properties that you want on a player here.
+
+        Reason values:
+        _ADD_REASON_REGISTER_ = 0
+        _ADD_REASON_START_ = 1
+        _ADD_REASON_RESPAWN_ = 2
+
+        Analog to player_died
+        """
+        if reason == 1:
+            player.score = self._points_initial
+            player.bestscore = self._points_initial
+            player.deaths = 0
+
+    
+    def player_get_start_position(self, force=False):
+        """
+        Should return a position for a player to start at in the world.
+        """
+        pos = (random.randint(100, self.world.width - 100),
+               random.randint(100, self.world.height - 100))
+        x = 0
+        while len(self.world.getObjectsInArea(pos, 150)) > 0 and x < 15:
+            x += 1
+            pos = (random.randint(100, self.world.width - 100),
+                   random.randint(100, self.world.height - 100))
+        return pos
+
+    def round_over(self):
+        """
+        Called in a tournament when the round time expires.
+        Will automatically advance the top players to the next round.
+        """
+        logging.debug("[Game] Round Over")
+        self.game_update(0) # make sure we do one last update to sync and refresh the leaderboard cache
+        
+        # Get Stats for only the players in the round
+        self.laststats = self.gui_get_player_stats()
+
+        logging.info("[Game] Stats: %s", repr(self.laststats))
+
+        if not self._tournamentfinalround:
+            # get winner(s)
+            for x in xrange(self.cfg.getint("Tournament", "number_to_final_round")):
+                logging.info("Adding player to final round %s stats: %s", self.__leaderboard_cache[x].name, self.laststats[x])
+                self._player_add_to_final_round(self.__leaderboard_cache[x])
+            #next
+        else:
+            logging.info("Final Round Winner %s stats: %s", self._leader.name, self.laststats[0])
+            self._tournamentfinalwinner = self._leader
+        
+        self.__timer = None
+        for player in self._players:
+            player.roundover = True
+            if player.object != None:
+                #player.object.destroyed = True
+                self.world.remove(player.object)
+
+        # overwritten by allowafterstart
+        self.__autostart = self.cfg.getboolean("Game", "auto_start")
+        # TODO: figure out a better way to tie these together
         if self._tournament:
+            self.__autostart = False
+            self._tournamentcurrentgroup += 1
+            logging.debug("[Tournament] Group Number Now %d", self._tournamentcurrentgroup)
+        if not self.__autostart:
+            # If not autostart, wait for next round to start
+            self.__started = False
+        else:
+            self.round_start()
+
+    def world_create(self, pys=True):
+        """
+        Called by constructor to create world and when world reset, defaults to the standard world configuration from the config file definitions.
+        """
+        return ConfiguredWorld(self, self.cfg, pys)
+    
+    def _world_reset(self):
+        """
+        Recreates a world, called when the reset_world_each_round property is set.
+        """
+        self.world.newWorld(self.world_create(False))
+
+    def round_get_has_started(self):
+        """
+        Returns True when game has started.
+        """
+        return self.__started    
+
+    def game_update(self, t):
+        """
+        Called by the World to notify the passage of time
+
+        The default game uses this update to cache the current leaderboard to be used by the GUI and the game to determine the leader info to send out.
+
+        Note: This is called from the core game loop, best not to delay much here
+        """
+        self.__leaderboard_cache = sorted(sorted(self.game_get_current_player_list(), key=attrgetter(self._secondary_victory), reverse=self._secondary_victory_high), 
+                                          key=attrgetter(self._primary_victory), reverse=self._primary_victory_high)
+        if len(self.__leaderboard_cache) > 0:
+            self._leader = self.__leaderboard_cache[0]
+            self._highscore = getattr(self._leader, self._primary_victory)
+        #eif
+    #endregion
+    
+    #region Network driven functions
+    def server_register_player(self, name, color, imgindex, netid, aiship=None):
+        """
+        Called by the server when a new client registration message is received
+        Has all information pertaining to a player entity
+
+        Parameters:
+            ship: Ship object - used to register AI Ships to the game world
+        """
+        if not self._players.has_key(netid):
+            if (self.__started and self.__allowafterstart) or not self.__started:
+                # create new player
+                #
+                p = Player(name, color, imgindex, netid, None)
+                self.player_added(p, BasicGame._ADD_REASON_REGISTER_)
+                self._players[netid] = p
+
+                # TODO: Need to handle AI Ships specially for delayed starts or respawns
+                if aiship != None:
+                    self.__aiships[netid] = aiship
+                
+                if self.__autostart:
+                    self._game_add_ship_for_player(netid, roundstart=True, aiship=aiship)
+
+                logging.info("Registering Player: %s %d", name, netid)
+                    
+                return True
+
+        return False
+
+    def _game_add_ship_for_player(self, netid, force=False, roundstart=False, aiship=None):        
+        """
+        Called internally when a player registers if autostart is true, or when round_start is called
+        Also called when a player respawns.
+
+        Look to override player_added instead.
+
+        Also, sends initial environment to start RPC loop with client
+        """
+        if aiship != None:
+            self._players[netid].object = aiship
+        else:
+            self._players[netid].object = Ship(self.player_get_start_position(True), self.world)
+        logging.info("Adding Ship for Player %d (%s) id #%d with Name %s", netid, repr(force), self._players[netid].object.id, self._players[netid].name)
+        self._players[netid].object.player = self._players[netid]
+        self._players[netid].object.owner = self._players[netid].object # Make ships owners of themselves for easier logic with ownership?
+        self._players[netid].roundover = False
+
+        if not self.cfg.getboolean("World", "collisions"):
+            self._players[netid].object.shape.group = 1
+
+        if roundstart:
+            self.player_added(self._players[netid], BasicGame._ADD_REASON_START_)
+        else:
+            self.player_added(self._players[netid], BasicGame._ADD_REASON_RESPAWN_)
+        #eif
+
+        self.world.append(self._players[netid].object)
+
+        logging.info("Sending New Ship #%d Environment Info", self._players[netid].object.id)
+        if netid >= 0 and not self._players[netid].waiting:
+            self.server.sendEnvironment(self._players[netid].object, netid)
+        return self._players[netid].object
+    
+    def game_get_info(self):
+        """
+        Called when a client is connected and appends this data to the default image number, world width and world height
+        Should at least return a key "GAMENAME" with the name of the game module.
+
+        Your game name should be "Basic" if you don't want to return anything in game_get_extra_environment to the player
+            besides Score, Bestscore, Deaths, Highscore, Time left, and Round time.
+
+        Note: The client doesn't expose a way to get anything besides the game name right now.
+        """
+        return {"GAMENAME": "Basic"}    
+    
+    def game_get_extra_environment(self, player):
+        """
+        Called by World to return extra environment info to a player when they need to return a command (for just that player).
+
+        If you desire to return more information to the client, you can create an extended BasicGameInfo class there and repackage the jar.
+        See info in the server docs on adding a subgame.
+        """
+        return {"SCORE": player.score, "BESTSCORE": player.bestscore, "DEATHS": player.deaths, 
+                "HIGHSCORE": self._highscore, "TIMELEFT": int(self.round_get_time_remaining()), "ROUNDTIME": self.__roundtime}
+
+    
+    def game_get_extra_radar_info(self, obj, objdata):
+        """
+        Called by the World when the obj is being radared, should add new properties to the objdata.
+
+        Note: it is not supported to pick up these values directly by the client, it is best to use the existing properties that make sense.
+        """
+        if hasattr(obj, "player") and self.cfg.getboolean("World", "radar_include_name"):
+            objdata["NAME"] = obj.player.name
+
+    def server_disconnect_player(self, netid):        
+        """
+        Called by the server when a disconnect message is received by a player's client
+
+        player_died should also be called, so it is recommended to override that method instead.
+        """
+        for player in self._players:
+            if player.netid == netid and player.object != None:
+                logging.debug("Player %s Disconnected", player.name)
+                player.disconnected = True
+                player.object.killed = True # terminate
+                self.world.remove(player.object)
+                player.object = None
+
+                if self.__allowreentry:
+                    if self._players.has_key(player.netid):
+                        del self._players[player.netid] # should be handled by world part
+                    return True
+
+        logging.debug("Couldn't find player with netid %d to disconnect", netid);
+        return False
+
+    def player_get_by_name(self, name):
+        """
+        Retrieves a player by their name.
+        """
+        for player in self._players.values():
+            if player.name == name:
+                return player
+
+        return None    
+    
+    def player_get_by_network_id(self, netid):
+        """
+        Used by the server to retrieve a player by their network id.
+        """
+        if self._players.has_key(netid):
+            return self._players[netid]
+        return None
+
+    #endregion
+
+    #region Player Scoring / Leaderboard Functions
+    def player_update_score(self, player, amount):
+        """
+        Should be called to manipulate a player's score, will do extra bookkeeping and sanity for you.
+        """
+        player.score += amount
+
+        # scores can't be negative
+        if player.score < 0:
+            player.score = 0
+
+        # TODO: should probably check if primary highest flag to see if we want to keep track of lowest or highest score here
+        # update if this is a new personal best
+        if player.score > player.bestscore:
+            player.bestscore = player.score
+        
+    def player_died(self, player, gone):
+        """
+        Will be called when a player dies, will adjust score appropriately based on game rules.
+        Called before player object removed from player.
+
+        gone will be True if the player is disconnected or killed (they won't respawn)
+
+        Analog to player_added
+        """
+        player.deaths += 1
+        if self._points_lost_on_death > 0:
+            self.player_update_score(player, -self._points_lost_on_death)
+
+        if self._reset_score_on_death:
+            self._player_reset_score(player)
+
+    def _player_reset_score(self, player):
+        """
+        Used to reset a players score and determine the new leader.
+
+        Will be called by the default implementation of player_died if the reset_score_on_death configuration property is true.
+        """
+        player.score = self._points_initial
+
+    def _player_add_to_final_round(self, player):
+        """
+        Add the player to the final round.  Will be automatically called by the default implementation for round_over.
+        """
+        self._tournamentfinalgroup.append(player)
+
+    def game_get_current_leader_list(self, all=False):
+        """
+        Gets the list of players sorted by their score (highest first) (or all players)
+        """
+        # secondary victory first, primary second
+        if all:
+            return sorted(sorted(self.game_get_current_player_list(all), key=attrgetter(self._secondary_victory), reverse=self._secondary_victory_high), 
+                   key=attrgetter(self._primary_victory), reverse=self._primary_victory_high)
+
+        # TODO: Cache this and regen, update leader and highscore value there too, should I do this once every game update?
+        return self.__leaderboard_cache
+
+    def game_get_current_player_list(self, all=False):
+        """
+        Returns a list of player objects for players in the current round
+        Returns all players if no tournament running or requested
+        """
+        if all or not self._tournament:
+            return self._players
+        else:
             if self._tournamentfinalround:
                 return self._tournamentfinalgroup
             else:
@@ -406,46 +510,172 @@ class BasicGame(object):
                 else:
                     return []
             #eif
-        else:
-            return self._players
         #eif
 
-    def addPlayerToFinalRound(self, player):
-        self._tournamentfinalgroup.append(player)
+    def player_get_stat_string(self, player):
+        """
+        Should return a string with information about the player and their current score.
 
-    """
-    Called by World to return extra environment info to a player when they need to return a command (for just that player)
-    """
-    def getExtraEnvironment(self, player):
+        Defaults to:
+        primary_score  secondary_score : player_name
+        """
+        return "%.1f" % getattr(player, self._primary_victory) + "  " + str(getattr(player, self._secondary_victory)) + " : " + player.name
+    
+    def tournament_is_running(self):
+        """
+        Returns true if a tournament is running.
+        """
+        return self._tournament
+    #endregion
+    
+    #region World/Collision Functions
+    def world_add_remove_object(self, wobj, added):
+        """
+        Called by world when an object is added or destroyed
+
+        For simple tasks involving players look to the player_died or player_added methods
+
+        killed ships will not return (used to prevent respawn)
+        """
+        logging.debug("[Game] Add Object(%s): #%d (%s)", repr(added), wobj.id, friendly_type(wobj))
+        if not added and isinstance(wobj, Ship) and wobj.player.netid in self._players:
+            nid = wobj.player.netid
+
+            self.player_died(self._players[nid], (self._players[nid].disconnected or wobj.killed))
+
+            self._players[nid].object = None
+
+            if not self._players[nid].disconnected:
+                if self._disconnect_on_death or wobj.killed:
+                    if self.__allowreentry:
+                        del self._players[nid]
+
+                    # TODO: disconnect AI?
+                    if nid >= 0:
+                        self.server.sendDisconnect(nid)
+                else:
+                    if not self._players[nid].roundover:
+                        # if the round isn't over, then re-add the ship
+                        if self.__aiships.has_key(nid):
+                            # re-readd the AI Ship TODO: tell it it's died?
+                            self._game_add_ship_for_player(nid, True, aiship = self.__aiships[nid])
+                        else:
+                            self._game_add_ship_for_player(nid, True)
+    
+    def world_physics_pre_collision(self, shapes):
+        """
+        Called by the physics engine when two objects just touch for the first time
+
+        return [True/False, [[func, obj, para...]... ] ]
+
+        use False to not process collision in the physics engine, the function callback will still be called
+
+        The default game prevents anything from colliding with BlackHole or Nebula.
+
+        shapes is a list of pymunk Shape classes, but you can look at it's id or world_object properties to get useful information.
+        """
+        for shape in shapes:
+            if isinstance(shape.world_object, BlackHole) or isinstance(shape.world_object, Nebula):
+                return [ False, [] ]
+
+    def world_physics_collision(self, shapes, damage):
+        """
+        Called by the physics engine when two objects collide
+
+        Return [[func, obj, para...]...]
+
+        The default game handles inflicting damage on entities in this step.  
+    
+        It is best to override world_physics_pre_collision if you want to prevent things from occuring in the first place.
+        """
+        r = []
+        for shape in shapes:
+            #print shape.id, ":",
+            gobj = shape.world_object
+            if isinstance(gobj, Ship) and gobj.commandQueue.containstype(RaiseShieldsCommand) and gobj.shield.value > 0:
+                gobj.shield -= damage * gobj.shieldDamageReduction
+                gobj.health -= damage * (1.0 - gobj.shieldDamageReduction)
+            else:
+                logging.debug("Object #%d took %d damage", gobj.id, damage)
+                gobj.health -= damage
+            #eif
+
+            if gobj.health.maximum > 0 and gobj.health.value <= 0:
+                gobj.killedby = None
+                if len(shapes) == 2:
+                    for s2 in shapes:
+                        if s2 != shape:
+                            gobj.killedby = self.world[s2.id]
+                            break
+
+                logging.info("Object #%d destroyed by %s", gobj.id, repr(gobj.killedby))
+                r.append([self.world_physics_post_collision, gobj, damage])
+                
+                if isinstance(gobj, Ship):
+                    gobj.player.sound = "EXPLODE"
+            elif isinstance(gobj, Ship):
+                gobj.player.sound = "HIT"
+            #eif
+        if r == []: return None
+        return r
+
+    def world_physics_post_collision(self, dobj, para):
+        """
+        Setup and called by world_physics_collision to process objects which have been destroyed as a result of taking too much damage.
+
+        The default game causes an explosion force based on the strength of the collision in the vicinity of the collision.
+
+        dobj: the object destroyed
+        para: extra parameters from a previous step, by default collision passes the strength of the collision only
+        """
+        strength = para[0] / 75.0
+        logging.info("Destroying Object: #%d, Force: %d [%d]", dobj.id, strength, thread.get_ident())
+        dobj.destroyed = True
+
+        self.world.causeExplosion(dobj.body.position, dobj.radius * 5, strength / 75.0, True) #Force in physics step
+
+        self.world.remove(dobj)
+
+    #endregion
+
+    #region GUI Drawing
+    def gui_initialize(self):
+        """
+        Used to initialize GUI resources at the appropriate time after the graphics engine has been initialized.
+        """
+        self._tfont = pygame.font.Font("freesansbold.ttf", 18)
+        self._dfont = debugfont()
+
+    def gui_draw_game_world_info(self, surface, flags):
+        """
+        Called by GUI to have the game draw additional (optional) info in the world when toggled on 'G'.
+        (coordinates related to the game world)
+        """
         pass
 
-    """
-    Called by the World when the obj is being radared
-    """
-    def getExtraRadarInfo(self, obj, objdata):
-        if hasattr(obj, "player") and self.cfg.getboolean("World", "radar_include_name"):
-            objdata["NAME"] = obj.player.name
-
-    """
-    Called by the World to notify the passage of time
-
-    Note: This is called from the core game loop, best not to delay much here
-    """
-    def update(self, t):
+    def gui_draw_game_screen_info(self, screen, flags):
+        """
+        Called by GUI to have the game draw additional (optional) info on screen when toggled on 'G'.
+        (coordinates related to the screen)
+        """
         pass
 
-    """
-    Called by GUI to have game draw additional info on screen
-    (related to the game world)
-    """
-    def drawInfo(self, surface, flags):
-        pass                
+    def gui_get_player_stats(self, all=False):
+        """
+        Called by GUI to get the sorted list of player stats.
 
-    """
-    Called by GUI to draw info about the round/tournament
-    (related to the screen)
-    """
-    def drawGameData(self, screen, flags):
+        GUI expects a list of strings, you should usually override player_get_stat_string.
+        """
+        sstat = []
+        for player in self.game_get_current_leader_list(all):
+            sstat.append(self.player_get_stat_string(player))
+        return sstat
+
+    def gui_draw_tournament_bracket(self, screen, flags):
+        """
+        Called by GUI to draw info about the round/tournament (optional) when toggled on 'T'.
+        (coordinates related to the screen)
+        """
         if self._tournament and self._tournamentinitialized:
             # draw first Bracket
             y = 100
@@ -479,12 +709,4 @@ class BasicGame(object):
             if self._tournamentfinalwinner:
                 screen.blit(self._tfont.render(self._tournamentfinalwinner.name, False, (128, 255, 255)), (835, py + (y - py) / 2))
         #eif
-
-# COMMAND - GAME COMMANDS?
-    # COMMAND LIMITS (Thrusting, Energy, Temporary, Aux...)
-
-# IN RANGE
-
-# EXTRA SHIP HUD?
-
-# LEADER BOARD?
+    #endregion

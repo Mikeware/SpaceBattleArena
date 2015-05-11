@@ -19,7 +19,7 @@ class CreatePlanetTestCase(SBAWorldTestCase):
     """
     Dummy test to create a planet and check it was added to the world of the game.
     """
-    def createWorld(self, world):
+    def world_create(self, world):
         self._planet = Planet((300, 300))
         world.append(self._planet)
 

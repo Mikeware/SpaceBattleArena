@@ -22,7 +22,6 @@ from GUI.GraphicsCache import Cache
 from GUI.Helpers import debugfont, wrapcircle, namefont
 import logging, random
 import pygame
-from operator import attrgetter
 
 # Basic Game - Find The Middle
 # Preliminary Exercise to introduce students to the world of Space Battle
@@ -34,136 +33,73 @@ from operator import attrgetter
 class FindTheMiddleGame(BasicGame):
     
     def __init__(self, cfgobj):
-        self.__objectiveradii = eval(cfgobj.get("FindTheMiddle", "objective_radii"))
-        self.__objectivepoints = eval(cfgobj.get("FindTheMiddle", "objective_points"))
-        self.__objectivetime = float(cfgobj.getint("FindTheMiddle", "objective_time"))
-        self.__objectivevelocity = cfgobj.getint("FindTheMiddle", "objective_velocity")
+        self.__objective_radii = eval(cfgobj.get("FindTheMiddle", "objective_radii"))
+        self.__objective_points = eval(cfgobj.get("FindTheMiddle", "objective_points"))
+        self.__objective_time = float(cfgobj.getint("FindTheMiddle", "objective_time"))
+        self.__objective_velocity = cfgobj.getint("FindTheMiddle", "objective_velocity")
 
         super(FindTheMiddleGame, self).__init__(cfgobj)
-                
-        self.__highscore = 0
 
-    def createWorld(self, pys=True):
-        world = super(FindTheMiddleGame, self).createWorld(pys)
+    def world_create(self, pys=True):
+        world = super(FindTheMiddleGame, self).world_create(pys)
         self.midpoint = (int(world.width / 2), int(world.height / 2))
         return world
+
+    def player_added(self, player, reason):
+        player.time = 0
+
+        super(FindTheMiddleGame, self).player_added(player, reason)
+
+    def player_get_stat_string(self, player):
+        return repr(int(player.score)) + "  " + player.name
     
-    def getPlayerStartPosition(self, force=False):
+    def player_get_start_position(self, force=False):
         # make sure player doesn't spawn in middle
         pos = (random.randint(50, self.world.width - 50),
                random.randint(50, self.world.height - 50))
         x = 0
-        while (len(self.world.getObjectsInArea(pos, 75)) > 0 or in_circle(self.midpoint, self.__objectiveradii[-1], pos)) and x < 15:
+        while (len(self.world.getObjectsInArea(pos, 75)) > 0 or in_circle(self.midpoint, self.__objective_radii[-1], pos)) and x < 15:
             x += 1
             pos = (random.randint(50, self.world.width - 50),
                    random.randint(50, self.world.height - 50))
         return pos
 
-    def GUICFG(self):
-        super(FindTheMiddleGame, self).GUICFG()
-
-        self.__dfont = debugfont()
-
-    def addPlayerAttributes(self, player):
-        player.score = 0
-        player.time = 0
-        player.deaths = 0
-
-        return player
-
-    def worldAddRemoveObject(self, wobj, added):
-        logging.debug("BH Add Object(%s): #%d (%s)", repr(added), wobj.id, friendly_type(wobj))
-        if not added and isinstance(wobj, Ship) and wobj.player.netid in self._players:
-            nid = wobj.player.netid
-            self._players[nid].deaths += 1
-
-        return super(FindTheMiddleGame, self).worldAddRemoveObject(wobj, added)
-        
-    def getExtraEnvironment(self, player):
-        return {"SCORE": player.score, "HIGHSCORE": self.__highscore, "DEATHS": player.deaths}
-        
-    def getPlayerStats(self, current=False):
-        if current:
-            p = self.getCurrentPlayers() #.itervalues()
-        else:
-            p = self._players.itervalues()
-        #eif
-        stat = sorted(p, key=attrgetter("deaths"))
-        stat = sorted(stat, key=attrgetter("score"), reverse=True)
-        sstat = []
-        for player in stat:
-            sstat.append(("%.1f" % player.score) + " " + str(player.deaths) + " : " + player.name)
-        return sstat
-        
-        #stat.append("Player "+player.name + ": "+str(player.score))
-
-    def roundOver(self):
-        #self.__btimer.cancel() # prevent more baubles from being spawned!
-
-        stat = sorted(self.getCurrentPlayers(), key=attrgetter("deaths"))
-        stat = sorted(stat, key=attrgetter("score"), reverse=True)
-
-        if not self._tournamentfinalround:
-            # get winner
-            for x in xrange(self.cfg.getint("KingOfTheBubble", "numtofinalround")):
-                logging.info("Adding player to final round %s %d", stat[x].name, stat[x].score)
-                self.addPlayerToFinalRound(stat[x])
-            #next
-        else:
-            #TODO: Clean up
-            logging.info("Final Round Winner %s %d", stat[0].name, stat[0].score)
-            self._tournamentfinalwinner = stat[0]
-
-        super(FindTheMiddleGame, self).roundOver()
-
-    def update(self, t):
-        if self.hasStarted():
+    def game_update(self, t):
+        if self.round_get_has_started():
             ships = []
-            for obj in self.world.getObjectsInArea(self.midpoint, self.__objectiveradii[-1] + 28): # add the ship radius so it looks like you get points if you overlap
+            for obj in self.world.getObjectsInArea(self.midpoint, self.__objective_radii[-1] + 28): # add the ship radius so it looks like you get points if you overlap
                 if isinstance(obj, Ship):
                     ships.append(obj)
         
+            # decrease the time for ships that are moving slowly in the bubble
             for ship in ships:
-                if ship.body.velocity.length < self.__objectivevelocity:
+                if ship.body.velocity.length < self.__objective_velocity:
                     ship.player.time += t
-                    if ship.player.time >= self.__objectivetime:
+                    if ship.player.time >= self.__objective_time:
+                        # slowed enough, figure out how many points to give
                         x = 0
-                        for radius in self.__objectiveradii:
+                        for radius in self.__objective_radii:
                             if in_circle(self.midpoint, radius + 28, ship.body.position):                                
                                 break
                             x += 1
-                        ship.body.position = self.getPlayerStartPosition()
-                        ship.player.score += self.__objectivepoints[x]
+                        ship.body.position = self.player_get_start_position() 
+                        self.player_update_score(ship.player, self.__objective_points[x])
                         ship.player.time = 0
 
-    def drawInfo(self, surface, flags):
+        super(FindTheMiddleGame, self).game_update(t)
+
+    def gui_draw_game_world_info(self, surface, flags):
         # Draw circles in middle of world
         x = 1
-        inc = int(255 / len(self.__objectiveradii))
-        for radius in self.__objectiveradii:
-            pygame.draw.circle(surface, (0, inc * x, 255 - inc * x), self.midpoint, radius, len(self.__objectiveradii) - x + 1)
-            text = debugfont().render(repr(self.__objectivepoints[x-1]) + " Points", False, (128, 128, 128))
+        inc = int(255 / len(self.__objective_radii))
+        for radius in self.__objective_radii:
+            pygame.draw.circle(surface, (0, inc * x, 255 - inc * x), self.midpoint, radius, len(self.__objective_radii) - x + 1)
+            text = self._dfont.render(repr(int(self.__objective_points[x-1])) + " Points", False, (128, 128, 128))
             surface.blit(text, (self.midpoint[0]-text.get_width()/2, self.midpoint[1]-radius+18))
             x += 1
 
-        for player in self._players.values():
+        for player in self.game_get_current_player_list().values():
             if player.object != None and player.time > 0:
-                # draw time left in bubble
-                text = debugfont().render("%.1f" % (self.__objectivetime - player.time), False, player.color)
+                # draw time left in bubble for player
+                text = self._dfont.render("%.1f" % (self.__objective_time - player.time), False, player.color)
                 surface.blit(text, (player.object.body.position[0]+30, player.object.body.position[1]-4))
-
-    def drawGameData(self, screen, flags):
-        if self._tournament and self._tournamentinitialized:
-            super(FindTheMiddleGame, self).drawGameData(screen, flags)
-            stat = sorted(self.getCurrentPlayers(), key=attrgetter("deaths"))
-            stat = sorted(stat, key=attrgetter("score"), reverse=True)
-            x = len(stat) - 1
-            for player in stat:                
-                screen.blit(self.__dfont.render(("%.1f" % player.score) + " : " + str(player.deaths) + " " + player.name, False, (255, 192, 192)), (screen.get_width()-300, screen.get_height() - 64 - 12*x))
-                x -= 1
-
-    def start(self):
-        # reset world so bubbles start fresh - TODO: think about how to do this better... (as will reset twice each time now)
-        self.resetWorld()
-        
-        super(FindTheMiddleGame, self).start()

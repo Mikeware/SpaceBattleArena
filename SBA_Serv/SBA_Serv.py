@@ -116,7 +116,7 @@ if defaults:
     print "Attempting to Load Game: ", rungame
 
     game = None
-    if rungame != "BasicGame" and rungame != None and rungame.strip() != "":
+    if rungame != "Basic" and rungame != None and rungame.strip() != "":
         mod = None
         try:
             mod = import_module("Game."+rungame)
@@ -128,7 +128,7 @@ if defaults:
             print traceback.format_exc()        
     #eif
     
-    if game == None or rungame == "BasicGame" or rungame == None or rungame.strip() == "":
+    if game == None or rungame == "Basic" or rungame == None or rungame.strip() == "":
         logging.info("Running Basic Game")
         game = BasicGame(cfg)
 

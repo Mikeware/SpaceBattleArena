@@ -12,6 +12,9 @@ class Player(object):
         self.waiting = False
         self.sound = None
         self.score = 0
+        self.bestscore = 0
+        self.deaths = 0
+        self.disconnected = False
 
 #TODO: Put alliegiences in here?
 

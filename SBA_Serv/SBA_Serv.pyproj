@@ -37,6 +37,7 @@
     <Compile Include="Game\BaubleHunt.py" />
     <Compile Include="Game\AsteroidMiner.py" />
     <Compile Include="Game\CombatExercise.py" />
+    <Compile Include="Game\Survivor.py" />
     <Compile Include="Game\Game.py" />
     <Compile Include="Game\FindTheMiddle.py" />
     <Compile Include="Game\KingOfTheBubble.py" />
@@ -54,6 +55,11 @@
     <Compile Include="GUI\SoundCache.py" />
     <Compile Include="GUI\Star.py" />
     <Compile Include="GUI\__init__.py" />
+    <Compile Include="Tests\CombatExerciseTestCases.py" />
+    <Compile Include="Tests\AsteroidMinerTestCases.py" />
+    <Compile Include="Tests\FindTheMiddleTestCases.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Tests\ServerTestCases.py">
       <SubType>Code</SubType>
     </Compile>
@@ -65,6 +71,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Tests\WorldTestCases.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tests\__init__.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ThreadStuff\ThreadSafe.py" />
@@ -106,20 +115,28 @@
     <Folder Include="World\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="baublehunt.cfg" />
-    <Content Include="baubletournamentB.cfg" />
-    <Content Include="test.cfg" />
+    <Content Include="basicgame_asteroid.cfg" />
+    <Content Include="basicgame_survivor.cfg" />
+    <Content Include="game_baublehunt.cfg" />
+    <Content Include="game_kingofspace.cfg" />
+    <Content Include="game_kingofthebubble.cfg" />
+    <Content Include="radarworld_2014.cfg" />
+    <Content Include="Tests\test_combatexercise.cfg" />
+    <Content Include="Tests\test_asteroidminer.cfg" />
+    <Content Include="Tests\test_findthemiddle.cfg" />
+    <Content Include="Tests\defaulttest.cfg" />
     <Content Include="GUI\ObjWrappers\GUIEntity.py" />
-    <Content Include="baubletournamentA.cfg" />
     <Content Include="default.cfg" />
     <Content Include="machine_fullscreen2x.cfg" />
     <Content Include="machine_fullscreen1p5x.cfg" />
     <Content Include="machine_fullscreen.cfg" />
     <Content Include="machine_empty.cfg" />
     <Content Include="machine_test.cfg" />
-    <Content Include="findthemiddle.cfg" />
+    <Content Include="basicgame_findthemiddle.cfg" />
     <Content Include="radarworld.cfg" />
-    <Content Include="baublescvold.cfg" />
+    <Content Include="game_baublehuntscv.cfg" />
+    <Content Include="basicgame_combatexercise.cfg" />
+    <Content Include="tournament.cfg" />
   </ItemGroup>
   <Import Project="$(PtvsTargetsFile)" Condition="Exists($(PtvsTargetsFile))" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="!Exists($(PtvsTargetsFile))" />

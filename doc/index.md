@@ -50,8 +50,12 @@ Documentation
     * Your Ship's 'Computer'
     * Commands
 * Competitions
-    * Bauble Hunt
-    * Asteroid Miner
+    * 'Basic' Games
+        * Find The Middle
+        * Survivor
+        * Asteroid Miner
+        * Combat Exercise
+    * Bauble Hunt  
     * Bauble Hunt SCV
     * King of the Bubble
         * King of Space (Variant)

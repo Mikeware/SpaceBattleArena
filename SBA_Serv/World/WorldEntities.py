@@ -23,7 +23,12 @@ from WorldMath import PlayerStat
 from Entities import PhysicalRound, PhysicalEllipse
 
 class Ship(PhysicalRound):
-    """Describes a ship"""
+    """
+    A Ship is the main entity a player controls in the world.
+    
+    Attributes:
+        killed: boolean different than destroyed, represents an object forcibly removed from the world (by GUI or end of round), should NOT respawn
+    """
 
     def __init__(self, pos, world):
         super(Ship, self).__init__(28, 500, pos)
@@ -55,8 +60,7 @@ class Ship(PhysicalRound):
         self.lasernodes = []
 
         # extra state
-        self.killed = False
-        self.disconnected = False #TODO: Move to player?
+        self.killed = False # forcibly removed object
 
     def setCommandBufferSize(self, size):
         old = self.commandQueue[:]
@@ -155,9 +159,11 @@ class Asteroid(PhysicalRound):
     Asteroids are given an initial random direction and speed and will travel in that direction forever until disrupted...
     """
 
-    def __init__(self, pos):
+    def __init__(self, pos, mass = None):
         #TODO: Make Asteroids of different sizes
-        super(Asteroid, self).__init__(16, random.randint(1500, 3500), pos)
+        if mass == None:
+            mass = random.randint(1500, 3500)
+        super(Asteroid, self).__init__(16, mass, pos)
         self.shape.elasticity = 0.8
         self.health = PlayerStat(self.mass / 15.0)
 
@@ -179,6 +185,7 @@ class Torpedo(PhysicalRound):
         self.shape.elasticity = 0.8
         self.health = PlayerStat(1)
         self.owner = owner
+        self.explodable = False
 
         #self.shape.group = 1
         v = 15000

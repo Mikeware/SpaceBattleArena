@@ -29,37 +29,14 @@ class AsteroidMinerGame(BasicGame):
     def __init__(self, cfgobj):
         super(AsteroidMinerGame, self).__init__(cfgobj)
 
-        self.__highscore = 0
-        self.__deathpenalty = self.cfg.getint("AsteroidMiner", "deathpenalty")
-        self.__torpedopoints = self.cfg.getint("AsteroidMiner", "torpedopoints")
-        self.__shippoints = self.cfg.getint("AsteroidMiner", "shippoints")
+        self.__torpedopoints = self.cfg.getint("AsteroidMiner", "points_torpedo")
+        self.__shippoints = self.cfg.getint("AsteroidMiner", "points_ship")
+    
+    def player_added(self, player, reason):
+        super(AsteroidMinerGame, self).player_added(player, reason)
 
-    def GUICFG(self):
-        super(AsteroidMinerGame, self).GUICFG()
-
-        self.__dfont = debugfont()
-
-    def createWorld(self, pys=True):
-        w = ConfiguredWorld(self, self.cfg, pys)
-        
-        return w
-
-    def registerPlayer(self, name, color, imgindex, netid):
-        return super(AsteroidMinerGame, self).registerPlayer(name, color, imgindex, netid)
-
-    # TODO: remove, clean start procedure? Add to start??
-    def addPlayerAttributes(self, player):
-        player.score = 0
-        player.deaths = 0
-
-        return player
-
-    def newRoundForPlayer(self, player):
-        super(AsteroidMinerGame, self).newRoundForPlayer(player)
-        player.score = 0
-        player.deaths = 0
-
-        self.__addAsteroid()
+        if reason == BasicGame._ADD_REASON_START_:
+            self.__addAsteroid()
 
     def __addAsteroid(self, force=False):
         logging.info("Add Asteroid (%s)", repr(force))
@@ -75,7 +52,7 @@ class AsteroidMinerGame(BasicGame):
         logging.info("Done Adding Asteroids")
 
     """
-    def worldObjectPreCollision(self, shapes):
+    def world_physics_pre_collision(self, shapes):
         types = []
         objs = []
         for shape in shapes:
@@ -98,110 +75,48 @@ class AsteroidMinerGame(BasicGame):
         logging.info("checkAsteroid Torpedo #%d", torpedo.id)
         for ast in para[0]:
             if ast.destroyed:
-                torpedo.owner.player.score += 1
+                self.player_update_score(torpedo.owner.player, 1)
 
                 # add new asteroid
                 self.__addAsteroid(True)
             #eif
-        if torpedo.owner.player.score > self.__highscore:
-            self.__highscore = torpedo.owner.player.score
+
         logging.info("Done checkAsteroid #%d", torpedo.id)            
         
     """
 
-    def worldAddRemoveObject(self, wobj, added):
+    def world_add_remove_object(self, wobj, added):
         logging.debug("BH Add Object(%s): #%d (%s)", repr(added), wobj.id, friendly_type(wobj))
-        if not added and isinstance(wobj, Asteroid) and wobj.killedby != None:
+        if not added and isinstance(wobj, Asteroid) and hasattr(wobj, "killedby") and wobj.killedby != None:
             obj = wobj.killedby
             if isinstance(obj, Torpedo):
-                obj.owner.player.score += self.__torpedopoints
-                if obj.owner.player.score > self.__highscore:
-                    self.__highscore = obj.owner.player.score
+                self.player_update_score(obj.owner.player, self.__torpedopoints)
                     
                 logging.info("Torpedo Owner (#%d) Destroyed Asteroid", obj.owner.id)
             elif isinstance(obj, Ship) and obj.health.value > 0:
-                obj.player.score += self.__shippoints
-                if obj.player.score > self.__highscore:
-                    self.__highscore = obj.player.score
+                self.player_update_score(obj.player, self.__shippoints)
                     
                 logging.info("Ship (#%d) Destroyed Asteroid", obj.id)
-                
-        if isinstance(wobj, Ship) and (wobj.disconnected or wobj.killed):
-            return super(AsteroidMinerGame, self).worldAddRemoveObject(wobj, added)               
-        if not added and isinstance(wobj, Ship) and wobj.player.netid in self._players:
-            nid = wobj.player.netid
-
-            self._players[nid].object = None                     
-
-            self._players[nid].score -= self.__deathpenalty
-            self._players[nid].deaths += 1
-            if self._players[nid].score < 0:
-                self._players[nid].score = 0
-
-            # readd
-            self._addShipForPlayer(nid, True)
-
-    def getExtraEnvironment(self, player):
-        return {"SCORE": player.score, "HIGHSCORE": self.__highscore, "DEATHS": player.deaths}
-
-    def getPlayerStats(self, current=False):
-        if current:
-            p = self.getCurrentPlayers() #.itervalues()
         else:
-            p = self._players.itervalues()
-        #eif
-        stat = sorted(p, key=attrgetter("deaths"))
-        stat = sorted(stat, key=attrgetter("score"), reverse=True)
-        sstat = []
-        for player in stat:
-            sstat.append(str(player.score) + " " + str(player.deaths) + " : " + player.name)
-        return sstat
-        
-        #stat.append("Player "+player.name + ": "+str(player.score))
+            super(AsteroidMinerGame, self).world_add_remove_object(wobj, added)
 
-    def roundOver(self):
-        self.__btimer.cancel() # prevent more baubles from being spawned!
 
-        stat = sorted(self.getCurrentPlayers(), key=attrgetter("deaths"))
-        stat = sorted(stat, key=attrgetter("score"), reverse=True)
+    def round_over(self):
+        self.__btimer.cancel() # prevent more asteroids from being spawned!
 
-        if not self._tournamentfinalround:
-            # get winner
-            for x in xrange(self.cfg.getint("AsteroidMiner", "numtofinalround")):
-                logging.info("Adding player to final round %s", stat[x].name)
-                self.addPlayerToFinalRound(stat[x])
-            #next
-        else:
-            #TODO: Clean up
-            logging.info("Final Round Winner %s", stat[0].name)
-            self._tournamentfinalwinner = stat[0]
+        super(AsteroidMinerGame, self).round_over()
 
-        super(AsteroidMinerGame, self).roundOver()
-
-    def drawInfo(self, surface, flags):
-        pass
-
-    def drawGameData(self, screen, flags):
-        if self._tournament and self._tournamentinitialized:
-            super(AsteroidMinerGame, self).drawGameData(screen, flags)
-            stat = sorted(self.getCurrentPlayers(), key=attrgetter("deaths"))
-            stat = sorted(stat, key=attrgetter("score"), reverse=True)
-            x = len(stat) - 1
-            for player in stat:                
-                screen.blit(self.__dfont.render(str(player.score) + " : " + str(player.deaths) + " " + player.name, False, (255, 192, 192)), (screen.get_width()-300, screen.get_height() - 64 - 12*x))
-                x -= 1
-
-    def start(self):
-        super(AsteroidMinerGame, self).start()
+    def round_start(self):
+        super(AsteroidMinerGame, self).round_start()
 
         # start Bauble Spawn Timer
         self.newAsteroidTimer()    
         
     def newAsteroidTimer(self):
-        self.__btimer = RoundTimer(self.cfg.getint("AsteroidMiner", "timefornewasteroid"), self.spawnAsteroid)
+        self.__btimer = RoundTimer(self.cfg.getint("AsteroidMiner", "spawn_time"), self.spawnAsteroid)
         self.__btimer.start()
 
     def spawnAsteroid(self):
-        self.__addAsteroids(self.world, self.cfg.getint("AsteroidMiner", "asteroidsperspawn"))
+        self.__addAsteroids(self.world, self.cfg.getint("AsteroidMiner", "spawn_number"))
         
         self.newAsteroidTimer()

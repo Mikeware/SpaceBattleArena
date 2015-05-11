@@ -64,6 +64,10 @@ class PhysicsCore(Entity):
         inertia: physical moment for this object.
         body: pymunk Body for this object.
         shape: pymunk Shape for this object.
+
+        destroyed: this object has lost all its health and was removed from the world
+        TTL: time to live, amount of time before this object should get removed from the world, if None will be ignored
+        explodable: boolean should this object be effected by explosion forces
     """
     def __init__(self, mass, pos):
         super(PhysicsCore, self).__init__()
@@ -83,6 +87,7 @@ class PhysicsCore(Entity):
 
     def addToSpace(self, space):
         self.shape.id = self.id
+        self.shape.world_object = self
         space.add(self.body, self.shape)
 
     def removeFromSpace(self, space):

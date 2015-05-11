@@ -4,11 +4,11 @@ from WorldEntities import Ship
 from Game.Players import Player
 
 class AIShip(Ship):
-    NetIDs = -3
+    NetIDs = -3 # ID Should be -3 or less, auto-assign (unused by network engine)
 
-    def __init__(self, name, pos, world, callback):
-        super(AIShip, self).__init__(pos, world)
-        self.player = Player("* "+name+str(AIShip.NetIDs)+" *", (64, 64, 64), 8, AIShip.NetIDs, self) # ID Should be -3 or less, auto-assign
+    def __init__(self, name, pos, game, callback):
+        super(AIShip, self).__init__(pos, game.world)
+        game.server_register_player("* "+name+str(AIShip.NetIDs)+" *", (64, 64, 64), 8, AIShip.NetIDs, self)
         AIShip.NetIDs -= 1
         self.rotationAngle = 0
         self._callback = callback

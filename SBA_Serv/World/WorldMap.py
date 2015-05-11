@@ -45,6 +45,7 @@ class GameWorld(object):
         self.__toadd = []        
         self.__active = True
         self.__pys = pys
+        self.gameerror = False
 
         logging.info("Initialized World of size %s, starting game loop...", repr(worldsize))
         if pys:
@@ -73,7 +74,7 @@ class GameWorld(object):
         
     def __beginCollideObject(self, space, arbiter):
         if arbiter.is_first_contact:
-            r = self.__game.worldObjectPreCollision( arbiter.shapes )
+            r = self.__game.world_physics_pre_collision( arbiter.shapes )
             if r != None:
                 for i in r[1]:
                     space.add_post_step_callback(i[0], i[1], i[2:])
@@ -83,7 +84,7 @@ class GameWorld(object):
         
     def __collideObject(self, space, arbiter):        
         if arbiter.is_first_contact:
-            r = self.__game.worldObjectCollision( arbiter.shapes, arbiter.total_impulse.length / 250.0 )
+            r = self.__game.world_physics_collision( arbiter.shapes, arbiter.total_impulse.length / 250.0 )
             if r != None:
                 for i in r:
                     space.add_post_step_callback(i[0], i[1], i[2:])            
@@ -116,8 +117,10 @@ class GameWorld(object):
     def __setitem__(self, key, value):
         return self.__objects.__setitem__(key, value)
 
-    # for adding to the world from other threads outside game loop
     def append(self, item, pys=False):
+        """
+        Call to add an object to the game world from threads outside the game loop
+        """
         logging.debug("Append Object to World %s [%d]", repr(item), thread.get_ident())
         added = False        
         logging.debug("SEMAPHORE ACQ append [%d]", thread.get_ident())
@@ -140,6 +143,9 @@ class GameWorld(object):
                 objListener(item, True)
                 
     def remove(self, item):
+        """
+        Call to remove an object from the game world
+        """
         del self[item]
 
     def pysremove(self, item):
@@ -173,13 +179,15 @@ class GameWorld(object):
                     self.__space.step(MINIMUM_GAMESTEP_TIME) # Advance Physics Engine
                 
                 tstamp = time.time()
+
                 # find objects in nebulas
                 for neb in self.__nebulas:
                     for shape in self.__space.shape_query(neb.shape):
                         # Set value to two, so that if we're still in the nebula
                         # for another loop, that we don't toggle in/out of nebula between slices
                         # across threads
-                        self[shape.id].in_nebula = [2, neb]
+                        if shape.id in self:
+                            self[shape.id].in_nebula = [2, neb]
 
                 # update all game objects
                 for obj in self: # self is dictionary
@@ -216,7 +224,7 @@ class GameWorld(object):
                 #next            
 
                 # game time notification
-                self.__game.update(lasttime)
+                self.__game.game_update(lasttime)
 
                 # update time
                 lasttime = time.time() - tstamp
@@ -252,6 +260,7 @@ class GameWorld(object):
             logging.exception("FATAL Error in game loop!!!")
             logging.error(traceback.format_exc())
             print traceback.format_exc()
+            self.gameerror = True
         logging.debug("Gameloop Ended")
 
     def getObjectsInArea(self, pos, radius, force=False):
@@ -289,7 +298,7 @@ class GameWorld(object):
 
         obj.getExtraInfo(objData)
 
-        self.__game.getExtraRadarInfo(obj, objData)
+        self.__game.game_get_extra_radar_info(obj, objData)
 
         return objData
 
@@ -345,6 +354,6 @@ class GameWorld(object):
         return {"SHIPDATA": self.getObjectData(ship),
                 "RADARLEVEL": radarlevel,
                 "RADARDATA": radardata,
-                "GAMEDATA": self.__game.getExtraEnvironment(ship.player),
+                "GAMEDATA": self.__game.game_get_extra_environment(ship.player),
                 "MESSAGES": msgQueue,
                 }

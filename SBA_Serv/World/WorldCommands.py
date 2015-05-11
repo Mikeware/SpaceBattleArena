@@ -97,18 +97,12 @@ def ConvertNetworkMessageToCommand(ship, cmdname, cmddict):
             #eif
         elif cmdname == SHIP_CMD_ROTATE:
             if cmddict.has_key("DEG") and isinstance(cmddict["DEG"], int):
-                if cmddict["DEG"] == 0:
-                    return "Degrees Must be Non-Zero"
-                
                 return RotateCommand(ship, cmddict["DEG"])
             else:
                 return "Degrees Missing or Should Be Integer"
             #eif
         elif cmdname == SHIP_CMD_STEER:
             if cmddict.has_key("DEG") and isinstance(cmddict["DEG"], int):
-                if cmddict["DEG"] == 0:
-                    return "Degrees Must be Non-Zero"
-                
                 return SteerCommand(ship, cmddict["DEG"])
             else:
                 return "Degrees Missing or Should Be Integer"
@@ -225,7 +219,7 @@ class AllStopCommand(OneTimeCommand):
         #eif
 
     def onetime(self):        
-        self._obj.body.velocity.length = 0.000001
+        self._obj.body.velocity = Vec2d(0, 0)
         self._obj.health /= 2
             
 class WarpCommand(Command):

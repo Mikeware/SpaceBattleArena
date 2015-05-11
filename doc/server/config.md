@@ -189,8 +189,34 @@ To just have a standard universe running, use **BasicGame**.
 ###auto_start = boolean
 When set to true the game/round will automatically start when the server is run.  Otherwise, it will wait for you to press the space key.
 
+This value is set to *false* if tournament is set to *true*.
+
 ###allow_after_start = boolean
 Can players join the server after the game has already started?
+
+###disconnect_on_death = boolean
+Determines if a player will be completely disconnected from the server when they die.
+
+###reset_score_on_death = boolean
+Will a player's score reset to 0 when they die.
+
+###points_lost_on_death = positive integer
+Number of points a player loses when they die. Should be a **positive** integer or zero.
+
+###points_initial = positive integer
+Number of points each player should start with.  Should be a **positive** integer or zero.
+
+###primary_victory_attr = string
+This represents what the primary victory condition should be.  For basic games, this will either be **score** or **bestscore**.  Which either represents their current score or the best score they've achieved between deaths.  Other games may have other attributes which can be inspected.
+
+###primary_victory_highest = boolean
+Represents if the primary victory condition is sorted from highest to lowest (this is usually the case).
+
+###secondary_victory_attr = string
+This represents what should break ties on the primary victory condition.  For basic games, this is usually **deaths**, but could also be **bestscore** for instance.
+
+###secondary_victory_highest = boolean
+Represents if the secondary victory condition is sorted from highest to lowest.  For instance, if you wanted least deaths to be the tie-breaker, then you would set the secondary victory condition to be **deaths** and this value to be **false**.
 
 
 <a name="tournament"></a>[Tournament]
@@ -203,11 +229,11 @@ Should the game be run in a tournament setting where connected players are split
 ###tournament_groups = integer
 How many groups should the number of clients connected be broken into for the tournament?  E.g. Setting this value to 5 and having 30 clients connected would result in 5 rounds of 6 players each and a final round with the winners of each group.  Raising this number to higher values requires more vertical real-estate for the tournament display board.
 
+###number_to_final_round = integer
+How many players from each preliminary round should advance to the final round. i.e. The top X players will be taken into the final round where X is this options value.
+
 ###round_time = integer
 How long each game round should last in seconds.
 
 ###reset_world_each_round = boolean
 Should the world be cleared of all objects and recreated between each round of play?
-
-###disconnect_players_after_round = boolean
-Should clients be disconnected from the server after they have completed a round? **Note:** this should not be turned on when running a multi-round tournament.

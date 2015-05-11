@@ -49,6 +49,7 @@ class MessageLogHandler(logging.Handler):
             self.messages.append(record.message)
 
 def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=False, sound=False, testcase=None):    
+    #region Initialization
     logging.info("Initiating PyGame...")
 
     world = game.world
@@ -75,14 +76,14 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
 
     logging.debug("Game GUI CFG...")
     # Let game initialize any GUI objects independently
-    game.GUICFG()
+    game.gui_initialize()
 
     colorBlack = pygame.Color(0, 0, 0)
 
     #shipw = ShipGUI(Ship((100, 100)))
     #shipw.ship.velocity.magnitude = 5
 
-    # World Registration
+    #region World Registration
     bgobjects = ThreadSafeDict() # items we want always in the background
     objects = ThreadSafeDict()
     shipids = []
@@ -140,7 +141,7 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
             logging.error(traceback.format_exc())
             print traceback.format_exc()
         #logging.debug("GUI: Add/Remove Done [%d]", thread.get_ident())
-    #e addorremove
+    #endregion
 
     logging.debug("Register World Listener...")
     world.registerObjectListener(addorremove)
@@ -186,7 +187,7 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
 
     mousemode = None
     prevzoom = zoomout
-    showip = True
+    showip = showstats
     showplayerlist = showstats
     showroundtime = game.cfg.getboolean("Tournament", "tournament")
     tournamentinfo = game.cfg.getboolean("Tournament", "tournament")
@@ -208,6 +209,8 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
     # In test case we only care about test being done
     if testcase != None:
         notexit = False
+
+    #endregion
 
     while notexit or (testcase != None and not testcase.donetest):
         t = pygame.time.get_ticks() / 1000.0
@@ -243,22 +246,23 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                     shipids.remove(obj._worldobj.id)
                             
         if flags["GAME"]:
-            game.drawInfo(worldsurface, flags)
+            game.gui_draw_game_world_info(worldsurface, flags)
 
+        #region Key/Mouse Event Handling
         for event in pygame.event.get():
             if event.type == QUIT:
                 notexit = False
             elif event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     pygame.event.post(pygame.event.Event(QUIT))
-                elif event.key == K_SPACE and not game.hasStarted():
-                    game.start()
+                elif event.key == K_SPACE and not game.round_get_has_started():
+                    game.round_start()
                 elif event.key == K_d:
                     flags["DEBUG"] = not flags["DEBUG"]
                 elif event.key == K_i:
                     showip = not showip
                 elif event.key == K_p:
-                    showplayerlist = not showplayerlist
+                    showplayerlist = (showplayerlist + 1) % (2 + game.tournament_is_running())
                 elif event.key == K_s:
                     flags["STATS"] = not flags["STATS"]
                 elif event.key == K_n:
@@ -273,7 +277,7 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                     offsetx += 16
                 elif event.key == K_g:
                     flags["GAME"] = not flags["GAME"]
-                elif event.key == K_t:
+                elif event.key == K_t and game.tournament_is_running():
                     tournamentinfo = not tournamentinfo
                 elif event.key == K_z:
                     zoomout = not zoomout
@@ -383,17 +387,14 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                     # recenter on new click
                     offsetx, offsety = centerViewOnWorld((event.pos[0]*scalefactorx, event.pos[1]*scalefactory))
                     
+        #endregion 
+
         # Tracks a ship on screen
         if len(shipids) == 0 or trackshipid not in objects: 
             trackshipid = None
         
         if dynamiccamera:
-            mpnts = 0
-            trackshipid = None
-            for ship in objects.itervalues():
-                if isinstance(ship, ShipGUI) and ship._worldobj.player.score > mpnts:
-                    mpnts = ship._worldobj.player.score
-                    trackshipid = ship._worldobj.id
+            trackshipid = game.game_get_current_leader_list()[0].id
             
         if trackshipid != None:
             mlh.filter = "#" + repr(trackshipid)
@@ -428,7 +429,7 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
             ip = bigfont.render(ipaddress, False, (255, 255, 255))
             windowSurface.blit(ip, (resolution[0]/2-ip.get_width()/2,0))
 
-        if not game.hasStarted():
+        if not game.round_get_has_started():
             ip = bigfont.render("Waiting For Start - Press Space", False, (255, 255, 255))
             windowSurface.blit(ip, (resolution[0]/2-ip.get_width()/2,resolution[1]/2-ip.get_height()/2))
             
@@ -438,15 +439,18 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                     windowSurface.blit(font.render(i, False, (192, 192, 255)), (resolution[0]/2-300, resolution[1]/2 + 64 + 12*x))
                     x += 1
             
-        if showplayerlist:
+        if showplayerlist > 0:
             x = 0
-            for i in game.getPlayerStats():                
+            for i in game.gui_get_player_stats(all=(showplayerlist == 1)):
                 windowSurface.blit(font.render(i, False, (192, 192, 192)), (resolution[0]-300, 64 + 12*x))
                 x += 1
-            windowSurface.blit(font.render(repr(x) + " Players Connected", False, (192, 192, 192)), (resolution[0]-300, 64 + 12 * x))
+            if showplayerlist == 1:
+                windowSurface.blit(font.render(repr(x) + " Players Connected", False, (192, 192, 192)), (resolution[0]-300, 64 + 12 * x))
+            else:
+                windowSurface.blit(font.render(repr(x) + " Players In Round", False, (192, 192, 192)), (resolution[0]-300, 64 + 12 * x))
 
         if showroundtime:
-            ip = bigfont.render(str(datetime.timedelta(seconds=game.getRoundTimeRemaining())), False, (255, 255, 255))
+            ip = bigfont.render(str(datetime.timedelta(seconds=game.round_get_time_remaining())), False, (255, 255, 255))
             windowSurface.blit(ip, (resolution[0]/2-ip.get_width()/2,32))
             
         if flags["DEBUG"]:
@@ -471,8 +475,11 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
             if trackshipid == None:
                 windowSurface.blit(font.render("Tracking Off", False, (255, 255, 255)), (resolution[0]/2-36,resolution[1]-12))
 
+        if flags["GAME"]:
+            game.gui_draw_game_screen_info(windowSurface, flags)
+
         if tournamentinfo:
-            game.drawGameData(windowSurface, flags)
+            game.gui_draw_tournament_bracket(windowSurface, flags)
 
         if trackshipid != None:
             n = font.render("Tracking: " + objects[trackshipid]._worldobj.player.name, False, objects[trackshipid]._worldobj.player.color)

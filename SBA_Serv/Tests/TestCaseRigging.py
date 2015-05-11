@@ -18,6 +18,9 @@ import logging
 import unittest
 
 from Game.Game import BasicGame
+from Game.AsteroidMiner import AsteroidMinerGame
+from Game.CombatExercise import CombatExerciseGame
+from Game.FindTheMiddle import FindTheMiddleGame
 
 from ConfigParser import ConfigParser
 from World.WorldGenerator import ConfiguredWorld
@@ -29,49 +32,74 @@ from importlib import import_module
 
 import time
 
-#TODO: Investigate the best way to inject this wrapper around any Subgame
 class TestGame(BasicGame):
-    """
-    Class to emulate a game but hook into world creations.
-    """
+
+    def world_create(self, pys = True):
+        return self._testcase.world_create(ConfiguredWorld(self, self.cfg, empty=True))
+
+#TODO: Investigate the best way to inject this wrapper around any Subgame
+class TestBasicGame(TestGame):
     def __init__(self, cfg, testcase):
         self._testcase = testcase
 
-        super(TestGame, self).__init__(cfg)
+        super(TestBasicGame, self).__init__(cfg)
 
-    def createWorld(self, pys = True):
-        return self._testcase.createWorld(ConfiguredWorld(self, self.cfg, empty=True))
+class TestFindTheMiddleGame(TestGame, FindTheMiddleGame):
+    def __init__(self, cfg, testcase):
+        self._testcase = testcase
+
+        super(TestFindTheMiddleGame, self).__init__(cfg)
+
+    def world_create(self, pys = True):
+        world = super(TestFindTheMiddleGame, self).world_create(pys)
+        self.midpoint = (int(world.width / 2), int(world.height / 2))
+        return world
+
+class TestAsteroidMinerGame(TestGame, AsteroidMinerGame):
+    def __init__(self, cfg, testcase):
+        self._testcase = testcase
+
+        super(TestAsteroidMinerGame, self).__init__(cfg)
+
+class TestCombatExerciseGame(TestGame, CombatExerciseGame):
+    def __init__(self, cfg, testcase):
+        self._testcase = testcase
+
+        super(TestCombatExerciseGame, self).__init__(cfg)
 
 class SBAWorldTestCase(unittest.TestCase):
     """
     Base Test Case which sets up a blank world and game for testing without the server or UI.
     """
     def setUp(self):
-        with open("SBA_Test"+self._testMethodName+".log", "w") as file:
+        classname = str(self.__class__)        
+        classname = classname[classname.find(".")+1:-2]
+        print classname
+        with open("SBA_Test_"+classname+"_"+self._testMethodName+".log", "w") as file:
             pass
-        logging.basicConfig(level=logging.DEBUG, filename="SBA_Test"+self._testMethodName+".log", format='%(asctime)s|%(relativeCreated)d|%(levelname)s|%(threadName)s|%(module)s|%(lineno)d|%(funcName)s|%(message)s')
+        logging.basicConfig(level=logging.DEBUG, filename="SBA_Test_"+classname+"_"+self._testMethodName+".log", format='%(asctime)s|%(relativeCreated)d|%(levelname)s|%(threadName)s|%(module)s|%(lineno)d|%(funcName)s|%(message)s')
         logging.info("Running Test: %s", self._testMethodName)
 
         self.cfg = ConfigParser()
-        self.cfg.readfp(open(self.get_config_filename()))
-        self.game = TestGame(self.cfg, self)
-
-        # Create Dummy Test Player
-        #self.game.registerPlayer("Test", (255, 0, 0), 0, 0) # TODO: check last parameter for netid to see what it should be
-        #self.player = self.game.getPlayerByNetId(0)
+        self.cfg.readfp(open("Tests/defaulttest.cfg"))
+        if self.get_config_filename() != None:
+            self.cfg.readfp(open("Tests/"+self.get_config_filename()))
+        self.game = globals()["Test"+self.cfg.get("Game", "game")+"Game"](self.cfg, self)
+        logging.info("Using Game %s", repr(self.game))
 
     def tearDown(self):
+        self.assertFalse(self.game.world.gameerror, "Gameloop Exception Occured")
+        # finish round
+        self.game._tournament = True # force it to not restart timers again
+        self.game.round_over()
+
         self.game.world.endGameLoop()
         logging.info("Done Running Test: %s", self._testMethodName)
 
     def get_config_filename(self):
-        return "test.cfg"
+        return None
 
-    # TODO: can I just grab from config instead and they'll need custom to change game anyway...
-    def get_game_name(self):
-        return "TestGame"
-
-    def createWorld(self, world):
+    def world_create(self, world):
         """
         Test Case should override this method to generate a world for their test.
         """
