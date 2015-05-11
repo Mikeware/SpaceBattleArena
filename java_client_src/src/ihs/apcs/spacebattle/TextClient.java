@@ -37,27 +37,21 @@ public class TextClient implements Client {
 	private int shipId = -1;
 	private MwnpListener listener;
 	private MwnpMessenger messenger;
-	private String shipClassname;
+//	private String shipSuffix = "";
+	
 	private Spaceship<?> ship;	
-	private Class<?> shipType;
 	
 	private boolean disconnected = false;
 	
-	private String shipSuffix = "";
-	
-	public TextClient(String classname) {
+	public TextClient(Spaceship<?> ship) {
 		try {
 			logStream = new PrintStream("client.log");
 		} catch (FileNotFoundException ex) {
 			System.err.println("Could not write to 'client.log' file.");
 		}
-		shipClassname = classname;
+		this.ship = ship;
 	}
 	
-	/**
-	 * @param args
-	 * @throws IOException 
-	 */
 	public static void main(String[] args) {
 		if (args == null || args.length < 2)
 		{		
@@ -65,16 +59,55 @@ public class TextClient implements Client {
 			return;
 		}
 		
-		System.out.println("Loading Ship " + args[1]);
-		TextClient client = new TextClient(args[1]);
+		try {
+			run(args[0], (Spaceship<?>)Class.forName(args[1]).getConstructor().newInstance(), args.length > 2 ? Integer.parseInt(args[2]) : 2012);
+		} catch (InvocationTargetException ex) {
+			System.err.println("Exception constructing ship: " + ex.getMessage());
+			ex.printStackTrace();
+			return;
+		} catch (IllegalAccessException ex) {
+			System.err.println("Exception constructing ship: " + ex.getMessage());
+			ex.printStackTrace();
+			return;
+		} catch (InstantiationException ex) {
+			System.err.println("Exception constructing ship: " + ex.getMessage());
+			ex.printStackTrace();
+			return;
+		} catch (NoSuchMethodException ex) {
+			System.err.println("Exception constructing ship: " + ex.getMessage());
+			ex.printStackTrace();
+			return;
+		} catch (ClassNotFoundException ex) {
+			System.err.println("Cannot find ship class: " + ex.getMessage());
+			ex.printStackTrace();
+			return;
+		} catch (ClassCastException ex) {
+			System.err.println("Specified ship type does not implement Spaceship: " + ex.getMessage());
+			ex.printStackTrace();
+			return;
+		}
+	}
+	
+	public static void run(String ipAddress, Spaceship<?> ship) {
+		run(ipAddress, ship, 2012);
+	}
+	
+	/**
+	 * @param args
+	 * @throws IOException 
+	 */
+	public static void run(String ipAddress, Spaceship<?> ship, int socketNum) {
+
+		System.out.println("Loading Ship " + ship.getClass().getSimpleName());
+		TextClient client = new TextClient(ship);
 		try {
 			// Add disconnect hook
 			Runtime.getRuntime().addShutdownHook(new ShutdownHook(client));
 
 			// Connect to server
-			System.out.println("Connecting to " + args[0]);
+			System.out.println("Connecting to " + ipAddress);
 			client.logMessage("Connecting to server...");
-			Socket server = new Socket(args[0], args.length >= 3 ? Integer.parseInt(args[2]) : 2012);
+			Socket server = new Socket(ipAddress, socketNum);
 			
 			// Start listening for messages
 			client.logMessage("Starting listener...");
@@ -85,23 +118,15 @@ public class TextClient implements Client {
 			client.logMessage("Starting messenger...");
 			client.messenger = new MwnpMessenger(client, server, "Messenger Thread");
 			client.messenger.start();
-						
-			// Try and load ship
-			client.shipType = Class.forName(client.shipClassname);
-			client.logMessage("Creating new " + client.shipType.getName());			
-			client.ship = (Spaceship<?>)client.shipType.getConstructor().newInstance();
-			
-			System.out.println(args.length);
-			System.out.println(Arrays.toString(args));
-			if (args.length > 3) {
-				System.out.println("Adding suffix " + args[3]);
-				client.shipSuffix = args[3];
-			}
+	
+//			if (args.length > 3) {
+//				System.out.println("Adding suffix " + args[3]);
+//				client.shipSuffix = args[3];
+//			}
 			
 			// Wait for termination command
 			System.out.println("Type QUIT to disconnect from server and end program");
 			BufferedReader kb = new BufferedReader(new InputStreamReader(System.in));
-			// TODO: Be able to break-out of this loop and end program when the client receives a disconnect message
 			while (!client.disconnected) {
 				if (kb.ready()) {
 					String input = kb.readLine();
@@ -115,9 +140,6 @@ public class TextClient implements Client {
 			System.err.println("Server connection failed.");
 			System.err.println(ex.getMessage());
 			ex.printStackTrace();
-		} catch (ClassCastException ex) {
-			System.err.println("Specified ship type does not implement Spaceship.");
-			System.err.println(ex.getMessage());
 		} catch (Exception ex) {
 			System.err.println(ex.getMessage());
 			ex.printStackTrace();
@@ -154,7 +176,7 @@ public class TextClient implements Client {
 						
 			// TODO: Some games may return extra data in the map, we should figure out how we want to expose this in the client
 			RegistrationData data = ship.registerShip(numImages, width, height);
-			data = new RegistrationData(data.getName() + shipSuffix, data.getColor(), data.getImage());
+			data = new RegistrationData(data.getName(), data.getColor(), data.getImage());
 			
 			MwnpMessage response = new MwnpMessage(new Integer[]{netId, 0}, data);
 			messenger.sendMessage(response);
@@ -176,12 +198,13 @@ public class TextClient implements Client {
 			ShipCommand cmd = null;
 			try {
 				// Need to invoke through reflection as compiler doesn't know what type of Environment is here
-				cmd = (ShipCommand)shipType.getMethod("getNextCommand", Environment.class).invoke(ship, env);
+				cmd = (ShipCommand)ship.getClass().getMethod("getNextCommand", Environment.class).invoke(ship, env);
 			} catch (InvocationTargetException | NoSuchMethodException
 					| SecurityException ex) {
 				System.err.println("Error Invoking getNextCommand:");
 				System.err.println(ex.getMessage());
 				ex.printStackTrace(System.err);
+				disconnect();
 			}
 			if (cmd == null) {
 				cmd = new IdleCommand(0.1);

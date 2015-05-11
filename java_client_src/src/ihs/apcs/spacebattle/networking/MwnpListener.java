@@ -116,7 +116,7 @@ public class MwnpListener extends Thread {
 	}
 	
 	private void printMessage(MwnpMessage message) {
-		logStream.printf("Message received from %d intended for %d - \r\n", message.getSenderId(), message.getReceiverId());
+		logStream.printf("Message received from %s intended for %s - \r\n", message.getSenderId(), message.getReceiverId());
 		logStream.printf("  %s(%s)\r\n", message.getCommand(), message.getData());
 	}
 }
