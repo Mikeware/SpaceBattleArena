@@ -145,6 +145,7 @@ public class TextClient implements Client {
 
 			MwnpMessage.RegisterGameType(map.get("GAMENAME"));			
 						
+			// TODO: Some games may return extra data in the map, we should figure out how we want to expose this in the client
 			RegistrationData data = ship.registerShip(numImages, width, height);
 			data = new RegistrationData(data.getName() + shipSuffix, data.getColor(), data.getImage());
 			
