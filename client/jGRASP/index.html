@@ -81,6 +81,11 @@ import ihs.apcs.spacebattle.*;
 import ihs.apcs.spacebattle.commands.*;
 
 public class ExampleShip extends BasicSpaceship {
+    public static void main(String[] args)
+    {
+        TextClient.run("127.0.0.1", new ExampleShip());
+    }
+
     @Override
     public RegistrationData registerShip(int numImages, int worldWidth, int worldHeight)
     {
@@ -104,7 +109,7 @@ public class ExampleShip extends BasicSpaceship {
 <li><p>Adjust Workspace Classpath under Settings -&gt; PATH/CLASSPATH -&gt; Workspace:</p>
 
 <p><img src="Classpath.png" alt="Classpath Settings"></p></li>
-<li><p>Add the <strong><a href="http://github.com/Mikeware/SpaceBattleArena/blob/master/bin/gson-2.2.jar?raw=true">gson-2.2.jar</a></strong> and <strong><a href="http://github.com/Mikeware/SpaceBattleArena/blob/master/bin/SpaceBattle.jar?raw=true">SpaceBattle.jar</a></strong> under the PATH -&gt; CLASSPATHS tab:</p>
+<li><p>Add the <strong><a href="http://github.com/Mikeware/SpaceBattleArena/blob/master/bin/gson-2.2.jar?raw=true">gson-2.2.jar</a></strong> and <strong><a href="http://github.com/Mikeware/SpaceBattleArena/blob/master/bin/SpaceBattle.jar?raw=true">SpaceBattle.jar</a></strong> under the PATH -&gt; CLASSPATHS tab using the New button:</p>
 
 <p><img src="AddJars.png" alt="Jars in Classpath"></p></li>
 <li><p>Save and Compile your class.</p></li>
@@ -115,20 +120,7 @@ public class ExampleShip extends BasicSpaceship {
 <p><strong>Note: Do not terminate the program through the jGRASP UI; instead, click in the console window and type &#39;QUIT&#39; to gracefully close the connection.</strong></p>
 
 <ol>
-<li><p>Invoke a Static Method on a Named Class from the Build -&gt; Java Workbench menu:</p>
-
-<p><img src="InvokeStatic1.png" alt="Invoke Static Method on Named Class"></p></li>
-<li><p>Type in a Class Name of &#39;ihs.apcs.spacebattle.TextClient&#39; (in subsequent times, it should be selectable from the drop-down list):</p>
-
-<p><img src="InvokeStatic2.png" alt="Class Name ihs.apcs.spacebattle.TextClient"></p></li>
-<li><p>Select the main method in the list.</p></li>
-<li><p>Type in the Parameters box the Server IP address and your <em>Java Class</em> name in quotes with a comma in-between (also selectable from the drop-down list in subsequent runs):</p>
-
-<p><img src="InvokeStatic3.png" alt="Invoke Method Dialog"></p>
-
-<p>e.g. &quot;127.0.0.1&quot;,&quot;ExampleShip&quot;</p></li>
-<li><p>Check the &#39;Don&#39;t Show Result Dialog&#39;.</p></li>
-<li><p>Hit the &#39;Invoke&#39; button and then the &#39;Close&#39; button.  </p></li>
+<li><p>Compile and run your class as normal.</p></li>
 <li><p>Type &#39;QUIT&#39; in the output window to disconnect your ship:</p>
 
 <p><img src="Disconnect.png" alt="Output Window"></p></li>
