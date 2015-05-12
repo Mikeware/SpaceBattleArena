@@ -309,13 +309,15 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                         logger.removeHandler(mlh)
                         mlh.messages.clear()
                 elif event.key == K_a:
-                    if mousemode not in ("AddAsteroid", "AddPlanet", "AddBlackHole", "AddBubble"):
+                    if mousemode not in ("AddAsteroid", "AddPlanet", "AddBlackHole", "AddNebula", "AddBubble"):
                         mousemode = "AddAsteroid"
                     elif mousemode == "AddAsteroid":
                         mousemode = "AddPlanet"
                     elif mousemode == "AddPlanet":
                         mousemode = "AddBlackHole"
-                    elif mousemode == "AddBlackHole" and isinstance(game, KingOfTheBubbleGame):
+                    elif mousemode == "AddBlackHole":
+                        mousemode = "AddNebula"
+                    elif mousemode == "AddNebula" and isinstance(game, KingOfTheBubbleGame):
                         mousemode = "AddBubble"
                     else:
                         mousemode = None
@@ -374,6 +376,9 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                 elif mousemode == "AddBlackHole":
                     mousemode = None
                     world.append(BlackHole((x, y)))
+                elif mousemode == "AddNebula":
+                    mousemode = None
+                    world.append(Nebula((x, y), (512, 128)))
                 elif mousemode == "AddBubble":
                     mousemode = None
                     game.addBubbles(world, 1, pos=(x, y))

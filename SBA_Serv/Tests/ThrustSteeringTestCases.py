@@ -32,6 +32,7 @@ class SteeringTestCase(SBAGUITestCase):
         time.sleep(5.0)
 
         self.assertEqual(len(self.ship.commandQueue), 1, "Ship not processing Thurst Command still")
+        self.assertNotAlmostEqual(self.game.world.mid_point(-50)[0], self.ship.body.position[0], None, "Ship didn't move in X direction", 1)
 
 
     def test_steer_vs_thrust_90(self):

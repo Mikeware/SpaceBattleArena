@@ -17,7 +17,7 @@ The following lessons are provided as guidance towards a ***4 week curriculum***
 
 Classroom Setup & Equipment
 ---------------------------
-It is assumed that Space Battle will be run in a lab based setting with *each student having access to their own machine* running a Java 8 version of the [JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html). See [Client Setup](../client/index.html) for more information about the client configuration required.
+It is assumed that Space Battle will be run in a lab based setting with *each student having access to their own machine* running a Java 8 version of the [JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html). See [Client Setup](../client/index.html) for more information about the client configuration required - though **it is suggested** to have students link to the jar on a shared network resource, so pushing updates to students when updating the server is automatic just by refreshing the jar.
 
 A teacher machine should be able to present and *project* to the front of the classroom so that all students can see the [server](../server/index.html)'s simulation of space.  This machine needs to be a Windows machine to run the server executable right now, unless you run from the Python source.
 

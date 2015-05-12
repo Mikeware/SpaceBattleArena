@@ -117,6 +117,9 @@ class GameWorld(object):
     def __setitem__(self, key, value):
         return self.__objects.__setitem__(key, value)
 
+    def has_key(self, key):
+        return self.__objects.has_key(key)
+
     def append(self, item, pys=False):
         """
         Call to add an object to the game world from threads outside the game loop
@@ -186,7 +189,7 @@ class GameWorld(object):
                         # Set value to two, so that if we're still in the nebula
                         # for another loop, that we don't toggle in/out of nebula between slices
                         # across threads
-                        if shape.id in self:
+                        if self.has_key(shape.id):
                             self[shape.id].in_nebula = [2, neb]
 
                 # update all game objects
