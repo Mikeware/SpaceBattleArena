@@ -38,7 +38,7 @@ Documentation
     * [Server Usage/Shortcuts](server/usage.html)
 * [Lessons](lessons/index.html)
     * 00 - [Intro and Setup](lessons/intro.html)
-    * 01 - Find the Middle
+    * 01 - [Find the Middle](lessons/findthemiddle.html)
     * 02 - Shapes in Space
     * 03 - Intro to Radar
     * 04 - Finite State Machines
