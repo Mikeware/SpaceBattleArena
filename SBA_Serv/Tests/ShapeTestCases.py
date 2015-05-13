@@ -48,14 +48,19 @@ class ShapesTestCase(SBAGUITestCase):
     def test_spiral(self):
         self.ship = AIShip_SetListLoop("Spiral", self.game.world.mid_point(0), self.game, [
                 "DeployLaserBeaconCommand(self)",
-                "ThrustCommand(self, 'B', 0.5)",
-                "RotateCommand(self, 20)",
-                "SteerCommand(self, 20)",
+                "ThrustCommand(self, 'B', 0.1)",
+                "SteerCommand(self, 40, False)",
+                "RotateCommand(self, 20)",                
+                "IdleCommand(self, 0.05*self.loop)",
+                "DeployLaserBeaconCommand(self)",
+                "DeployLaserBeaconCommand(self)",
+                "RotateCommand(self, 20)",                
+                "IdleCommand(self, 0.05*self.loop)",
                 "DeployLaserBeaconCommand(self)"
             ])
         self.ship.rotationAngle = 90
         
-        time.sleep(40)
+        time.sleep(60)
 
         x = self.ship.body.position[0]
 

@@ -39,7 +39,8 @@ class AIShip_SetList(AIShip):
 class AIShip_SetListLoop(AIShip_SetList): # Need to use string and eval to reinitialize commands for current states?    
     def __init__(self, name, pos, world, cmdlist, numtimes = 0):
         self.current = 0
-        self.loops = numtimes
+        self.loop = 0
+        self.max_loop = numtimes
         return super(AIShip_SetListLoop, self).__init__(name, pos, world, cmdlist)
 
     def get_next_command(self):
@@ -47,8 +48,8 @@ class AIShip_SetListLoop(AIShip_SetList): # Need to use string and eval to reini
         self.current += 1
         if self.current >= len(self.cmdlist):
             self.current = 0
-            self.loops -= 1
-            if self.loops == 0:
+            self.loop += 1
+            if self.max_loop > 0 and self.loop >= self.max_loop:
                 self.cmdlist = []
 
         return cmd

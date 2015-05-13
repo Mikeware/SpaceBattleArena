@@ -39,7 +39,10 @@ public class SteerShip extends BasicSpaceship {
 			case 1:
 				return new IdleCommand(5.0);
 			case 2:
-				return new SteerCommand(90);
+				return new SteerCommand(90, false);
+			case 3:
+				current = -1;
+				return new SteerCommand(-45);
 		}
 		
 		return new IdleCommand(5.0);

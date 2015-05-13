@@ -103,7 +103,10 @@ def ConvertNetworkMessageToCommand(ship, cmdname, cmddict):
             #eif
         elif cmdname == SHIP_CMD_STEER:
             if cmddict.has_key("DEG") and isinstance(cmddict["DEG"], int):
-                return SteerCommand(ship, cmddict["DEG"])
+                if cmddict.has_key("BLOCK") and isinstance(cmddict["BLOCK"], bool):
+                    return SteerCommand(ship, cmddict["DEG"], cmddict["BLOCK"])
+                else:
+                    return SteerCommand(ship, cmddict["DEG"])
             else:
                 return "Degrees Missing or Should Be Integer"
             #eif
@@ -326,8 +329,8 @@ class RotateCommand(Command):
 class SteerCommand(Command):
     NAME = SHIP_CMD_STEER
 
-    def __init__(self, obj, degrees):
-        super(SteerCommand, self).__init__(obj, SteerCommand.NAME, 13, block=True) # 12 should be enough to do a circle
+    def __init__(self, obj, degrees, block=True):
+        super(SteerCommand, self).__init__(obj, SteerCommand.NAME, 15, block=block) # 12 should be enough to do a circle
 
         self.__deg = -degrees # Physics rotations is opposite
         self.energycost = 4
