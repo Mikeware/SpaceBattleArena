@@ -28,7 +28,7 @@ Follow the link in the table below for a more complete lesson plan for that acti
 | Day Number | Lesson                    |
 |------------|---------------------------|
 |  1 - 2     | [Intro & Connections](intro.html)|
-|  3 - 4     | Find the Middle           |
+|  3 - 4     | [Find the Middle](findthemiddle.html)|
 |  5 -  8    | Shapes in Space           |
 |  9 - 12    | Intro to Radar + Minigame |
 | 13 +       | Competitions              |
@@ -45,6 +45,8 @@ By the second day you should be distributing the client package to students and 
 
 <a name="findthemiddle"></a>Find The Middle [Days 3 - 4]
 ------------------
+[Full Plan](findthemiddle.html)
+
 [See Find The Middle Game](../games/findthemiddle.html)
 
 Now that students are able to connect, the 3rd day should be spent going over commands (Rotate, Thrust, and Brake) and controlling a ship in space.  This is also a good point to talk about blocking vs. non-blocking commands. 
