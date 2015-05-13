@@ -120,6 +120,7 @@
     <Content Include="game_hungryhungrybaubles.cfg" />
     <Content Include="game_kingofspace.cfg" />
     <Content Include="game_kingofthebubble.cfg" />
+    <Content Include="no_gravity_drag.cfg" />
     <Content Include="radarworld_2014.cfg" />
     <Content Include="Tests\test_combatexercise.cfg" />
     <Content Include="Tests\test_asteroidminer.cfg" />

@@ -49,6 +49,20 @@ class WorldVisualTestCase(SBAGUITestCase):
         self.failIfAlmostEqual(ship.body.position, start, None, "Doomed ship should have moved", 5)
         self.assertAlmostEqual(ship2.body.position, start2, None, "Free Ship not in same place", 2)
 
+    def test_planet_no_gravity(self):
+        """
+        Tests a ship inside a gravity well vs outside.
+        """
+        planet = BlackHole(self.game.world.mid_point(0,0), 100, 0)
+        self.game.world.append(planet)
+
+        start = self.game.world.mid_point(50, -50)
+        ship = AIShip_SetList("Not Doomed", start, self.game, [])        
+
+        time.sleep(5.0)
+
+        self.assertAlmostEqual(ship.body.position, start, None, "Doomed ship shouldn't have moved", 2)
+
     def test_nebula_drag(self):
         """
         Test which has two ships thrust in the same direction, but one slowed by Nebula.

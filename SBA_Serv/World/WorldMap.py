@@ -135,9 +135,9 @@ class GameWorld(object):
             else:
                 self.__toadd.append(item)
             added = True
-            if isinstance(item, Planet):
+            if isinstance(item, Planet) and item.pull > 0:
                 self.__planets.append(item)
-            elif isinstance(item, Nebula):
+            elif isinstance(item, Nebula) and item.pull > 0:
                 self.__nebulas.append(item)
         self.__addremovesem.release()
         logging.debug("SEMAPHORE REL append [%d]", thread.get_ident())                

@@ -148,7 +148,7 @@ These two range values correspond to the distance away from a planet's center th
 see pull_max
 
 ###pull_max = integer
-These two values correspond to the amount of pull the gravity will have on ships.  Larger values mean ships will get pulled in quicker and will have a harder time escaping.  A random value will be generated between **pull_min** and **pull_max**.  These are typically **8** and **24**.
+These two values correspond to the amount of pull the gravity will have on ships.  Larger values mean ships will get pulled in quicker and will have a harder time escaping.  A random value will be generated between **pull_min** and **pull_max**.  These are typically **8** and **24**.  Setting pull to zero, will turn off gravity.
 
 
 <a name="blackhole"></a>[BlackHole]
@@ -174,7 +174,7 @@ This is a list of the available sizes of nebulas.  The tuple pair is the total l
 see pull_max
 
 ###pull_max = integer
-These two values correspond to the amount of pull the drag will have on ships.  Larger values mean ships will slow down faster.  It'd best not to make these values higher than the Ship's Thruster force of 3500.  A random value will be generated between **pull_min** and **pull_max**.  These are typically **1750** and **2500**.
+These two values correspond to the amount of pull the drag will have on ships.  Larger values mean ships will slow down faster.  It'd best not to make these values higher than the Ship's Thruster force of 3500.  A random value will be generated between **pull_min** and **pull_max**.  These are typically **1750** and **2500**.  Setting pull to zero, will turn off drag.
 
 
 <a name="game"></a>[Game]
