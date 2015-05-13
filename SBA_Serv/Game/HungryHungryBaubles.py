@@ -130,7 +130,7 @@ class HungryHungryBaublesGame(BasicGame):
         super(HungryHungryBaublesGame, self).round_over()
 
     def gui_draw_game_world_info(self, surface, flags):
-        for player in self._players.values():
+        for player in self.game_get_current_player_list():
             if player.object != None and self.__baubles.has_key(player.netid):
                 # draw line between player and Bauble
                 pygame.draw.line(surface, player.color, intpos(player.object.body.position), intpos(self.__baubles[player.netid].body.position))
