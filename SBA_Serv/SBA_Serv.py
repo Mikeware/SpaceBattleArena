@@ -23,6 +23,7 @@ title = "Space Battle Arena"
 titlever = title + " v" + __version__
 
 import logging
+import datetime
 
 import sys, traceback, glob, os.path
 from GUI import main
@@ -41,7 +42,7 @@ parser.add_option("-n", "--nolog", action="store_true", dest="nolog", default=Fa
                   help="turns logging off")
 parser.add_option("-v", "--verbose", action="store_true", dest="verbose", default=False,
                   help="turns logging to DEBUG (from INFO)")
-parser.add_option("-l", "--logfile", action="store", dest="logfilename", default="SBA_Serv.log",
+parser.add_option("-l", "--logfile", action="store", dest="logfilename", default="SBA_Serv"+datetime.datetime.now().strftime("%Y-%m-%d_%H%M%S")+".log",
                   help="specifies the file to log info to")
 """
 parser.add_option("-g", "--headless", action="store_true", dest="headless", default=False,
@@ -65,6 +66,7 @@ if not options.nolog:
     #eif
     logging.info("Starting " + titlever)
     logging.info("Logging to " + options.logfilename + " Verbose: " + str(options.verbose))
+    print "Logging to " + options.logfilename + " Verbose: " + str(options.verbose)
 else:
     print " -- LOGGING DISABLED -- "
     
@@ -150,8 +152,8 @@ if defaults:
         print traceback.format_exc()
 
     print "Sending Disconnect..."
-    logging.debug("End of Main")
+    logging.info("Server Request Disconnect All")
     server.disconnectAll()
-    logging.debug("All done?")
+    logging.info("Server exit main")
     print "Server Closed."
 #eif
