@@ -354,7 +354,6 @@ class IdleCommand(Command):
 
     def __init__(self, obj, duration=0.0):
         super(IdleCommand, self).__init__(obj, IdleCommand.NAME, duration, block=True)
-        self.energycost = 1
 
 class RadarCommand(Command):
     NAME = SHIP_CMD_RADAR

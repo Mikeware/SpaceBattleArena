@@ -13,10 +13,40 @@ The full text of the license is available online: http://opensource.org/licenses
 """
 
 from TestCaseRigging import SBAWorldTestCase, SBAGUITestCase
+from unittest import TestCase
 from World.WorldEntities import *
 from World.AIShips import *
+from World.WorldMath import PlayerStat
 
 import time
+
+class PlayerStatTestCase(TestCase):
+    """
+    Basic Test cases for our PlayerStat class.
+    """
+    def test_max_value(self):
+        p = PlayerStat(100, 50)
+        p += 100
+
+        self.assertEqual(p, 100, "Adding over max value should equal max value.")
+
+        self.assertEqual(PlayerStat(100, 30) + 30, 60, "value add not equal")
+
+    def test_min_value(self):
+        p = PlayerStat(100, 50)
+        p -= 100
+
+        self.assertEqual(p, 0, "Subtracting over min value should equal zero.")
+
+    def test_division(self):
+        p = PlayerStat(100, 100)
+        p /= 2
+
+        self.assertEqual(p, 50, "division not correct.")
+
+        p /= 0.5
+
+        self.assertEqual(p, 100, "division not correct for inverse.")
 
 class WorldTestCase(SBAWorldTestCase):
     """
@@ -28,6 +58,28 @@ class WorldTestCase(SBAWorldTestCase):
 
         self.assertNotEqual(self.game.world[planet.id], None, 'Planet Missing')
 
+    def test_idle_no_energy(self):
+        start = self.game.world.mid_point(50, -50)
+        ship = AIShip_SetList("Doomed", start, self.game, [
+            "IdleCommand(self, 2.0)"
+            ])
+
+        time.sleep(2.2)
+
+        self.assertEqual(ship.energy, 100, "Ship depleated energy doing nothing.")
+
+    def test_regain_energy(self):
+        start = self.game.world.mid_point(50, -50)
+        ship = AIShip_SetList("Doomed", start, self.game, [
+            "IdleCommand(self, 2.0)"
+            ])
+        
+        ship.energy /= 2
+        start = ship.energy.value
+
+        time.sleep(2.2)
+
+        self.assertGreater(ship.energy, start, "Ship didn't regain energy over time.")
 
 class WorldVisualTestCase(SBAGUITestCase):
 

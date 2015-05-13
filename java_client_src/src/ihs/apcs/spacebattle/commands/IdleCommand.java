@@ -33,7 +33,7 @@ public class IdleCommand extends ShipCommand {
 
 	/**
 	 * Gets the energy cost per second of this command.
-	 * @return the amount of energy consumed per second while this command is executing (1)
+	 * @return the amount of energy consumed per second while this command is executing (0)
 	 */
-	public static int getOngoingEnergyCost() { return 1; }
+	public static int getOngoingEnergyCost() { return 0; }
 }

@@ -88,7 +88,9 @@ class Velocity(object):
 class PlayerStat(object):
     """
     Defines a statistic for the player (e.g. Health, Energy, Shield)
-    Is bound by a maximum value and can't go below zero
+    Is bound by a maximum value and can't go below zero.
+
+    Note: It is assumed the object will be manipulated numerically after creation and not directly intereact with other PlayerStat objects.
     """
     def __init__(self, maxvalue, current=-1):
         self.__maximum = maxvalue
@@ -145,6 +147,27 @@ class PlayerStat(object):
     def __ipow__(self, other, modulo):
         self.__current = self.__checkbound(self.__current ** other)
         return self
+
+    def __cmp__(self, other):
+        return self.__current - other
+
+    def __lt__(self, other):
+        return (self.__current - other) < 0
+
+    def __le__(self, other):
+        return (self.__current - other) <= 0
+
+    def __eq__(self, other):
+        return (self.__current - other) == 0
+
+    def __ne__(self, other):
+        return (self.__current - other) != 0
+
+    def __gt__(self, other):
+        return (self.__current - other) > 0
+
+    def __ge__(self, other):
+        return (self.__current - other) >= 0
 
     def empty(self):
         self.__current = 0
