@@ -544,6 +544,10 @@ class BasicGame(object):
         if not added and isinstance(wobj, Ship) and wobj.player.netid in self._players:
             nid = wobj.player.netid
 
+            # if we were given an expiration time, means we haven't issued a command, so kill the ship
+            if wobj.TTL != None:
+                wobj.killed = true
+
             self.player_died(self._players[nid], (self._players[nid].disconnected or wobj.killed))
 
             self._players[nid].object = None

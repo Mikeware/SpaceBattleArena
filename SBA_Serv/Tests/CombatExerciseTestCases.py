@@ -20,7 +20,7 @@ class CombatExerciseTestCases(SBAGUITestCase):
         Tests that we get points for destroying a ship with a torpedo
         """
         self.ship = AIShip_SetList("Shooter", self.game.world.mid_point(-100), self.game, [
-                "IdleCommand(self, 10.0)",
+                "IdleCommand(self, 12.0)",
                 "FireTorpedoCommand(self, 'F')",
                 "IdleCommand(self, 0.1)",
                 "FireTorpedoCommand(self, 'F')",
@@ -34,7 +34,12 @@ class CombatExerciseTestCases(SBAGUITestCase):
 
         self.assertEqual(len(self.game.world), 2, "Found more than two ships in world")
 
-        time.sleep(14)
+        time.sleep(11)
+
+        #ensure ship is still there for testing ship timeout function doesn't effect AI ships
+        self.assertTrue(self.ship2 in self.game.world, "Target Ship disappeared early")
+
+        time.sleep(5)
 
         #self.assertFalse(found, "Asteroid Not Destroyed") # TODO: figure out how to determine if ship was destroyed...
         self.assertGreaterEqual(self.ship.player.score, 3, "Ship didn't gain at least 3 points")

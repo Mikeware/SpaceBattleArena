@@ -149,7 +149,9 @@ if defaults:
         logging.error(traceback.format_exc())
         print traceback.format_exc()
 
+    print "Sending Disconnect..."
     logging.debug("End of Main")
     server.disconnectAll()
     logging.debug("All done?")
+    print "Server Closed."
 #eif

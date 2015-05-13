@@ -68,8 +68,12 @@ class Ship(PhysicalRound):
         self.commandQueue.extend(old)
 
     def update(self, t):
-        super(Ship, self).update(t) 
-        self.commandQueue.update(t)
+        super(Ship, self).update(t)
+        if len(self.commandQueue) > 0: 
+            self.commandQueue.update(t)
+            self.TTL = None
+        elif hasattr(self, "player") and self.player.netid >= 0: # if we're a human player, make sure we issue another command within 10 seconds, or kill scuttle the ship.
+            self.TTL = self.timealive + 10
         self.energy += self.energyRechargeRate * t
 
     def getExtraInfo(self, objData):

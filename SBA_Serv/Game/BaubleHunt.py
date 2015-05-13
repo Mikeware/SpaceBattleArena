@@ -54,15 +54,6 @@ class BaubleHuntGame(BasicGame):
     def game_get_info(self):
         return {"GAMENAME": "BaubleHunt"}
 
-    def playerDisconnected(self, netid):
-        if netid in self.__bases:
-            logging.info("Removing Player %d Base", netid)
-            self.world.remove(self.__bases[netid])
-            del self.__bases[netid]
-        else:
-            logging.error("Trying to remove player %d that was already disconnected?", netid)
-        return super(BaubleHuntGame, self).playerDisconnected(netid)
-
     def _world_reset(self):
         self.__bases = ThreadSafeDict()
         self.__baubles = ThreadSafeDict()
