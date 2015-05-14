@@ -96,6 +96,8 @@ class FindTheMiddleGame(BasicGame):
             pygame.draw.circle(surface, (0, inc * x, 255 - inc * x), self.midpoint, radius, len(self.__objective_radii) - x + 1)
             text = self._dfont.render(repr(int(self.__objective_points[x-1])) + " Points", False, (128, 128, 128))
             surface.blit(text, (self.midpoint[0]-text.get_width()/2, self.midpoint[1]-radius+18))
+            text = self._dfont.render("Radius " + repr(int(self.__objective_radii[x-1])), False, (128, 128, 128))
+            surface.blit(text, (self.midpoint[0]-text.get_width()/2, self.midpoint[1]+radius-36))
             x += 1
 
         for player in self.game_get_current_player_list():

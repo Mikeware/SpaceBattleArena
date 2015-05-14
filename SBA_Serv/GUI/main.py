@@ -459,10 +459,17 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
             windowSurface.blit(ip, (resolution[0]/2-ip.get_width()/2,32))
             
         if flags["DEBUG"]:
+            mpos = pygame.mouse.get_pos()
+            if zoomout: # TODO: Need to refactor and centralize these calculations as part of 'Camera' system
+                x = mpos[0]*scalefactorx
+                y = mpos[1]*scalefactory
+            else:
+                x, y = mpos[0]-offsetx, mpos[1]-offsety
+
             windowSurface.blit(font.render("DEBUG MODE", False, (255, 255, 255)), (resolution[0]/2-38,32))
-            windowSurface.blit(font.render("FPS: " + repr(fpsClock.get_fps()), False, (255, 255, 255)), (0,0))
+            windowSurface.blit(font.render("FPS: " + repr(fpsClock.get_fps()), False, (255, 255, 255)), (0,0))            
             windowSurface.blit(font.render("World Offset: " + repr((-offsetx, -offsety)), False, (255, 255, 255)), (0,24))
-            windowSurface.blit(font.render("World Size: " + repr(world.size), False, (255, 255, 255)), (0,36))
+            windowSurface.blit(font.render("World Size: " + repr(world.size) + " - " + repr((int(x), int(y))), False, (255, 255, 255)), (0,36))
             windowSurface.blit(font.render("World Objects: " + repr(len(world)), False, (255, 255, 255)), (0,48))
             
             if mouselock:
