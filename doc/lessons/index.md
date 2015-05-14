@@ -29,7 +29,7 @@ Follow the link in the table below for a more complete lesson plan for that acti
 |------------|---------------------------|
 |  1 - 2     | [Intro & Connections](intro.html)|
 |  3 - 4     | [Find the Middle](findthemiddle.html)|
-|  5 -  8    | Shapes in Space           |
+|  5 -  8    | [Shapes in Space](shapes.html)|
 |  9 - 12    | Intro to Radar + Minigame |
 | 13 +       | Competitions              |
 
@@ -55,14 +55,11 @@ Then give the students the objective to get their ship from their spawning point
 
 <a name="shapesinspace"></a>Shapes in Space [Days 5 - 8]
 ------------------
+[Full Plan](shapes.html)
 
-It turns out drawing turtle graphics in space is a lot harder than you would think.  The next exercise teaches students a familiar concept in a whole new way.  SBA has ‘Laser Nodes’ which are non-tangible entities which project laser lines in space.  They work in pairs, thus dropping one Laser Node does nothing until another one is dropped.  Once a pair has been dropped, they will perpetually display a laser line of the ship’s color in space indefinitely. 
+It turns out drawing turtle graphics in space is a lot harder than you would think.  The next exercise teaches students a familiar concept in a whole new way.  Space Battle provides a way to draw shapes on the screen.
 
-Using this new command, students can draw shapes in space.  You can walk through drawing a square as an example. 
-
-On their own students should work on creating a 5-pointed star. 
-
-For the next few days, as an assignment, the students should also work on creating a Spiral (inwards or outwards, doesn’t have to be perfectly smooth) and an ‘OctoSquare’.  We define an ‘OctoSquare’ as an octagon circumscribed around a square.  However, the square should not touch the octagon. 
+This lesson works towards students getting more comfortable with maneuvering their ship by incrementally learning to draw different shapes such as rectangles, stars, spirals, and an octagon circumscribed around a square.
 
 <a name="radar"></a>Intro to Radar [Days 9 - 12]
 -----------------------

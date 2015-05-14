@@ -40,7 +40,7 @@ This helps create a greater visual impact when first introducing students to Spa
 
     SBA_Serv machine_fullscreen.cfg
  
-<a name="resources"></a>Resouces
+<a name="resources"></a>Resources
 ------------------------------
 
  * [Client Setup](../client/index.html)

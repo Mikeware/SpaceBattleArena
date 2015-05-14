@@ -43,7 +43,7 @@ And disables a couple of commands:
 	
 Extra specifics on the game configuration can be found on the game resource page.
  
-<a name="resources"></a>Resouces
+<a name="resources"></a>Resources
 ------------------------------
 
  * [Find The Middle](../games/findthemiddle.html)
@@ -67,8 +67,7 @@ The Point class also provides helpful methods to determine how to rotate a ship 
 
 <a name="commands"></a>Commands Used
 --------------------------------
-[IdleCommand](http://mikeware.github.io/SpaceBattleArena/client/java_doc/ihs/apcs/spacebattle/commands/IdleCommand.html), [RotateCommand](http://mikeware.github.io/SpaceBattleArena/client/java_doc/ihs/apcs/spacebattle/commands/RotateCommand.html)
-[ThrustCommand](http://mikeware.github.io/SpaceBattleArena/client/java_doc/ihs/apcs/spacebattle/commands/ThrustCommand.html)
+[IdleCommand](http://mikeware.github.io/SpaceBattleArena/client/java_doc/ihs/apcs/spacebattle/commands/IdleCommand.html), [RotateCommand](http://mikeware.github.io/SpaceBattleArena/client/java_doc/ihs/apcs/spacebattle/commands/RotateCommand.html), [ThrustCommand](http://mikeware.github.io/SpaceBattleArena/client/java_doc/ihs/apcs/spacebattle/commands/ThrustCommand.html)
 
 <a name="api"></a>API Used
 -----------------------------
