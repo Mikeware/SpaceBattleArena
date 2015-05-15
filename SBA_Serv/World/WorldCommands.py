@@ -190,6 +190,9 @@ class ThrustCommand(Command):
     def __repr__(self):
         return super(ThrustCommand, self).__repr__() + " DIR: " + self.direction + " POW: " + repr(self.power)
 
+    def net_repr(self):
+        return (ThrustCommand.NAME, {"DIR": self.direction, "DUR":self.timeToLive, "PER":self.power})
+
 class BrakeCommand(Command):
     NAME = SHIP_CMD_BRAKE
 
@@ -326,6 +329,9 @@ class RotateCommand(Command):
     def __repr__(self):
         return super(RotateCommand, self).__repr__() + " DEG: " + repr(self.__deg)
 
+    def net_repr(self):
+        return (RotateCommand.NAME, {"DEG":self.__deg})
+
 class SteerCommand(Command):
     NAME = SHIP_CMD_STEER
 
@@ -357,6 +363,9 @@ class IdleCommand(Command):
 
     def __init__(self, obj, duration=0.0):
         super(IdleCommand, self).__init__(obj, IdleCommand.NAME, duration, block=True)
+
+    def net_repr(self):
+        return (IdleCommand.NAME, {"DUR":self.timeToLive})
 
 class RadarCommand(Command):
     NAME = SHIP_CMD_RADAR

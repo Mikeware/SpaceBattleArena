@@ -110,17 +110,32 @@ class SBAServerTestCase(SBAWorldTestCase):
     Test Case which needs a server running
     """
     def setUp(self):
+        self.started = False
+
         super(SBAServerTestCase, self).setUp()
 
-        self.server = WorldServer.WorldServer(self.cfg.getint("Server", "port"), self.game)
+        self._startServer()
+
+    def _startServer(self):
+        if not self.started:
+            self.server = WorldServer.WorldServer(self.cfg.getint("Server", "port"), self.game)
+            self.started = True
+
+    def _endServer(self):
+        if self.server != None:
+            self.server.disconnectAll()
+            self.server = None
+            self.started = False
 
     def tearDown(self):
         super(SBAServerTestCase, self).tearDown()
 
-        self.server.disconnectAll()
+        self._endServer()
 
 class SBAGUITestCase(SBAWorldTestCase):
-
+    """
+    Test Case with GUI hook for visualization
+    """
     def setUp(self):
         super(SBAGUITestCase, self).setUp()
 
@@ -136,6 +151,20 @@ class SBAGUITestCase(SBAWorldTestCase):
         time.sleep(1)
 
         super(SBAGUITestCase, self).tearDown()
+
+class SBAGUIWithServerTestCase(SBAGUITestCase, SBAServerTestCase):
+    """
+    Test Case with both GUI and Server backend.
+    """
+    def setUp(self):
+        super(SBAGUIWithServerTestCase, self).setUp()
+
+        self._startServer()
+
+    def tearDone(self):
+        super(SBAGUIWithServerTestCase, self).tearDown()
+
+        self._endServer()
 
 """
     game = None

@@ -234,19 +234,22 @@ class GameWorld(object):
                            
                 logging.debug("SEMAPHORE ACQ gameloop [%d]", thread.get_ident())
                 self.__addremovesem.acquire()
-                #remove objects
-                for item in self.__toremove:
-                    logging.info("World Removing #%d from Physics Engine %s", item.id, repr(item))
-                    item.removeFromSpace(self.__space)
-                    
-                self.__toremove = []
-                    
+                # NOTE ISSUE #68 - If server is slow, can be adding and removing object in same step... add first, so we can immediately remove instead of crash
+                # TODO: just look for common set between two lists and remove... or have each list check the other first before adding to the lists...
+                #       probably best to refactor to PyMunk 4.0.0 and be able to have PyMunk handle adding/removing objects during physics step.
                 # add objects
                 for item in self.__toadd:
                     logging.info("World Adding #%d to Physics Engine %s", item.id, repr(item))
                     item.addToSpace(self.__space)
 
                 self.__toadd = []
+
+                #remove objects
+                for item in self.__toremove:
+                    logging.info("World Removing #%d from Physics Engine %s", item.id, repr(item))
+                    item.removeFromSpace(self.__space)
+                    
+                self.__toremove = []
                 self.__addremovesem.release()
                 logging.debug("SEMAPHORE REL gameloop [%d]", thread.get_ident())
                     

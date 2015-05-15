@@ -58,6 +58,9 @@ class WorldServer(object):
     def disconnectAll(self):
         self.__net.close()
 
+    def isrunning(self):
+        return self.__net.isconnected()
+
     def __serverCallback(self, sender, cmd):
         try:
             #logging.debug("Got Info from " + repr(sender) + " " + repr(cmd))        

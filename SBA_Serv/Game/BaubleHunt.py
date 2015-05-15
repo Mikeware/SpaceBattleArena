@@ -69,8 +69,8 @@ class BaubleHuntGame(BasicGame):
 
             self.__addHomeBase(player)
             self.__addBaubles(self.world, self.cfg.getint("BaubleHunt", "bauble_per_player"))
-        elif self.__bases.has_key(nid):
-            self.__bases[nid].newOwner(player.object)
+        elif self.__bases.has_key(player.netid):
+            self.__bases[player.netid].newOwner(player.object)
 
     def __addHomeBase(self, player, force=False):
         logging.info("Add HomeBase (%s) for Player %d", repr(force), player.netid)

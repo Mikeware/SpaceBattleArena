@@ -117,9 +117,12 @@
   <ItemGroup>
     <Content Include="basicgame_asteroid.cfg" />
     <Content Include="basicgame_survivor.cfg" />
+    <Content Include="empty.cfg" />
     <Content Include="game_hungryhungrybaubles.cfg" />
     <Content Include="game_kingofspace.cfg" />
     <Content Include="game_kingofthebubble.cfg" />
+    <Content Include="no_advanced_commands.cfg" />
+    <Content Include="no_collide.cfg" />
     <Content Include="no_gravity_drag.cfg" />
     <Content Include="radarworld_2014.cfg" />
     <Content Include="Tests\test_combatexercise.cfg" />
@@ -131,12 +134,12 @@
     <Content Include="machine_fullscreen2x.cfg" />
     <Content Include="machine_fullscreen1p5x.cfg" />
     <Content Include="machine_fullscreen.cfg" />
-    <Content Include="machine_empty.cfg" />
     <Content Include="machine_test.cfg" />
     <Content Include="basicgame_findthemiddle.cfg" />
     <Content Include="radarworld.cfg" />
     <Content Include="game_baublehunt.cfg" />
     <Content Include="basicgame_combatexercise.cfg" />
+    <Content Include="Tests\test_server.cfg" />
     <Content Include="tournament.cfg" />
   </ItemGroup>
   <Import Project="$(PtvsTargetsFile)" Condition="Exists($(PtvsTargetsFile))" />

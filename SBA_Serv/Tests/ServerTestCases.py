@@ -12,14 +12,19 @@ You should have received a copy of the GNU General Public License along with thi
 The full text of the license is available online: http://opensource.org/licenses/GPL-2.0
 """
 
-from TestCaseRigging import SBAServerTestCase
+from TestCaseRigging import SBAServerTestCase, SBAGUIWithServerTestCase
 import Server.MWNL2 as MWNL2
+from World.AIShips import AIShip_Network_Harness
+from World.WorldCommands import *
 
 import time
 
 class ServerConnectTestCase(SBAServerTestCase):
 
     def test_make_connection(self):
+        """
+        Basic test case to test lifecycle of a client against the server.
+        """
         net = MWNL2.MWNL_Init(self.cfg.getint("Server", "port"), self.callback)
         net.connect("localhost")
 
@@ -41,8 +46,140 @@ class ServerConnectTestCase(SBAServerTestCase):
 
         self.assertEqual(net.isconnected(), False, "Didn't Disconnect from Server")
 
+        # TODO: Fix BUG#2
+        #time.sleep(2)
+        #self.assertFalse(self.server.isrunning(), "Server hasn't shut down.")
+
+        # TODO: Do more to Test Server clean-up is ok too. Might help with discovery of root cause of #2
+
     def callback(self, sender, cmd):
         pass
+
+class ServerGUISingleShipRemoteTestCase(SBAGUIWithServerTestCase):
+
+    def get_config_filename(self):
+        return "test_server.cfg"
+
+    def test_add_host_close_ship(self):
+        """
+        Test adding a networked client and having the server close connection
+        """
+        self.__env = None
+
+        self.ship = AIShip_Network_Harness("Add Me", self.__rotate_ship)
+
+        self.assertTrue(self.ship.connect(self.cfg.getint("Server", "port")), "Didn't connect to server.")
+
+        time.sleep(2)
+
+        self.assertIsNotNone(self.__env, "Never received environment.")
+        
+        ang = self.__env["SHIPDATA"]["ROTATION"]
+
+        time.sleep(2)
+
+        self.assertNotEqual(ang, self.__env["SHIPDATA"]["ROTATION"], "Angle didn't change over time.")
+
+        self._endServer() # Note, Ship will still be visible as we're not removing it from world in this test.
+
+        time.sleep(3)
+
+        self.assertFalse(self.ship.isconnected(), "Client still connected to server after disconnect.")
+
+    def test_add_client_disconnect_ship(self):
+        """
+        Pure client connect/disconnect test running single command
+        """
+        self.__env = None
+
+        self.ship = AIShip_Network_Harness("Add Me", self.__rotate_ship)
+
+        self.assertTrue(self.ship.connect(self.cfg.getint("Server", "port")), "Didn't connect to server.")
+
+        time.sleep(2)
+
+        self.assertIsNotNone(self.__env, "Never received environment.")
+        
+        ang = self.__env["SHIPDATA"]["ROTATION"]
+
+        time.sleep(2)
+
+        self.assertNotEqual(ang, self.__env["SHIPDATA"]["ROTATION"], "Angle didn't change over time.")
+
+        self.ship.disconnect()
+
+        time.sleep(2)
+
+        self.assertFalse(self.ship.isconnected(), "Client still connected to server after disconnect.")
+
+    def test_add_host_remove_ship(self):
+        """
+        Test disconnect_on_death setting by remove object from world on server
+        """
+        self.__env = None
+
+        self.ship = AIShip_Network_Harness("Add Me", self.__rotate_ship)
+
+        self.assertTrue(self.ship.connect(self.cfg.getint("Server", "port")), "Didn't connect to server.")
+
+        time.sleep(2)
+
+        self.assertIsNotNone(self.__env, "Never received environment.")
+        
+        ang = self.__env["SHIPDATA"]["ROTATION"]
+
+        time.sleep(2)
+
+        self.assertNotEqual(ang, self.__env["SHIPDATA"]["ROTATION"], "Angle didn't change over time.")
+
+        #SERVER
+        self.assertEqual(len(self.game.world), 1, "More than one object in the world.")
+        for obj in self.game.world:
+            self.game.world.remove(obj) # we turned disconnect on death on to make this also disconnect
+
+        time.sleep(3)
+
+        self.assertEqual(len(self.game.world), 0, "Ship still in world.")
+        #end SERVER
+
+        self.assertFalse(self.ship.isconnected(), "Client still connected to server after disconnect.")
+
+    def test_client_removed_on_error(self):
+        """
+        Test disconnect_on_death setting by remove object from world on server
+        """
+        self.__env = None
+
+        self.ship = AIShip_Network_Harness("Add Me", self.__error_ship)
+
+        self.assertTrue(self.ship.connect(self.cfg.getint("Server", "port")), "Didn't connect to server.")
+
+        time.sleep(2)
+
+        self.assertEqual(len(self.game.world), 1, "Client didn't connect as no object in world.") # Server
+
+        self.assertIsNotNone(self.__env, "Never received environment.")
+       
+        # Wait for server to remove
+        time.sleep(12)
+        
+        self.assertEqual(len(self.game.world), 0, "Ship still in world.") #SERVER
+
+        time.sleep(3)
+
+        self.assertFalse(self.ship.isconnected(), "Client still connected after failure?")
+
+    def __rotate_ship(self, env):
+        logging.info("Test Case got Callback from Network")
+        self.__env = env
+        return RotateCommand(self.ship, 6)
+
+    def __error_ship(self, env):
+        self.__env = env
+        time.sleep(1)
+        # want client thread to die to test server, seems to not effect test, which is kind of a bad thing, but we'll exploit it for now
+        # means we should be more prudent with testing for those cases with asserts to prevent bad tests.
+        raise Exception
 
 if __name__ == '__main__':
     unittest.main()
