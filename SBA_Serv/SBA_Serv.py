@@ -132,7 +132,10 @@ if defaults:
     
     if game == None or rungame == "Basic" or rungame == None or rungame.strip() == "":
         logging.info("Running Basic Game")
+        title_game = ""
         game = BasicGame(cfg)
+    else:
+        title_game = " - " + rungame
 
     print "Game: ", game
     
@@ -146,7 +149,7 @@ if defaults:
             #TODO: Set World Size Here?
         #else:
         #startGame(title, game, fullscreen:bool, (xres, yres), showstats:bool, sound:bool)
-        main.startGame(titlever, game, cfg.getboolean("Application", "fullscreen"), resolution, cfg.getboolean("Application", "showstats"), cfg.getboolean("Application", "sound"))
+        main.startGame(titlever + title_game, game, cfg.getboolean("Application", "fullscreen"), resolution, cfg.getboolean("Application", "showstats"), cfg.getboolean("Application", "sound"))
     except:
         logging.error(traceback.format_exc())
         print traceback.format_exc()
