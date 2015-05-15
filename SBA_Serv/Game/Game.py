@@ -546,6 +546,7 @@ class BasicGame(object):
 
             # if we were given an expiration time, means we haven't issued a command, so kill the ship
             if wobj.TTL != None:
+                logging.info("Ship #%d killed due to timeout.", wobj.id)
                 wobj.killed = True
 
             self.player_died(self._players[nid], (self._players[nid].disconnected or wobj.killed))

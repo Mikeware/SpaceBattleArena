@@ -72,7 +72,8 @@ class Ship(PhysicalRound):
         if len(self.commandQueue) > 0: 
             self.commandQueue.update(t)
             self.TTL = None
-        elif hasattr(self, "player") and self.player.netid >= 0: # if we're a human player, make sure we issue another command within 10 seconds, or kill scuttle the ship.
+        elif self.TTL == None and hasattr(self, "player") and self.player.netid >= 0: # if we're a human player, make sure we issue another command within 10 seconds, or kill scuttle the ship.
+            logging.info("Ship #%d on clock for not issuing a command in given time.", self.id)
             self.TTL = self.timealive + 10
         self.energy += self.energyRechargeRate * t
 
