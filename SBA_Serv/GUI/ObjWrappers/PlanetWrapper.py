@@ -11,12 +11,12 @@ class PlanetGUI(GUIEntity):
     def __init__(self, planet, world):
         super(PlanetGUI, self).__init__(planet, world)
         if isinstance(planet, BlackHole):
-            self._imageName = "Planets/blackhole"
+            self._imageName = "Planets/blackhole"+str(random.randint(1,1))
             self.anispeed = random.randint(12, 24);
             self.anidirection = -1;
             self.zorder = -3
         else:
-            self._imageName = "Planets/planet"+str(random.randint(1,4))
+            self._imageName = "Planets/planet"+str(random.randint(1,7))
             self.anispeed = random.randint(24, 48 );
             self.anidirection = random.randint(0, 1);
             self.zorder = -1
