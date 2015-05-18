@@ -28,7 +28,7 @@ public class ObjectStatus {
 	private double SPEED;
 	private double MAXSPEED;
 	private double DIRECTION;
-	private int MASS;
+	private long MASS;
 	
 	private double CURHEALTH;
 	private double MAXHEALTH;
@@ -104,7 +104,7 @@ public class ObjectStatus {
 	 * Gets this object's mass.
 	 * @return
 	 */
-	public int getMass() { return MASS; }
+	public long getMass() { return MASS; }
 	
 	/**
 	 * Gets the current Health of this object.

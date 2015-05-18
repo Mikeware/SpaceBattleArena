@@ -16,6 +16,7 @@ import random
 import pymunk
 import math
 import logging
+import sys
 
 from Messaging import MessageQueue
 from Commanding import CommandSystem
@@ -91,7 +92,7 @@ class Nebula(PhysicalEllipse):
     They impose a 'friction' on objects and TODO: reduce radar range?
     """
     def __init__(self, pos, size=(384, 256), pull=2000, mass=-1):
-        if mass == -1: mass = pymunk.inf
+        if mass == -1: mass = sys.maxint
         super(Nebula, self).__init__(size, mass, pos)
 
         self.body.angle = math.radians(random.randint(-30, 30))
@@ -110,8 +111,8 @@ class Nebula(PhysicalEllipse):
         objData["PULL"] = self.pull
 
         # Overrides
-        objData["DIRECTION"] = -math.degrees(obj.body.angle)
-        objData["ROTATION"] = -math.degrees(obj.body.angle)
+        objData["DIRECTION"] = -math.degrees(self.body.angle)
+        objData["ROTATION"] = -math.degrees(self.body.angle)
 
         objData["MAJOR"] = self.major
         objData["MINOR"] = self.minor
@@ -126,7 +127,7 @@ class Planet(PhysicalRound):
     EnergyRechargeRateFactor = 2
 
     def __init__(self, pos, size=128, pull=15, radius=60, mass=-1):
-        if mass == -1: mass = pymunk.inf
+        if mass == -1: mass = sys.maxint
         super(Planet, self).__init__(radius, mass, pos)
 
         #self.energyRechargeRate = 1
