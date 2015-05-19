@@ -17,13 +17,14 @@ Survivor [Basic Game]
 
 **Survivor** is a basic game which is a great motivator for learning about radar.
 
-The objective is to be the player who has survived the longest in the game world.
+The objective is to be the player who has survived the longest in the game world while moving.
 
-Points are awarded for every second the player has lived in the world.
+Points are awarded for every second the player has travelled in the world.
 
-A player's best record is used to determine their ranking, so even if your intermediate score is reset upon being destroyed, if you have lived the longest still overall, you'll win.
+A player's best record is used to determine their ranking, so even if your intermediate score is reset upon being destroyed, if you have travelled the longest still overall, you'll win.
 
 <a name="config"></a>Configuration
 -----------
 
-There is no special configuration for survivor.
+###minimum_velocity = int
+The minimum speed a ship must be travelling in order to accumulate points.

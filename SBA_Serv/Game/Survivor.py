@@ -27,14 +27,21 @@ from operator import attrgetter
 # Basic Game - Survivor
 # Preliminary Exercise to motivate students to learn about Radar
 # 
-# Students score is based on how long their ship has lived.
+# Students score is based on how long their ship has lived (and is moving).
 # Introduces the notion of a 'best' score for a session.
 
 class SurvivorGame(BasicGame):
+
+    def __init__(self, cfgobj):
+        self._min_vel = cfgobj.getint("Survivor", "minimum_velocity")
+
+        super(SurvivorGame, self).__init__(cfgobj)
     
     def game_update(self, t):
         for player in self.game_get_current_player_list():
-            self.player_update_score(player, t)
+            # Update a player's score only when they're moving
+            if player.object != None and player.object.body.velocity.length > self._min_vel:
+                self.player_update_score(player, t)
 
         super(SurvivorGame, self).game_update(t)
 
