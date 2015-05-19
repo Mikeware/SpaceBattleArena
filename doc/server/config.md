@@ -115,6 +115,9 @@ This option when enabled allows the same client machine to be connected to the s
 ###allow_re-entry = boolean
 Can a player join the server again if they had connected previously and disconnected?
 
+###disconnect_on_idle = boolean
+Determines if a player's ship should be disconnected if it doesn't issue a command periodically (within 10 seconds of the last command being executed finishing).  **Note:** this will not prevent a ship from disconnecting if the actual socket is detected to be closed.
+
 ###disable_commands = string
 Comma separated list of ship commands to disable on the server.  E.g.
 
