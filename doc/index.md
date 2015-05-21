@@ -40,7 +40,7 @@ Documentation
     * 00 - [Intro and Setup](lessons/intro.html)
     * 01 - [Find the Middle](lessons/findthemiddle.html)
     * 02 - [Shapes in Space](lessons/shapes.html)
-    * 03 - Intro to Radar
+    * 03 - [Intro to Radar](lessons/radar.html)
     * 04 - Finite State Machines
     * 05 - Competitions
 * Guides

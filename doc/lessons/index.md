@@ -30,7 +30,7 @@ Follow the link in the table below for a more complete lesson plan for that acti
 |  1 - 2     | [Intro & Connections](intro.html)|
 |  3 - 4     | [Find the Middle](findthemiddle.html)|
 |  5 -  8    | [Shapes in Space](shapes.html)|
-|  9 - 12    | Intro to Radar + Minigame |
+|  9 - 12    | [Intro to Radar + Minigame](radar.html) |
 | 13 +       | Competitions              |
 
 <a name="intro"></a>Intro & Connections [Days 1 - 2]
@@ -63,6 +63,8 @@ This lesson works towards students getting more comfortable with maneuvering the
 
 <a name="radar"></a>Intro to Radar [Days 9 - 12]
 -----------------------
+[Full Plan](radar.html)
+
 Once players are comfortable maneuvering their ships, they need to understand how to *see* the world around them and react to it.
 
 **Radar** is the way that enables students to get extra information about the world around their ship.
