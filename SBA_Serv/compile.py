@@ -84,10 +84,10 @@ class BuildExe:
  
         #Extra/excludes python modules
         self.extra_modules = []
-        self.exclude_modules = []
+        self.exclude_modules = ['ssl', '_ssl']
         
         #DLL Excludes
-        self.exclude_dll = ['']
+        self.exclude_dll = ['CRYPT32.dll']
         #python scripts (strings) to be included, separated by a comma
         games = glob.glob('Game\\*.py')
         games.remove('Game\\__init__.py')
