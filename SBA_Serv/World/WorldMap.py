@@ -49,7 +49,7 @@ class GameWorld(object):
 
         logging.info("Initialized World of size %s, starting game loop...", repr(worldsize))
         if pys:
-            thread.start_new_thread(self.__THREAD__gameloop, ())
+            threading.Thread(None, self.__THREAD__gameloop, "WorldMap_gameloop").start()
 
     def mid_point(self, xoff = 0, yoff = 0):
         return intpos((self.width / 2 + xoff, self.height / 2 + yoff))

@@ -46,9 +46,11 @@ class ServerConnectTestCase(SBAServerTestCase):
 
         self.assertEqual(net.isconnected(), False, "Didn't Disconnect from Server")
 
-        # TODO: Fix BUG#2
-        #time.sleep(2)
-        #self.assertFalse(self.server.isrunning(), "Server hasn't shut down.")
+        self.server.disconnectAll()
+
+        time.sleep(2)
+
+        self.assertFalse(self.server.isrunning(), "Server hasn't shut down.")
 
         # TODO: Do more to Test Server clean-up is ok too. Might help with discovery of root cause of #2
 

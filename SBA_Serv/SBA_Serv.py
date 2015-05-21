@@ -24,6 +24,8 @@ titlever = title + " v" + __version__
 
 import logging
 import datetime
+import threading
+import time
 
 import sys, traceback, glob, os.path
 from GUI import main
@@ -158,5 +160,14 @@ if defaults:
     logging.info("Server Request Disconnect All")
     server.disconnectAll()
     logging.info("Server exit main")
-    print "Server Closed."
+    print "Server Closed, Checking Threads..."
+
+    time.sleep(2)
+
+    tlist = threading.enumerate()
+    if len(tlist) > 1: # main thread is counted
+        logging.error("%d Threads Not Cleaned Up", len(tlist))
+        for t in tlist:
+            logging.error("Thread Not Cleaned Up %s:%s", t.getName(), repr(t))
+            print t.getName() + ":" + repr(t)
 #eif

@@ -130,7 +130,7 @@ class MWNL_Init:
                 logging.info("Accepting New Clients")
                 self.__acceptNewClients = 1
 
-                thread.start_new_thread(self.__THREAD__getClients, ())
+                threading.Thread(None, self.__THREAD__getClients, "MWNL2_getClients").start()
             #END IF
                 
             return 1
@@ -169,7 +169,7 @@ class MWNL_Init:
     
     def close(self, specificconnection=0, senddis=1):
         if specificconnection == 0:
-            thread.start_new_thread(self.__THREAD__close, (senddis,))
+            threading.Thread(None, self.__THREAD__close, "Close All Clients Thread", (senddis,)).start()
         else:
             self.__disconnectClient(specificconnection)
         #eif
@@ -224,7 +224,7 @@ class MWNL_Init:
 
     # Used To Prevent Blocking On Client
     def __makeCallback(self, sender, cmd):
-        thread.start_new_thread(self.__callback, (sender, cmd))
+        threading.Thread(None, self.__callback, "Client Callback %d %s" % (sender, repr(cmd)), (sender, cmd)).start()
     #END __makeCallback
 
     # Connection Was Removed (Not Necessarily Closed)
@@ -450,7 +450,7 @@ class MWNL_Init:
         if self.__connections.has_key(id):
             logging.info("Trying to Disconnect Client %d", id)
             try:
-                thread.start_new_thread(self.__connections[id].close, ())
+                threading.Thread(None, self.__connections[id].close, "Close Specific Connection %d" % id).start()
                 logging.info("Closing Threads...")
                 del self.__connections[id]
                 logging.info("newdic = %s", repr(self.__connections))
@@ -488,9 +488,9 @@ class MWNL_Connection:
         self.__callback = callback
         
         # Start Thread For This Connection
-        thread.start_new_thread(self.__THREAD__listen, ())
-        thread.start_new_thread(self.__THREAD__send, ())
-        thread.start_new_thread(self.__THREAD__getNextTag, ())
+        threading.Thread(None, self.__THREAD__listen, "Client Receiving Thread %d" % id).start()
+        threading.Thread(None, self.__THREAD__send, "Client Sending Thread %d" % id).start()
+        threading.Thread(None, self.__THREAD__getNextTag, "Client Processing Thread %d" % id).start()
     #END __init__
     
     # Connection Was Removed (Not Necessarily Closed)
@@ -518,7 +518,7 @@ class MWNL_Connection:
         logging.info("%s Closing Connection", repr(self.__address))
         
         # Let it Finish Sending All Data Before Closing Connection
-        while self.isSendingData():
+        while self.__threadsalive > 0 and self.isSendingData():
             pass
         #END WHILE
 

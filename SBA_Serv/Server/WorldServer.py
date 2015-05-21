@@ -28,6 +28,7 @@ class WorldServer(object):
         self.__net = Server.MWNL2.MWNL_Init(port, self.__serverCallback)
         self.__net.host(game.cfg.getboolean("Server", "multiple_connections"))
         self.__game = game
+        self.__run = True # used to kill command loops while waiting on blocking commands
         if game.cfg.has_option("Server", "disable_commands"):
             self.__badcmds = game.cfg.get("Server", "disable_commands").split(",")
         else:
@@ -56,6 +57,7 @@ class WorldServer(object):
         
     # Called when Main Ends to clean-up threads
     def disconnectAll(self):
+        self.__run = False
         self.__net.close()
 
     def isrunning(self):
@@ -160,7 +162,7 @@ class WorldServer(object):
                         #if scmd.blocking
                         #   while not (scmd.isExpired() or scmd.isComplete()):
                         #TODO Releasing Here?
-                        while ship.commandQueue.isBlockingCommandOnTop():
+                        while ship.commandQueue.isBlockingCommandOnTop() and not (ship.destroyed or ship.killed) and self.__run:
                             time.sleep(0.02) #TODO: Centralize step
 
                         #logging.error("%s", repr(ship.commandQueue))                            
