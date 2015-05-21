@@ -545,7 +545,7 @@ class BasicGame(object):
             nid = wobj.player.netid
 
             # if we were given an expiration time, means we haven't issued a command, so kill the ship
-            if wobj.TTL != None and self.cfg.getboolean("Server", "disconnect_on_idle"):
+            if wobj.has_expired() and self.cfg.getboolean("Server", "disconnect_on_idle"):
                 logging.info("Ship #%d killed due to timeout.", wobj.id)
                 wobj.killed = True
 

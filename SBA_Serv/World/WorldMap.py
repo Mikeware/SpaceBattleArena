@@ -222,7 +222,7 @@ class GameWorld(object):
                         if obj.in_nebula[0] <= 0:
                             obj.in_nebula = None
 
-                    if obj.TTL != None and obj.timealive > obj.TTL:
+                    if obj.has_expired():
                         del self[obj]                        
                 #next            
 

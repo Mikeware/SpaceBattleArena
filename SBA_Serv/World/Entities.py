@@ -29,8 +29,17 @@ class Entity(object):
         self.energy = PlayerStat(0)
         self.energyRechargeRate = 0 # Amount of Energy Recovered Per Second
         self.timealive = 0
+        self.TTL = None # None means will live 'forever', otherwise if timealive > TTL (time to live), then the object will be automatically cleaned up in gameloop and destroyed.
 
         self.in_nebula = None
+
+    def has_expired(self):
+        """
+        Has this entity expired?
+
+        Returns False if there is no expiry time either.
+        """
+        return self.TTL != None and self.timealive > self.TTL
 
     def update(self, t):
         """Called each game frame to update the object
@@ -74,8 +83,7 @@ class PhysicsCore(Entity):
         self._constructPhysics(mass, pos)
         self.body.position = pos
         
-        self.destroyed = False
-        self.TTL = None
+        self.destroyed = False        
         self.explodable = True
 
     def _constructPhysics(self, mass, pos):
