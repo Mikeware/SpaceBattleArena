@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/print.css" media="print">
+
+    <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="/SpaceBattleArena/js/main.js"></script>
+    
+    <title>Space Battle Arena by Mikeware</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="headercontainer">
+        <h1>Space Battle Arena</h1>
+        <h2>A Programming Game in Java for AP CS Students.</h2>
+
+        <section id="downloads">
+          <a href="https://www.github.com/Mikeware/SpaceBattleArena/blob/master/bin/SpaceBattle.jar?raw=true" class="btn">Download Client Jar</a>
+          <a href="/SpaceBattleArena/client/java_doc/" class="btn">Java Docs</a>
+          <a href="https://www.github.com/Mikeware/SpaceBattleArena/blob/master/bin/SBAserver.zip?raw=true" class="btn">Download Server (Windows)</a>
+          <a href="https://www.github.com/Mikeware/SpaceBattleArena" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            
+            <span><a href="/SpaceBattleArena/index.html">Home</a></span>
+            
+            
+            
+                
+                    &nbsp<span><a href="index.html">Lessons</a></span>
+                
+            
+            <span>Intro to Radar</span>
+        </div>
+    </nav>
+    
+
+    
+<aside>
+    <h1>Lessons</h1>
+    <ul>
+    
+        <li><a href="#objective">Objectives</a></li>
+    
+        <li><a href="#config">Suggested Configuration</a></li>
+    
+        <li><a href="#resources">Resources</a></li>
+    
+        <li><a href="#classroom">Classroom Notes</a></li>
+    
+        <li><a href="#commands">Commands Used</a></li>
+    
+        <li><a href="#api">API Used</a></li>
+    
+    </ul>
+</aside>
+
+
+
+    <div class="container">
+      <section id="main_content">
+        <h1 id="intro-to-radar">Intro to Radar</h1>
+
+<p>Once players are comfortable maneuvering their ships, they need to understand how to <em>see</em> the world around them and react to it.</p>
+
+<p>There are two subgames which can help with introducing radar. <a href="../games/asteroidminer.html">Asteroid Miner</a> encourages a more combative stance vs. <a href="../games/survivor.html">Survivor</a> which encourages more avoidance.</p>
+
+<p>Though most of the <a href="../games/basic.html">Basic Games</a> can be configured to provide a challenge and motivation via scoring.</p>
+
+<h2 id="objectives"><a name="objective"></a>Objectives</h2>
+
+<p>A student can write a ship which can navigate around space by avoiding obstacles and/or destroying them.</p>
+
+<h2 id="suggested-configuration"><a name="config"></a>Suggested Configuration</h2>
+
+<p>An Asteroid Miner game configuration is provided in the server package:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">SBA_Serv machine_fullscreen.cfg basicgame_asteroid.cfg
+</code></pre></div>
+<p>As well as a Survivor game:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">SBA_Serv machine_fullscreen.cfg basicgame_survivor.cfg
+</code></pre></div>
+<p>Extra specifics on the configuration for each game can be found on their page.</p>
+
+<h2 id="resources"><a name="resources"></a>Resources</h2>
+
+<ul>
+<li><a href="../games/asteroidminer.html">Asteroid Miner</a> </li>
+<li><a href="../games/survivor.html">Survivor</a></li>
+</ul>
+
+<h2 id="classroom-notes"><a name="classroom"></a>Classroom Notes</h2>
+
+<p><strong>Radar</strong> is the way that enables students to get extra information about the world around their ship.</p>
+
+<p>The first day of this lesson should be about explaining how radar works, what information it provides, and how the programming paradigm changes.</p>
+
+<p>When a RadarCommand is returned in your getNextCommand, the <em>next</em> getNextCommand callback&#39;s Environment will contain a RadarResults object which can be retrieved with getRadar().</p>
+
+<p>The <strong>RadarResults</strong> acts as an ArrayList of ObjectStatus.  It will contain information about all the objects that were around the ship within its <a href="http://mikeware.github.io/SpaceBattleArena/client/java_doc/ihs/apcs/spacebattle/ObjectStatus.html#getRadarRange()">radar range</a>.</p>
+
+<p>A Radar Command has 5 different modes.  Each mode returns a varying level of information about the types of objects around the ship, but more details require more time to complete.</p>
+
+<p><strong>It is important</strong> to note that the <em>RadarResults</em> object is not cached, therefore the second call to getNextCommand after a RadarCommand will have a null getRadar() value, unless another RadarCommand was requested.  It is up to the student to decide to cache any information they wish to maintain about the objects in the world longer than a single callback.</p>
+
+<p>Radar is agnostic to the edges of the world; however, the client Point commands return information based on the absolute bounds of the world.  Therefore, an object detected in radar range, may be on the &#39;other&#39; side of the world.  It is up to the ship to determine if it should head over the boundary of the world to wrap around as the quickest path.</p>
+
+<p>At this point, starting to learn about advanced commands for maneuvering is important as well as energy management.  Warp and All Stop can be expensive, but critical to passing or avoiding dangerous objects.  Similarly Raise Shields and Torpedoes can be used to protect against collisions or engage other ships.</p>
+
+<h2 id="commands-used"><a name="commands"></a>Commands Used</h2>
+
+<p><a href="http://mikeware.github.io/SpaceBattleArena/client/java_doc/ihs/apcs/spacebattle/commands/RadarCommand.html">RadarCommand</a>, <a href="http://mikeware.github.io/SpaceBattleArena/client/java_doc/ihs/apcs/spacebattle/commands/SteerCommand.html">SteerCommand</a></p>
+
+<p>Advanced: <a href="http://mikeware.github.io/SpaceBattleArena/client/java_doc/ihs/apcs/spacebattle/commands/WarpCommand.html">WarpCommand</a>, <a href="http://mikeware.github.io/SpaceBattleArena/client/java_doc/ihs/apcs/spacebattle/commands/RaiseShieldsCommand.html">RaiseShieldsCommand</a>, <a href="http://mikeware.github.io/SpaceBattleArena/client/java_doc/ihs/apcs/spacebattle/commands/FireTorpedoCommand.html">FireTorpedoCommand</a>, <a href="http://mikeware.github.io/SpaceBattleArena/client/java_doc/ihs/apcs/spacebattle/commands/AllStopCommand.html">AllStopCommand</a></p>
+
+<h2 id="api-used"><a name="api"></a>API Used</h2>
+
+<p><a href="http://mikeware.github.io/SpaceBattleArena/client/java_doc/ihs/apcs/spacebattle/Environment.html#getRadar()">getRadar</a>, <a href="http://mikeware.github.io/SpaceBattleArena/client/java_doc/ihs/apcs/spacebattle/RadarResults.html">RadarResults</a></p>
+
+      </section>
+    </div>
+
+
+		<footer>
+		  <div class="container">
+		    <div class="owner">
+		      <p><a href="https://github.com/Mikeware" class="avatar"><img src="https://avatars3.githubusercontent.com/u/8961203?v=3&s=48" width="48" height="48"/></a> <a href="https://github.com/Mikeware">Mikeware</a> maintains <a href="https://github.com/Mikeware/SpaceBattleArena">Space Battle Arena</a></p>
+		    </div>
+		    <div class="creds">
+			  <small>This page generated using <a href="https://pages.github.com/">GitHub Pages</a> themes and <a href="http://www.jekyllrb.com/">Jekyll</a>.</small>
+		    </div>
+		  </div>
+		</footer>
+
+		  <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-39650553-3");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
