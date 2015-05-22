@@ -39,6 +39,8 @@ from Game.Game import BasicGame
 from optparse import OptionParser
 from ConfigParser import ConfigParser
 
+from GUI.GraphicsCache import Cache
+
 parser = OptionParser(usage="Usage: %prog [options] [config_file] [more_config_files...]\n\nYou should pass at least one config file to the server. Additional config files will override/add to the options in the base file.")
 parser.add_option("-n", "--nolog", action="store_true", dest="nolog", default=False,
                   help="turns logging off")
@@ -114,6 +116,11 @@ if defaults:
             cfg.set("World", "width", str(int(resolution[0] * float(width.replace("x",""))))) # as per doc, need to cast back to store as string, will unbox as int again later
         if height.find("x") != -1:
             cfg.set("World", "height", str(int(resolution[1] * float(height.replace("x","")))))
+
+    max_images = cfg.getint("Application", "ship_images")
+    # auto-detect number of ship images
+    if max_images == 0:
+        cfg.set("Application", "ship_images", str(Cache().getMaxImages("Ships/ship")+1)) # ship index starts at 0
 
     rungame = cfg.get("Game","game")
 

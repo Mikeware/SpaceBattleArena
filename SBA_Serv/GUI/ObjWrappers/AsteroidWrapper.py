@@ -16,8 +16,8 @@ class AsteroidGUI(GUIEntity):
     """
     def __init__(self, planet, world):
         super(AsteroidGUI, self).__init__(planet, world)
-        self._imageName = "Asteroids/Asteroid" + str(random.randint(1, 8))
-        #self.surface = Cache().getImage()
+        self._imageName = "Asteroids/Asteroid"
+        self._imageName = self._imageName + str(random.randint(1, Cache().getMaxImages(self._imageName)))
         self.__extra = (Cache().getImage(self._imageName).get_width() - 32) / 1.5
 
     def draw(self, surface, flags):      
