@@ -40,6 +40,7 @@ public class TextClient implements Client {
 //	private String shipSuffix = "";
 	
 	private Spaceship<?> ship;	
+	private Environment<?> env;
 	
 	private boolean disconnected = false;
 	
@@ -181,7 +182,7 @@ public class TextClient implements Client {
 			MwnpMessage response = new MwnpMessage(new Integer[]{netId, 0}, data);
 			messenger.sendMessage(response);
 		} else if (msg.getCommand().equals("ENV")) {
-			Environment<?> env = (Environment<?>)msg.getData();
+			env = (Environment<?>)msg.getData();
 
 			// check for death
 			int currShipId = env.getShipStatus().getId();
@@ -237,6 +238,13 @@ public class TextClient implements Client {
 			
 			disconnected = true;
 			System.out.println("Disconnect complete.");
+			
+			BasicGameInfo gameInfo = (BasicGameInfo)(env.getGameInfo());
+			System.out.println("\n**GAME STATISTICS**");
+			System.out.printf("   Last round score: %f\n", gameInfo.getScore());
+			System.out.printf("   Best round score: %f\n", gameInfo.getBestScore());
+			System.out.printf("   Game high score: %f\n", gameInfo.getBestScore());
+			System.out.printf("   Number of times destroyed: %d\n", gameInfo.getNumDeaths());
 		}		
 	}
 	
