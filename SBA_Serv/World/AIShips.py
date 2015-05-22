@@ -107,7 +107,7 @@ class AIShip_Network_Harness:
             logging.info("AI Ship %s callback said to %s", self._name, repr(response))
             if response == None or not isinstance(response, Command): 
                 self.__client.close()
-            else:
+            elif self.__client.isconnected():
                 self.__client.send(MWNL_CMD_SHIPCMD, response.net_repr(), sender)
         elif cmd[0] == MWNL_CMD_ERROR:
             #print "ERROR:", cmd[1]

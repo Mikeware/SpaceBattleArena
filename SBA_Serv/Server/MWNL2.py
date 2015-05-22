@@ -281,7 +281,7 @@ class MWNL_Init:
                 #END FOR
             #END IF
         # Client
-        else:
+        elif self.__connections.has_key(self.__id):
             logging.debug("Sending message to host")
             # Send To Host
             self.__connections[self.__id].send(info, command, data)

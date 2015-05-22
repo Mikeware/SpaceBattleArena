@@ -18,6 +18,7 @@ from World.AIShips import AIShip_Network_Harness
 from World.WorldCommands import *
 
 import time
+import threading
 
 class ServerConnectTestCase(SBAServerTestCase):
 
@@ -53,6 +54,50 @@ class ServerConnectTestCase(SBAServerTestCase):
         self.assertFalse(self.server.isrunning(), "Server hasn't shut down.")
 
         # TODO: Do more to Test Server clean-up is ok too. Might help with discovery of root cause of #2
+
+    def test_multiple_clients_server_disconnect(self):
+        """
+        Test to check multiple client connect/disconnect scenario.
+        """
+
+        numclients = 40
+
+        self.ships = []
+
+        for x in xrange(numclients):
+            self.ships.append(AIShip_Network_Harness("Add Me " + str(x), self.__bad_thrust_ship))
+
+            self.assertTrue(self.ships[-1].connect(self.cfg.getint("Server", "port")), "Didn't connect to server.")
+        #next
+
+        time.sleep(5)
+
+        self.game.end()
+
+        # server closes all connections
+        self.server.disconnectAll()
+
+        time.sleep(10)
+
+        print threading.enumerate()
+
+        self.assertFalse(self.server.isrunning(), "Server still running after disconnect.")
+
+        for x in xrange(numclients):
+            self.assertFalse(self.ships[x].isconnected(), "Client still connected to server after disconnect.")
+
+        print threading.enumerate()
+        self.assertEqual(len(threading.enumerate()), 1, "More than main thread running.")
+
+    def __bad_thrust_ship(self, env):
+        logging.info("Test Case got Callback from Network")
+        x = random.randint(1, 10)
+        if x > 7:
+            return ThrustCommand(self.ships[0], 'B', 1.0, 0.5)
+        elif x > 3:
+            time.sleep(3)
+            return RotateCommand(self.ships[0], 120)
+        return IdleCommand(self.ships[0], 10)
 
     def callback(self, sender, cmd):
         pass

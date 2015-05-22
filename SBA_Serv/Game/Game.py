@@ -120,6 +120,17 @@ class BasicGame(object):
         if self.__autostart:
             self.round_start()
             
+    def end(self):
+        """
+        Called when exiting GUI to terminate game.
+        """
+        logging.info("Ending Game")
+        self._tournament = True # force it to not restart timers again
+        self.round_over()
+
+        logging.info("Ending World")
+        self.world.endGameLoop()
+
     #region Round/Timing Functions
     def _round_start_timer(self):
         """

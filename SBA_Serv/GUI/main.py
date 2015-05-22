@@ -521,13 +521,8 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
     #TODO: Add Logging???
 
     # close out a game 
-    logging.info("Ending Game")
-    game._tournament = True # force it to not restart timers again
-    game.round_over()
+    game.end()
 
-    logging.info("Ending World")
-    print "Ending World"
-    game.world.endGameLoop()
     logging.info("Closing Pygame...")
     print "Closing Pygame"
     pygame.quit()

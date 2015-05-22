@@ -162,7 +162,7 @@ if defaults:
     logging.info("Server exit main")
     print "Server Closed, Checking Threads..."
 
-    time.sleep(2)
+    time.sleep(8)
 
     tlist = threading.enumerate()
     if len(tlist) > 1: # main thread is counted
