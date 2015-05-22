@@ -3,7 +3,7 @@ Module with functions related to World Generation. (i.e. placement of Planets, B
 """
 
 from World.WorldMap import GameWorld
-from World.WorldEntities import Planet, BlackHole, Asteroid, Nebula
+from World.WorldEntities import Planet, BlackHole, Asteroid, Nebula, Star
 import random
 
 def getPositionAwayFromOtherObjects(world, radius, edgebuffer, force=False):
@@ -84,6 +84,10 @@ def ConfiguredWorld(game, cfg, pys=True, empty=False):
 
         for bh in xrange(cfg.getint("BlackHole", "number")):
             world.append(BlackHole(getPositionAwayFromOtherObjects(world, 250, 100), cfg_rand_min_max(cfg, "BlackHole", "range"), cfg_rand_min_max(cfg, "BlackHole", "pull")))
+        #next bh
+
+        for s in xrange(cfg.getint("Star", "number")):
+            world.append(Star(getPositionAwayFromOtherObjects(world, 250, 100), cfg_rand_min_max(cfg, "Star", "range"), cfg_rand_min_max(cfg, "Star", "pull")))
         #next bh
 
         for ast in xrange(cfg.getint("Asteroid", "number")):

@@ -3,7 +3,7 @@ import pygame, random
 from GUIEntity import GUIEntity
 from World.WorldMath import intpos
 from GUI.Helpers import wrapcircle, debugfont
-from World.WorldEntities import BlackHole
+from World.WorldEntities import BlackHole, Star
 from GUI.GraphicsCache import Cache
 
 class PlanetGUI(GUIEntity):
@@ -15,6 +15,11 @@ class PlanetGUI(GUIEntity):
             self.anispeed = random.randint(12, 24)
             self.anidirection = -1
             self.zorder = -3
+        elif isinstance(planet, Star):
+            self._imageName = "Planets/Star"
+            self.anispeed = random.randint(2, 4)
+            self.anidirection = -1
+            self.zorder = -2
         else:
             self._imageName = "Planets/Planet"
             self.anispeed = random.randint(24, 48)

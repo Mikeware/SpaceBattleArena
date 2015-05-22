@@ -31,6 +31,7 @@ class Entity(object):
         self.timealive = 0
         self.TTL = None # None means will live 'forever', otherwise if timealive > TTL (time to live), then the object will be automatically cleaned up in gameloop and destroyed.
 
+        self.collidable = True # determines if anything can 'hit' this object in the default game
         self.in_nebula = None
 
     def has_expired(self):

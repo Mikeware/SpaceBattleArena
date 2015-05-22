@@ -589,12 +589,12 @@ class BasicGame(object):
 
         use False to not process collision in the physics engine, the function callback will still be called
 
-        The default game prevents anything from colliding with BlackHole or Nebula.
+        The default game prevents anything from colliding with (BlackHole, Nebula, or Star) collidable = False.
 
         shapes is a list of pymunk Shape classes, but you can look at it's id or world_object properties to get useful information.
         """
         for shape in shapes:
-            if isinstance(shape.world_object, BlackHole) or isinstance(shape.world_object, Nebula):
+            if not shape.world_object.collidable:
                 return [ False, [] ]
 
     def world_physics_collision(self, shapes, damage):

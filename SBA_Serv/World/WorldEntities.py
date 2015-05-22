@@ -102,6 +102,8 @@ class Nebula(PhysicalEllipse):
         
         # Nebulas can't be moved by explosions
         self.explodable = False
+
+        self.collidable = False
         
         self.health = PlayerStat(0)
         self.pull = pull
@@ -158,7 +160,18 @@ class BlackHole(Planet):
     def __init__(self, pos, size=96, pull=64):
         super(BlackHole, self).__init__(pos, size, pull, 16)
 
+        self.collidable = False
+
         #self.resources = PlayerStat(0)
+
+class Star(Planet):
+    """
+    Stars are similar to planets/blackholes however cause damage in relation to how close you are to their center
+    """
+    def __init__(self, pos, size=192, pull=32):
+        super(Star, self).__init__(pos, size, pull, 90)
+
+        self.collidable = False
 
 class Asteroid(PhysicalRound):
     """
