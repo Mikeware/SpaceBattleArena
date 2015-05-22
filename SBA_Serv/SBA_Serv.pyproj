@@ -124,7 +124,6 @@
     <Content Include="no_advanced_commands.cfg" />
     <Content Include="no_collide.cfg" />
     <Content Include="no_gravity_drag.cfg" />
-    <Content Include="radarworld_2014.cfg" />
     <Content Include="Tests\test_combatexercise.cfg" />
     <Content Include="Tests\test_asteroidminer.cfg" />
     <Content Include="Tests\test_findthemiddle.cfg" />
@@ -136,7 +135,6 @@
     <Content Include="machine_fullscreen.cfg" />
     <Content Include="machine_test.cfg" />
     <Content Include="basicgame_findthemiddle.cfg" />
-    <Content Include="radarworld.cfg" />
     <Content Include="game_baublehunt.cfg" />
     <Content Include="basicgame_combatexercise.cfg" />
     <Content Include="Tests\test_server.cfg" />
