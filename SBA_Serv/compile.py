@@ -54,7 +54,7 @@ class BuildExe:
         self.project_url = "http://www.mikeware.com/"
  
         #Version of program
-        self.project_version = "1.0"
+        self.project_version = "1.0.1"
  
         #License of the program
         self.license = "GPLv2"

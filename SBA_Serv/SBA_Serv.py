@@ -15,9 +15,9 @@ The full text of the license is available online: http://opensource.org/licenses
 __author__ = "Michael A. Hawker"
 __copyright__ = "Copyright 2012-2015 Mikeware"
 __license__ = "GPLv2"
-__version__ = "1.0"
+__version__ = "1.0.1"
 __email__ = "questions@mikeware.com"
-__status__ = "beta"
+__status__ = "Production"
 
 title = "Space Battle Arena"
 titlever = title + " v" + __version__

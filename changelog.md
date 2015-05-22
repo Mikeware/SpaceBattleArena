@@ -1,3 +1,18 @@
+v1.0.1 : 05/??/2015
+----
+* Added this changelog
+* Functional Updates:
+  * *SteerCommand* can also be **non-blocking** now (optional parameter)
+  * *IdleCommand* costs **no** energy
+  * Survivor game now based on travel to encourage movement.
+  * *Auto-kick* feature for inactive clients (disconnect_on_idle)
+  * Client prints statistics on exit
+  * BasicSpaceship doesn't require shipDestroyed method any more
+  * Point class now has ** and ** helper methods
+* General Client Disconnect and Threading Improvements
+* Log files now append timestamp to name
+* Fix issues with Planets and Nebulas
+* Additional Celestial Body Graphics by Jeff
 
 v1.0 : 05/11/2015 [Season 4] - Open Source
 ----
