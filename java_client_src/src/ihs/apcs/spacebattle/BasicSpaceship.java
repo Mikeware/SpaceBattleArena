@@ -16,8 +16,7 @@ public abstract class BasicSpaceship implements Spaceship<BasicGameInfo> {
 	 * @see ihs.apcs.spacebattle.Spaceship#registerShip(int, int, int)
 	 */
 	@Override
-	abstract public RegistrationData registerShip(int numImages, int worldWidth,
-			int worldHeight);
+	abstract public RegistrationData registerShip(int numImages, int worldWidth, int worldHeight);
 
 	abstract public ShipCommand getNextCommand(BasicEnvironment env);
 	
@@ -33,5 +32,5 @@ public abstract class BasicSpaceship implements Spaceship<BasicGameInfo> {
 	 * @see ihs.apcs.spacebattle.Spaceship#shipDestroyed()
 	 */
 	@Override
-	abstract public void shipDestroyed();	
+	public void shipDestroyed() { }	
 }
