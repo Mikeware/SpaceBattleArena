@@ -51,6 +51,8 @@
     
         <li><a href="Eclipse/index.html">Eclipse</a></li>
     
+        <li><a href="BlueJ/index.html">BlueJ</a></li>
+    
     </ul>
 </aside>
 
@@ -62,7 +64,7 @@
 
 <p>Any Java IDE should be able to be used for Space Battle Arena.</p>
 
-<p>We typically use <a href="http://www.jgrasp.org/">jGRASP</a> or <a href="https://eclipse.org/">Eclipse</a>.  Look to the <strong>left</strong> for some walk-throughs on setting up Space Battle using different IDEs.</p>
+<p>We typically use <a href="http://www.jgrasp.org/">jGRASP</a> or <a href="https://eclipse.org/">Eclipse</a>.  Look to the <strong>right</strong> for some walk-throughs on setting up Space Battle using different IDEs.</p>
 
 <p>The general process involves:</p>
 
@@ -70,13 +72,15 @@
 <li>Adding both the Gson and SpaceBattle .jar files to your classpath.</li>
 <li>Creating a Ship class which either extends the BasicSpaceship abstract class OR<br>
 implements the Spaceship&lt;?&gt; interface.</li>
-<li>Executes the TextClient&#39;s main method from the SpaceBattle.jar file with the following arguments:
+<li>Execute the TextClient&#39;s main method from the SpaceBattle.jar file with the following arguments:
 
 <ol>
 <li>IP address of the server</li>
 <li>name of your Java Ship class</li>
 </ol></li>
 </ol>
+
+<p>Alternatively, to the third step above, create a main method which calls the <em>run</em> method on TextClient with the IP Address and an instance of your Ship class.</p>
 
 <p>We also have a complete set of <a href="java_doc/" target="_blank">Java Docs</a> available.</p>
 
