@@ -29,9 +29,10 @@ We use [jGRASP](http://www.jgrasp.org/) as our IDE of choice when working with H
 Documentation
 ------------------
 * [Client Setup](client/index.html)
+    * <a href="client/java_doc/" target="_blank">Java Docs</a>
     * [jGRASP](client/jGRASP/index.html)
     * [Eclipse](client/Eclipse/index.html)
-    * <a href="client/java_doc/" target="_blank">Java Docs</a>
+    * [BlueJ](client/BlueJ/index.html)    
 * [Server Information](server/index.html)
     * [Server Setup](server/setup.html)
     * [Server Config](server/config.html)
