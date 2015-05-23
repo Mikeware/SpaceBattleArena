@@ -342,7 +342,40 @@ class BasicGame(object):
 
         return False
 
-    def _game_add_ship_for_player(self, netid, force=False, roundstart=False, aiship=None):        
+    def server_process_network_message(self, ship, cmdname, cmddict={}):
+        """
+        Called by the server when it doesn't know how to convert a network message into a Ship Command.
+        This function is used to create commands custom to the game itself.
+        
+        Parameters:
+            ship: Ship object which will process the Command
+            cmdname: string network shortcode for command, set overriding getName in ShipCommand on Client
+            cmddict: dictionary of properties of a command, set using private fields on ShipCommand class
+
+        Return:
+            return a server 'Command' object, a string indicating an error, or None
+        """
+        pass
+
+    def server_process_command(self, ship, command):
+        """
+        Called by the server after a Command object has been formed from a network message.
+        This includes the command processed by a game in server_process_network_message.
+        This function would allow the game to interact with the built-in commands.
+
+        Parameters:
+            ship: Ship object to process this command
+            command: Command object that will be added to the ship's computer by the server
+
+        Return:
+            This method should return the command or a string indicating an error.
+            Returning None would cause a silent failure on the client.
+            In the case of a string, the message would be printed out in the client console.
+            In both error cases, another standard request for a command is made on the client.
+        """
+        return command
+
+    def _game_add_ship_for_player(self, netid, force=False, roundstart=False, aiship=None):
         """
         Called internally when a player registers if autostart is true, or when round_start is called
         Also called when a player respawns.

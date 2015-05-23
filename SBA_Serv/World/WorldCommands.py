@@ -41,6 +41,7 @@ SHIP_CMD_SHIELD = "SHLD"
 SHIP_CMD_CLOAK = "CLOAK"
 
 SHIP_CMD_REPAIR = "REP"
+SHIP_CMD_SCOOP = "SCOOP"
 
 from Messaging import Command, OneTimeCommand
 
@@ -134,6 +135,14 @@ def ConvertNetworkMessageToCommand(ship, cmdname, cmddict):
                 return RepairCommand(ship, cmddict["AMT"])
             else:
                 return "Repair amount must be a positive integer"
+        elif cmdname == SHIP_CMD_SCOOP:
+            if cmddict.has_key("SHORT") and isinstance(cmddict["SHORT"], bool):
+                if cmddict["SHORT"]:
+                    return LowerEnergyScoopCommand(ship)
+                else:
+                    return LowerEnergyScoopCommand(ship, 2)
+            else:
+                return "LowerEnergyScoop expects a boolean to indicate if short or long duration is requested"
         elif cmdname == SHIP_CMD_CLOAK:
             if cmddict.has_key("DUR") and isinstance(cmddict["DUR"], float) and cmddict["DUR"] > 0:
                 return CloakCommand(ship, cmddict["DUR"])
@@ -146,8 +155,6 @@ def ConvertNetworkMessageToCommand(ship, cmdname, cmddict):
             else:
                 return "Shield Command Needs a Positive Float for Duration"
             #eif
-        else:
-            return "Command " + repr(cmdname) + " Not Found"
         #eif
     else:
         return "Command Format Not Recognized"
@@ -439,6 +446,33 @@ class RepairCommand(Command):
         self.left -= amt
         self._obj.health += amt
         self._obj.shield += amt / self._obj.shieldConversionRate
+
+class LowerEnergyScoopCommand(Command):
+    """
+    The LowerEnergyScoopCommand deploys an energy collector under your ship.
+
+    If flying through a celestial body (like a Sun or Nebula), this scoop will collect a massive amount of energy.
+    It will additionally cause some drag.
+
+    If not in an energy source, this command will drain energy quickly.
+
+    It can be run for a 'short period' of 3 seconds or a 'long period' of 6 seconds.  A long period will restore almost all energy from the initial requirements to start this command.
+    """
+    NAME = SHIP_CMD_SCOOP
+
+    def __init__(self, obj, short=1):
+        super(LowerEnergyScoopCommand, self).__init__(obj, LowerEnergyScoopCommand.NAME, 3 * short, required=4)
+        self.energycost = 8
+
+    def execute(self, t):
+        bpull = 500
+        for body in self._obj.in_celestialbody:
+            if isinstance(body, WorldEntities.CelestialBody):
+                self._obj.energy += t * 24
+                bpull = body.pull
+                break
+        if self._obj.body.velocity.length > 0.1:
+            self._obj.body.velocity.length -= (bpull / self._obj.mass) * t
 
 class CloakCommand(Command):
     NAME = SHIP_CMD_CLOAK

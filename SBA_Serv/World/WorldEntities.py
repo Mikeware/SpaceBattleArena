@@ -103,6 +103,8 @@ class Ship(PhysicalRound):
 class CelestialBody:
     """
     Celestial Bodies are a sub-baseclass to denote Entities which have an effect when the player is within their range of influence.
+
+    They can also be 'mined' for energy with the LowerEnergyScoopCommand, though this is most effective in Nebulas and Suns
     """
     
     def collide_start(self, otherobj):
