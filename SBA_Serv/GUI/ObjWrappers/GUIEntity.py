@@ -25,8 +25,12 @@ class GUIEntity(object):
             GUIEntity._healthbar = Cache().getImage("HUD/Health")
             GUIEntity._energybar = Cache().getImage("HUD/Energy")
 
-    def draw(self, surface, flags):        
-        bp = intpos(self._worldobj.body.position)
+    def draw(self, surface, flags, sp=None):
+        if sp == None:
+            bp = intpos(self._worldobj.body.position)
+        else:
+            bp = intpos(sp)
+
         if flags["DEBUG"]:
             # position text
             surface.blit(debugfont().render(repr((bp[0], bp[1])), False, (192, 192, 192)), (bp[0]-30, bp[1]-self._dist-30))

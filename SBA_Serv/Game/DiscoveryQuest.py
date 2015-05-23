@@ -111,6 +111,9 @@ class ScanCommand(Command):
 
         return super(ScanCommand, self).execute(t)
 
+    def __repr__(self):
+        return super(ScanCommand, self).__repr__() + " ID: #%d [%s]" % (self.target, str(self.success))
+
 class OutpostWrapper(GUIEntity):
     def __init__(self, obj, world):
         super(OutpostWrapper, self).__init__(obj, world)

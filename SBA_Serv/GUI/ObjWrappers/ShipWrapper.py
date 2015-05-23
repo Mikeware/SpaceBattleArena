@@ -23,7 +23,9 @@ class ShipGUI(GUIEntity):
             ShipGUI._shieldsurface = Cache().getImage("Ships/Shield")
             ShipGUI._shieldhudsurface = Cache().getImage("HUD/Shield")
 
-    def draw(self, surface, flags):
+    def draw(self, surface, flags, sp=None):
+        if sp == None:
+            sp = self._worldobj.body.position
         # Check if Thrusting or Braking
         state = 0
 
@@ -48,8 +50,8 @@ class ShipGUI(GUIEntity):
         # Rotate to Current Direction
         rotimg = pygame.transform.rotate(self.surface.subsurface(pygame.Rect(64 * state, yoff, 64, 64)), self._worldobj.rotationAngle - 90)
         w, h = rotimg.get_rect().size
-        bp = intpos(self._worldobj.body.position)
-        pos = intpos(self._worldobj.body.position - (w/2, h/2))
+        bp = intpos(sp)
+        pos = intpos(sp - (w/2, h/2))
 
         if len(self._worldobj.lasernodes) > 0:
             for i in range(0, len(self._worldobj.lasernodes)+1, 2):
@@ -85,7 +87,7 @@ class ShipGUI(GUIEntity):
             wrapcircle(surface, (255, 255, 0), bp, self._worldobj.radarRange, self._world.size, 1) # Radar            
 
         if flags["STATS"] and self._worldobj.shield.maximum > 0:
-            # Energy Bar
+            # Shield Bar
             pygame.draw.rect(surface, (0, 0, 96), pygame.Rect(bp[0]-16, bp[1] + 21, 32, 5))
 
             if flags["DEBUG"]:
@@ -95,4 +97,4 @@ class ShipGUI(GUIEntity):
         if flags["GAME"] and self._worldobj.player.score > 0:
             surface.blit(infofont().render(("%.1f" % self._worldobj.player.score) + " Pts", False, (0, 255, 255)), (bp[0]-24, bp[1] + 32))
 
-        super(ShipGUI, self).draw(surface, flags)
+        super(ShipGUI, self).draw(surface, flags, sp)

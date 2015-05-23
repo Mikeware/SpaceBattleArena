@@ -53,9 +53,10 @@ public interface Spaceship<T> {
 	/**
 	 * Notifies a ship that it has been destroyed and respawned.  Ships can use this to track their deaths.
 	 * 
+	 * @version 1.2
 	 * @since 1.1
 	 */
-	public void shipDestroyed();
+	public void shipDestroyed(String lastDestroyedBy);
 	
 	
 	//public void processError(ErrorData error);

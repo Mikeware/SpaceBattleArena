@@ -429,7 +429,8 @@ class BasicGame(object):
         See info in the server docs on adding a subgame.
         """
         return {"SCORE": player.score, "BESTSCORE": player.bestscore, "DEATHS": player.deaths, 
-                "HIGHSCORE": self._highscore, "TIMELEFT": int(self.round_get_time_remaining()), "ROUNDTIME": self.__roundtime}
+                "HIGHSCORE": self._highscore, "TIMELEFT": int(self.round_get_time_remaining()), "ROUNDTIME": self.__roundtime,
+                "LSTDSTRBY": player.lastkilledby}
 
     
     def game_get_extra_radar_info(self, obj, objdata):
@@ -592,6 +593,12 @@ class BasicGame(object):
             if wobj.has_expired() and self.cfg.getboolean("Server", "disconnect_on_idle"):
                 logging.info("Ship #%d killed due to timeout.", wobj.id)
                 wobj.killed = True
+
+            if hasattr(wobj, "killedby") and wobj.killedby != None:
+                if isinstance(wobj.killedby, Ship):
+                    self._players[nid].lastkilledby = wobj.player.name
+                else:
+                    self._players[nid].lastkilledby = friendly_type(wobj.killedby) + " #" + str(wobj.killedby.id)
 
             self.player_died(self._players[nid], (self._players[nid].disconnected or wobj.killed))
 

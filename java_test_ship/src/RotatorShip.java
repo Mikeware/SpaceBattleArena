@@ -36,7 +36,7 @@ public class RotatorShip extends BasicSpaceship {
 	 * @see ihs.apcs.spacebattle.Spaceship#shipDestroyed()
 	 */
 	@Override
-	public void shipDestroyed() {
+	public void shipDestroyed(String lastDestroyedBy) {
 		// TODO Auto-generated method stub
 
 	}

@@ -192,7 +192,7 @@ public class TextClient implements Client {
 			
 			if (shipId != currShipId) {
 				// new id means ship has died; inform ship
-				ship.shipDestroyed();
+				ship.shipDestroyed(((BasicGameInfo)env.getGameInfo()).getLastDestroyedBy());
 				shipId = currShipId;
 			}
 			

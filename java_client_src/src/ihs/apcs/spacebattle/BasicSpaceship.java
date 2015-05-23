@@ -32,5 +32,5 @@ public abstract class BasicSpaceship implements Spaceship<BasicGameInfo> {
 	 * @see ihs.apcs.spacebattle.Spaceship#shipDestroyed()
 	 */
 	@Override
-	public void shipDestroyed() { }	
+	public void shipDestroyed(String lastDestroyedBy) { }	
 }

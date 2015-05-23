@@ -195,7 +195,7 @@ class ThrustCommand(Command):
         #logging.debug("Executing Thrust on %s for %f", repr(obj), t)
         
     def __repr__(self):
-        return super(ThrustCommand, self).__repr__() + " DIR: " + self.direction + " POW: " + repr(self.power)
+        return super(ThrustCommand, self).__repr__() + " DIR: " + self.direction + " POW: %.2f" % self.power
 
     def net_repr(self):
         return (ThrustCommand.NAME, {"DIR": self.direction, "DUR":self.timeToLive, "PER":self.power})
@@ -297,7 +297,7 @@ class WarpCommand(Command):
             self.__stage = 2
             
     def __repr__(self):
-        return super(WarpCommand, self).__repr__() + " DEST: " + repr(self.__dest)
+        return super(WarpCommand, self).__repr__() + " DEST: " + repr(intpos(self.__dest))
             
 class RotateCommand(Command):
     NAME = SHIP_CMD_ROTATE
@@ -334,7 +334,7 @@ class RotateCommand(Command):
         #logging.debug("Executing Rotate on #%d for %f", self._obj.id, t)
         
     def __repr__(self):
-        return super(RotateCommand, self).__repr__() + " DEG: " + repr(self.__deg)
+        return super(RotateCommand, self).__repr__() + " DEG: %d" % self.__deg
 
     def net_repr(self):
         return (RotateCommand.NAME, {"DEG":self.__deg})
@@ -363,7 +363,7 @@ class SteerCommand(Command):
         #logging.debug("Executing Steering on #%d for %f", self._obj.id, t)
         
     def __repr__(self):
-        return super(SteerCommand, self).__repr__() + " DEG: " + repr(self.__deg)
+        return super(SteerCommand, self).__repr__() + " DEG: %d" % self.__deg
 
 class IdleCommand(Command):
     NAME = SHIP_CMD_IDLE
@@ -446,6 +446,9 @@ class RepairCommand(Command):
         self.left -= amt
         self._obj.health += amt
         self._obj.shield += amt / self._obj.shieldConversionRate
+
+    def __repr__(self):
+        return super(RepairCommand, self).__repr__() + " LEFT: %.1f" % self.left
 
 class LowerEnergyScoopCommand(Command):
     """
