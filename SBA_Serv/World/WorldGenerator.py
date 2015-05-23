@@ -58,7 +58,7 @@ def SimpleWorld(game, size, numplanets=1, numblackholes=0, numasteroids=2):
 
     return world
 
-def ConfiguredWorld(game, cfg, pys=True, empty=False):
+def ConfiguredWorld(game, cfg, pys=True, empty=False, objlistener=None):
     """Generates a World from a Configuration Object.
 
     Args:
@@ -70,7 +70,7 @@ def ConfiguredWorld(game, cfg, pys=True, empty=False):
     Returns:
         new World object.
     """
-    world = GameWorld(game, (cfg.getint("World","width"), cfg.getint("World","height")), pys)
+    world = GameWorld(game, (cfg.getint("World","width"), cfg.getint("World","height")), pys, objlistener)
 
     if not empty:
         av_sizes = eval(cfg.get("Nebula", "sizes"))

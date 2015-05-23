@@ -28,7 +28,7 @@ class GameWorld(object):
     represents the virtual space world and the objects in it
     Provides hit detection and radar between objects in the world
     """
-    def __init__(self, game, worldsize, pys=True):
+    def __init__(self, game, worldsize, pys=True, objlistener=None):
         self.__game = game
         self.size = intpos(worldsize)
         self.width = worldsize[0]
@@ -39,7 +39,10 @@ class GameWorld(object):
         self.__objects = ThreadSafeDict()
         self.__addremovesem = threading.Semaphore()
         self.__planets = []
-        self.__objectListener = []
+        if objlistener == None:
+            self.__objectListener = []
+        else:
+            self.__objectListener = [objlistener]
         self.__toremove = []
         self.__toadd = []        
         self.__active = True
@@ -109,7 +112,8 @@ class GameWorld(object):
         logging.debug("Done Explosion") 
         
     def registerObjectListener(self, callback):
-        self.__objectListener.append(callback)
+        if callback not in self.__objectListener:
+            self.__objectListener.append(callback)
 
     def __len__(self):
         return len(self.__objects)

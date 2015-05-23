@@ -17,9 +17,9 @@ from World.WorldGenerator import getPositionAwayFromOtherObjects
 from World.Entities import PhysicalEllipse
 from World.WorldEntities import Nebula
 from GUI.ObjWrappers.GUIEntity import GUIEntity
-from World.WorldMath import intpos, PlayerStat
+from World.WorldMath import intpos, PlayerStat, friendly_type
 from GUI.GraphicsCache import Cache
-from GUI.Helpers import wrapcircle
+from GUI.Helpers import wrapcircle, debugfont
 from World.WorldCommands import WarpCommand
 from World.Commanding import Command
 import logging, random
@@ -28,16 +28,78 @@ GAME_CMD_SCAN = "DQSCN"
 
 class DiscoveryQuestGame(BasicGame):
     """
-    Discovery Quest is an exploration game.
+    Discovery Quest is a game of exploration.
 
+    Ships must 'Scan' various objects in order to accumulate points.  Every type of object in the game is worth a different number of points.
+    Scanning is different from Radar, and requires a precise ID and takes more time and energy to perform.  It also has a limited range which you must stay within for the whole duration of the scan.
+    You CANNOT scan the same object more than once for points.
 
+    Ships must establish an 'Outpost' by scanning it.  Once they have done so, they will start to receive 'Missions'.  They initially won't score points for scanned objects until an Outpost is established.
+    All points for things scanned before making an Outpost will be awarded when an Outpost is established.
+
+    A Mission dictates which objects a ship should go scan.  If a ship goes and scans ONLY those things, bonus points will be awarded when they return to their outpost and Scan it again.
+
+    Scanning their outpost will always give them a new mission.
+
+    Your Ship being destroyed clears/fails your mission, so you must return to your established outpost if you want a new one.
     """
-    
     def __init__(self, cfgobj):
         super(DiscoveryQuestGame, self).__init__(cfgobj)
 
-        self.world.append(Outpost(getPositionAwayFromOtherObjects(self.world, 80, 30)))
+    def game_get_info(self):
+        return {"GAMENAME": "DiscoveryQuest"}
 
+    def player_added(self, player, reason):
+        if reason == BasicGame._ADD_REASON_REGISTER_:
+            player.buffervalue = 0
+            player.outpost = None
+        return super(DiscoveryQuestGame, self).player_added(player, reason)
+
+    def player_died(self, player, gone):
+        if gone and player.outpost != None:
+            player.outpost.home_for.remove(player)
+            player.outpost = None
+
+        if gone:
+            for obj in self.world:
+                if player in obj.scanned_by:
+                    obj.scanned_by.remove(player)
+
+        return super(DiscoveryQuestGame, self).player_died(player, gone)
+
+    def world_create(self, pys = True):
+        world = super(DiscoveryQuestGame, self).world_create(pys)
+        for x in xrange(self.cfg.getint("DiscoveryQuest", "outpost_number")):
+            world.append(Outpost(getPositionAwayFromOtherObjects(world, 80, 30)))
+        return world
+
+    def world_add_remove_object(self, wobj, added):
+        if added:
+            wobj.scanned_by = [] # objects keep track of who scans them
+
+            # give object point value
+            opt = "points_" + friendly_type(wobj).lower()
+            if self.cfg.has_option("DiscoveryQuest", opt):
+                wobj.value = self.cfg.getint("DiscoveryQuest", opt)
+
+        return super(DiscoveryQuestGame, self).world_add_remove_object(wobj, added)
+
+    def game_get_extra_environment(self, player):
+        env = super(DiscoveryQuestGame, self).game_get_extra_environment(player)
+
+        if player.outpost != None:
+            env["OUTPOST"] = intpos(player.outpost.body.position)
+        env["FAILED"] = True
+        env["MISSION"] = []
+
+        return env
+
+    def game_get_extra_radar_info(self, obj, objdata):
+        super(DiscoveryQuestGame, self).game_get_extra_radar_info(obj, objdata)
+
+        # return object's value for scanning
+        if hasattr(obj, "value"):
+            objdata["VALUE"] = obj.value
 
     def server_process_network_message(self, ship, cmdname, cmddict={}):
         """
@@ -67,17 +129,42 @@ class DiscoveryQuestGame(BasicGame):
 
         return command
 
-    def dq_finished_scan(self, ship, id, success):
-        logging.info("Ship #%d finished scan of object #%d and was successful? [%s]", ship.id, id, repr(success))
-        self.player_update_score(ship.player, 5)
+    def dq_finished_scan(self, ship, obj, success):
+        if obj != None:
+            logging.info("Ship #%d finished scan of object #%d and was successful? [%s]", ship.id, obj.id, repr(success))
+        else:
+            logging.info("Ship #%d finished scan of unknown object (never saw id)", ship.id)
 
+        if success:
+            if isinstance(obj, Outpost) and (ship.player in obj.home_for or ship.player.outpost == None):
+                # scanned player's own Outpost, do Mission Stuff HERE
+                if ship.player.outpost == None:
+                    # establish as ship's Outpost
+                    ship.player.outpost = obj
+                    obj.home_for.append(ship.player)
+                    self.player_update_score(ship.player, ship.player.buffervalue) # Score initial points
+                    ship.player.buffervalue = 0
 
-    def gui_draw_game_world_info(self, surface, flags):
+                pass
+            elif ship.player in obj.scanned_by:
+                logging.info("Ship #%d has ALREADY scanned object #%d", ship.id, obj.id)
+            else:
+                obj.scanned_by.append(ship.player)
+                if ship.player.outpost != None:
+                    self.player_update_score(ship.player, obj.value)
+                else: #haven't found outpost, need to buffer points
+                    ship.player.buffervalue += obj.value
+    #end dq_finished_scan
+
+    def gui_draw_game_world_info(self, surface, flags, trackplayer):
         for player in self.game_get_current_player_list():
             if player.object != None:
                 wrapcircle(surface, (0, 255, 255), intpos(player.object.body.position), player.object.radarRange / 3, self.world.size, 1) # Scan Range
 
-        return super(DiscoveryQuestGame, self).gui_draw_game_world_info(surface, flags)
+        if trackplayer != None:
+            for obj in self.world:
+                if trackplayer in obj.scanned_by:
+                    wrapcircle(surface, (0, 255, 255), intpos(obj.body.position), obj.radius + 4, self.world.size, 4)
 
 class ScanCommand(Command):
     """
@@ -91,6 +178,7 @@ class ScanCommand(Command):
         super(ScanCommand, self).__init__(obj, ScanCommand.NAME, 2.5, required=4)
         self.energycost = 4
         self.target = id
+        self.targetobj = None
         self.game = game
         self.success = True
 
@@ -98,13 +186,14 @@ class ScanCommand(Command):
         done = super(ScanCommand, self).isExpired()
         # hook back to game when done scanning
         if done:
-            self.game.dq_finished_scan(self._obj, self.target, self.success)
+            self.game.dq_finished_scan(self._obj, self.targetobj, self.success)
         return done
 
     def execute(self, t):
         if self.success:
             for wobj in self.game.world.getObjectsInArea(self._obj.body.position, self._obj.radarRange / 3):
                 if wobj.id == self.target:
+                    self.targetobj = wobj
                     return super(ScanCommand, self).execute(t)
 
             self.success = False
@@ -124,6 +213,13 @@ class OutpostWrapper(GUIEntity):
         surface.blit(self.surface, (bp[0] - 32, bp[1] - 64))
 
         # TODO: Owner ID Display
+
+        if flags["NAMES"]:
+            text = ""
+            for player in self._worldobj.home_for:
+                text += player.name + " "
+            text = debugfont().render(text, False, (0, 255, 255))
+            surface.blit(text, (bp[0]-text.get_width()/2, bp[1]-18))
 
         #if flags["NAMES"]:
             # HACK TODO: Ship name should be from team
@@ -150,7 +246,7 @@ class Outpost(PhysicalEllipse):
         
         self.shape.group = 1
 
-        self.stored = 0
+        self.home_for = []
 
     def collide_start(self, otherobj):
         return False

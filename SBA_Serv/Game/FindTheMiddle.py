@@ -88,7 +88,7 @@ class FindTheMiddleGame(BasicGame):
 
         super(FindTheMiddleGame, self).game_update(t)
 
-    def gui_draw_game_world_info(self, surface, flags):
+    def gui_draw_game_world_info(self, surface, flags, trackplayer):
         # Draw circles in middle of world
         x = 1
         inc = int(255 / len(self.__objective_radii))

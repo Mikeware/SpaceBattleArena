@@ -220,7 +220,7 @@ class BaubleHuntGame(BasicGame):
 
         super(BaubleHuntGame, self).round_over()
 
-    def gui_draw_game_world_info(self, surface, flags):
+    def gui_draw_game_world_info(self, surface, flags, trackplayer):
         for player in self.game_get_current_player_list():
             if player.object != None:
                 # draw number of objects carried

@@ -42,6 +42,9 @@ public class MwnpMessage {
 			case "KingOfTheBubble":
 				cmdDataTypes.put("\"ENV\"", new TypeToken<Environment<KingOfTheBubbleGameInfo>>() {}.getType());
 				break;
+			case "DiscoveryQuest":
+				cmdDataTypes.put("\"ENV\"", new TypeToken<Environment<DiscoveryQuestGameInfo>>() {}.getType());
+				break;
 			default:
 				cmdDataTypes.put("\"ENV\"", new TypeToken<Environment<BasicGameInfo>>() {}.getType());				
 				break;

@@ -243,7 +243,7 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                 del objects[obj._worldobj.id]
                             
         if flags["GAME"]:
-            game.gui_draw_game_world_info(worldsurface, flags)
+            game.gui_draw_game_world_info(worldsurface, flags, trackplayer)
 
         #region Key/Mouse Event Handling
         for event in pygame.event.get():
@@ -503,53 +503,54 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
 
             if trackplayer == None:
                 windowSurface.blit(font.render("Tracking Off", False, (255, 255, 255)), (resolution[0]/2-36,resolution[1]-12))
-            elif trackplayer.object != None and objects.has_key(trackplayer.object.id):
-                to = trackplayer.object
-                # if we're tracking a ship, let's print some useful info about it.
-                #windowSurface.blit(font.render(trackplayer.name, False, trackplayer.color), (resolution[0] - 200, resolution[1] - 120))
-                windowSurface.fill((128, 128, 128), Rect(resolution[0] - 310, resolution[1] - 120, 300, 110), pygame.BLEND_ADD)
-                pygame.draw.rect(windowSurface, (192, 192, 192, 128), Rect(resolution[0] - 310, resolution[1] - 120, 300, 110), 1)
-                objects[trackplayer.object.id].draw(windowSurface, 
-                                                    {"DEBUG":False,
-                                                     "STATS":False,
-                                                     "NAMES":True,
-                                                     "GAME":False}, Vec2d(resolution[0] - 250, resolution[1] - 64))
-                windowSurface.blit(font.render("%d" % to.body.velocity.length, False, (255, 255, 255)), (resolution[0] - 298, resolution[1] - 86))
 
-                netenergy = 4
-                x = 0
-                for cmd in to.commandQueue:
-                    netenergy -= cmd.energycost
-                    windowSurface.blit(font.render("%.1f (%s" % (cmd.energycost, repr(cmd)[14:]), False, trackplayer.color), (resolution[0] - 300, resolution[1] - 28 - x * 12))
-                    x += 1
-                x = "+"
-                if netenergy < 0:
-                    x = "-"
-                #windowSurface.blit(infofont().render("Energy %d  %s%.1f" % (to.energy.value, x, netenergy), False, trackplayer.color), (resolution[0] - 190, resolution[1] - 110))
+        if trackplayer != None and trackplayer.object != None and objects.has_key(trackplayer.object.id):
+            to = trackplayer.object
+            # if we're tracking a ship, let's print some useful info about it.
+            #windowSurface.blit(font.render(trackplayer.name, False, trackplayer.color), (resolution[0] - 200, resolution[1] - 120))
+            windowSurface.fill((128, 128, 128), Rect(resolution[0] - 310, resolution[1] - 120, 300, 110), pygame.BLEND_ADD)
+            pygame.draw.rect(windowSurface, (192, 192, 192, 128), Rect(resolution[0] - 310, resolution[1] - 120, 300, 110), 1)
+            objects[trackplayer.object.id].draw(windowSurface, 
+                                                {"DEBUG":False,
+                                                    "STATS":False,
+                                                    "NAMES":True,
+                                                    "GAME":False}, Vec2d(resolution[0] - 250, resolution[1] - 64))
+            windowSurface.blit(font.render("%d" % to.body.velocity.length, False, (255, 255, 255)), (resolution[0] - 298, resolution[1] - 86))
 
-                # Energy Bar
-                windowSurface.fill((0, 64, 0), Rect(resolution[0] - 190, resolution[1] - 114, 170, 18))
-                windowSurface.blit(pygame.transform.scale(Cache().getImage("HUD/Energy"), (166, 14)), (resolution[0] - 188, resolution[1] - 112), pygame.Rect(0, 0, 166 * to.energy.percent, 14))
-                windowSurface.blit(infofont().render("%d %s%.1f" % (to.energy.value, x, netenergy), False, (255, 255, 255)), (resolution[0] - 180, resolution[1] - 112))
+            netenergy = 4
+            x = 0
+            for cmd in to.commandQueue:
+                netenergy -= cmd.energycost
+                windowSurface.blit(font.render("%.1f (%s" % (cmd.energycost, repr(cmd)[14:]), False, trackplayer.color), (resolution[0] - 300, resolution[1] - 28 - x * 12))
+                x += 1
+            x = "+"
+            if netenergy < 0:
+                x = "-"
+            #windowSurface.blit(infofont().render("Energy %d  %s%.1f" % (to.energy.value, x, netenergy), False, trackplayer.color), (resolution[0] - 190, resolution[1] - 110))
 
-                # Shield Bar
-                windowSurface.fill((0, 0, 96), Rect(resolution[0] - 190, resolution[1] - 94, 170, 8))
-                windowSurface.blit(pygame.transform.scale(Cache().getImage("HUD/Shield"), (166, 14)), (resolution[0] - 188, resolution[1] - 93), pygame.Rect(0, 0, 166 * to.shield.percent, 6))
-                windowSurface.blit(font.render(repr(int(100 * to.shield.percent)), False, (255, 255, 255)), (resolution[0] - 178, resolution[1] - 95))
+            # Energy Bar
+            windowSurface.fill((0, 64, 0), Rect(resolution[0] - 190, resolution[1] - 114, 170, 18))
+            windowSurface.blit(pygame.transform.scale(Cache().getImage("HUD/Energy"), (166, 14)), (resolution[0] - 188, resolution[1] - 112), pygame.Rect(0, 0, 166 * to.energy.percent, 14))
+            windowSurface.blit(infofont().render("%d %s%.1f" % (to.energy.value, x, netenergy), False, (255, 255, 255)), (resolution[0] - 180, resolution[1] - 112))
 
-                # Health Bar
-                windowSurface.fill((64, 0, 0), Rect(resolution[0] - 190, resolution[1] - 84, 170, 16))
-                windowSurface.blit(pygame.transform.scale(Cache().getImage("HUD/Health"), (166, 14)), (resolution[0] - 188, resolution[1] - 82), pygame.Rect(0, 0, 166 * to.health.percent, 12))
-                windowSurface.blit(infofont().render(repr(int(100 * to.health.percent)), False, (255, 255, 255)), (resolution[0] - 180, resolution[1] - 83))
+            # Shield Bar
+            windowSurface.fill((0, 0, 96), Rect(resolution[0] - 190, resolution[1] - 94, 170, 8))
+            windowSurface.blit(pygame.transform.scale(Cache().getImage("HUD/Shield"), (166, 14)), (resolution[0] - 188, resolution[1] - 93), pygame.Rect(0, 0, 166 * to.shield.percent, 6))
+            windowSurface.blit(font.render(repr(int(100 * to.shield.percent)), False, (255, 255, 255)), (resolution[0] - 178, resolution[1] - 95))
 
-                if trackplayer.lastkilledby != None:
-                    windowSurface.blit(font.render("LD: " + trackplayer.lastkilledby, False, (255, 255, 255)), (resolution[0] - 298, resolution[1] - 118))
+            # Health Bar
+            windowSurface.fill((64, 0, 0), Rect(resolution[0] - 190, resolution[1] - 84, 170, 16))
+            windowSurface.blit(pygame.transform.scale(Cache().getImage("HUD/Health"), (166, 14)), (resolution[0] - 188, resolution[1] - 82), pygame.Rect(0, 0, 166 * to.health.percent, 12))
+            windowSurface.blit(infofont().render(repr(int(100 * to.health.percent)), False, (255, 255, 255)), (resolution[0] - 180, resolution[1] - 83))
+
+            if trackplayer.lastkilledby != None:
+                windowSurface.blit(font.render("LD: " + trackplayer.lastkilledby, False, (255, 255, 255)), (resolution[0] - 298, resolution[1] - 118))
 
         if flags["GAME"]:
-            game.gui_draw_game_screen_info(windowSurface, flags)
+            game.gui_draw_game_screen_info(windowSurface, flags, trackplayer)
 
         if tournamentinfo:
-            game.gui_draw_tournament_bracket(windowSurface, flags)
+            game.gui_draw_tournament_bracket(windowSurface, flags, trackplayer)
 
         if trackplayer != None:
             n = font.render("Tracking: " + trackplayer.name, False, trackplayer.color)

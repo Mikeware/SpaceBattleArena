@@ -282,7 +282,7 @@ class BasicGame(object):
         """
         Called by constructor to create world and when world reset, defaults to the standard world configuration from the config file definitions.
         """
-        return ConfiguredWorld(self, self.cfg, pys)
+        return ConfiguredWorld(self, self.cfg, pys, objlistener=self.world_add_remove_object)
     
     def _world_reset(self):
         """
@@ -698,14 +698,14 @@ class BasicGame(object):
         self._tfont = pygame.font.Font("freesansbold.ttf", 18)
         self._dfont = debugfont()
 
-    def gui_draw_game_world_info(self, surface, flags):
+    def gui_draw_game_world_info(self, surface, flags, trackplayer):
         """
         Called by GUI to have the game draw additional (optional) info in the world when toggled on 'G'.
         (coordinates related to the game world)
         """
         pass
 
-    def gui_draw_game_screen_info(self, screen, flags):
+    def gui_draw_game_screen_info(self, screen, flags, trackplayer):
         """
         Called by GUI to have the game draw additional (optional) info on screen when toggled on 'G'.
         (coordinates related to the screen)
@@ -723,7 +723,7 @@ class BasicGame(object):
             sstat.append(self.player_get_stat_string(player))
         return sstat
 
-    def gui_draw_tournament_bracket(self, screen, flags):
+    def gui_draw_tournament_bracket(self, screen, flags, trackplayer):
         """
         Called by GUI to draw info about the round/tournament (optional) when toggled on 'T'.
         (coordinates related to the screen)
@@ -732,11 +732,13 @@ class BasicGame(object):
             # draw first Bracket
             y = 100
             for x in xrange(self._tournamentnumgroups):
-                c = (128, 128, 128)
-                if x == self._tournamentcurrentgroup:
-                    c = (255, 255, 255)
                 py = y
                 for player in self._tournamentgroups[x]:
+                    c = (128, 128, 128)
+                    if x == self._tournamentcurrentgroup:
+                        c = (255, 255, 255)
+                    if trackplayer != None and player == trackplayer:
+                        c = trackplayer.color
                     screen.blit(self._tfont.render(player.name, False, c), (100, y))
                     y += 24
                                 
@@ -752,7 +754,10 @@ class BasicGame(object):
             y = 96 + ((y - 96) / 2) - len(self._tournamentfinalgroup) * 16
             py = y
             for player in self._tournamentfinalgroup:
-                screen.blit(self._tfont.render(player.name, False, (255, 255, 128)), (435, y))
+                c = (255, 255, 128)
+                if trackplayer != None and player == trackplayer:
+                    c = trackplayer.color
+                screen.blit(self._tfont.render(player.name, False, c), (435, y))
                 y += 24
             pygame.draw.line(screen, (192, 192, 192), (800, py), (810, py))
             pygame.draw.line(screen, (192, 192, 192), (810, py), (810, y))
