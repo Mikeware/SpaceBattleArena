@@ -31,7 +31,7 @@ class Entity(object):
         self.timealive = 0
         self.TTL = None # None means will live 'forever', otherwise if timealive > TTL (time to live), then the object will be automatically cleaned up in gameloop and destroyed.
 
-        self.in_nebula = None
+        self.in_celestialbody = [] # keeps track of celestial bodies this object is in
 
     def collide_start(self, otherobj):
         """
@@ -46,6 +46,17 @@ class Entity(object):
         Called when two objects finish colliding/overlapping (even if they didn't actually 'collide')
         """
         pass
+
+    def take_damage(self, damage, by=None):
+        """
+        Called when damage is taken.
+        """
+        logging.debug("Object #%d took %d damage", self.id, damage)
+        self.health -= damage
+        if self.health.maximum > 0 and self.health.value <= 0:
+            if by != None:
+                logging.info("Object #%d killed by #%d", self.id, by.id)
+            self.killedby = by
 
     def has_expired(self):
         """

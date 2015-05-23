@@ -18,6 +18,7 @@ import math
 import logging
 import sys
 
+from WorldCommands import RaiseShieldsCommand
 from Messaging import MessageQueue
 from Commanding import CommandSystem
 from WorldMath import PlayerStat
@@ -68,6 +69,20 @@ class Ship(PhysicalRound):
         self.commandQueue = MessageQueue(size)
         self.commandQueue.extend(old)
 
+    def take_damage(self, damage, by=None):
+        if self.commandQueue.containstype(RaiseShieldsCommand) and self.shield.value > 0:
+            logging.debug("Shields of #%d absorbed %d damage", self.id, damage * self.shieldDamageReduction)
+            self.shield -= damage * self.shieldDamageReduction
+            super(Ship, self).take_damage(damage * (1.0 - self.shieldDamageReduction), by)
+        else:
+            super(Ship, self).take_damage(damage, by)
+        #eif
+
+        if self.health == 0:
+            self.player.sound = "EXPLODE"
+        elif by != None and (isinstance(by, Torpedo) or isinstance(by, Asteroid)):
+            self.player.sound = "HIT"
+
     def update(self, t):
         super(Ship, self).update(t)
         if len(self.commandQueue) > 0: 
@@ -85,7 +100,22 @@ class Ship(PhysicalRound):
         objData["CURSHIELD"] = self.shield.value
         objData["MAXSHIELD"] = self.shield.maximum
 
-class Nebula(PhysicalEllipse):
+class CelestialBody:
+    """
+    Celestial Bodies are a sub-baseclass to denote Entities which have an effect when the player is within their range of influence.
+    """
+    
+    def collide_start(self, otherobj):
+        self.in_celestialbody.append(otherobj)
+        otherobj.in_celestialbody.append(self)
+
+    def collide_end(self, otherobj):
+        if otherobj in self.in_celestialbody:
+            self.in_celestialbody.remove(otherobj)
+        if self in otherobj.in_celestialbody:
+            otherobj.in_celestialbody.remove(self)
+
+class Nebula(CelestialBody, PhysicalEllipse):
     """
     Nebulas are an odd shape.
 
@@ -109,10 +139,17 @@ class Nebula(PhysicalEllipse):
 
     def collide_start(self, otherobj):
         # TODO: Add 'in' function here and drag
+        super(Nebula, self).collide_start(otherobj)
         return False
 
-    def collide_end(self, otherobj):
-        pass
+    def update(self, t):
+        # Objects in nebulas get slowed down
+        if self.pull > 0:
+            for obj in self.in_celestialbody:
+                if obj.body.velocity.length > 0.1:
+                    obj.body.velocity.length -= (self.pull / obj.mass) * t
+
+        super(Nebula, self).update(t)
 
     def getExtraInfo(self, objData):
         objData["PULL"] = self.pull
@@ -124,8 +161,10 @@ class Nebula(PhysicalEllipse):
         objData["MAJOR"] = self.major
         objData["MINOR"] = self.minor
 
-class Planet(PhysicalRound):
+class Planet(CelestialBody, PhysicalRound):
     """
+    Planets (and similar celestial bodies) have gravity which will pull a player towards their center
+
     TODO:
     Planets have stockpiles of energy which slowly recharge overtime
     Player's can leach energy off of a planet at twice their Energy Recharge Rate (Recover Energy Twice as Fast)
@@ -166,11 +205,22 @@ class BlackHole(Planet):
         super(BlackHole, self).__init__(pos, size, pull, 16)
 
     def collide_start(self, otherobj):
-        # TODO: Add 'in' function here and drag
+        otherobj.bh_timer = 0
+        super(BlackHole, self).collide_start(otherobj)
         return False
 
-    def collide_end(self, otherobj):
-        pass
+    def update(self, t):
+        if self.pull > 0:
+            # Ships in center of BH for too long get crushed
+            for obj in self.in_celestialbody:
+                if isinstance(obj, Ship):
+                    obj.bh_timer += t
+                    if obj.bh_timer >= 5:
+                        obj.health.empty()
+                        obj.player.sound = "EXPLODE"
+                        obj.killedby = self
+                        obj.destroyed = True
+                        obj._world.remove(obj)
 
 class Star(Planet):
     """
@@ -180,11 +230,20 @@ class Star(Planet):
         super(Star, self).__init__(pos, size, pull, 90)
 
     def collide_start(self, otherobj):
-        # TODO: Add 'in' function here and drag
+        super(Star, self).collide_start(otherobj)
         return False
 
-    def collide_end(self, otherobj):
-        pass
+    def update(self, t):
+        # Objects in stars take damage
+        if self.pull > 0:
+            for obj in self.in_celestialbody:
+                if isinstance(obj, Ship):
+                    obj.take_damage(max(0, (self.radius + obj.radius - self.body.position.get_distance(obj.body.position)) * t / 16), self)
+                    if obj.health == 0: #HACK: Need a better way to detect 'damaged' ships as currently only done on collision
+                        obj.destroyed = True
+                        obj._world.remove(obj)
+
+        super(Star, self).update(t)
 
 class Asteroid(PhysicalRound):
     """

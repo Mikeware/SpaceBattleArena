@@ -17,7 +17,7 @@ import thread, threading, time, math
 import pymunk
 import traceback
 from WorldMath import in_circle, wrappos, intpos, friendly_type
-from World.WorldEntities import Planet, Ship, Nebula
+from World.WorldEntities import Planet, Ship
 from WorldCommands import CloakCommand
 from ThreadStuff.ThreadSafe import ThreadSafeDict
 
@@ -39,7 +39,6 @@ class GameWorld(object):
         self.__objects = ThreadSafeDict()
         self.__addremovesem = threading.Semaphore()
         self.__planets = []
-        self.__nebulas = []
         self.__objectListener = []
         self.__toremove = []
         self.__toadd = []        
@@ -96,7 +95,7 @@ class GameWorld(object):
         # when object is destroyed in callback, arbiter may be empty
         if hasattr(arbiter, "shapes"):            
             self.__game.world_physics_end_collision( arbiter.shapes[0].world_object, arbiter.shapes[1].world_object )
-
+        
     def causeExplosion(self, origin, radius, strength, force=False):
         logging.debug("Start Explosion %s, %d, %d [%d]", origin, radius, strength, thread.get_ident())
         origin = pymunk.Vec2d(origin)
@@ -144,8 +143,6 @@ class GameWorld(object):
             added = True
             if isinstance(item, Planet) and item.pull > 0:
                 self.__planets.append(item)
-            elif isinstance(item, Nebula) and item.pull > 0:
-                self.__nebulas.append(item)
         self.__addremovesem.release()
         logging.debug("SEMAPHORE REL append [%d]", thread.get_ident())                
         if added:
@@ -165,6 +162,13 @@ class GameWorld(object):
         logging.debug("Removing Object from World %s [%d]", repr(key), thread.get_ident())
         for objListener in self.__objectListener:
             objListener(key, False)
+
+        # Notify each item this may be in that it's no longer colliding
+        # HACK: Get around issue with PyMunk not telling us shapes when object removed already before separate callback
+        if len(key.in_celestialbody) > 0:
+            for item in key.in_celestialbody[:]:
+                item.collide_end(key)
+
         logging.debug("SEMAPHORE ACQ delitem [%d]", thread.get_ident())
         self.__addremovesem.acquire()            
         if self.__objects.has_key(key.id):
@@ -176,8 +180,6 @@ class GameWorld(object):
             del self.__objects[key.id]
             if key in self.__planets:
                 self.__planets.remove(key)
-            elif key in self.__nebulas:
-                self.__nebulas.remove(key)
         self.__addremovesem.release()           
         logging.debug("SEMAPHORE REL delitem [%d]", thread.get_ident())
 
@@ -189,15 +191,6 @@ class GameWorld(object):
                     self.__space.step(MINIMUM_GAMESTEP_TIME) # Advance Physics Engine
                 
                 tstamp = time.time()
-
-                # find objects in nebulas
-                for neb in self.__nebulas:
-                    for shape in self.__space.shape_query(neb.shape):
-                        # Set value to two, so that if we're still in the nebula
-                        # for another loop, that we don't toggle in/out of nebula between slices
-                        # across threads
-                        if self.has_key(shape.id):
-                            self[shape.id].in_nebula = [2, neb]
 
                 # update all game objects
                 for obj in self: # self is dictionary
@@ -221,13 +214,6 @@ class GameWorld(object):
                     
                     # Update and Run Commands
                     obj.update(lasttime)
-                    if obj.in_nebula != None:
-                        # slow down objects in Nebula
-                        if obj.body.velocity.length > 0.1:
-                            obj.body.velocity.length -= (obj.in_nebula[1].pull / obj.mass) * lasttime
-                        obj.in_nebula[0] -= 1 # decrement count
-                        if obj.in_nebula[0] <= 0:
-                            obj.in_nebula = None
 
                     if obj.has_expired():
                         del self[obj]                        
@@ -308,6 +294,7 @@ class GameWorld(object):
         objData["MASS"] = obj.mass
         objData["HITRADIUS"] = obj.radius #TODO: Move to entites that have this i.e. physicalround?
         objData["TIMEALIVE"] = obj.timealive
+        objData["INBODY"] = (len(obj.in_celestialbody) > 0)
 
         obj.getExtraInfo(objData)
 

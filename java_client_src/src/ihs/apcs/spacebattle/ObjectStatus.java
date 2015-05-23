@@ -40,7 +40,8 @@ public class ObjectStatus {
 	private double ROTATIONSPEED; // Ship Only
 	private double CURSHIELD; // Ship Only
 	private double MAXSHIELD; // Ship Only
-	private int RADARRANGE; // Ship Only	
+	private int RADARRANGE; // Ship Only
+	private boolean INBODY; // Ship or Celestial Body Only;
 	
 	// Game Specific
 	private double VALUE; // Bubble, Bauble or Ship Only
@@ -66,7 +67,7 @@ public class ObjectStatus {
 	/**
 	 * String representation of the Type of Object.
 	 * 
-	 * Could be Ship, Planet, BlackHole, Asteroid, Torpedo,
+	 * Could be Ship, Planet, BlackHole, Star, Nebula, Asteroid, Torpedo,
 	 * Bauble, Bubble, or HomeBase.
 	 * 
 	 * @return
@@ -160,6 +161,13 @@ public class ObjectStatus {
 	 * @return
 	 */
 	public int getRadarRange() { return RADARRANGE; }
+	
+	/**
+	 * Returns true if a ship is in a celestial body's main area of effect (could be false but in gravity well still {@see ObjectStatus#getAxisMajorLength()}).
+	 * A celestial body will return true if it contains an object like a ship.
+	 * @return
+	 */
+	public boolean isInCelestialBody() { return INBODY; }
 	
 	/**
 	 * Gets the point value worth of a Bubble, Bauble, or Ship in a Game.

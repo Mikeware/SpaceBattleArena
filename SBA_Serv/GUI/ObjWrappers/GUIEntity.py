@@ -38,7 +38,7 @@ class GUIEntity(object):
             else: 
                 wrapcircle(surface, (192, 192, 192), bp, self._dist, self._world.size, 2)
 
-            if self._worldobj.in_nebula != None:
+            if len(self._worldobj.in_celestialbody) > 0:
                 wrapcircle(surface, (255, 64, 64), bp, self._dist, self._world.size, 4)
 
             # velocity vector

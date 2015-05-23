@@ -608,29 +608,14 @@ class BasicGame(object):
         """
         logging.debug("Object #%d collided with #%d for %f damage", obj1.id, obj2.id, damage)
         r = []
-        for gobj in (obj1, obj2): # check both objects for shields
-            if isinstance(gobj, Ship) and gobj.commandQueue.containstype(RaiseShieldsCommand) and gobj.shield.value > 0:
-                gobj.shield -= damage * gobj.shieldDamageReduction
-                gobj.health -= damage * (1.0 - gobj.shieldDamageReduction)
-            else:
-                logging.debug("Object #%d took %d damage", gobj.id, damage)
-                gobj.health -= damage
-            #eif
 
+        obj1.take_damage(damage, obj2)
+        obj2.take_damage(damage, obj1)
+
+        for gobj in (obj1, obj2): # check both objects for callback
             if gobj.health.maximum > 0 and gobj.health.value <= 0:
-                gobj.killedby = None
-                for s2 in (obj1, obj2):
-                    if s2 != gobj:
-                        gobj.killedby = s2
-                        break
-
                 logging.info("Object #%d destroyed by %s", gobj.id, repr(gobj.killedby))
                 r.append([self.world_physics_post_collision, gobj, damage])
-                
-                if isinstance(gobj, Ship):
-                    gobj.player.sound = "EXPLODE"
-            elif isinstance(gobj, Ship):
-                gobj.player.sound = "HIT"
             #eif
         if r == []: return None
         return r
@@ -644,13 +629,13 @@ class BasicGame(object):
         dobj: the object destroyed
         para: extra parameters from a previous step, by default collision passes the strength of the collision only
         """
-        strength = damage / 75.0
+        strength = damage * 10
         logging.info("Destroying Object: #%d, Force: %d [%d]", dobj.id, strength, thread.get_ident())
         dobj.destroyed = True
 
         self.world.causeExplosion(dobj.body.position, dobj.radius * 5, strength, True) #Force in physics step
 
-        self.world.remove(dobj)
+        self.world.remove(dobj) # TODO: centralize this and flag to ship take_damage when we move to pymunk 4.0 and don't need to do callback...
 
     def world_physics_end_collision(self, obj1, obj2):
         """
