@@ -29,8 +29,8 @@ public class BaubleHuntGameInfo extends BasicGameInfo {
 	private int STOREDVALUE;
 	
 	/**
-	 * Gets the position of your home base.
-	 * @return the position of your home base
+	 * Gets the position of your home base outpost.
+	 * @return the position of your home base outpost
 	 */
 	public Point getHomeBasePosition() { return new Point(POSITION); }
 	

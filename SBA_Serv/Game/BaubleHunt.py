@@ -75,7 +75,7 @@ class BaubleHuntGame(BasicGame):
     def __addHomeBase(self, player, force=False):
         logging.info("Add HomeBase (%s) for Player %d", repr(force), player.netid)
         # add player bauble
-        b = HomeBase(self.getHomeBasePosition(), player.object)
+        b = Outpost(self.getHomeBasePosition(), player.object)
 
         self.__bases[player.netid] = b
         
@@ -119,10 +119,10 @@ class BaubleHuntGame(BasicGame):
         ship = None
         myhome = None
         # check if this is a ship hitting it's own home base
-        if isinstance(obj1, Ship) and isinstance(obj2, HomeBase) and obj2.owner.id == obj1.id:
+        if isinstance(obj1, Ship) and isinstance(obj2, Outpost) and obj2.owner.id == obj1.id:
             ship = obj1
             myhome = obj2
-        elif isinstance(obj2, Ship) and isinstance(obj1, HomeBase) and obj1.owner.id == obj2.id:
+        elif isinstance(obj2, Ship) and isinstance(obj1, Outpost) and obj1.owner.id == obj2.id:
             ship = obj2
             myhome = obj1
 
@@ -281,9 +281,9 @@ class Bauble(PhysicalRound):
     def getExtraInfo(self, objData):
         objData["VALUE"] = self.value
 
-class HomeBaseWrapper(GUIEntity):
+class OutpostWrapper(GUIEntity):
     def __init__(self, obj, world):
-        super(HomeBaseWrapper, self).__init__(obj, world)
+        super(OutpostWrapper, self).__init__(obj, world)
         self.surface = Cache().getImage("Games/HomeBase")
 
     def draw(self, surface, flags):
@@ -301,15 +301,15 @@ class HomeBaseWrapper(GUIEntity):
             text = debugfont().render(repr(self._worldobj.stored), False, self._worldobj.owner.player.color)
             surface.blit(text, (bp[0]-text.get_width()/2, bp[1]+4))
 
-        super(HomeBaseWrapper, self).draw(surface, flags)
+        super(OutpostWrapper, self).draw(surface, flags)
 
-class HomeBase(PhysicalRound):
-    WRAPPERCLASS = HomeBaseWrapper
+class Outpost(PhysicalRound):
+    WRAPPERCLASS = OutpostWrapper
     """
     Baubles are small prizes worth different amounts of points
     """
     def __init__(self, pos, owner):
-        super(HomeBase, self).__init__(20, 2000, pos)
+        super(Outpost, self).__init__(20, 2000, pos)
         self.shape.elasticity = 0.8
         self.health = PlayerStat(0)
 

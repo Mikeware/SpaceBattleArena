@@ -13,7 +13,8 @@
     <Name>SBA_Serv</Name>
     <RootNamespace>SBA_Serv</RootNamespace>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>machine_test.cfg game_kingofthebubble.cfg</CommandLineArguments>
+    <CommandLineArguments>
+    </CommandLineArguments>
     <InterpreterPath />
     <InterpreterArguments />
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
@@ -33,6 +34,9 @@
   <ItemGroup>
     <Compile Include="compile.py" />
     <Compile Include="Game\BaubleHunt.py" />
+    <Compile Include="Game\DiscoveryQuest.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Game\HungryHungryBaubles.py" />
     <Compile Include="Game\AsteroidMiner.py" />
     <Compile Include="Game\CombatExercise.py" />
@@ -119,6 +123,7 @@
     <Content Include="empty.cfg" />
     <Content Include="game_hungryhungrybaubles.cfg" />
     <Content Include="game_kingofspace.cfg" />
+    <Content Include="game_discoveryquest.cfg" />
     <Content Include="game_kingofthebubble.cfg" />
     <Content Include="no_advanced_commands.cfg" />
     <Content Include="no_collide.cfg" />

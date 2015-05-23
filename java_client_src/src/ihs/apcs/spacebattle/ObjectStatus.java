@@ -68,7 +68,7 @@ public class ObjectStatus {
 	 * String representation of the Type of Object.
 	 * 
 	 * Could be Ship, Planet, BlackHole, Star, Nebula, Asteroid, Torpedo,
-	 * Bauble, Bubble, or HomeBase.
+	 * Bauble, Bubble, or Outpost.
 	 * 
 	 * @return
 	 */
@@ -209,7 +209,7 @@ public class ObjectStatus {
 	public int getAxisMinorLength() { return MINOR; }
 	
 	/**
-	 * Gets the ID of the Owner of this object.  This could be who fired a Torpedo or who owns a HomeBase.
+	 * Gets the ID of the Owner of this object.  This could be who fired a Torpedo or who owns an Outpost (Bauble Hunt).
 	 * @return
 	 */
 	public int getOwnerId() { return OWNERID; }
