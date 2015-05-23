@@ -581,36 +581,34 @@ class BasicGame(object):
                         else:
                             self._game_add_ship_for_player(nid, True)
     
-    def world_physics_pre_collision(self, shapes):
+    def world_physics_pre_collision(self, obj1, obj2):
         """
         Called by the physics engine when two objects just touch for the first time
 
-        return [True/False, [[func, obj, para...]... ] ]
+        return [True/False, [func, obj, para...]... ]
 
         use False to not process collision in the physics engine, the function callback will still be called
 
-        The default game prevents anything from colliding with (BlackHole, Nebula, or Star) collidable = False.
+        return a list with lists of function callback requests for the function, and object, and extra parameters
 
-        shapes is a list of pymunk Shape classes, but you can look at it's id or world_object properties to get useful information.
+        The default game prevents anything from colliding with (BlackHole, Nebula, or Star) collide returns False.
         """
-        for shape in shapes:
-            if not shape.world_object.collidable:
-                return [ False, [] ]
+        logging.debug("Object #%d colliding with #%d", obj1.id, obj2.id)
+        return obj1.collide_start(obj2) and obj2.collide_start(obj1)
 
-    def world_physics_collision(self, shapes, damage):
+    def world_physics_collision(self, obj1, obj2, damage):
         """
         Called by the physics engine when two objects collide
 
-        Return [[func, obj, para...]...]
+        Return [[func, obj, parameter]...]
 
         The default game handles inflicting damage on entities in this step.  
     
         It is best to override world_physics_pre_collision if you want to prevent things from occuring in the first place.
         """
+        logging.debug("Object #%d collided with #%d for %f damage", obj1.id, obj2.id, damage)
         r = []
-        for shape in shapes:
-            #print shape.id, ":",
-            gobj = shape.world_object
+        for gobj in (obj1, obj2): # check both objects for shields
             if isinstance(gobj, Ship) and gobj.commandQueue.containstype(RaiseShieldsCommand) and gobj.shield.value > 0:
                 gobj.shield -= damage * gobj.shieldDamageReduction
                 gobj.health -= damage * (1.0 - gobj.shieldDamageReduction)
@@ -621,11 +619,10 @@ class BasicGame(object):
 
             if gobj.health.maximum > 0 and gobj.health.value <= 0:
                 gobj.killedby = None
-                if len(shapes) == 2:
-                    for s2 in shapes:
-                        if s2 != shape:
-                            gobj.killedby = self.world[s2.id]
-                            break
+                for s2 in (obj1, obj2):
+                    if s2 != gobj:
+                        gobj.killedby = s2
+                        break
 
                 logging.info("Object #%d destroyed by %s", gobj.id, repr(gobj.killedby))
                 r.append([self.world_physics_post_collision, gobj, damage])
@@ -638,7 +635,7 @@ class BasicGame(object):
         if r == []: return None
         return r
 
-    def world_physics_post_collision(self, dobj, para):
+    def world_physics_post_collision(self, dobj, damage):
         """
         Setup and called by world_physics_collision to process objects which have been destroyed as a result of taking too much damage.
 
@@ -647,13 +644,24 @@ class BasicGame(object):
         dobj: the object destroyed
         para: extra parameters from a previous step, by default collision passes the strength of the collision only
         """
-        strength = para[0] / 75.0
+        strength = damage / 75.0
         logging.info("Destroying Object: #%d, Force: %d [%d]", dobj.id, strength, thread.get_ident())
         dobj.destroyed = True
 
-        self.world.causeExplosion(dobj.body.position, dobj.radius * 5, strength / 75.0, True) #Force in physics step
+        self.world.causeExplosion(dobj.body.position, dobj.radius * 5, strength, True) #Force in physics step
 
         self.world.remove(dobj)
+
+    def world_physics_end_collision(self, obj1, obj2):
+        """
+        Called by the physics engine after two objects stop overlapping/colliding.
+
+        This is still called even if the pre_collision returned 'False' and no actual collision was processed
+        """
+        logging.debug("Object #%d no longer colliding with #%d", obj1.id, obj2.id)
+        # notify each object of the finalization of the collision
+        obj1.collide_end(obj2)
+        obj2.collide_end(obj1)
 
     #endregion
 

@@ -35,7 +35,7 @@ class GameWorld(object):
         self.height = worldsize[1]
         self.__space = pymunk.Space()
         #self.__space.add_collision_handler(0, 0, post_solve=self.collideShipStellarObject)
-        self.__space.set_default_collision_handler(begin=self.__beginCollideObject, post_solve=self.__collideObject)
+        self.__space.set_default_collision_handler(begin=self.__beginCollideObject, post_solve=self.__collideObject, separate=self.__endCollideObject)
         self.__objects = ThreadSafeDict()
         self.__addremovesem = threading.Semaphore()
         self.__planets = []
@@ -74,21 +74,28 @@ class GameWorld(object):
         
     def __beginCollideObject(self, space, arbiter):
         if arbiter.is_first_contact:
-            r = self.__game.world_physics_pre_collision( arbiter.shapes )
+            r = self.__game.world_physics_pre_collision( arbiter.shapes[0].world_object, arbiter.shapes[1].world_object )
             if r != None:
-                for i in r[1]:
-                    space.add_post_step_callback(i[0], i[1], i[2:])
-                return r[0]  
+                if r == False or r == True:
+                    return r
+                for i in r[1:]:
+                    space.add_post_step_callback(i[0], i[1], i[2])
+                return r[0]
 
         return True       
         
     def __collideObject(self, space, arbiter):        
         if arbiter.is_first_contact:
-            r = self.__game.world_physics_collision( arbiter.shapes, arbiter.total_impulse.length / 250.0 )
+            r = self.__game.world_physics_collision( arbiter.shapes[0].world_object, arbiter.shapes[1].world_object, arbiter.total_impulse.length / 250.0 )
             if r != None:
                 for i in r:
-                    space.add_post_step_callback(i[0], i[1], i[2:])            
+                    space.add_post_step_callback(i[0], i[1], i[2])
         #eif
+
+    def __endCollideObject(self, space, arbiter):
+        # when object is destroyed in callback, arbiter may be empty
+        if hasattr(arbiter, "shapes"):            
+            self.__game.world_physics_end_collision( arbiter.shapes[0].world_object, arbiter.shapes[1].world_object )
 
     def causeExplosion(self, origin, radius, strength, force=False):
         logging.debug("Start Explosion %s, %d, %d [%d]", origin, radius, strength, thread.get_ident())

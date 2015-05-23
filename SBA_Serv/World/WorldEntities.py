@@ -102,12 +102,17 @@ class Nebula(PhysicalEllipse):
         
         # Nebulas can't be moved by explosions
         self.explodable = False
-
-        self.collidable = False
         
         self.health = PlayerStat(0)
         self.pull = pull
         #self.resources = PlayerStat(random.randint(500, 2000))
+
+    def collide_start(self, otherobj):
+        # TODO: Add 'in' function here and drag
+        return False
+
+    def collide_end(self, otherobj):
+        pass
 
     def getExtraInfo(self, objData):
         objData["PULL"] = self.pull
@@ -160,9 +165,12 @@ class BlackHole(Planet):
     def __init__(self, pos, size=96, pull=64):
         super(BlackHole, self).__init__(pos, size, pull, 16)
 
-        self.collidable = False
+    def collide_start(self, otherobj):
+        # TODO: Add 'in' function here and drag
+        return False
 
-        #self.resources = PlayerStat(0)
+    def collide_end(self, otherobj):
+        pass
 
 class Star(Planet):
     """
@@ -171,7 +179,12 @@ class Star(Planet):
     def __init__(self, pos, size=192, pull=32):
         super(Star, self).__init__(pos, size, pull, 90)
 
-        self.collidable = False
+    def collide_start(self, otherobj):
+        # TODO: Add 'in' function here and drag
+        return False
+
+    def collide_end(self, otherobj):
+        pass
 
 class Asteroid(PhysicalRound):
     """

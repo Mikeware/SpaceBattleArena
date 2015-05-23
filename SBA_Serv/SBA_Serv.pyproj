@@ -13,8 +13,7 @@
     <Name>SBA_Serv</Name>
     <RootNamespace>SBA_Serv</RootNamespace>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>
-    </CommandLineArguments>
+    <CommandLineArguments>machine_test.cfg game_kingofthebubble.cfg</CommandLineArguments>
     <InterpreterPath />
     <InterpreterArguments />
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>

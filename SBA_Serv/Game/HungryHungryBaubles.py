@@ -69,52 +69,40 @@ class HungryHungryBaublesGame(BasicGame):
             w.append(Bauble(getPositionAwayFromOtherObjects(w, 100, 30, force), self.__points_blue))
         logging.info("Done Adding Baubles")
 
-    def world_physics_pre_collision(self, shapes):
-        types = []
-        objs = []
-        for shape in shapes:
-            objs.append(self.world[shape.id])
-            types.append(friendly_type(objs[-1]))
-        
-        if "Ship" in types and "Bauble" in types:
-            b = []
-            ship = None
-            for i in xrange(len(objs)-1, -1, -1):
-                if isinstance(objs[i], Bauble):
-                    b.append(objs[i])
-                    del objs[i]
-                elif isinstance(objs[i], Ship):
-                    ship = objs[i]
+    def world_physics_pre_collision(self, obj1, obj2):
+        if isinstance(obj1, Ship) and isinstance(obj2, Bauble):
+            return [ False, [self.collectBaubles, obj1, obj2] ]
+        elif isinstance(obj2, Ship) and isinstance(obj1, Bauble):
+            return [ False, [self.collectBaubles, obj2, obj1] ]
 
-            return [ False, [ [self.collectBaubles, ship, b] ] ]
+        return super(HungryHungryBaublesGame, self).world_physics_pre_collision(obj1, obj2)
 
-    def collectBaubles(self, ship, para):
+    def collectBaubles(self, ship, bauble):
         logging.info("Collected Baubles Ship #%d", ship.id)
-        for bauble in para[0]:
-            # collect own Bauble?
-            if bauble == self.__baubles[ship.player.netid]:
-                logging.info("Collected Own Bauble #%d", ship.id)
-                self.player_update_score(ship.player, self.__points_extra)
+        # collect own Bauble?
+        if bauble == self.__baubles[ship.player.netid]:
+            logging.info("Collected Own Bauble #%d", ship.id)
+            self.player_update_score(ship.player, self.__points_extra)
 
-                # add new bauble
-                self.__addBauble(ship.player, True)
-            elif bauble in self.__baubles.values():
-                logging.info("Collected Gold Bauble #%d", ship.id)
-                # someone else's bauble
-                for key, value in self.__baubles.iteritems():
-                    if self._players.has_key(key) and value == bauble:
-                        self.__addBauble(self._players[key], True)
-                    elif value == bauble:
-                        # Gold Bauble no longer owned, add back a regular one
-                        self.__addBaubles(self.world, 1, True)
-                    #eif
-            else:
-                logging.info("Collected Regular Bauble #%d", ship.id)
-                self.__addBaubles(self.world, 1, True)
-            #eif
-            self.player_update_score(ship.player, bauble.value)
-            bauble.destroyed = True
-            self.world.remove(bauble)
+            # add new bauble
+            self.__addBauble(ship.player, True)
+        elif bauble in self.__baubles.values():
+            logging.info("Collected Gold Bauble #%d", ship.id)
+            # someone else's bauble
+            for key, value in self.__baubles.iteritems():
+                if self._players.has_key(key) and value == bauble:
+                    self.__addBauble(self._players[key], True)
+                elif value == bauble:
+                    # Gold Bauble no longer owned, add back a regular one
+                    self.__addBaubles(self.world, 1, True)
+                #eif
+        else:
+            logging.info("Collected Regular Bauble #%d", ship.id)
+            self.__addBaubles(self.world, 1, True)
+        #eif
+        self.player_update_score(ship.player, bauble.value)
+        bauble.destroyed = True
+        self.world.remove(bauble)
 
         logging.info("Done Collecting Baubles #%d", ship.id)
 
@@ -175,6 +163,9 @@ class Bauble(PhysicalRound):
         self.shape.group = 1
 
         self.value = value
+
+    def collide_start(self, otherobj):
+        return False
 
     def getExtraInfo(self, objData):
         objData["VALUE"] = self.value

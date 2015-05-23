@@ -31,8 +31,21 @@ class Entity(object):
         self.timealive = 0
         self.TTL = None # None means will live 'forever', otherwise if timealive > TTL (time to live), then the object will be automatically cleaned up in gameloop and destroyed.
 
-        self.collidable = True # determines if anything can 'hit' this object in the default game
         self.in_nebula = None
+
+    def collide_start(self, otherobj):
+        """
+        Called on both objects when a collision first occurs, the other object is the one being hit
+
+        If either object returns False, then no collision will occur
+        """
+        return True
+
+    def collide_end(self, otherobj):
+        """
+        Called when two objects finish colliding/overlapping (even if they didn't actually 'collide')
+        """
+        pass
 
     def has_expired(self):
         """

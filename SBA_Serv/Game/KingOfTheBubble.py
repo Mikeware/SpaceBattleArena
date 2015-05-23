@@ -113,19 +113,6 @@ class KingOfTheBubbleGame(BasicGame):
 
         super(KingOfTheBubbleGame, self).world_add_remove_object(wobj, added)
 
-    # Ignore anything that hits a bubble
-    def world_physics_pre_collision(self, shapes):
-        types = []
-        objs = []
-        for shape in shapes:
-            objs.append(self.world[shape.id])
-            types.append(friendly_type(objs[-1]))
-
-        if "Bubble" in types:
-            return [ False, [] ]
-            
-        return super(KingOfTheBubbleGame, self).world_physics_pre_collision(shapes)
-        
     def game_get_extra_environment(self, player):
         bub = []
         for b in self.__bubbles.values():
@@ -184,9 +171,12 @@ class Bubble(PhysicalRound):
         self.pointspeed = speed
         self.__world = world
         self.__game = game
+
+    def collide_start(self, otherobj):
+        return False
         
     def update(self, t):
-        super(Bubble, self).update(t)         
+        super(Bubble, self).update(t)
         
         ships = []
         for obj in self.__world.getObjectsInArea(self.body.position, self.size + 28): # add the ship radius so it looks like you get points if you overlap

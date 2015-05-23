@@ -115,78 +115,49 @@ class BaubleHuntGame(BasicGame):
             w.append(b)
         logging.info("Done Adding Baubles")
 
-    def world_physics_pre_collision(self, shapes):
-        types = []
-        objs = []
-        for shape in shapes:
-            objs.append(self.world[shape.id])
-            types.append(friendly_type(objs[-1]))
+    def world_physics_pre_collision(self, obj1, obj2):
+        ship = None
+        myhome = None
+        # check if this is a ship hitting it's own home base
+        if isinstance(obj1, Ship) and isinstance(obj2, HomeBase) and obj2.owner.id == obj1.id:
+            ship = obj1
+            myhome = obj2
+        elif isinstance(obj2, Ship) and isinstance(obj1, HomeBase) and obj1.owner.id == obj2.id:
+            ship = obj2
+            myhome = obj1
 
-        if "Ship" in types and "HomeBase" in types:
-            ship = None
-            myhome = None
-            homes = []
-            for obj in objs:
-                if isinstance(obj, HomeBase):
-                    homes.append(obj)
-                elif isinstance(obj, Ship):
-                    ship = obj            
-            if ship != None:
-                logging.info("Ship #%d hit bases %d owner id #%d", ship.id, len(homes), homes[0].owner.id)
-                for h in homes:
-                    if ship.id == h.owner.id:
-                        myhome = h
-                        logging.info("Ship #%d hit their base", ship.id)
-                        break
-                    #eif
-                #next
-            else:
-                logging.error("Ship not found after collision with Ship?")
-            #eif
-            if myhome != None:
-                return [ False, [ [self.depositBaubles, ship, myhome] ] ]
-            else:
-                logging.info("Ship #%d hit some other base", ship.id)
-                return [ False, [] ]            
-        if "Ship" in types and "Bauble" in types:
-            b = []
-            ship = None
-            for obj in objs:
-                if isinstance(obj, Bauble):
-                    b.append(obj)
-                elif isinstance(obj, Ship):
-                    ship = obj
-                #eif
-            #next
+        if ship != None and myhome != None:
+            logging.info("Ship #%d hit their base", ship.id)
+            return [ False, [self.depositBaubles, ship, myhome] ]
 
-            return [ False, [ [self.collectBaubles, ship, b] ] ]
-        elif "HomeBase" in types or "Bauble" in types:
-            return [ False, [] ]
+        # Collect Baubles
+        elif isinstance(obj1, Ship) and isinstance(obj2, Bauble):
+            return [ False, [self.collectBaubles, obj1, obj2] ]
+        elif isinstance(obj2, Ship) and isinstance(obj1, Bauble):
+            return [ False, [self.collectBaubles, obj2, obj1] ]
         
-        return super(BaubleHuntGame, self).world_physics_pre_collision(shapes)
+        return super(BaubleHuntGame, self).world_physics_pre_collision(obj1, obj2)
 
-    def collectBaubles(self, ship, para):
+    def collectBaubles(self, ship, bauble):
         logging.info("Collected Baubles Ship #%d", ship.id)
         sound = True
-        for bauble in para[0]:
-            if len(ship.player.carrying) < self.__maxcarry:
-                ship.player.carrying.append(bauble)
-                if sound:
-                    sound = False
-                    ship.player.sound = "BAUBLE"
+        if len(ship.player.carrying) < self.__maxcarry:
+            ship.player.carrying.append(bauble)
+            if sound:
+                sound = False
+                ship.player.sound = "BAUBLE"
 
-                if self.__baubles.has_key(bauble.id):
-                    del self.__baubles[bauble.id]
+            if self.__baubles.has_key(bauble.id):
+                del self.__baubles[bauble.id]
 
-                self.world.remove(bauble)
-                bauble.destroyed = True
+            self.world.remove(bauble)
+            bauble.destroyed = True
                 
-                self.__addBaubles(self.world, 1, True)
-            #eif
+            self.__addBaubles(self.world, 1, True)
+        #eif
         logging.info("Done Collecting Baubles #%d", ship.id)
 
-    def depositBaubles(self, ship, para):
-        home = para[0]
+    def depositBaubles(self, ship, home):
         logging.info("Player Depositing Baubles #%d", ship.id)
         for b in ship.player.carrying:
             self.player_update_score(ship.player, b.value)
@@ -304,6 +275,9 @@ class Bauble(PhysicalRound):
 
         self.value = value
 
+    def collide_start(self, otherobj):
+        return False
+
     def getExtraInfo(self, objData):
         objData["VALUE"] = self.value
 
@@ -345,6 +319,9 @@ class HomeBase(PhysicalRound):
 
         self.owner = owner
         self.stored = 0
+
+    def collide_start(self, otherobj):
+        return False
 
     def getExtraInfo(self, objData):
         objData["OWNERID"] = self.owner.id
