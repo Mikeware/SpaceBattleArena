@@ -596,7 +596,7 @@ class BasicGame(object):
 
             if hasattr(wobj, "killedby") and wobj.killedby != None:
                 if isinstance(wobj.killedby, Ship):
-                    self._players[nid].lastkilledby = wobj.player.name
+                    self._players[nid].lastkilledby = wobj.killedby.player.name
                 else:
                     self._players[nid].lastkilledby = friendly_type(wobj.killedby) + " #" + str(wobj.killedby.id)
 
