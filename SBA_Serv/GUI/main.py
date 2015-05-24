@@ -26,7 +26,7 @@ from ObjWrappers.AsteroidWrapper import AsteroidGUI
 from ObjWrappers.WeaponWrappers import TorpedoGUI
 from Game.KingOfTheBubble import Bubble, KingOfTheBubbleGame
 from GraphicsCache import Cache
-from World.WorldEntities import Ship, Planet, Asteroid, Torpedo, BlackHole, Nebula
+from World.WorldEntities import Ship, Planet, Asteroid, Torpedo, BlackHole, Nebula, Star
 from Server.MWNL2 import getIPAddress
 from pymunk import Vec2d
 from Helpers import infofont
@@ -318,13 +318,15 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                         logger.removeHandler(mlh)
                         mlh.messages.clear()
                 elif event.key == K_a:
-                    if mousemode not in ("AddAsteroid", "AddPlanet", "AddBlackHole", "AddNebula", "AddBubble"):
+                    if mousemode not in ("AddAsteroid", "AddPlanet", "AddBlackHole", "AddStar", "AddNebula", "AddBubble"):
                         mousemode = "AddAsteroid"
                     elif mousemode == "AddAsteroid":
                         mousemode = "AddPlanet"
                     elif mousemode == "AddPlanet":
                         mousemode = "AddBlackHole"
                     elif mousemode == "AddBlackHole":
+                        mousemode = "AddStar"
+                    elif mousemode == "AddStar":
                         mousemode = "AddNebula"
                     elif mousemode == "AddNebula" and isinstance(game, KingOfTheBubbleGame):
                         mousemode = "AddBubble"
@@ -385,6 +387,9 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                 elif mousemode == "AddBlackHole":
                     mousemode = None
                     world.append(BlackHole((x, y)))
+                elif mousemode == "AddStar":
+                    mousemode = None
+                    world.append(Star((x, y)))
                 elif mousemode == "AddNebula":
                     mousemode = None
                     world.append(Nebula((x, y), (512, 128)))
