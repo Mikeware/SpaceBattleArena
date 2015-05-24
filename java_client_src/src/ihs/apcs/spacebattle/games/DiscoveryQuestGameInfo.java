@@ -32,6 +32,7 @@ public class DiscoveryQuestGameInfo extends BasicGameInfo {
 	private boolean FAILED;
 	private double[] OUTPOST;
    private int[] CURIDS;
+   private int[] SUCIDS;
 	
 	/**
 	 * Gets the position of your home base outpost.
@@ -70,6 +71,15 @@ public class DiscoveryQuestGameInfo extends BasicGameInfo {
     * @return a list of integer ids of objects that are currently being scanned
     */
    public int[] getScanIdsInProgress() { return CURIDS; }
+      
+   /**
+    * Gets an array of ints of ids for objects which a {@link ScanCommand} 
+    *  successfully processed.
+    * Will only be returned immediately after a successful scan and cleared.
+    *
+    * @return a list of integer ids of objects that were scanned successfully
+    */
+   public int[] getLastSuccessfulIds() { return SUCIDS; }
       
 	@Override
 	public String toString() {

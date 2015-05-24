@@ -65,6 +65,7 @@ class DiscoveryQuestGame(BasicGame):
         if reason == BasicGame._ADD_REASON_REGISTER_:
             player.buffervalue = 0
             player.outpost = None
+            player.lastids = []
             
         player.mission = []
         player.scanned = []
@@ -83,6 +84,18 @@ class DiscoveryQuestGame(BasicGame):
                     obj.scanned_by.remove(player)
 
         return super(DiscoveryQuestGame, self).player_died(player, gone)
+
+    def player_get_stat_string(self, player):
+        """
+        Should return a string with information about the player and their current score.
+
+        Defaults to:
+        primary_score  secondary_score : player_name
+        """
+        if player.buffervalue > 0:
+            return "%d %s B: %d" % (getattr(player, self._primary_victory), player.name, getattr(player, self._secondary_victory))
+        else:
+            return "%d %s" % (getattr(player, self._primary_victory), player.name)
 
     def world_create(self, pys = True):
         world = super(DiscoveryQuestGame, self).world_create(pys)
@@ -114,6 +127,9 @@ class DiscoveryQuestGame(BasicGame):
                 if isinstance(cmd, ScanCommand):
                     cur.append(cmd.target)
             env["CURIDS"] = cur
+
+        env["SUCIDS"] = player.lastids
+        player.lastids = []
 
         return env
 
@@ -161,13 +177,15 @@ class DiscoveryQuestGame(BasicGame):
             logging.info("Ship #%d finished scan of unknown object (never saw id)", ship.id)
 
         if success:
+            ship.player.lastids.append(obj.id)
+
             if isinstance(obj, Outpost) and (ship.player in obj.home_for or ship.player.outpost == None):
                 # scanned player's own Outpost, do Mission Stuff HERE
                 if ship.player.outpost == None:
                     # establish as ship's Outpost
                     ship.player.outpost = obj
                     obj.home_for.append(ship.player)
-                    self.player_update_score(ship.player, ship.player.buffervalue) # Score initial points
+                    self.player_update_score(ship.player, ship.player.buffervalue + obj.value * 2) # Score initial points + 2*outpost value for establishing base
                     ship.player.buffervalue = 0
                 
                 if not ship.player.failed and len(ship.player.mission) == 0: # completed mission exactly
@@ -206,9 +224,22 @@ class DiscoveryQuestGame(BasicGame):
                 surface.blit(text, (bp[0]-text.get_width()/2, bp[1] - 6))
 
         if trackplayer != None:
+            curs = []
+            curf = []
+            if trackplayer.object != None:
+                for cmd in trackplayer.object.commandQueue:
+                    if isinstance(cmd, ScanCommand):
+                        if cmd.success:
+                            curs.append(cmd.target)
+                        else:
+                            curf.append(cmd.target)
             for obj in self.world:
                 if trackplayer in obj.scanned_by:
                     wrapcircle(surface, (0, 255, 255), intpos(obj.body.position), obj.radius + 4, self.world.size, 4)
+                if obj.id in curs:
+                    wrapcircle(surface, (255, 255, 0), intpos(obj.body.position), obj.radius + 5, self.world.size, 2)
+                elif obj.id in curf:
+                    wrapcircle(surface, (255, 0, 0), intpos(obj.body.position), obj.radius + 5, self.world.size, 2)
 
 class ScanCommand(Command):
     """
