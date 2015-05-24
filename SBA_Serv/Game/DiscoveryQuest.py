@@ -13,7 +13,7 @@ The full text of the license is available online: http://opensource.org/licenses
 """
 
 from Game import BasicGame
-from World.WorldGenerator import getPositionAwayFromOtherObjects
+from World.WorldGenerator import getPositionAwayFromOtherObjects, cfg_rand_min_max
 from World.Entities import PhysicalEllipse
 from World.WorldEntities import Nebula
 from GUI.ObjWrappers.GUIEntity import GUIEntity
@@ -46,13 +46,29 @@ class DiscoveryQuestGame(BasicGame):
     def __init__(self, cfgobj):
         super(DiscoveryQuestGame, self).__init__(cfgobj)
 
+        self._missions = cfgobj.get("DiscoveryQuest", "mission_objectives").split(",")
+        self.scantime = cfgobj.getfloat("DiscoveryQuest", "scan_time")
+
     def game_get_info(self):
         return {"GAMENAME": "DiscoveryQuest"}
+
+    def player_reset_mission(self, player):
+        # get a number of missions for each thing
+        player.mission = []
+        player.scanned = []
+        player.failed = False
+        for i in xrange(cfg_rand_min_max(self.cfg, "DiscoveryQuest", "mission_num")):
+            player.mission.append(random.choice(self._missions)) # TODO: validate that this player can still scan those types of objects
 
     def player_added(self, player, reason):
         if reason == BasicGame._ADD_REASON_REGISTER_:
             player.buffervalue = 0
             player.outpost = None
+            
+        player.mission = []
+        player.scanned = []
+        player.failed = True
+
         return super(DiscoveryQuestGame, self).player_added(player, reason)
 
     def player_died(self, player, gone):
@@ -89,8 +105,8 @@ class DiscoveryQuestGame(BasicGame):
 
         if player.outpost != None:
             env["OUTPOST"] = intpos(player.outpost.body.position)
-        env["FAILED"] = True
-        env["MISSION"] = []
+        env["FAILED"] = player.failed
+        env["MISSION"] = player.mission
 
         return env
 
@@ -144,11 +160,27 @@ class DiscoveryQuestGame(BasicGame):
                     obj.home_for.append(ship.player)
                     self.player_update_score(ship.player, ship.player.buffervalue) # Score initial points
                     ship.player.buffervalue = 0
+                
+                if not ship.player.failed and len(ship.player.mission) == 0: # completed mission exactly
+                    points = 0
+                    # tally points of scanned objects
+                    for obj in ship.player.scanned:
+                        points += obj.value
+                    self.player_update_score(ship.player, points * self.cfg.getfloat("DiscoveryQuest", "mission_bonus_multiplier"))
 
-                pass
+                self.player_reset_mission(ship.player)
+
             elif ship.player in obj.scanned_by:
                 logging.info("Ship #%d has ALREADY scanned object #%d", ship.id, obj.id)
             else:
+                # mission checks
+                if friendly_type(obj) in ship.player.mission:
+                    ship.player.mission.remove(friendly_type(obj))
+                else:
+                    ship.player.failed = True
+                ship.player.scanned.append(obj)
+
+                # update scores
                 obj.scanned_by.append(ship.player)
                 if ship.player.outpost != None:
                     self.player_update_score(ship.player, obj.value)
@@ -159,7 +191,10 @@ class DiscoveryQuestGame(BasicGame):
     def gui_draw_game_world_info(self, surface, flags, trackplayer):
         for player in self.game_get_current_player_list():
             if player.object != None:
+                bp = intpos(player.object.body.position)
                 wrapcircle(surface, (0, 255, 255), intpos(player.object.body.position), player.object.radarRange / 3, self.world.size, 1) # Scan Range
+                text = debugfont().render("%s [%s]" % (repr(player.mission), player.failed), False, (0, 255, 255))
+                surface.blit(text, (bp[0]-text.get_width()/2, bp[1] - 6))
 
         if trackplayer != None:
             for obj in self.world:
@@ -175,7 +210,7 @@ class ScanCommand(Command):
     NAME = GAME_CMD_SCAN
 
     def __init__(self, obj, game, id):
-        super(ScanCommand, self).__init__(obj, ScanCommand.NAME, 2.5, required=4)
+        super(ScanCommand, self).__init__(obj, ScanCommand.NAME, game.scantime, required=4)
         self.energycost = 4
         self.target = id
         self.targetobj = None
@@ -235,7 +270,7 @@ class OutpostWrapper(GUIEntity):
 class Outpost(PhysicalEllipse):
     WRAPPERCLASS = OutpostWrapper
     """
-    Baubles are small prizes worth different amounts of points
+    Outposts are bases for research.
     """
     def __init__(self, pos):
         super(Outpost, self).__init__((60, 120), 4000, pos)
