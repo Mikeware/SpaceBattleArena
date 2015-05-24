@@ -407,7 +407,7 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
         if len(game.game_get_current_player_list()) == 0 or trackplayer not in game.game_get_current_leader_list():
             trackplayer = None
         
-        if dynamiccamera:
+        if dynamiccamera and len(game.game_get_current_leader_list()) > 0:
             trackplayer = game.game_get_current_leader_list()[0]
             
         if trackplayer != None and trackplayer.object != None:
