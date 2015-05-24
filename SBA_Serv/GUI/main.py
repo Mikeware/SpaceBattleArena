@@ -281,34 +281,27 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                 elif event.key == K_m:
                     mouselock = not mouselock
                 elif event.key == K_PAGEUP and len(game.game_get_current_player_list()) > 0:
-                    if trackplayer == None: 
-                        trackplayer = game.game_get_current_leader_list()[0]
-                    else:
-                        next = False
-                        for player in game.game_get_current_leader_list():
-                            if next:
-                                trackplayer = player
-                                break
-                            if player == trackplayer:
-                                next = True
-                        if not next:
-                            trackplayer = player
-                elif event.key == K_PAGEDOWN and len(game.game_get_current_player_list()) > 0:
                     if trackplayer == None:
                         trackplayer = game.game_get_current_leader_list()[-1]
                     else:
-                        found = False
-                        prev = None
-                        for player in game.game_get_current_leader_list():
-                            if found:
-                                trackplayer = prev
+                        lst = game.game_get_current_leader_list()
+                        for x in xrange(len(lst) - 1, -1, -1):
+                            if lst[x] == trackplayer:
+                                if x == 0:
+                                    x = len(lst)
+                                trackplayer = lst[x-1]
                                 break
-                            if player == trackplayer:
-                                found = True
-                            else:
-                                prev = player
-                        if not found:
-                            trackplayer = player
+                elif event.key == K_PAGEDOWN and len(game.game_get_current_player_list()) > 0:
+                    if trackplayer == None: 
+                        trackplayer = game.game_get_current_leader_list()[0]
+                    else:
+                        lst = game.game_get_current_leader_list()
+                        for x in xrange(len(lst)):
+                            if lst[x] == trackplayer:
+                                if x == len(lst) - 1:
+                                    x = -1
+                                trackplayer = lst[x+1]
+                                break
                 elif event.key == K_END:
                     trackplayer = None
                     mlh.filter = None
@@ -463,7 +456,10 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
         if showplayerlist > 0:
             x = 0
             for i in game.gui_get_player_stats(all=(showplayerlist == 1)):
-                windowSurface.blit(font.render(i, False, (192, 192, 192)), (resolution[0]-300, 64 + 12*x))
+                c = (192, 192, 192)
+                if trackplayer != None and trackplayer.name in i:
+                    c = trackplayer.color
+                windowSurface.blit(font.render(i, False, c), (resolution[0]-300, 64 + 12*x))
                 x += 1
             if showplayerlist == 1:
                 windowSurface.blit(font.render(repr(x) + " Players Connected", False, (192, 192, 192)), (resolution[0]-300, 64 + 12 * x))
