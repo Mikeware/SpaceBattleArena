@@ -93,7 +93,7 @@ class Ship(PhysicalRound):
             self.TTL = self.timealive + 10
         self.energy += self.energyRechargeRate * t
 
-    def getExtraInfo(self, objData):
+    def getExtraInfo(self, objData, player):
         objData["RADARRANGE"] = self.radarRange
         objData["ROTATION"] = self.rotationAngle
         objData["ROTATIONSPEED"] = self.rotationSpeed
@@ -153,7 +153,7 @@ class Nebula(CelestialBody, PhysicalEllipse):
 
         super(Nebula, self).update(t)
 
-    def getExtraInfo(self, objData):
+    def getExtraInfo(self, objData, player):
         objData["PULL"] = self.pull
 
         # Overrides
@@ -193,7 +193,7 @@ class Planet(CelestialBody, PhysicalRound):
         self.gravityFieldLength = size
         #self.resources = PlayerStat(random.randint(500, 2000))
 
-    def getExtraInfo(self, objData):
+    def getExtraInfo(self, objData, player):
         objData["PULL"] = self.pull
 
         objData["MAJOR"] = self.gravityFieldLength
@@ -285,5 +285,5 @@ class Torpedo(PhysicalRound):
         self.body.apply_impulse((math.cos(math.radians(-direction)) * v,
                                  math.sin(math.radians(-direction)) * v), (0,0))
                                  
-    def getExtraInfo(self, objData):
+    def getExtraInfo(self, objData, player):
         objData["OWNERID"] = self.owner.id

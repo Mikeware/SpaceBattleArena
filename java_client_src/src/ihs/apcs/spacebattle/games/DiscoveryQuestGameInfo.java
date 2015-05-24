@@ -31,6 +31,7 @@ public class DiscoveryQuestGameInfo extends BasicGameInfo {
 	private String[] MISSION;
 	private boolean FAILED;
 	private double[] OUTPOST;
+   private int[] CURIDS;
 	
 	/**
 	 * Gets the position of your home base outpost.
@@ -62,6 +63,14 @@ public class DiscoveryQuestGameInfo extends BasicGameInfo {
 	 */
 	public String[] getMissionLeft() { return MISSION; }
 		
+   /**
+    * Gets an array of ints of ids for objects which a {@link ScanCommand} is 
+    *  currently in progress for. 
+    *
+    * @return a list of integer ids of objects that are currently being scanned
+    */
+   public int[] getScanIdsInProgress() { return CURIDS; }
+      
 	@Override
 	public String toString() {
 		return String.format("{Mission: %s; Outpost: %s; Score: %f; Deaths: %d; High Score: %f}", Arrays.toString(getMissionLeft()), getHomeBasePosition(), getScore(), getNumDeaths(), getHighScore());

@@ -48,6 +48,7 @@ class DiscoveryQuestGame(BasicGame):
 
         self._missions = cfgobj.get("DiscoveryQuest", "mission_objectives").split(",")
         self.scantime = cfgobj.getfloat("DiscoveryQuest", "scan_time")
+        self.scanrange = cfgobj.getint("DiscoveryQuest", "scan_range")
 
     def game_get_info(self):
         return {"GAMENAME": "DiscoveryQuest"}
@@ -107,15 +108,23 @@ class DiscoveryQuestGame(BasicGame):
             env["OUTPOST"] = intpos(player.outpost.body.position)
         env["FAILED"] = player.failed
         env["MISSION"] = player.mission
+        if player.object != None:
+            cur = []
+            for cmd in player.object.commandQueue:
+                if isinstance(cmd, ScanCommand):
+                    cur.append(cmd.target)
+            env["CURIDS"] = cur
 
         return env
 
-    def game_get_extra_radar_info(self, obj, objdata):
-        super(DiscoveryQuestGame, self).game_get_extra_radar_info(obj, objdata)
+    def game_get_extra_radar_info(self, obj, objdata, player):
+        super(DiscoveryQuestGame, self).game_get_extra_radar_info(obj, objdata, player)
 
         # return object's value for scanning
         if hasattr(obj, "value"):
             objdata["VALUE"] = obj.value
+
+        objdata["SUCCESS"] = player in obj.scanned_by
 
     def server_process_network_message(self, ship, cmdname, cmddict={}):
         """
@@ -192,7 +201,7 @@ class DiscoveryQuestGame(BasicGame):
         for player in self.game_get_current_player_list():
             if player.object != None:
                 bp = intpos(player.object.body.position)
-                wrapcircle(surface, (0, 255, 255), intpos(player.object.body.position), player.object.radarRange / 3, self.world.size, 1) # Scan Range
+                wrapcircle(surface, (0, 255, 255), intpos(player.object.body.position), self.scanrange, self.world.size, 1) # Scan Range
                 text = debugfont().render("%s [%s]" % (repr(player.mission), player.failed), False, (0, 255, 255))
                 surface.blit(text, (bp[0]-text.get_width()/2, bp[1] - 6))
 
@@ -226,7 +235,7 @@ class ScanCommand(Command):
 
     def execute(self, t):
         if self.success:
-            for wobj in self.game.world.getObjectsInArea(self._obj.body.position, self._obj.radarRange / 3):
+            for wobj in self.game.world.getObjectsInArea(self._obj.body.position, self.game.scanrange):
                 if wobj.id == self.target:
                     self.targetobj = wobj
                     return super(ScanCommand, self).execute(t)

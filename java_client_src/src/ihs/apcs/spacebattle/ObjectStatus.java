@@ -47,6 +47,7 @@ public class ObjectStatus {
 	private double VALUE; // Bubble, Bauble or Ship Only
 	private int NUMSTORED; // Ship Only - Number of Baubles Carried
 	private double HITRADIUS; // Round Only
+   private boolean SUCCESS; // Game boolean for success for this object
 	
 	private int PULL; // Planet/BlackHole/Nebula Only
 	private int MAJOR; // Planet/BlackHole/Nebula Only
@@ -169,6 +170,13 @@ public class ObjectStatus {
 	 */
 	public boolean isInCelestialBody() { return INBODY; }
 	
+   /**
+    * Returns true if this object has a value of success for the current game.
+    * i.e. Successfully scanned in Discovery Quest.
+    * @return
+    */
+   public boolean isSuccessful() { return SUCCESS; }
+   
 	/**
 	 * Gets the point value worth of a Bubble, Bauble, or Ship in a Game.
 	 * @return

@@ -123,8 +123,8 @@ class KingOfTheBubbleGame(BasicGame):
 
         return env
         
-    def game_get_extra_radar_info(self, obj, objdata):
-        super(KingOfTheBubbleGame, self).game_get_extra_radar_info(obj, objdata)
+    def game_get_extra_radar_info(self, obj, objdata, player):
+        super(KingOfTheBubbleGame, self).game_get_extra_radar_info(obj, objdata, player)
         if hasattr(obj, "player"):
             objdata["VALUE"] = obj.player.score
 

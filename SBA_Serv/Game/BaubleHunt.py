@@ -203,11 +203,11 @@ class BaubleHuntGame(BasicGame):
         else:
             return {}
     
-    def game_get_extra_radar_info(self, obj, objdata):
+    def game_get_extra_radar_info(self, obj, objdata, player):
         """
         Called by the World when the obj is being radared
         """
-        super(BaubleHuntGame, self).game_get_extra_radar_info(obj, objdata)
+        super(BaubleHuntGame, self).game_get_extra_radar_info(obj, objdata, player)
         if hasattr(obj, "player"):
             objdata["NUMSTORED"] = len(obj.player.carrying)
 

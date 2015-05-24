@@ -279,7 +279,7 @@ class GameWorld(object):
         #next
         return objList
 
-    def getObjectData(self, obj):
+    def getObjectData(self, obj, player):
         objData = {}
         # Convert Type of Object to String
         objData["TYPE"] = friendly_type(obj)
@@ -300,9 +300,9 @@ class GameWorld(object):
         objData["TIMEALIVE"] = obj.timealive
         objData["INBODY"] = (len(obj.in_celestialbody) > 0)
 
-        obj.getExtraInfo(objData)
+        obj.getExtraInfo(objData, player)
 
-        self.__game.game_get_extra_radar_info(obj, objData)
+        self.__game.game_get_extra_radar_info(obj, objData, player)
 
         return objData
 
@@ -335,7 +335,7 @@ class GameWorld(object):
             elif radarlevel == 3:
                 for obj in objs:
                     if obj.id == target:
-                        radardata = [self.getObjectData(obj)]
+                        radardata = [self.getObjectData(obj, ship.player)]
                         break
             elif radarlevel == 4:
                 # (pos, id, type)
@@ -346,7 +346,7 @@ class GameWorld(object):
             elif radarlevel == 5:
                 radardata = []
                 for e in objs:
-                    radardata.append(self.getObjectData(e))
+                    radardata.append(self.getObjectData(e, ship.player))
                 #next
             #eif
         #eif
@@ -355,7 +355,7 @@ class GameWorld(object):
         if getMessages:
             msqQueue = list(ship.messageQueue)
 
-        return {"SHIPDATA": self.getObjectData(ship),
+        return {"SHIPDATA": self.getObjectData(ship, ship.player),
                 "RADARLEVEL": radarlevel,
                 "RADARDATA": radardata,
                 "GAMEDATA": self.__game.game_get_extra_environment(ship.player),

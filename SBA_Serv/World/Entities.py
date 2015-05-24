@@ -76,11 +76,12 @@ class Entity(object):
         #self.energy += self.energyRechargeRate * t
         #self.position = self.velocity.updatePosition(self.position, t)
     
-    def getExtraInfo(self, objData):
+    def getExtraInfo(self, objData, player):
         """Method called by world to get extra Radar info about a particular Entity.
 
         Args:
             objData: dictionary[string] = obj Should add keys to objData for extra properties object has over base properties.
+            player: player requesting the extra info
 
         See WorldMap.getObjectData.
         """

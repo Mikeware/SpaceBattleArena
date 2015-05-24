@@ -433,7 +433,7 @@ class BasicGame(object):
                 "LSTDSTRBY": player.lastkilledby}
 
     
-    def game_get_extra_radar_info(self, obj, objdata):
+    def game_get_extra_radar_info(self, obj, objdata, player):
         """
         Called by the World when the obj is being radared, should add new properties to the objdata.
 
