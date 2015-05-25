@@ -66,7 +66,7 @@ public class ObjectStatus {
 	/**
 	 * String representation of the Type of Object.
 	 * 
-	 * Could be Ship, Planet, BlackHole, Asteroid, Torpedo,
+	 * Could be Ship, Planet, BlackHole, Asteroid, Torpedo, Nebula,
 	 * Bauble, Bubble, or HomeBase.
 	 * 
 	 * @return
