@@ -22,9 +22,9 @@
         <h2>A Programming Game in Java for AP CS Students.</h2>
 
         <section id="downloads">
-          <a href="https://www.github.com/Mikeware/SpaceBattleArena/blob/master/bin/SpaceBattle.jar?raw=true" class="btn">Download Client Jar</a>
+          <a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.0.1/SpaceBattle.jar" class="btn">Download Client Jar</a>
           <a href="/SpaceBattleArena/client/java_doc/" class="btn">Java Docs</a>
-          <a href="https://www.github.com/Mikeware/SpaceBattleArena/blob/master/bin/SBAserver.zip?raw=true" class="btn">Download Server (Windows)</a>
+          <a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.0.1/SBAserver.zip" class="btn">Download Server (Windows)</a>
           <a href="https://www.github.com/Mikeware/SpaceBattleArena" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
         </section>
       </div>
@@ -183,6 +183,10 @@ etc...
 <h3 id="allow_re-entry-=-boolean">allow_re-entry = boolean</h3>
 
 <p>Can a player join the server again if they had connected previously and disconnected?</p>
+
+<h3 id="disconnect_on_idle-=-boolean">disconnect_on_idle = boolean</h3>
+
+<p>Determines if a player&#39;s ship should be disconnected if it doesn&#39;t issue a command periodically (within 10 seconds of the last command being executed finishing).  <strong>Note:</strong> this will not prevent a ship from disconnecting if the actual socket is detected to be closed.</p>
 
 <h3 id="disable_commands-=-string">disable_commands = string</h3>
 

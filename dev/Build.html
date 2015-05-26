@@ -38,43 +38,38 @@
             
             
                 
-                    &nbsp<span><a href="index.html">Competitions</a></span>
+                    &nbsp<span><a href="index.html">Development</a></span>
                 
             
-            <span>Basic Games</span>
+            <span>Building Space Battle Arena</span>
         </div>
     </nav>
     
 
     
-<aside>
-    <h1>Basic Games</h1>
-    <ul>
-    
-        <li><a href="findthemiddle.html">Find The Middle</a></li>
-    
-        <li><a href="survivor.html">Survivor</a></li>
-    
-        <li><a href="asteroidminer.html">Asteroid Miner</a></li>
-    
-        <li><a href="combatexercise.html">Combat Exercise</a></li>
-    
-    </ul>
-</aside>
-
 
 
     <div class="container">
       <section id="main_content">
-        <h1 id="basic-games">Basic Games</h1>
+        <h1 id="building-space-battle-arena">Building Space Battle Arena</h1>
 
-<p>Basic games can be played with the default implementation of BasicSpaceship without having to worry about the generics or casting needed to play games passing back additional information.</p>
+<p>This document will explain how to build the client and server Space Battle Arena packages.</p>
 
-<p>All basic games use the <a href="http://mikeware.github.io/SpaceBattleArena/client/java_doc/ihs/apcs/spacebattle/BasicGameInfo.html">BasicGameInfo</a> object provided in the <a href="http://mikeware.github.io/SpaceBattleArena/client/java_doc/ihs/apcs/spacebattle/BasicSpaceship.html">BasicSpaceship</a> abstract class.  </p>
+<h2 id="dependencies">Dependencies</h2>
 
-<p>This object contains common elements like a player&#39;s score, best score, number of deaths, or information about the game itself such as the highest score, the time left in the round, or the total time of the round.</p>
+<p>Make sure you have downloaded and installed all the Python Server dependencies listed on the <a href="index.html">Development Guide Home</a>.</p>
 
-<p>Basic games also have a lot of configuration available through the <a href="../server/config.html#game">game configuration section</a>.</p>
+<p>Download the <a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.0.1/gson-2.2.jar">gson-2.2.jar</a> and place it in the root of your downloaded copy of Space Battle Arena <a href="https://github.com/Mikeware/SpaceBattleArena.git">repository</a>.</p>
+
+<h2 id="building">Building</h2>
+
+<p>Make sure <strong>javac</strong>, <strong>javadoc</strong>, and <strong>python</strong> are part of your environment path.  Open up a command window at the root of the repository and type &#39;compile&#39;.</p>
+
+<p>If all is successful, a &#39;bin&#39; directory should appear and contain a SpaceBattle.jar file and a SBAServer.zip file.</p>
+
+<p>Updated java docs will be copied to doc/client/java_doc.</p>
+
+<p>For info on building the website see <a href="SetupGitHubPages.html">Setup GitHub Pages</a>.</p>
 
       </section>
     </div>
