@@ -46,11 +46,6 @@ public class ExampleShip extends BasicSpaceship {
     {
         return new IdleCommand(0.1);
     }
-    
-    @Override
-    public void shipDestroyed()
-    {
-    }
 }
 </code></pre>
 
@@ -58,7 +53,7 @@ public class ExampleShip extends BasicSpaceship {
 
 	![Classpath Settings](Classpath.png)
 	
-2. Add the **[gson-2.2.jar](http://github.com/Mikeware/SpaceBattleArena/blob/master/bin/gson-2.2.jar?raw=true)** and **[SpaceBattle.jar](http://github.com/Mikeware/SpaceBattleArena/blob/master/bin/SpaceBattle.jar?raw=true)** under the PATH -> CLASSPATHS tab using the New button:
+2. Add the **[gson-2.2.jar]({{ site.releasepath }}/gson-2.2.jar)** and **[SpaceBattle.jar]({{ site.releasepath }}/SpaceBattle.jar)** under the PATH -> CLASSPATHS tab using the New button:
 
 	![Jars in Classpath](AddJars.png)
 	

@@ -39,4 +39,5 @@ Space Battle was built against the following versions of libraries:
     * [PyMunk 3.0.0](https://pypi.python.org/pypi/pymunk/3.0.0)
     * [PyGame 1.9.1](http://www.pygame.org/download.shtml)
     * [Py2Exe 0.6.9](http://sourceforge.net/projects/py2exe/files/py2exe/0.6.9/) (for server executable build)
- 
+
+See the [Development Guide](http://mikeware.github.io/SpaceBattleArena/dev/) for more information on extending Space Battle Arena.

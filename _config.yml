@@ -6,6 +6,7 @@ baseurl: /SpaceBattleArena
 url: http://mikeware.github.io/SpaceBattleArena
 
 githuburl: https://www.github.com/Mikeware/SpaceBattleArena
+releasepath: https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.0.1
 
 markdown: redcarpet
 redcarpet:
