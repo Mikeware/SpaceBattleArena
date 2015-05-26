@@ -21,6 +21,7 @@ from Game.Game import BasicGame
 from Game.AsteroidMiner import AsteroidMinerGame
 from Game.CombatExercise import CombatExerciseGame
 from Game.FindTheMiddle import FindTheMiddleGame
+from Game.Survivor import SurvivorGame
 
 from ConfigParser import ConfigParser
 from World.WorldGenerator import ConfiguredWorld
@@ -35,7 +36,7 @@ import time
 class TestGame(BasicGame):
 
     def world_create(self, pys = True):
-        return self._testcase.world_create(ConfiguredWorld(self, self.cfg, empty=True))
+        return self._testcase.world_create(ConfiguredWorld(self, self.cfg, pys, empty=True))
 
 #TODO: Investigate the best way to inject this wrapper around any Subgame
 class TestBasicGame(TestGame):
@@ -67,6 +68,12 @@ class TestCombatExerciseGame(TestGame, CombatExerciseGame):
 
         super(TestCombatExerciseGame, self).__init__(cfg)
 
+class TestSurvivorGame(TestGame, SurvivorGame):
+    def __init__(self, cfg, testcase):
+        self._testcase = testcase
+
+        super(TestSurvivorGame, self).__init__(cfg)
+
 class SBAWorldTestCase(unittest.TestCase):
     """
     Base Test Case which sets up a blank world and game for testing without the server or UI.
@@ -82,8 +89,12 @@ class SBAWorldTestCase(unittest.TestCase):
 
         self.cfg = ConfigParser()
         self.cfg.readfp(open("Tests/defaulttest.cfg"))
-        if self.get_config_filename() != None:
-            self.cfg.readfp(open("Tests/"+self.get_config_filename()))
+        configs = self.get_config_filename()
+        if configs != None:
+            if isinstance(configs, str):
+                configs = [configs]
+            for config in configs:
+                self.cfg.readfp(open("Tests/"+config))
         self.game = globals()["Test"+self.cfg.get("Game", "game")+"Game"](self.cfg, self)
         logging.info("Using Game %s", repr(self.game))
 

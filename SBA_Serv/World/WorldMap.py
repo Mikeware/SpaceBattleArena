@@ -29,6 +29,12 @@ class GameWorld(object):
     Provides hit detection and radar between objects in the world
     """
     def __init__(self, game, worldsize, pys=True):
+        """
+        Parameters:
+            game: game object that manages rules for world
+            worldsize: tuple of world width,height
+            pys: flag to indicate whether this should be the main world running a physics/game loop or not
+        """
         self.__game = game
         self.size = intpos(worldsize)
         self.width = worldsize[0]
@@ -47,9 +53,10 @@ class GameWorld(object):
         self.__pys = pys
         self.gameerror = False
 
-        logging.info("Initialized World of size %s, starting game loop...", repr(worldsize))
+        logging.info("Initialized World of size %s", repr(worldsize))
         if pys:
-            threading.Thread(None, self.__THREAD__gameloop, "WorldMap_gameloop").start()
+            logging.debug("Started gameloop for World %s", repr(self))
+            threading.Thread(None, self.__THREAD__gameloop, "WorldMap_gameloop_" + repr(self)).start()
 
     def mid_point(self, xoff = 0, yoff = 0):
         return intpos((self.width / 2 + xoff, self.height / 2 + yoff))
@@ -125,26 +132,27 @@ class GameWorld(object):
         Call to add an object to the game world from threads outside the game loop
         """
         logging.debug("Append Object to World %s [%d]", repr(item), thread.get_ident())
-        added = False        
+        for objListener in self.__objectListener:
+            objListener(item, True)
+
         logging.debug("SEMAPHORE ACQ append [%d]", thread.get_ident())
         self.__addremovesem.acquire()
         if not self.__objects.has_key(item.id):
             self.__objects[item.id] = item
             if pys:
                 item.addToSpace(self.__space)
+            elif item in self.__toremove:
+                self.__toremove.remove(item)
             else:
                 self.__toadd.append(item)
-            added = True
-            if isinstance(item, Planet) and item.pull > 0:
+
+            if isinstance(item, Planet) and not item in self.__planets and item.pull > 0:
                 self.__planets.append(item)
-            elif isinstance(item, Nebula) and item.pull > 0:
+            elif isinstance(item, Nebula) and not item in self.__nebulas and item.pull > 0:
                 self.__nebulas.append(item)
         self.__addremovesem.release()
         logging.debug("SEMAPHORE REL append [%d]", thread.get_ident())                
-        if added:
-            for objListener in self.__objectListener:
-                objListener(item, True)
-                
+
     def remove(self, item):
         """
         Call to remove an object from the game world
@@ -156,13 +164,13 @@ class GameWorld(object):
         
     def __delitem__(self, key, pys=False):
         logging.debug("Removing Object from World %s [%d]", repr(key), thread.get_ident())
-        for objListener in self.__objectListener:
-            objListener(key, False)
         logging.debug("SEMAPHORE ACQ delitem [%d]", thread.get_ident())
         self.__addremovesem.acquire()            
         if self.__objects.has_key(key.id):
             if pys:
                 key.removeFromSpace(self.__space)
+            elif key in self.__toadd:
+                self.__toadd.remove(key)
             else:
                 self.__toremove.append(key)
             
@@ -173,6 +181,10 @@ class GameWorld(object):
                 self.__nebulas.remove(key)
         self.__addremovesem.release()           
         logging.debug("SEMAPHORE REL delitem [%d]", thread.get_ident())
+        
+        # Notify after removed, in case re-add same object
+        for objListener in self.__objectListener:
+            objListener(key, False)
 
     def __THREAD__gameloop(self):
         lasttime = MINIMUM_GAMESTEP_TIME
