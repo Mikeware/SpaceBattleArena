@@ -278,7 +278,7 @@ class Bauble(PhysicalRound):
     def collide_start(self, otherobj):
         return False
 
-    def getExtraInfo(self, objData):
+    def getExtraInfo(self, objData, player):
         objData["VALUE"] = self.value
 
 class OutpostWrapper(GUIEntity):
@@ -323,7 +323,7 @@ class Outpost(PhysicalRound):
     def collide_start(self, otherobj):
         return False
 
-    def getExtraInfo(self, objData):
+    def getExtraInfo(self, objData, player):
         objData["OWNERID"] = self.owner.id
         
     def newOwner(self, ship):

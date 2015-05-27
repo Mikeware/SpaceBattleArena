@@ -197,7 +197,7 @@ class Bubble(PhysicalRound):
         if self.size <= self.basesize:
             self.TTL = self.timealive - 1 # schedule this object for removal        
 
-    def getExtraInfo(self, objData):
+    def getExtraInfo(self, objData, player):
         objData["VALUE"] = (self.size - self.basesize)
         # Overwrite the 'radius' to show where you can be hit
         objData["HITRADIUS"] = self.size + 28

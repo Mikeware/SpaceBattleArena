@@ -17,7 +17,7 @@ import thread, threading, time, math
 import pymunk
 import traceback
 from WorldMath import in_circle, wrappos, intpos, friendly_type
-from World.WorldEntities import Planet, Ship
+from World.WorldEntities import Influential, Ship
 from WorldCommands import CloakCommand
 from ThreadStuff.ThreadSafe import ThreadSafeDict
 
@@ -38,7 +38,7 @@ class GameWorld(object):
         self.__space.set_default_collision_handler(begin=self.__beginCollideObject, post_solve=self.__collideObject, separate=self.__endCollideObject)
         self.__objects = ThreadSafeDict()
         self.__addremovesem = threading.Semaphore()
-        self.__planets = []
+        self.__influential = []
         if objlistener == None:
             self.__objectListener = []
         else:
@@ -145,8 +145,8 @@ class GameWorld(object):
             else:
                 self.__toadd.append(item)
             added = True
-            if isinstance(item, Planet) and item.pull > 0:
-                self.__planets.append(item)
+            if isinstance(item, Influential) and item.influence_range > 0:
+                self.__influential.append(item)
         self.__addremovesem.release()
         logging.debug("SEMAPHORE REL append [%d]", thread.get_ident())                
         if added:
@@ -182,8 +182,8 @@ class GameWorld(object):
                 self.__toremove.append(key)
             
             del self.__objects[key.id]
-            if key in self.__planets:
-                self.__planets.remove(key)
+            if key in self.__influential:
+                self.__influential.remove(key)
         self.__addremovesem.release()           
         logging.debug("SEMAPHORE REL delitem [%d]", thread.get_ident())
 
@@ -210,10 +210,10 @@ class GameWorld(object):
 
                     # Apply Gravity for Planets
                     if obj.explodable:
-                        for planet in self.__planets:
-                            for point in wrappos(obj.body.position, planet.gravityFieldLength, self.size):
-                                if in_circle(planet.body.position, planet.gravityFieldLength, point):                        
-                                    obj.body.apply_impulse((point - planet.body.position) * -planet.pull * lasttime, (0,0))
+                        for influencer in self.__influential:
+                            for point in wrappos(obj.body.position, influencer.influence_range, self.size):
+                                if in_circle(influencer.body.position, influencer.influence_range, point):
+                                    influencer.apply_influence(obj, point, lasttime)
                                     break
                     
                     # Update and Run Commands

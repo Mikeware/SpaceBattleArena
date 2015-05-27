@@ -13,13 +13,12 @@ Server - GUI\Graphics and GUI\Sounds
 ------------------------------------
 IMPORTANT NOTE: 
 
-The GUI\Sounds directory contains sounds which are licensed for distribution with this project; however, they are not licensed for general distribution.  
+The GUI\Sounds directory contains public domain CC0 sounds from http://freesound.org
 
-Therefore, you may **not** redistribute the sounds outside the confines of this project.
+All GUI\Graphics files were created under supervision by the project owner with the exception of the GUI\Graphics\Ships\ship*.png files.
 
-All GUI\Graphics files were created by the project owner with the exception of the GUI\Graphics\Ships\ship*.png files.
-
-These ships were created by our students of previous years and contributed with their permission.
+These ships were created by our students of previous years and contributed with their permission.  If you believe there
+to be a problem with an image, please let us know and it will be removed.
 
 
 Gson-2.2.jar and Gson-2.2-javadoc.jar are third-party libraries from Google licensed under the Apache license.

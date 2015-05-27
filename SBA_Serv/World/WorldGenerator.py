@@ -3,7 +3,7 @@ Module with functions related to World Generation. (i.e. placement of Planets, B
 """
 
 from World.WorldMap import GameWorld
-from World.WorldEntities import Planet, BlackHole, Asteroid, Nebula, Star
+from World.WorldEntities import Planet, BlackHole, Asteroid, Nebula, Star, Dragon
 import random
 
 def getPositionAwayFromOtherObjects(world, radius, edgebuffer, force=False):
@@ -93,6 +93,10 @@ def ConfiguredWorld(game, cfg, pys=True, empty=False, objlistener=None):
         for ast in xrange(cfg.getint("Asteroid", "number")):
             world.append(Asteroid(getPositionAwayFromOtherObjects(world, 100, 30)))
         #next ast
+
+        for dragon in xrange(cfg.getint("Dragon", "number")):
+            world.append(Dragon(getPositionAwayFromOtherObjects(world, 128, 16), cfg_rand_min_max(cfg, "Dragon", "range"), cfg_rand_min_max(cfg, "Dragon", "attack_speed"), cfg_rand_min_max(cfg, "Dragon", "health")))
+        #next dragon
     #eif
 
     return world

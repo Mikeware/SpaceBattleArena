@@ -79,9 +79,15 @@ class Ship(PhysicalRound):
         #eif
 
         if self.health == 0:
-            self.player.sound = "EXPLODE"
-        elif by != None and (isinstance(by, Torpedo) or isinstance(by, Asteroid)):
-            self.player.sound = "HIT"
+            if by != None and isinstance(by, Star):
+                self.player.sound = "BURN"
+            else:
+                self.player.sound = "EXPLODE"
+        elif by != None:
+            if isinstance(by, Dragon):
+                self.player.sound = "CHOMP"
+            elif not isinstance(by, Star):
+                self.player.sound = "HIT"
 
     def update(self, t):
         super(Ship, self).update(t)
@@ -104,7 +110,7 @@ class CelestialBody:
     """
     Celestial Bodies are a sub-baseclass to denote Entities which have an effect when the player is within their range of influence.
 
-    They can also be 'mined' for energy with the LowerEnergyScoopCommand, though this is most effective in Nebulas and Suns
+    They can also be 'mined' for energy with the LowerEnergyScoopCommand, though this is most effective in Nebulas and Stars
     """
     
     def collide_start(self, otherobj):
@@ -116,6 +122,20 @@ class CelestialBody:
             self.in_celestialbody.remove(otherobj)
         if self in otherobj.in_celestialbody:
             otherobj.in_celestialbody.remove(self)
+
+class Influential:
+    """
+    Influential bodies are those which have a circular area of effect behind their hit radius (like gravity for planets).
+
+    They should have an 'influence_range' property
+    """
+    def apply_influence(self, otherobj, mapped_pos, t):
+        """
+        This function will get called once for every object within the range of influence.
+
+        The mapped_position may not be the actual position of the object, but the modified coordinates outside the edge of the world border to help with math.
+        """
+        pass
 
 class Nebula(CelestialBody, PhysicalEllipse):
     """
@@ -163,7 +183,7 @@ class Nebula(CelestialBody, PhysicalEllipse):
         objData["MAJOR"] = self.major
         objData["MINOR"] = self.minor
 
-class Planet(CelestialBody, PhysicalRound):
+class Planet(CelestialBody, Influential, PhysicalRound):
     """
     Planets (and similar celestial bodies) have gravity which will pull a player towards their center
 
@@ -190,14 +210,18 @@ class Planet(CelestialBody, PhysicalRound):
         # Planet specific
         self.health = PlayerStat(0)
         self.pull = pull
-        self.gravityFieldLength = size
+        self.influence_range = size
         #self.resources = PlayerStat(random.randint(500, 2000))
 
     def getExtraInfo(self, objData, player):
         objData["PULL"] = self.pull
 
-        objData["MAJOR"] = self.gravityFieldLength
-        objData["MINOR"] = self.gravityFieldLength
+        objData["MAJOR"] = self.influence_range
+        objData["MINOR"] = self.influence_range
+
+    def apply_influence(self, otherobj, mapped_pos, t):
+        # apply 'gravity' pull amount force towards planet's center
+        otherobj.body.apply_impulse((mapped_pos - self.body.position) * -self.pull * t, (0,0))
 
 class BlackHole(Planet):
     """
@@ -219,7 +243,7 @@ class BlackHole(Planet):
                     obj.bh_timer += t
                     if obj.bh_timer >= 5:
                         obj.health.empty()
-                        obj.player.sound = "EXPLODE"
+                        obj.player.sound = "CRUSH"
                         obj.killedby = self
                         obj.destroyed = True
                         obj._world.remove(obj)
@@ -231,6 +255,9 @@ class Star(Planet):
     def __init__(self, pos, size=192, pull=32):
         super(Star, self).__init__(pos, size, pull, 90)
 
+        # make the star pull have a small impact on the rate of damage
+        self.dmg_divide = 18 - (self.pull / 6.0) 
+
     def collide_start(self, otherobj):
         super(Star, self).collide_start(otherobj)
         return False
@@ -240,7 +267,8 @@ class Star(Planet):
         if self.pull > 0:
             for obj in self.in_celestialbody:
                 if isinstance(obj, Ship):
-                    obj.take_damage(max(0, (self.radius + obj.radius - self.body.position.get_distance(obj.body.position)) * t / 16), self)
+                    #print self.id, self.pull, self.dmg_divide, (self.radius + obj.radius - self.body.position.get_distance(obj.body.position)) / self.dmg_divide
+                    obj.take_damage(max(0, (self.radius + obj.radius - self.body.position.get_distance(obj.body.position)) * t / self.dmg_divide), self)
                     if obj.health == 0: #HACK: Need a better way to detect 'damaged' ships as currently only done on collision
                         obj.destroyed = True
                         obj._world.remove(obj)
@@ -265,6 +293,76 @@ class Asteroid(PhysicalRound):
         # initial movement
         v = random.randint(20000, 40000)
         self.body.apply_impulse((random.randint(-1, 1) * v, random.randint(-1, 1) * v), (0,0))
+
+class Dragon(CelestialBody, Influential, Asteroid):
+    """
+    Dragons move around the world and may try and track a nearby player.
+
+    Ships are munched on a bit when close to its mouth.
+    """
+    def __init__(self, pos, attack_range=64, attack_speed=5, health=400, mass = None):
+        if mass == None:
+            mass = random.randint(3000, 5000)
+        super(Dragon, self).__init__(pos, mass)
+        self.shape.elasticity = 0.8
+        self.health = PlayerStat(health)
+
+        self.shape.group = 1
+
+        self.influence_range = attack_range
+        self.attack_speed = attack_speed
+        self.target = None
+        #initial movement
+        v = random.randint(12000, 18000)
+        self.body.apply_impulse((random.randint(-1, 1) * v, random.randint(-1, 1) * v), (0,0))
+
+    def collide_start(self, otherobj):
+        otherobj.dr_timer = 0
+        super(Dragon, self).collide_start(otherobj)
+        if isinstance(otherobj, Torpedo): # Torpedos can hit Dragons
+            return True
+
+        return False
+
+    def apply_influence(self, otherobj, mapped_pos, t):
+        # get closest ship
+        if isinstance(otherobj, Ship) and (self.target == None or self.body.position.get_dist_sqrd(mapped_pos) < self.body.position.get_dist_sqrd(self.target)):
+            if self.target == None:
+                if len(self.in_celestialbody) == 0:
+                    otherobj.player.sound = "RAWR"
+                self.body.velocity.length += self.attack_speed
+            self.target = pymunk.Vec2d(mapped_pos)
+
+    def update(self, t):
+        # Objects 'in' dragons take damage
+        #if self.pull > 0: # TODO: Range for moving towards thing
+        for obj in self.in_celestialbody:
+            if isinstance(obj, Ship):
+                obj.dr_timer += t
+                if obj.dr_timer >= 1.5:
+                    obj.dr_timer = 0
+                    obj.take_damage(20, self)
+                    if obj.health == 0: #HACK: Need a better way to detect 'damaged' ships as currently only done on collision
+                        obj.destroyed = True
+                        obj._world.remove(obj)
+
+        if self.target != None:
+            # turn towards target
+            nang = self.body.velocity.get_angle_degrees_between(self.target - self.body.position)
+            self.body.velocity.angle_degrees += nang * t
+
+            # clear target as we'll reaquire to 'readjust course' for moving object...
+            if self.body.position.get_dist_sqrd(self.target) < 400:
+                self.body.velocity.length -= self.attack_speed
+                self.target = None
+
+        super(Dragon, self).update(t)
+
+    def getExtraInfo(self, objData, player):
+        objData["PULL"] = self.attack_speed
+
+        objData["MAJOR"] = self.influence_range
+        objData["MINOR"] = self.influence_range
 
 class Torpedo(PhysicalRound):
     """

@@ -44,14 +44,14 @@ class PlanetGUI(GUIEntity):
         #TODO: convert world to graphics coordinates
         surface.blit(rotimg, (self._worldobj.body.position[0] -w/2, self._worldobj.body.position[1] -h/2))
 
-        if flags["DEBUG"]:
+        if flags["DEBUG"] and self._worldobj.influence_range > 0:
             bp = intpos(self._worldobj.body.position)
-            wrapcircle(surface, (64, 64, 255), bp, self._worldobj.gravityFieldLength, self._world.size, 3)
-            pygame.draw.line(surface, (64, 128, 255), intpos(self._worldobj.body.position - (0, self._worldobj.gravityFieldLength)), intpos(self._worldobj.body.position - (0, self._worldobj.gravityFieldLength - self._worldobj.pull)))
-            pygame.draw.line(surface, (64, 128, 255), intpos(self._worldobj.body.position - (self._worldobj.gravityFieldLength, 0)), intpos(self._worldobj.body.position - (self._worldobj.gravityFieldLength - self._worldobj.pull, 0)))
-            pygame.draw.line(surface, (64, 128, 255), intpos(self._worldobj.body.position + (self._worldobj.gravityFieldLength, 0)), intpos(self._worldobj.body.position + (self._worldobj.gravityFieldLength - self._worldobj.pull, 0)))
-            pygame.draw.line(surface, (64, 128, 255), intpos(self._worldobj.body.position + (0, self._worldobj.gravityFieldLength)), intpos(self._worldobj.body.position + (0, self._worldobj.gravityFieldLength - self._worldobj.pull)))
+            wrapcircle(surface, (64, 64, 255), bp, self._worldobj.influence_range, self._world.size, 3)
+            pygame.draw.line(surface, (64, 128, 255), intpos(self._worldobj.body.position - (0, self._worldobj.influence_range)), intpos(self._worldobj.body.position - (0, self._worldobj.influence_range - self._worldobj.pull)))
+            pygame.draw.line(surface, (64, 128, 255), intpos(self._worldobj.body.position - (self._worldobj.influence_range, 0)), intpos(self._worldobj.body.position - (self._worldobj.influence_range - self._worldobj.pull, 0)))
+            pygame.draw.line(surface, (64, 128, 255), intpos(self._worldobj.body.position + (self._worldobj.influence_range, 0)), intpos(self._worldobj.body.position + (self._worldobj.influence_range - self._worldobj.pull, 0)))
+            pygame.draw.line(surface, (64, 128, 255), intpos(self._worldobj.body.position + (0, self._worldobj.influence_range)), intpos(self._worldobj.body.position + (0, self._worldobj.influence_range - self._worldobj.pull)))
             # radius
-            surface.blit(debugfont().render(repr(self._worldobj.gravityFieldLength), False, (255, 255, 192)), intpos((bp[0], bp[1] - self._worldobj.gravityFieldLength - 16)))
+            surface.blit(debugfont().render(repr(self._worldobj.influence_range), False, (255, 255, 192)), intpos((bp[0], bp[1] - self._worldobj.influence_range - 16)))
 
         super(PlanetGUI, self).draw(surface, flags)

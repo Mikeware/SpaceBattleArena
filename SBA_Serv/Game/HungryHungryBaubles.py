@@ -167,5 +167,5 @@ class Bauble(PhysicalRound):
     def collide_start(self, otherobj):
         return False
 
-    def getExtraInfo(self, objData):
+    def getExtraInfo(self, objData, player):
         objData["VALUE"] = self.value

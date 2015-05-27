@@ -187,12 +187,14 @@ class DiscoveryQuestGame(BasicGame):
                     obj.home_for.append(ship.player)
                     self.player_update_score(ship.player, ship.player.buffervalue + obj.value * 2) # Score initial points + 2*outpost value for establishing base
                     ship.player.buffervalue = 0
+                    ship.player.sound = "SUCCESS"
                 
                 if not ship.player.failed and len(ship.player.mission) == 0: # completed mission exactly
                     points = 0
                     # tally points of scanned objects
                     for obj in ship.player.scanned:
                         points += obj.value
+                    ship.player.sound = "MISSION"
                     self.player_update_score(ship.player, points * self.cfg.getfloat("DiscoveryQuest", "mission_bonus_multiplier"))
 
                 self.player_reset_mission(ship.player)
@@ -209,7 +211,8 @@ class DiscoveryQuestGame(BasicGame):
 
                 # update scores
                 obj.scanned_by.append(ship.player)
-                if ship.player.outpost != None:
+                ship.player.sound = "SUCCESS"
+                if ship.player.outpost != None:                    
                     self.player_update_score(ship.player, obj.value)
                 else: #haven't found outpost, need to buffer points
                     ship.player.buffervalue += obj.value
@@ -256,6 +259,7 @@ class ScanCommand(Command):
         self.targetobj = None
         self.game = game
         self.success = True
+        self.sound = False
 
     def isExpired(self):
         done = super(ScanCommand, self).isExpired()
@@ -268,6 +272,9 @@ class ScanCommand(Command):
         if self.success:
             for wobj in self.game.world.getObjectsInArea(self._obj.body.position, self.game.scanrange):
                 if wobj.id == self.target:
+                    if not self.sound:
+                        self._obj.player.sound = "SCAN"
+                        self.sound = True
                     self.targetobj = wobj
                     return super(ScanCommand, self).execute(t)
 
@@ -326,7 +333,7 @@ class Outpost(PhysicalEllipse):
     def collide_start(self, otherobj):
         return False
 
-    #def getExtraInfo(self, objData):
+    #def getExtraInfo(self, objData, player):
     #    objData["OWNERID"] = self.owner.id
         
     #def newOwner(self, ship):

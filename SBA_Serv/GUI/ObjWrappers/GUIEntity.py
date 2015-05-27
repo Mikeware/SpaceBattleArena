@@ -14,8 +14,11 @@ class GUIEntity(object):
         self._world = world
         self.dying = False
         self.dead = False
+        self._points = None
         if self._worldobj.__dict__.has_key("points"):
             self._dist = int(max(self._worldobj.points[0]))
+            self._points = self._worldobj.shape.get_points()
+            self._lp = intpos(self._worldobj.body.position)
         elif self._worldobj.__dict__.has_key("radius"):
             self._dist = int(self._worldobj.radius)
         else:
@@ -28,6 +31,9 @@ class GUIEntity(object):
     def draw(self, surface, flags, sp=None):
         if sp == None:
             bp = intpos(self._worldobj.body.position)
+            if self._points != None and bp != self._lp:
+                self._lp = bp
+                self._points = self._worldobj.shape.get_points()
         else:
             bp = intpos(sp)
 
@@ -38,7 +44,7 @@ class GUIEntity(object):
             surface.blit(debugfont().render("#"+str(self._worldobj.id), False, (192, 192, 192)), (bp[0]-4, bp[1]+self._dist+4))
             # collision circle
             if self._worldobj.__dict__.has_key("points"): #Polygon
-                self.draw_poly(surface, (192, 192, 192), bp, self._worldobj.shape.get_points(), 2)
+                self.draw_poly(surface, (192, 192, 192), bp, self._points, 2)
             else: 
                 wrapcircle(surface, (192, 192, 192), bp, self._dist, self._world.size, 2)
 

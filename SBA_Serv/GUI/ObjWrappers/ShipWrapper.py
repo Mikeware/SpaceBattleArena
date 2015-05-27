@@ -64,7 +64,7 @@ class ShipGUI(GUIEntity):
         # Draw
         surface.blit(rotimg, pos)
 
-        gp = intpos(self._worldobj.body.position - (32, 32)) #adjusted fixed graphic size
+        gp = (sp[0] - 32, sp[1] - 32) #adjusted fixed graphic size
         # Draw shield
         if self._worldobj.commandQueue.containstype(RaiseShieldsCommand) and self._worldobj.shield.value > 0:
             surface.blit(ShipGUI._shieldsurface, gp)

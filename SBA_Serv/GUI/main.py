@@ -26,7 +26,7 @@ from ObjWrappers.AsteroidWrapper import AsteroidGUI
 from ObjWrappers.WeaponWrappers import TorpedoGUI
 from Game.KingOfTheBubble import Bubble, KingOfTheBubbleGame
 from GraphicsCache import Cache
-from World.WorldEntities import Ship, Planet, Asteroid, Torpedo, BlackHole, Nebula, Star
+from World.WorldEntities import Ship, Planet, Asteroid, Torpedo, BlackHole, Nebula, Star, Dragon
 from Server.MWNL2 import getIPAddress
 from pymunk import Vec2d
 from Helpers import infofont
@@ -318,7 +318,7 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                         logger.removeHandler(mlh)
                         mlh.messages.clear()
                 elif event.key == K_a:
-                    if mousemode not in ("AddAsteroid", "AddPlanet", "AddBlackHole", "AddStar", "AddNebula", "AddBubble"):
+                    if mousemode not in ("AddAsteroid", "AddPlanet", "AddBlackHole", "AddStar", "AddNebula", "AddDragon", "AddBubble"):
                         mousemode = "AddAsteroid"
                     elif mousemode == "AddAsteroid":
                         mousemode = "AddPlanet"
@@ -328,7 +328,9 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                         mousemode = "AddStar"
                     elif mousemode == "AddStar":
                         mousemode = "AddNebula"
-                    elif mousemode == "AddNebula" and isinstance(game, KingOfTheBubbleGame):
+                    elif mousemode == "AddNebula":
+                        mousemode = "AddDragon"
+                    elif mousemode == "AddDragon" and isinstance(game, KingOfTheBubbleGame):
                         mousemode = "AddBubble"
                     else:
                         mousemode = None
@@ -393,6 +395,9 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                 elif mousemode == "AddNebula":
                     mousemode = None
                     world.append(Nebula((x, y), (512, 128)))
+                elif mousemode == "AddDragon":
+                    mousemode = None
+                    world.append(Dragon((x, y)))
                 elif mousemode == "AddBubble":
                     mousemode = None
                     game.addBubbles(world, 1, pos=(x, y))

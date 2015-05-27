@@ -12,11 +12,11 @@ class AIShip(Ship):
     NetIDs = -3 # ID Should be -3 or less, auto-assign (unused by network engine)
 
     def __init__(self, name, pos, game, callback, color=(64, 64, 64), image=8):
+        self._callback = callback
         super(AIShip, self).__init__(pos, game.world)
         game.server_register_player("* "+name+str(AIShip.NetIDs)+" *", color, image, AIShip.NetIDs, self)
         AIShip.NetIDs -= 1
-        self.rotationAngle = 0
-        self._callback = callback
+        self.rotationAngle = 0        
 
     def update(self, t):
         super(AIShip, self).update(t)
