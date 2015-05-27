@@ -15,7 +15,7 @@ cd java_client_src
 
 rmdir /S /Q bin
 mkdir bin
-javac -cp ..\bin\gson-2.2.jar -d bin src\ihs\apcs\spacebattle\*.java src\ihs\apcs\spacebattle\commands\*.java src\ihs\apcs\spacebattle\games\*.java src\ihs\apcs\spacebattle\networking\*.java src\ihs\apcs\spacebattle\util\*.java
+javac -cp ..\gson-2.2.jar -d bin src\ihs\apcs\spacebattle\*.java src\ihs\apcs\spacebattle\commands\*.java src\ihs\apcs\spacebattle\games\*.java src\ihs\apcs\spacebattle\networking\*.java src\ihs\apcs\spacebattle\util\*.java
 cd bin
 jar cf ..\..\bin\SpaceBattle.jar ihs
 cd..

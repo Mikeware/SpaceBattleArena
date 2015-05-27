@@ -22,8 +22,8 @@ All GUI\Graphics files were created by the project owner with the exception of t
 These ships were created by our students of previous years and contributed with their permission.
 
 
-Gson-2.2.jar and Gson-2.2-javadoc.jar are third-party libraries from Google licensed under the Apache license.
----------------------------------------------------------------------------------------------------------------
+Gson-2.2.jar is a third-party library dependency from Google licensed under the Apache license.
+-----------------------------------------------------------------------------------------------
 Copyright 2008 Google Inc. 
 
 Licensed under the Apache License, Version 2.0 (the "License");
