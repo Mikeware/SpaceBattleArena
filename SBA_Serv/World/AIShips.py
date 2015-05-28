@@ -16,7 +16,14 @@ class AIShip(Ship):
         super(AIShip, self).__init__(pos, game.world)
         game.server_register_player("* "+name+str(AIShip.NetIDs)+" *", color, image, AIShip.NetIDs, self)
         AIShip.NetIDs -= 1
-        self.rotationAngle = 0        
+        self._name = name
+        self.rotationAngle = 0
+
+    def ship_added(self):
+        """
+        Called by game when ship added to world (important for tournaments)
+        """
+        pass
 
     def update(self, t):
         super(AIShip, self).update(t)
@@ -24,15 +31,18 @@ class AIShip(Ship):
         if not self.commandQueue.isBlockingCommandOnTop():
             self._callback()
 
+
 class AIShip_SetList(AIShip):
-    def __init__(self, name, pos, world, cmdlist, color=(64, 64, 64), image=8):
+    def __init__(self, name, pos, game, cmdlist, color=(64, 64, 64), image=8):
         """
         Note cmdlist should be in list of string form, not objects directly
             pass 'self' as ship
         """
         self.cmdlist = cmdlist
-        super(AIShip_SetList, self).__init__(name, pos, world, self.__callback, color, image)
-        self.__callback() # queue up first command        
+        super(AIShip_SetList, self).__init__(name, pos, game, self.__callback, color, image)
+
+    def ship_added(self):
+        self.__callback() # queue up first command when added to world
 
     def __callback(self):
         if len(self.cmdlist) > 0:
@@ -41,12 +51,19 @@ class AIShip_SetList(AIShip):
     def get_next_command(self):
         return eval(self.cmdlist.pop(0))
 
+    def add_command(self, cmd):
+        """
+        Add a command to the list, should be string.
+        """
+        self.cmdlist.append(cmd)
+
+
 class AIShip_SetListLoop(AIShip_SetList): # Need to use string and eval to reinitialize commands for current states?    
-    def __init__(self, name, pos, world, cmdlist, numtimes = 0, color=(64, 64, 64), image=8):
+    def __init__(self, name, pos, game, cmdlist, numtimes = 0, color=(64, 64, 64), image=8):
         self.current = 0
         self.loop = 0
         self.max_loop = numtimes
-        return super(AIShip_SetListLoop, self).__init__(name, pos, world, cmdlist, color, image)
+        return super(AIShip_SetListLoop, self).__init__(name, pos, game, cmdlist, color, image)
 
     def get_next_command(self):
         cmd = eval(self.cmdlist[self.current])
@@ -102,6 +119,7 @@ class AIShip_Network_Harness:
             logging.info("MWNL Server Registration Request AI Ship %s", self._name)
             self.__client.send(MWNL_CMD_REGISTER, {"NAME": "* "+self._name+str(self.__client.getID())+" *", "COLOR": self._color, "IMAGEINDEX": self._image}, sender)
         elif cmd[0] == MWNL_CMD_ENVIRONMENT:
+            #TODO: Notify if died by checking object ID? just do it in callback manually like 'old' days?
             logging.info("AI Ship %s Making callback to %s", self._name, repr(self._callback))
             response = self._callback(cmd[1])
             logging.info("AI Ship %s callback said to %s", self._name, repr(response))

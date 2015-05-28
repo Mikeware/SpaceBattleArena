@@ -58,6 +58,7 @@
     <Compile Include="GUI\SoundCache.py" />
     <Compile Include="GUI\Star.py" />
     <Compile Include="GUI\__init__.py" />
+    <Compile Include="Tests\SurvivorTestCases.py" />
     <Compile Include="Tests\CombatExerciseTestCases.py" />
     <Compile Include="Tests\AsteroidMinerTestCases.py" />
     <Compile Include="Tests\FindTheMiddleTestCases.py">
@@ -128,7 +129,8 @@
     <Content Include="no_advanced_commands.cfg" />
     <Content Include="no_collide.cfg" />
     <Content Include="no_gravity_drag.cfg" />
-    <Content Include="radarworld_2014.cfg" />
+    <Content Include="Tests\test_destroyed.cfg" />
+    <Content Include="Tests\test_survivor.cfg" />
     <Content Include="Tests\test_combatexercise.cfg" />
     <Content Include="Tests\test_asteroidminer.cfg" />
     <Content Include="Tests\test_findthemiddle.cfg" />
@@ -140,10 +142,11 @@
     <Content Include="machine_fullscreen.cfg" />
     <Content Include="machine_test.cfg" />
     <Content Include="basicgame_findthemiddle.cfg" />
-    <Content Include="radarworld.cfg" />
     <Content Include="game_baublehunt.cfg" />
     <Content Include="basicgame_combatexercise.cfg" />
     <Content Include="Tests\test_server.cfg" />
+    <Content Include="Tests\test_singlegroup.cfg" />
+    <Content Include="Tests\test_tournament.cfg" />
     <Content Include="tournament.cfg" />
   </ItemGroup>
   <Import Project="$(PtvsTargetsFile)" Condition="Exists($(PtvsTargetsFile))" />

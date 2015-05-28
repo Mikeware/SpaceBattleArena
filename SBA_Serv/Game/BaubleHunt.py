@@ -150,7 +150,6 @@ class BaubleHuntGame(BasicGame):
             if self.__baubles.has_key(bauble.id):
                 del self.__baubles[bauble.id]
 
-            self.world.remove(bauble)
             bauble.destroyed = True
                 
             self.__addBaubles(self.world, 1, True)

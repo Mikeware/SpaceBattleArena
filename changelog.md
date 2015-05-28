@@ -1,4 +1,4 @@
-v1.0.1 : 05/??/2015
+v1.0.1 : 05/26/2015
 ----
 * Added this changelog
 * Functional Updates:
@@ -8,11 +8,11 @@ v1.0.1 : 05/??/2015
   * *Auto-kick* feature for inactive clients (disconnect_on_idle)
   * Client prints statistics on exit
   * BasicSpaceship doesn't require shipDestroyed method any more
-  * Point class now has ** and ** helper methods
 * General Client Disconnect and Threading Improvements
 * Log files now append timestamp to name
 * Fix issues with Planets and Nebulas
 * Additional Celestial Body Graphics by Jeff
+* Removed unneeded dependencies from Server build to save 1MB.
 
 v1.0 : 05/11/2015 [Season 4] - Open Source
 ----

@@ -62,7 +62,7 @@ class Ship(PhysicalRound):
         self.lasernodes = []
 
         # extra state
-        self.killed = False # forcibly removed object
+        self.killed = False # forcibly removed object 'for good'
 
     def setCommandBufferSize(self, size):
         old = self.commandQueue[:]
@@ -79,8 +79,13 @@ class Ship(PhysicalRound):
         #eif
 
         if self.health == 0:
-            if by != None and isinstance(by, Star):
-                self.player.sound = "BURN"
+            if by != None:
+                if isinstance(by, Star):
+                    self.player.sound = "BURN"
+                elif isinstance(by, BlackHole):
+                    self.player.sound = "CRUSH"
+                else:
+                    self.player.sound = "EXPLODE"
             else:
                 self.player.sound = "EXPLODE"
         elif by != None:
@@ -242,11 +247,7 @@ class BlackHole(Planet):
                 if isinstance(obj, Ship):
                     obj.bh_timer += t
                     if obj.bh_timer >= 5:
-                        obj.health.empty()
-                        obj.player.sound = "CRUSH"
-                        obj.killedby = self
-                        obj.destroyed = True
-                        obj._world.remove(obj)
+                        obj.take_damage(9000, self)                        
 
 class Star(Planet):
     """
@@ -269,9 +270,6 @@ class Star(Planet):
                 if isinstance(obj, Ship):
                     #print self.id, self.pull, self.dmg_divide, (self.radius + obj.radius - self.body.position.get_distance(obj.body.position)) / self.dmg_divide
                     obj.take_damage(max(0, (self.radius + obj.radius - self.body.position.get_distance(obj.body.position)) * t / self.dmg_divide), self)
-                    if obj.health == 0: #HACK: Need a better way to detect 'damaged' ships as currently only done on collision
-                        obj.destroyed = True
-                        obj._world.remove(obj)
 
         super(Star, self).update(t)
 
@@ -342,9 +340,6 @@ class Dragon(CelestialBody, Influential, Asteroid):
                 if obj.dr_timer >= 1.5:
                     obj.dr_timer = 0
                     obj.take_damage(20, self)
-                    if obj.health == 0: #HACK: Need a better way to detect 'damaged' ships as currently only done on collision
-                        obj.destroyed = True
-                        obj._world.remove(obj)
 
         if self.target != None:
             # turn towards target

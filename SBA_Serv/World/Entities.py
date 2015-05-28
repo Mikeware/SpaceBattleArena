@@ -32,6 +32,7 @@ class Entity(object):
         self.TTL = None # None means will live 'forever', otherwise if timealive > TTL (time to live), then the object will be automatically cleaned up in gameloop and destroyed.
 
         self.in_celestialbody = [] # keeps track of celestial bodies this object is in
+        self.destroyed = False # keeps track of if the object has been destroyed and needs to be removed from the world in the next gameloop.
 
     def collide_start(self, otherobj):
         """
@@ -57,6 +58,7 @@ class Entity(object):
             if by != None:
                 logging.info("Object #%d killed by #%d", self.id, by.id)
             self.killedby = by
+            self.destroyed = True
 
     def has_expired(self):
         """
@@ -108,8 +110,7 @@ class PhysicsCore(Entity):
         super(PhysicsCore, self).__init__()
         self._constructPhysics(mass, pos)
         self.body.position = pos
-        
-        self.destroyed = False        
+                
         self.explodable = True
 
     def _constructPhysics(self, mass, pos):

@@ -2,6 +2,7 @@
 title: Development
 outline-header: Common Development Task Guides
 outline:
+ - { url: "Build.html", title: "Build Packages" }
  - { url: "AddSubgame.html", title: "Adding a Subgame" }
 ---
 

@@ -50,6 +50,7 @@ Documentation
     * Coding Paradigm
     * Your Ship's 'Computer'
     * Commands
+    * [Ship Image Index](https://github.com/Mikeware/SpaceBattleArena/tree/master/SBA_Serv/GUI/Graphics/Ships)
 * [Competitions](games/index.html)
     * ['Basic' Games](games/basic.html)
         * [Find The Middle](games/findthemiddle.html)

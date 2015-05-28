@@ -131,5 +131,32 @@ class AsteroidMinerTestCases(SBAGUITestCase):
         self.assertFalse(found, "Asteroid Not Destroyed")
         self.assertEqual(self.ship.player.score, 1, "Ship didn't gain 1 point")
 
+class AsteroidMinerTournamentTestCases(SBAGUITestCase):
+    """
+    Test cases for Asteroid Miner basic game w/ tournamnet.
+    """
+    def get_config_filename(self):
+        return "test_asteroidminer.cfg", "test_tournament.cfg"
+
+    def test_ship_not_added_until_after_start(self):
+        """
+        Test that we spawn a new asteroid when a ship joins.
+        """
+        ship = AIShip_SetList("Nothing", self.game.world.mid_point(0), self.game, [])
+
+        self.assertEqual(len(self.game.world), 0, "Objects in World")
+
+        time.sleep(2.0)
+
+        self.assertFalse(ship in self.game.world, "Ship added to world")
+
+        self.game.round_start()
+
+        time.sleep(3)
+
+        self.assertTrue(ship in self.game.world, "Ship didn't get added to world")
+
+
+
 if __name__ == "__main__":
     unittest.main()

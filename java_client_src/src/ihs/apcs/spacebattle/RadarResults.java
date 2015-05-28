@@ -59,6 +59,10 @@ public class RadarResults extends ArrayList<ObjectStatus> {
 	/**
 	 * Gets the details read by this radar sweep for all objects of the given
 	 *   type.  Case-insensitive comparison is used for type names.
+	 *
+	 * <p>Could be Ship, Planet, BlackHole, Star, Nebula, Asteroid, Torpedo,
+	 * Bauble, Bubble, or Outpost.     
+	 *
 	 * @param type the type of object for which to return results
 	 * @return a list of radar details for all objects of the given type (may be empty)
 	 */

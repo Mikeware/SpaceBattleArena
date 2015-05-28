@@ -167,9 +167,17 @@ if defaults:
     logging.info("Server Request Disconnect All")
     server.disconnectAll()
     logging.info("Server exit main")
-    print "Server Closed, Checking Threads..."
+    time.sleep(0.5)
 
-    time.sleep(8)
+    print "Server Closed, Checking Threads...",
+
+    x = 0
+    while len(threading.enumerate()) > 1 and x < 8:
+        time.sleep(1)
+        print "\b.",
+        x += 1
+
+    print "\bDone!"
 
     tlist = threading.enumerate()
     if len(tlist) > 1: # main thread is counted

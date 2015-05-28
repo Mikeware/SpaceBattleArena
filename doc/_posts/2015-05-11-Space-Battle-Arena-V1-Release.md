@@ -1,6 +1,6 @@
 ---
 title: Space Battle Arena V1 Release
-abstract: First Official V1 Release.
+abstract: Soft V1 Release.
 ---
 
 At the start of our 4th season of Space Battle, we are releasing it to the open source world.  Look for more info on the website to come in the next few days. You can download it through the links above.

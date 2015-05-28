@@ -21,6 +21,7 @@ from World.WorldCommands import RaiseShieldsCommand
 from threading import Thread
 from ThreadStuff.ThreadSafe import ThreadSafeDict
 import pygame, thread
+from pymunk import Vec2d
 from GUI.Helpers import debugfont
 from operator import attrgetter
 
@@ -237,6 +238,10 @@ class BasicGame(object):
         Called in a tournament when the round time expires.
         Will automatically advance the top players to the next round.
         """
+        if self.__timer != None:
+            self.__timer.cancel() # if we get a round-over prematurely or do to some other condition, we should cancel this current timer
+            self.__timer = None
+
         logging.debug("[Game] Round Over")
         self.game_update(0) # make sure we do one last update to sync and refresh the leaderboard cache
         
@@ -258,12 +263,11 @@ class BasicGame(object):
             #eif
         #eif
         
-        self.__timer = None
         for player in self._players:
             player.roundover = True
             if player.object != None:
                 #player.object.destroyed = True
-                self.world.remove(player.object)
+                self.world.remove(player.object) # here we're forcibly removing them as we're clearing the game
 
         # overwritten by allowafterstart
         self.__autostart = self.cfg.getboolean("Game", "auto_start")
@@ -329,12 +333,11 @@ class BasicGame(object):
                 self.player_added(p, BasicGame._ADD_REASON_REGISTER_)
                 self._players[netid] = p
 
-                # TODO: Need to handle AI Ships specially for delayed starts or respawns
                 if aiship != None:
                     self.__aiships[netid] = aiship
                 
                 if self.__autostart:
-                    self._game_add_ship_for_player(netid, roundstart=True, aiship=aiship)
+                    self._game_add_ship_for_player(netid, roundstart=True)
 
                 logging.info("Registering Player: %s %d", name, netid)
                     
@@ -375,7 +378,7 @@ class BasicGame(object):
         """
         return command
 
-    def _game_add_ship_for_player(self, netid, force=False, roundstart=False, aiship=None):
+    def _game_add_ship_for_player(self, netid, force=False, roundstart=False):
         """
         Called internally when a player registers if autostart is true, or when round_start is called
         Also called when a player respawns.
@@ -384,8 +387,21 @@ class BasicGame(object):
 
         Also, sends initial environment to start RPC loop with client
         """
-        if aiship != None:
-            self._players[netid].object = aiship
+        if netid < -2: # AI Ship
+            self._players[netid].object = self.__aiships[netid]
+            # reset AI Ship to look like new ship, though reuse object 
+            # TODO: this doesn't work, need 'new' object to add to world, or queue the add to occur after the remove...boo
+            self.__aiships[netid].health.full()
+            self.__aiships[netid].energy.full()
+            self.__aiships[netid].shield.full()
+            self.__aiships[netid].destroyed = False
+            self.__aiships[netid].killed = False
+            self.__aiships[netid].timealive = 0
+            self.__aiships[netid].body.velocity = Vec2d(0, 0)
+            if not roundstart: # ai ship will be initialized with a starting position for round entry, but if killed, will randomize
+                self.__aiships[netid].body.position = self.player_get_start_position(True)
+
+            self._players[netid].object.ship_added() # tell AI ship to start
         else:
             self._players[netid].object = Ship(self.player_get_start_position(True), self.world)
         logging.info("Adding Ship for Player %d (%s) id #%d with Name %s", netid, repr(force), self._players[netid].object.id, self._players[netid].name)
@@ -579,7 +595,7 @@ class BasicGame(object):
     #region World/Collision Functions
     def world_add_remove_object(self, wobj, added):
         """
-        Called by world when an object is added or destroyed
+        Called by world when an object is added or destroyed (before added (guaranteed to not have update) and after removed (though may receive last update))
 
         For simple tasks involving players look to the player_died or player_added methods
 
@@ -615,11 +631,7 @@ class BasicGame(object):
                 else:
                     if not self._players[nid].roundover:
                         # if the round isn't over, then re-add the ship
-                        if self.__aiships.has_key(nid):
-                            # re-readd the AI Ship TODO: tell it it's died?
-                            self._game_add_ship_for_player(nid, True, aiship = self.__aiships[nid])
-                        else:
-                            self._game_add_ship_for_player(nid, True)
+                        self._game_add_ship_for_player(nid, True)
     
     def world_physics_pre_collision(self, obj1, obj2):
         """
@@ -669,13 +681,11 @@ class BasicGame(object):
         dobj: the object destroyed
         para: extra parameters from a previous step, by default collision passes the strength of the collision only
         """
-        strength = damage * 10
+        strength = damage
         logging.info("Destroying Object: #%d, Force: %d [%d]", dobj.id, strength, thread.get_ident())
-        dobj.destroyed = True
+        dobj.destroyed = True # get rid of object
 
         self.world.causeExplosion(dobj.body.position, dobj.radius * 5, strength, True) #Force in physics step
-
-        self.world.remove(dobj) # TODO: centralize this and flag to ship take_damage when we move to pymunk 4.0 and don't need to do callback...
 
     def world_physics_end_collision(self, obj1, obj2):
         """

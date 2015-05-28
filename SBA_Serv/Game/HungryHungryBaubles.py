@@ -102,7 +102,6 @@ class HungryHungryBaublesGame(BasicGame):
         #eif
         self.player_update_score(ship.player, bauble.value)
         bauble.destroyed = True
-        self.world.remove(bauble)
 
         logging.info("Done Collecting Baubles #%d", ship.id)
 

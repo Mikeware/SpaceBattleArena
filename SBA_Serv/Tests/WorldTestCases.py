@@ -60,7 +60,7 @@ class WorldTestCase(SBAWorldTestCase):
 
     def test_idle_no_energy(self):
         start = self.game.world.mid_point(50, -50)
-        ship = AIShip_SetList("Doomed", start, self.game, [
+        ship = AIShip_SetList("Energy", start, self.game, [
             "IdleCommand(self, 2.0)"
             ])
 
@@ -70,7 +70,7 @@ class WorldTestCase(SBAWorldTestCase):
 
     def test_regain_energy(self):
         start = self.game.world.mid_point(50, -50)
-        ship = AIShip_SetList("Doomed", start, self.game, [
+        ship = AIShip_SetList("Energy", start, self.game, [
             "IdleCommand(self, 2.0)"
             ])
         
@@ -81,7 +81,43 @@ class WorldTestCase(SBAWorldTestCase):
 
         self.assertGreater(ship.energy, start, "Ship didn't regain energy over time.")
 
-class WorldVisualTestCase(SBAGUITestCase):
+    def test_ship_respawn(self):
+        start = self.game.world.mid_point()
+        ship = AIShip_SetList("Doomed", start, self.game, [])
+
+        time.sleep(0.5)
+
+        self.assertIn(ship, self.game.world, "Ship not in world.")
+
+        ship.take_damage(9000)
+
+        time.sleep(0.5)
+
+        self.assertIn(ship, self.game.world, "Ship not in world.")
+        self.assertNotEqual(ship.body.position, start, "Ship didn't move") # should move when respawn
+
+
+class WorldNoRespawnTestCase(SBAWorldTestCase):
+
+    def get_config_filename(self):
+        return "test_destroyed.cfg"
+
+    def test_ship_no_respawn(self):
+        start = self.game.world.mid_point()
+        ship = AIShip_SetList("Doomed", start, self.game, [])
+
+        time.sleep(0.5)
+
+        self.assertIn(ship, self.game.world, "Ship not in world.")
+
+        ship.take_damage(9000)
+
+        time.sleep(0.5)
+
+        self.assertNotIn(ship, self.game.world, "Ship still in world.")
+
+
+class WorldVisualShipRespawnTestCase(SBAGUITestCase):
 
     def test_planet_gravity(self):
         """
@@ -100,6 +136,85 @@ class WorldVisualTestCase(SBAGUITestCase):
 
         self.failIfAlmostEqual(ship.body.position, start, None, "Doomed ship should have moved", 5)
         self.assertAlmostEqual(ship2.body.position, start2, None, "Free Ship not in same place", 2)
+
+    def test_planet_no_gravity(self):
+        """
+        Tests a ship inside a gravity well vs outside.
+        """
+        planet = BlackHole(self.game.world.mid_point(0,0), 100, 0)
+        self.game.world.append(planet)
+
+        start = self.game.world.mid_point(50, -50)
+        ship = AIShip_SetList("Not Doomed", start, self.game, [])        
+
+        time.sleep(5.0)
+
+        self.assertAlmostEqual(ship.body.position, start, None, "Doomed ship shouldn't have moved", 2)
+
+    def test_nebula_drag(self):
+        """
+        Test which has two ships thrust in the same direction, but one slowed by Nebula.
+        """
+        neb = Nebula(self.game.world.mid_point(100, -160), (384,256))
+        self.game.world.append(neb)
+
+        ship = AIShip_SetList("Nebula", self.game.world.mid_point(-100, -100), self.game, [
+            "ThrustCommand(self, 'B', 7.0)",
+        ])        
+
+        ship2 = AIShip_SetList("Free", self.game.world.mid_point(-100, 100), self.game, [
+            "ThrustCommand(self, 'B', 7.0)",
+        ])        
+
+        time.sleep(8.0)
+
+        print ship2.body.position[0], " vs ", ship.body.position[0]
+        self.failIfAlmostEqual(ship2.body.position[0], ship.body.position[0], None, "Ship Didn't get Slowed Down By Nebula", 15)
+
+    def test_ship_shoot_dragon(self):
+        """
+        Tests that a dragon can take damage from torpedos
+        """
+        ship = AIShip_SetList("Shooter", self.game.world.mid_point(-100), self.game, [
+                "IdleCommand(self, 2)",
+                "FireTorpedoCommand(self, 'F')",
+                "IdleCommand(self, 0.1)",
+                "FireTorpedoCommand(self, 'F')",
+                "IdleCommand(self, 0.1)",
+                "FireTorpedoCommand(self, 'F')",
+                "IdleCommand(self, 0.1)",
+                "FireTorpedoCommand(self, 'F')",
+                "IdleCommand(self, 0.1)",
+                "FireTorpedoCommand(self, 'F')",
+                "IdleCommand(self, 0.1)",
+                "FireTorpedoCommand(self, 'F')",
+            ])
+
+        dragon = Dragon(self.game.world.mid_point(100), 16, 0)
+        dragon.body.velocity = Vec2d(0, 0)
+        h = dragon.health.value
+        self.game.world.append(dragon)
+
+        time.sleep(0.2)
+
+        self.assertEqual(len(self.game.world), 2, "Found more than two objects in world")
+
+        time.sleep(4)
+
+        self.assertLess(dragon.health.value, h, "Dragon didn't take damage")
+
+        #ensure ship is still there for testing ship timeout function doesn't effect AI ships
+        self.assertTrue(ship in self.game.world, "Shooter Ship disappeared")
+
+        time.sleep(2)
+
+        self.assertTrue(ship in self.game.world, "Shooter Ship disappeared")
+        self.assertFalse(dragon in self.game.world, "Dragon not destroyed")
+
+class WorldVisualShipDestroyedTestCase(SBAGUITestCase):
+
+    def get_config_filename(self):
+        return "test_destroyed.cfg"
 
     def test_star_damage(self):
         """
@@ -153,40 +268,6 @@ class WorldVisualTestCase(SBAGUITestCase):
         self.assertTrue(ship2 in self.game.world, "Free Ship disappeared")
         self.assertAlmostEqual(ship2.body.position, start2, None, "Free Ship not in same place", 2)
 
-    def test_planet_no_gravity(self):
-        """
-        Tests a ship inside a gravity well vs outside.
-        """
-        planet = BlackHole(self.game.world.mid_point(0,0), 100, 0)
-        self.game.world.append(planet)
-
-        start = self.game.world.mid_point(50, -50)
-        ship = AIShip_SetList("Not Doomed", start, self.game, [])        
-
-        time.sleep(5.0)
-
-        self.assertAlmostEqual(ship.body.position, start, None, "Doomed ship shouldn't have moved", 2)
-
-    def test_nebula_drag(self):
-        """
-        Test which has two ships thrust in the same direction, but one slowed by Nebula.
-        """
-        neb = Nebula(self.game.world.mid_point(100, -160), (384,256))
-        self.game.world.append(neb)
-
-        ship = AIShip_SetList("Nebula", self.game.world.mid_point(-100, -100), self.game, [
-            "ThrustCommand(self, 'B', 7.0)",
-        ])        
-
-        ship2 = AIShip_SetList("Free", self.game.world.mid_point(-100, 100), self.game, [
-            "ThrustCommand(self, 'B', 7.0)",
-        ])        
-
-        time.sleep(8.0)
-
-        print ship2.body.position[0], " vs ", ship.body.position[0]
-        self.failIfAlmostEqual(ship2.body.position[0], ship.body.position[0], None, "Ship Didn't get Slowed Down By Nebula", 15)
-
     def test_dragon_eats_ship(self):
         """
         Tests a dragon
@@ -225,47 +306,6 @@ class WorldVisualTestCase(SBAGUITestCase):
         time.sleep(5.5)
 
         self.assertFalse(ship in self.game.world, "Doomed Ship not destroyed")
-
-    def test_ship_shoot_dragon(self):
-        """
-        Tests that a dragon can take damage from torpedos
-        """
-        ship = AIShip_SetList("Shooter", self.game.world.mid_point(-100), self.game, [
-                "IdleCommand(self, 2)",
-                "FireTorpedoCommand(self, 'F')",
-                "IdleCommand(self, 0.1)",
-                "FireTorpedoCommand(self, 'F')",
-                "IdleCommand(self, 0.1)",
-                "FireTorpedoCommand(self, 'F')",
-                "IdleCommand(self, 0.1)",
-                "FireTorpedoCommand(self, 'F')",
-                "IdleCommand(self, 0.1)",
-                "FireTorpedoCommand(self, 'F')",
-                "IdleCommand(self, 0.1)",
-                "FireTorpedoCommand(self, 'F')",
-            ])
-
-        dragon = Dragon(self.game.world.mid_point(100), 16, 0)
-        dragon.body.velocity = Vec2d(0, 0)
-        h = dragon.health.value
-        self.game.world.append(dragon)
-
-        time.sleep(0.2)
-
-        self.assertEqual(len(self.game.world), 2, "Found more than two objects in world")
-
-        time.sleep(4)
-
-        self.assertLess(dragon.health.value, h, "Dragon didn't take damage")
-
-        #ensure ship is still there for testing ship timeout function doesn't effect AI ships
-        self.assertTrue(ship in self.game.world, "Shooter Ship disappeared")
-
-        time.sleep(2)
-
-        self.assertTrue(ship in self.game.world, "Shooter Ship disappeared")
-        self.assertFalse(dragon in self.game.world, "Dragon not destroyed")
-
 
 if __name__ == '__main__':
     unittest.main()

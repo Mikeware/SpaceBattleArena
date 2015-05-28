@@ -1,6 +1,8 @@
 Thumbs.db
 .jekyll-metadata
 /TestResults/
+/bin/
+gson-2.2.jar
 *.suo
 *.log
 *.lock

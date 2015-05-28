@@ -37,7 +37,7 @@ These instructions were prepared for [Eclipse](http://www.eclipse.org/) Luna Ser
 
 5. Click on **Add External JARs**.
 
-6. Select both the **[gson-2.2.jar](http://github.com/Mikeware/SpaceBattleArena/blob/master/bin/gson-2.2.jar?raw=true)** and **[SpaceBattle.jar](http://github.com/Mikeware/SpaceBattleArena/blob/master/bin/SpaceBattle.jar?raw=true)** which you should have downloaded:
+6. Select both the **[gson-2.2.jar]({{ site.releasepath }}/gson-2.2.jar)** and **[SpaceBattle.jar]({{ site.releasepath }}/SpaceBattle.jar)** which you should have downloaded:
 
 	![Libraries Tab](NewJavaProjectDialog2.png)
 	
@@ -74,11 +74,6 @@ public class ExampleShip extends BasicSpaceship {
     public ShipCommand getNextCommand(BasicEnvironment env)
     {
         return new IdleCommand(0.1);
-    }
-    
-    @Override
-    public void shipDestroyed()
-    {
     }
 }
 </code></pre>
