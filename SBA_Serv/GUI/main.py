@@ -17,6 +17,7 @@ from collections import deque
 from pygame.locals import *
 from operator import attrgetter
 
+# REQUIRED FOR DEPENDENCIES IN LOADING
 from World.WorldMap import GameWorld
 
 from ObjWrappers.ShipWrapper import ShipGUI
@@ -116,7 +117,7 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                 else:
                     logging.debug("GUI: Adding %s #%d", repr(obj), obj.id)
                     objects[obj.id] = obj.WRAPPERCLASS(obj, world)
-                    logging.debug("GUI: Added %s %%d", repr(obj), obj.id)
+                    logging.debug("GUI: Added %s %d", repr(obj), obj.id)
                 #eif
             else:
                 if isinstance(obj, Ship):

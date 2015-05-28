@@ -17,7 +17,7 @@ from World.WorldGenerator import ConfiguredWorld, getPositionAwayFromOtherObject
 from World.Entities import Entity, PhysicalRound
 from World.WorldEntities import Ship
 from GUI.ObjWrappers.GUIEntity import GUIEntity
-from World.WorldMath import intpos, friendly_type, PlayerStat
+from World.WorldMath import intpos, friendly_type, PlayerStat, aligninstances
 from GUI.GraphicsCache import Cache
 from GUI.Helpers import debugfont
 from ThreadStuff.ThreadSafe import ThreadSafeDict
@@ -116,36 +116,22 @@ class BaubleHuntGame(BasicGame):
         logging.info("Done Adding Baubles")
 
     def world_physics_pre_collision(self, obj1, obj2):
-        ship = None
-        myhome = None
-        # check if this is a ship hitting it's own home base
-        if isinstance(obj1, Ship) and isinstance(obj2, Outpost) and obj2.owner.id == obj1.id:
-            ship = obj1
-            myhome = obj2
-        elif isinstance(obj2, Ship) and isinstance(obj1, Outpost) and obj1.owner.id == obj2.id:
-            ship = obj2
-            myhome = obj1
+        ship, other = aligninstances(obj1, obj2, Ship, Entity)
 
-        if ship != None and myhome != None:
-            logging.info("Ship #%d hit their base", ship.id)
-            return [ False, [self.depositBaubles, ship, myhome] ]
-
-        # Collect Baubles
-        elif isinstance(obj1, Ship) and isinstance(obj2, Bauble):
-            return [ False, [self.collectBaubles, obj1, obj2] ]
-        elif isinstance(obj2, Ship) and isinstance(obj1, Bauble):
-            return [ False, [self.collectBaubles, obj2, obj1] ]
+        if ship != None:
+            if isinstance(other, Outpost):
+                logging.info("Ship #%d hit their base", ship.id)
+                return [ False, [self.depositBaubles, ship, other] ]
+            elif isinstance(other, Bauble):
+                return [ False, [self.collectBaubles, ship, other] ]
         
         return super(BaubleHuntGame, self).world_physics_pre_collision(obj1, obj2)
 
     def collectBaubles(self, ship, bauble):
         logging.info("Collected Baubles Ship #%d", ship.id)
-        sound = True
         if len(ship.player.carrying) < self.__maxcarry:
             ship.player.carrying.append(bauble)
-            if sound:
-                sound = False
-                ship.player.sound = "BAUBLE"
+            ship.player.sound = "BAUBLE"
 
             if self.__baubles.has_key(bauble.id):
                 del self.__baubles[bauble.id]
@@ -172,6 +158,7 @@ class BaubleHuntGame(BasicGame):
         # if ship destroyed, put baubles stored back
         for b in player.carrying:
             b.body.position = (player.object.body.position[0] + random.randint(-10, 10), player.object.body.position[1] + random.randint(-10, 10))
+            b.destroyed = False # reset so that it won't get cleaned up
             if b.value == self._mv:
                 self.__baubles[b.id] = b
             self.world.append(b)

@@ -214,6 +214,7 @@ class BasicGame(object):
 
         Analog to player_died
         """
+        logging.info("Player %s Added(%d)", player.name, reason)
         if reason == 1:
             player.score = self._points_initial
             player.bestscore = self._points_initial
@@ -525,6 +526,7 @@ class BasicGame(object):
 
         Analog to player_added
         """
+        logging.info("Player %s Died", player.name)
         player.deaths += 1
         if self._points_lost_on_death > 0:
             self.player_update_score(player, -self._points_lost_on_death)

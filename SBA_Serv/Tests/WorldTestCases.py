@@ -16,7 +16,7 @@ from TestCaseRigging import SBAWorldTestCase, SBAGUITestCase
 from unittest import TestCase
 from World.WorldEntities import *
 from World.AIShips import *
-from World.WorldMath import PlayerStat
+from World.WorldMath import *
 
 import time
 
@@ -47,6 +47,24 @@ class PlayerStatTestCase(TestCase):
         p /= 0.5
 
         self.assertEqual(p, 100, "division not correct for inverse.")
+
+class WorldMathTestCases(TestCase):
+    """
+    Basic Test cases for the WorldMath functions.
+    """
+    def test_aligninstances(self):
+        self.assertEqual(aligninstances(4, 6.0, float, int), (6.0, 4), "Object values not swapped")
+        self.assertEqual(aligninstances(5, 5, int, str), (None, None), "Invalid Type match not returning None, None")
+        self.assertEqual(aligninstances("43", 8, str, int), ("43", 8), "Same order values not the same")
+
+    def test_intpos(self):
+        x = intpos((4.4, 5.6))
+        print x
+        self.assertEqual(x, (4, 5), "Not rounded correctly")
+
+        x = intpos((6.6, 8.1))
+        self.assertIsInstance(x[0], int, "First value not integer")
+        self.assertIsInstance(x[1], int, "Second value not integer")
 
 class WorldTestCase(SBAWorldTestCase):
     """

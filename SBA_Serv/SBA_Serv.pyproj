@@ -58,6 +58,7 @@
     <Compile Include="GUI\SoundCache.py" />
     <Compile Include="GUI\Star.py" />
     <Compile Include="GUI\__init__.py" />
+    <Compile Include="Tests\HungryHungryBaublesTestCases.py" />
     <Compile Include="Tests\SurvivorTestCases.py" />
     <Compile Include="Tests\CombatExerciseTestCases.py" />
     <Compile Include="Tests\AsteroidMinerTestCases.py" />
@@ -130,6 +131,8 @@
     <Content Include="no_collide.cfg" />
     <Content Include="no_gravity_drag.cfg" />
     <Content Include="Tests\test_destroyed.cfg" />
+    <Content Include="Tests\test_hungryhungrybaubles.cfg" />
+    <Content Include="Tests\test_hungryhungrybaubles2.cfg" />
     <Content Include="Tests\test_survivor.cfg" />
     <Content Include="Tests\test_combatexercise.cfg" />
     <Content Include="Tests\test_asteroidminer.cfg" />

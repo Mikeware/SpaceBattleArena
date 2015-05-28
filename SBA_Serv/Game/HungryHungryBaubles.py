@@ -17,7 +17,7 @@ from World.WorldGenerator import ConfiguredWorld, getPositionAwayFromOtherObject
 from World.Entities import PhysicalRound, Entity
 from World.WorldEntities import Ship
 from GUI.ObjWrappers.GUIEntity import GUIEntity
-from World.WorldMath import intpos, friendly_type, PlayerStat
+from World.WorldMath import intpos, friendly_type, PlayerStat, aligninstances
 from GUI.GraphicsCache import Cache
 from GUI.Helpers import debugfont
 import logging
@@ -70,10 +70,10 @@ class HungryHungryBaublesGame(BasicGame):
         logging.info("Done Adding Baubles")
 
     def world_physics_pre_collision(self, obj1, obj2):
-        if isinstance(obj1, Ship) and isinstance(obj2, Bauble):
-            return [ False, [self.collectBaubles, obj1, obj2] ]
-        elif isinstance(obj2, Ship) and isinstance(obj1, Bauble):
-            return [ False, [self.collectBaubles, obj2, obj1] ]
+        ship, bauble = aligninstances(obj1, obj2, Ship, Bauble)
+
+        if ship != None:
+            return [ False, [self.collectBaubles, ship, bauble] ]
 
         return super(HungryHungryBaublesGame, self).world_physics_pre_collision(obj1, obj2)
 
@@ -83,7 +83,7 @@ class HungryHungryBaublesGame(BasicGame):
         if bauble == self.__baubles[ship.player.netid]:
             logging.info("Collected Own Bauble #%d", ship.id)
             self.player_update_score(ship.player, self.__points_extra)
-
+            ship.player.sound = "COLLECT"
             # add new bauble
             self.__addBauble(ship.player, True)
         elif bauble in self.__baubles.values():
@@ -96,8 +96,10 @@ class HungryHungryBaublesGame(BasicGame):
                     # Gold Bauble no longer owned, add back a regular one
                     self.__addBaubles(self.world, 1, True)
                 #eif
+            ship.player.sound = "BAUBLE"
         else:
             logging.info("Collected Regular Bauble #%d", ship.id)
+            ship.player.sound = "BAUBLE"
             self.__addBaubles(self.world, 1, True)
         #eif
         self.player_update_score(ship.player, bauble.value)
