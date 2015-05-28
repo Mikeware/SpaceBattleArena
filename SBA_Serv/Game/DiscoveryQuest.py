@@ -20,6 +20,7 @@ from GUI.ObjWrappers.GUIEntity import GUIEntity
 from World.WorldMath import intpos, PlayerStat, friendly_type
 from GUI.GraphicsCache import Cache
 from GUI.Helpers import wrapcircle, debugfont
+from ThreadStuff.ThreadSafe import ThreadSafeDict
 from World.WorldCommands import WarpCommand
 from World.Commanding import Command
 import logging, random
@@ -44,6 +45,8 @@ class DiscoveryQuestGame(BasicGame):
     Your Ship being destroyed clears/fails your mission, so you must return to your established outpost if you want a new one.
     """
     def __init__(self, cfgobj):
+        self._outposts = ThreadSafeDict()
+
         super(DiscoveryQuestGame, self).__init__(cfgobj)
 
         self._missions = cfgobj.get("DiscoveryQuest", "mission_objectives").split(",")
@@ -72,6 +75,20 @@ class DiscoveryQuestGame(BasicGame):
         player.failed = True
 
         return super(DiscoveryQuestGame, self).player_added(player, reason)
+
+    def player_get_start_position(self, force = False):
+        # pick a random outpost to spawn the player besides
+        out = intpos(random.choice(self._outposts.values()).body.position)
+
+        pos = (random.randint(out[0]-150, out[0]+150),
+               random.randint(out[1]-150, out[1]+150))
+        x = 0
+        while len(self.world.getObjectsInArea(pos, 100)) > 0 and x < 15:
+            x += 1
+            pos = (random.randint(out[0]-150, out[0]+150),
+                   random.randint(out[1]-150, out[1]+150))
+        
+        return pos
 
     def player_died(self, player, gone):
         if gone and player.outpost != None:
@@ -104,6 +121,12 @@ class DiscoveryQuestGame(BasicGame):
         return world
 
     def world_add_remove_object(self, wobj, added):
+        if isinstance(wobj, Outpost):
+            if not added:
+                del self._outposts[wobj.id]
+            else:
+                self._outposts[wobj.id] = wobj
+
         if added:
             wobj.scanned_by = [] # objects keep track of who scans them
 
