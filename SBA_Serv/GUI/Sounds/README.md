@@ -21,9 +21,15 @@ Played when a Ship is destroyed.
 
 [HIT](https://www.freesound.org/people/Cyberkineticfilms/sounds/111048/)
 ---
-Played when a Ship is damaged.
+Played when a Ship is damaged by something that doesn't have another sound listed here.
 
 Remix of *Gunshot with metal hit* by **Cyberkineticfilms**
+
+[IMPACT](https://www.freesound.org/people/ZeSoundResearchInc./sounds/147875/)
+------
+Played when a Ship is hit by a Torpedo.
+
+Remix of *DepthBomb_02* by **ZeSoundResearchInc**
 
 [LASER](https://www.freesound.org/people/Julien%20Matthey/sounds/268343/)
 -----

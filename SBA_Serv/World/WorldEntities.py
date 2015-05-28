@@ -91,6 +91,8 @@ class Ship(PhysicalRound):
         elif by != None:
             if isinstance(by, Dragon):
                 self.player.sound = "CHOMP"
+            elif isinstance(by, Torpedo):
+                self.player.sound = "IMPACT"
             elif not isinstance(by, Star):
                 self.player.sound = "HIT"
 
