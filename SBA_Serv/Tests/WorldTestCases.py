@@ -286,6 +286,38 @@ class WorldVisualShipDestroyedTestCase(SBAGUITestCase):
         self.assertTrue(ship2 in self.game.world, "Free Ship disappeared")
         self.assertAlmostEqual(ship2.body.position, start2, None, "Free Ship not in same place", 2)
 
+    def test_blackhole_crush_vs_shield(self):
+        """
+        Tests a ship not being destroyed by a blackhole if shields raised.
+        """
+        planet = BlackHole(self.game.world.mid_point(0,0), 100, 100)
+        self.game.world.append(planet)
+
+        start = self.game.world.mid_point(0, 0)
+        ship = AIShip_SetList("Doomed", start, self.game, [
+                "IdleCommand(self, 4.0)",
+                "RaiseShieldsCommand(self, 3.0)",
+            ])
+
+        start2 = self.game.world.mid_point(-50, 250)
+        ship2 = AIShip_SetList("Free", start2, self.game, [])        
+
+        time.sleep(1)
+
+        #ensure ship is still there for testing ship timeout function doesn't effect AI ships
+        self.assertTrue(ship in self.game.world, "Doomed Ship disappeared early")
+
+        time.sleep(6.0)
+
+        # should be safe as shield up
+        self.assertTrue(ship in self.game.world, "Doomed Ship disappeared to early destroyed")
+
+        time.sleep(2.5) # wait for shield to expire, should be crushed immediately
+
+        self.assertFalse(ship in self.game.world, "Doomed Ship not destroyed")
+
+        self.assertAlmostEqual(ship2.body.position, start2, None, "Free Ship not in same place", 2)
+
     def test_dragon_eats_ship(self):
         """
         Tests a dragon
@@ -324,6 +356,135 @@ class WorldVisualShipDestroyedTestCase(SBAGUITestCase):
         time.sleep(5.5)
 
         self.assertFalse(ship in self.game.world, "Doomed Ship not destroyed")
+
+    def test_dragon_vs_cloak(self):
+        """
+        Tests a dragon and his ability (or lack of) to see cloaked ships
+        """
+        start = self.game.world.mid_point(0,100)
+        dragon = Dragon(start, 100, 20)
+        dragon.body.velocity = Vec2d(0, -5)
+        self.game.world.append(dragon)
+
+        speed = dragon.body.velocity.length
+        direction = dragon.body.velocity.angle_degrees
+        time.sleep(2.5)
+
+        self.failIfAlmostEqual(dragon.body.position, start, None, "Dragon should have moved", 2)
+
+        starts = self.game.world.mid_point(120, 0)
+        ship = AIShip_SetList("Cloaked", starts, self.game, [
+                "RotateCommand(self, 180)",
+                "ThrustCommand(self, 'B', 3.0, 1.0)",
+                "CloakCommand(self, 5.0)",
+            ])
+
+        start2 = self.game.world.mid_point(-150, 250)
+        ship2 = AIShip_SetList("Free", start2, self.game, [])
+
+        time.sleep(2.5)
+
+        self.assertAlmostEqual(dragon.body.velocity.length, speed, None, "Dragon increased speed", 5)
+        self.assertAlmostEqual(dragon.body.velocity.angle_degrees, direction, None, "Dragon changed direction", 5)
+
+        print dragon.body.velocity.angle_degrees
+        self.failIfAlmostEqual(dragon.body.position, start, None, "Dragon should have moved", 5)
+
+        time.sleep(5)
+
+        print dragon.body.velocity.angle_degrees
+        self.assertGreater(dragon.body.velocity.length, speed, "Dragon should have increased speed")
+        self.assertAlmostEqual(dragon.body.velocity.angle_degrees, -60, None, "Dragon should be facing ship", 15)
+
+        time.sleep(2.5)
+
+        self.failIfEqual(ship.health, 100, "Doomed ship did not take damage")
+
+        self.assertEqual(ship2.health, 100, "Free ship took damage")
+        self.assertAlmostEqual(ship2.body.position, start2, None, "Free Ship not in same place", 2)
+
+        time.sleep(6.5)
+
+        self.assertFalse(ship in self.game.world, "Doomed Ship not destroyed")
+
+    def test_dragon_vs_cloak_eating(self):
+        """
+        Tests a dragon and that he can't eat a cloaked ship
+        """
+        start = self.game.world.mid_point()
+        dragon = Dragon(start, 100, 0)
+        dragon.body.velocity = Vec2d(0, -0.05)
+        self.game.world.append(dragon)
+
+        time.sleep(0.5)
+
+        #self.assertAlmostEqual(dragon.body.position[, start, None, "Dragon shouldn't have moved", 3)
+
+        ship = AIShip_SetList("Cloaked", start, self.game, [
+            "IdleCommand(self, 0.5)", # TODO: Looks like get callback before registration so player doesn't exist to play cloak sound?
+            "CloakCommand(self, 5.0)",
+            ])
+
+        health = ship.health.value
+        time.sleep(0.5)
+
+        self.assertEqual(ship.health, health, "Ship lost health")
+
+        time.sleep(3.5)
+
+        self.assertEqual(ship.health, health, "Ship lost health")
+
+        time.sleep(4.5) # wait for decloak
+
+        self.assertNotEqual(ship.health, health, "Ship didn't lose health")
+
+    def test_dragon_ship_escape(self):
+        """
+        Tests a dragon not catching a ship at full speed.
+        """
+        start = self.game.world.mid_point(0,80)
+        dragon = Dragon(start, 100, 20)
+        dragon.body.velocity = Vec2d(0, -5)
+        self.game.world.append(dragon)
+
+        speed = dragon.body.velocity.length
+        time.sleep(2.5)
+
+        self.failIfAlmostEqual(dragon.body.position, start, None, "Dragon should have moved", 2)
+
+        starts = self.game.world.mid_point(50, 0)
+        ship = AIShip_SetList("Doomed", starts, self.game, [
+                "RotateCommand(self, 150)",
+                "ThrustCommand(self, 'B', 7.0, 1.0)",
+            ])        
+
+        start2 = self.game.world.mid_point(-150, 250)
+        ship2 = AIShip_SetList("Free", start2, self.game, [])        
+
+        time.sleep(2.5)
+
+        self.assertGreater(dragon.body.velocity.length, speed, "Dragon not moving faster")
+
+        print dragon.body.velocity.angle_degrees
+        self.failIfAlmostEqual(dragon.body.position, start, None, "Dragon should have moved", 5)
+        self.assertAlmostEqual(dragon.body.velocity.angle_degrees, -50, None, "Dragon should be facing ship", 15)
+
+        time.sleep(3.5)
+
+        self.failIfEqual(ship.health, 100, "Doomed ship did not take damage")
+
+        self.assertEqual(ship2.health, 100, "Free ship took damage")
+        self.assertAlmostEqual(ship2.body.position, start2, None, "Free Ship not in same place", 2)
+
+        time.sleep(5.5)
+
+        self.assertTrue(ship in self.game.world, "Doomed Ship destroyed")
+        self.assertAlmostEqual(dragon.body.velocity.angle_degrees, ship.body.velocity.angle_degrees, None, "Dragon should be headed in about same direction as ship.", 10)
+
+        time.sleep(3.5)
+
+        self.assertAlmostEqual(dragon.body.velocity.length, speed, None, "Dragon should have lost interest", 4)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -3,6 +3,8 @@ Thumbs.db
 /TestResults/
 /bin/
 gson-2.2.jar
+*.orig
+*.pyperf
 *.suo
 *.log
 *.lock

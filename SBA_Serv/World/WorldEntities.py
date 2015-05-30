@@ -18,7 +18,7 @@ import math
 import logging
 import sys
 
-from WorldCommands import RaiseShieldsCommand
+from WorldCommands import RaiseShieldsCommand, CloakCommand
 from Messaging import MessageQueue
 from Commanding import CommandSystem
 from WorldMath import PlayerStat
@@ -248,8 +248,8 @@ class BlackHole(Planet):
             for obj in self.in_celestialbody:
                 if isinstance(obj, Ship):
                     obj.bh_timer += t
-                    if obj.bh_timer >= 5:
-                        obj.take_damage(9000, self)                        
+                    if obj.bh_timer >= 5 and not obj.commandQueue.containstype(RaiseShieldsCommand):
+                        obj.take_damage(9000, self)
 
 class Star(Planet):
     """
@@ -325,8 +325,9 @@ class Dragon(CelestialBody, Influential, Asteroid):
         return False
 
     def apply_influence(self, otherobj, mapped_pos, t):
-        # get closest ship
-        if isinstance(otherobj, Ship) and (self.target == None or self.body.position.get_dist_sqrd(mapped_pos) < self.body.position.get_dist_sqrd(self.target)):
+        # get closest ship though cloak protects ship from dragon 'seeing' it
+        if isinstance(otherobj, Ship) and not otherobj.commandQueue.containstype(CloakCommand) and \
+                (self.target == None or self.body.position.get_dist_sqrd(mapped_pos) < self.body.position.get_dist_sqrd(self.target)):
             if self.target == None:
                 if len(self.in_celestialbody) == 0:
                     otherobj.player.sound = "RAWR"
@@ -337,7 +338,7 @@ class Dragon(CelestialBody, Influential, Asteroid):
         # Objects 'in' dragons take damage
         #if self.pull > 0: # TODO: Range for moving towards thing
         for obj in self.in_celestialbody:
-            if isinstance(obj, Ship):
+            if isinstance(obj, Ship) and not obj.commandQueue.containstype(CloakCommand):
                 obj.dr_timer += t
                 if obj.dr_timer >= 1.5:
                     obj.dr_timer = 0
