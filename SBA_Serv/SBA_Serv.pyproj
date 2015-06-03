@@ -78,6 +78,7 @@
     <Compile Include="Tests\ThrustSteeringTestCases.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Tests\SpawnManagerTestCases.py" />
     <Compile Include="Tests\WorldTestCases.py">
       <SubType>Code</SubType>
     </Compile>
@@ -136,6 +137,7 @@
     <Content Include="Tests\test_destroyed.cfg" />
     <Content Include="Tests\test_hungryhungrybaubles.cfg" />
     <Content Include="Tests\test_hungryhungrybaubles2.cfg" />
+    <Content Include="Tests\test_spawning.cfg" />
     <Content Include="Tests\test_survivor.cfg" />
     <Content Include="Tests\test_combatexercise.cfg" />
     <Content Include="Tests\test_asteroidminer.cfg" />

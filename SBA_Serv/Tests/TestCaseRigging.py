@@ -144,7 +144,7 @@ class SBAWorldTestCase(unittest.TestCase):
 
         The default return is an empty 'ConfiguredWorld'.
         """
-        return ConfiguredWorld(game, self.cfg, pys, empty=True)
+        return ConfiguredWorld(game, self.cfg, pys) #, empty=True)
 
 class SBAServerTestCase(SBAWorldTestCase):
     """

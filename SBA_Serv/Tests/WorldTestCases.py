@@ -66,7 +66,7 @@ class WorldMathTestCases(TestCase):
         self.assertIsInstance(x[0], int, "First value not integer")
         self.assertIsInstance(x[1], int, "Second value not integer")
 
-class WorldTestCase(SBAWorldTestCase):
+class WorldTestCase(SBAGUITestCase):
     """
     Dummy test to create a planet and check it was added to the world of the game.
     """
@@ -113,6 +113,8 @@ class WorldTestCase(SBAWorldTestCase):
 
         self.assertIn(ship, self.game.world, "Ship not in world.")
         self.assertNotEqual(ship.body.position, start, "Ship didn't move") # should move when respawn
+
+        # TODO, need to respawn ship!
 
 
 class WorldNoRespawnTestCase(SBAWorldTestCase):
