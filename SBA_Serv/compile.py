@@ -93,6 +93,7 @@ class BuildExe:
         games.remove('Game\\__init__.py')
         games.remove('Game\\Game.py')
         games.remove('Game\\Players.py')
+        games.remove('Game\\Utils.py')
         self.extra_scripts = ",".join(games).replace("\\", ".").replace(".py", "")
         print self.extra_scripts
  

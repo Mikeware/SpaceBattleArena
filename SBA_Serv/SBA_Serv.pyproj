@@ -45,6 +45,9 @@
     <Compile Include="Game\FindTheMiddle.py" />
     <Compile Include="Game\KingOfTheBubble.py" />
     <Compile Include="Game\Players.py" />
+    <Compile Include="Game\Utils.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Game\__init__.py" />
     <Compile Include="GUI\GraphicsCache.py" />
     <Compile Include="GUI\Helpers.py" />

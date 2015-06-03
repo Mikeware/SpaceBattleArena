@@ -291,6 +291,15 @@ class GameWorld(object):
         #next
         return objList
 
+    def get_count_of_objects(self, type):
+        count = 0
+        for obj in self.__objects.values():
+            if isinstance(obj, type):
+                count += 1
+            #eif
+        #next
+        return count
+
     def getObjectData(self, obj, player):
         objData = {}
         # Convert Type of Object to String

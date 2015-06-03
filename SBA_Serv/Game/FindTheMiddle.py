@@ -12,7 +12,7 @@ You should have received a copy of the GNU General Public License along with thi
 The full text of the license is available online: http://opensource.org/licenses/GPL-2.0
 """
 
-from Game import BasicGame, RoundTimer
+from Game import BasicGame
 from World.WorldGenerator import ConfiguredWorld, getPositionAwayFromOtherObjects
 from World.Entities import Entity
 from World.WorldEntities import Ship
@@ -33,8 +33,8 @@ import pygame
 class FindTheMiddleGame(BasicGame):
     
     def __init__(self, cfgobj):
-        self.__objective_radii = eval(cfgobj.get("FindTheMiddle", "objective_radii"))
-        self.__objective_points = eval(cfgobj.get("FindTheMiddle", "objective_points"))
+        self.__objective_radii = map(int, cfgobj.get("FindTheMiddle", "objective_radii").split(","))
+        self.__objective_points = map(int, cfgobj.get("FindTheMiddle", "objective_points").split(","))
         self.__objective_time = float(cfgobj.getint("FindTheMiddle", "objective_time"))
         self.__objective_velocity = cfgobj.getint("FindTheMiddle", "objective_velocity")
 

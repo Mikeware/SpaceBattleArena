@@ -18,31 +18,12 @@ from Players import Player
 import random, logging, time
 from World.WorldMath import friendly_type
 from World.WorldCommands import RaiseShieldsCommand
-from threading import Thread
 from ThreadStuff.ThreadSafe import ThreadSafeDict
 import pygame, thread
 from pymunk import Vec2d
 from GUI.Helpers import debugfont
 from operator import attrgetter
-
-class RoundTimer(Thread):
-    def __init__(self, seconds, callback):
-        self.totalTime = seconds
-        self.timeLeft = self.totalTime
-        self.__callback = callback
-        self.__cancel = False
-        Thread.__init__(self)
-
-    def cancel(self):
-        self.__cancel = True
-
-    def run(self):
-        for sec in xrange(self.totalTime, -1, -1):            
-            time.sleep(1.0)
-            self.timeLeft = sec
-            if self.__cancel:
-                return
-        self.__callback()
+from Utils import *
 
 class BasicGame(object):
     """
@@ -116,7 +97,9 @@ class BasicGame(object):
 
         # Load World
         self.world = self.world_create()
-        self.world.registerObjectListener(self.world_add_remove_object)   
+        self.world.registerObjectListener(self.world_add_remove_object)
+
+        self._spawnmanager = SpawnManager(cfgobj, self.world)
 
         if self.__autostart:
             self.round_start()
@@ -138,7 +121,7 @@ class BasicGame(object):
         Called automatically by round_start.
         """
         if self.__roundtime > 0 and self._tournament:
-            self.__timer = RoundTimer(self.__roundtime, self.round_over)
+            self.__timer = CallbackTimer(self.__roundtime, self.round_over)
             self.__timer.start()        
 
     def round_get_time_remaining(self):
@@ -148,7 +131,7 @@ class BasicGame(object):
         if self.__timer == None:
             return 0
 
-        return self.__timer.timeLeft
+        return self.__timer.time_left
 
     def round_start(self):
         """
@@ -190,7 +173,8 @@ class BasicGame(object):
                 self._game_add_ship_for_player(player.netid, roundstart=True)
             #next
 
-            self._round_start_timer()   
+            self._round_start_timer()
+            self._spawnmanager.start()
 
     
     def player_added(self, player, reason):
@@ -220,6 +204,8 @@ class BasicGame(object):
             player.bestscore = self._points_initial
             player.deaths = 0
 
+            self._spawnmanager.player_added(reason)
+
     
     def player_get_start_position(self, force=False):
         """
@@ -242,6 +228,7 @@ class BasicGame(object):
         if self.__timer != None:
             self.__timer.cancel() # if we get a round-over prematurely or do to some other condition, we should cancel this current timer
             self.__timer = None
+        self._spawnmanager.stop()
 
         logging.debug("[Game] Round Over")
         self.game_update(0) # make sure we do one last update to sync and refresh the leaderboard cache
@@ -634,6 +621,9 @@ class BasicGame(object):
                     if not self._players[nid].roundover:
                         # if the round isn't over, then re-add the ship
                         self._game_add_ship_for_player(nid, True)
+
+        if not added:
+            self._spawnmanager.check_number(wobj)
     
     def world_physics_pre_collision(self, obj1, obj2):
         """

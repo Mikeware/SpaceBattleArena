@@ -26,8 +26,10 @@ from ObjWrappers.PlanetWrapper import PlanetGUI
 from ObjWrappers.AsteroidWrapper import AsteroidGUI
 from ObjWrappers.WeaponWrappers import TorpedoGUI
 from Game.KingOfTheBubble import Bubble, KingOfTheBubbleGame
+from Game.DiscoveryQuest import Outpost, DiscoveryQuestGame
 from GraphicsCache import Cache
 from World.WorldEntities import Ship, Planet, Asteroid, Torpedo, BlackHole, Nebula, Star, Dragon
+from World.WorldGenerator import *
 from Server.MWNL2 import getIPAddress
 from pymunk import Vec2d
 from Helpers import infofont
@@ -50,7 +52,7 @@ class MessageLogHandler(logging.Handler):
         if self.filter == None or (self.filter != None and str(record.message).find(self.filter) != -1):
             self.messages.append(record.message)
 
-def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=False, sound=False, testcase=None):    
+def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=False, sound=False, cfg=None, testcase=None):
     #region Initialization
     logging.info("Initiating PyGame...")
 
@@ -319,7 +321,7 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                         logger.removeHandler(mlh)
                         mlh.messages.clear()
                 elif event.key == K_a:
-                    if mousemode not in ("AddAsteroid", "AddPlanet", "AddBlackHole", "AddStar", "AddNebula", "AddDragon", "AddBubble"):
+                    if mousemode not in ("AddAsteroid", "AddPlanet", "AddBlackHole", "AddStar", "AddNebula", "AddDragon", "AddBubble", "AddOutpost"):
                         mousemode = "AddAsteroid"
                     elif mousemode == "AddAsteroid":
                         mousemode = "AddPlanet"
@@ -333,6 +335,8 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                         mousemode = "AddDragon"
                     elif mousemode == "AddDragon" and isinstance(game, KingOfTheBubbleGame):
                         mousemode = "AddBubble"
+                    elif mousemode == "AddDragon" and isinstance(game, DiscoveryQuestGame):
+                        mousemode = "AddOutpost"
                     else:
                         mousemode = None
                 elif event.key == K_k:
@@ -381,27 +385,15 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                 elif mousemode == "Explode":
                     mousemode = None                
                     world.causeExplosion((x, y), 256, 1000)
-                elif mousemode == "AddAsteroid":
+                elif mousemode in ("AddAsteroid", "AddPlanet", "AddBlackHole", "AddStar", "AddNebula", "AddDragon"):
+                    eval("spawn_" + mousemode[3:] + "(world, cfg, (" + str(x) + "," + str(y) + "))")
                     mousemode = None
-                    world.append(Asteroid((x, y)))
-                elif mousemode == "AddPlanet":
-                    mousemode = None
-                    world.append(Planet((x, y)))
-                elif mousemode == "AddBlackHole":
-                    mousemode = None
-                    world.append(BlackHole((x, y)))
-                elif mousemode == "AddStar":
-                    mousemode = None
-                    world.append(Star((x, y)))
-                elif mousemode == "AddNebula":
-                    mousemode = None
-                    world.append(Nebula((x, y), (512, 128)))
-                elif mousemode == "AddDragon":
-                    mousemode = None
-                    world.append(Dragon((x, y)))
                 elif mousemode == "AddBubble":
                     mousemode = None
                     game.addBubbles(world, 1, pos=(x, y))
+                elif mousemode == "AddOutpost":
+                    mousemode = None
+                    world.append(Outpost((x, y)))
                 elif zoomout and event.button == 1:
                     # zoom in
                     zoomout = False

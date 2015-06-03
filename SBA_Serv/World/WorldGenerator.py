@@ -73,33 +73,62 @@ def ConfiguredWorld(game, cfg, pys=True, empty=False, objlistener=None):
     world = GameWorld(game, (cfg.getint("World","width"), cfg.getint("World","height")), pys, objlistener)
 
     if not empty:
-        av_sizes = eval(cfg.get("Nebula", "sizes"))
         for neb in xrange(cfg.getint("Nebula", "number")):
-            world.append(Nebula(getPositionAwayFromOtherObjects(world, 30, 30), random.choice(av_sizes), cfg_rand_min_max(cfg, "Nebula", "pull")))
+            spawn_Nebula(world, cfg)
         #next ast
 
         for p in xrange(cfg.getint("Planet", "number")):
-            world.append(Planet(getPositionAwayFromOtherObjects(world, 200, 100), cfg_rand_min_max(cfg, "Planet", "range"), cfg_rand_min_max(cfg, "Planet", "pull")))
+            spawn_Planet(world, cfg)
         #next p 
 
         for bh in xrange(cfg.getint("BlackHole", "number")):
-            world.append(BlackHole(getPositionAwayFromOtherObjects(world, 250, 100), cfg_rand_min_max(cfg, "BlackHole", "range"), cfg_rand_min_max(cfg, "BlackHole", "pull")))
+            spawn_BlackHole(world, cfg)
         #next bh
 
         for s in xrange(cfg.getint("Star", "number")):
-            world.append(Star(getPositionAwayFromOtherObjects(world, 250, 100), cfg_rand_min_max(cfg, "Star", "range"), cfg_rand_min_max(cfg, "Star", "pull")))
+            spawn_Star(world, cfg)
         #next bh
 
         for ast in xrange(cfg.getint("Asteroid", "number")):
-            world.append(Asteroid(getPositionAwayFromOtherObjects(world, 100, 30)))
+            spawn_Asteroid(world, cfg)
         #next ast
 
         for dragon in xrange(cfg.getint("Dragon", "number")):
-            world.append(Dragon(getPositionAwayFromOtherObjects(world, 128, 16), cfg_rand_min_max(cfg, "Dragon", "range"), cfg_rand_min_max(cfg, "Dragon", "attack_speed"), cfg_rand_min_max(cfg, "Dragon", "health")))
+            spawn_Dragon(world, cfg)
         #next dragon
     #eif
 
     return world
+
+def spawn_Nebula(world, cfg, pos=None):
+    if pos == None:
+        pos = getPositionAwayFromOtherObjects(world, 30, 30)
+    world.append(Nebula(pos, random.choice(eval(cfg.get("Nebula", "sizes"))), cfg_rand_min_max(cfg, "Nebula", "pull")))
+
+def spawn_Planet(world, cfg, pos=None):
+    if pos == None:
+        pos = getPositionAwayFromOtherObjects(world, 200, 100)
+    world.append(Planet(pos, cfg_rand_min_max(cfg, "Planet", "range"), cfg_rand_min_max(cfg, "Planet", "pull")))
+
+def spawn_BlackHole(world, cfg, pos=None):
+    if pos == None:
+        pos = getPositionAwayFromOtherObjects(world, 250, 100)
+    world.append(BlackHole(pos, cfg_rand_min_max(cfg, "BlackHole", "range"), cfg_rand_min_max(cfg, "BlackHole", "pull")))
+
+def spawn_Star(world, cfg, pos=None):
+    if pos == None:
+        pos = getPositionAwayFromOtherObjects(world, 250, 100)
+    world.append(Star(pos, cfg_rand_min_max(cfg, "Star", "range"), cfg_rand_min_max(cfg, "Star", "pull")))
+
+def spawn_Asteroid(world, cfg, pos=None):
+    if pos == None:
+        pos = getPositionAwayFromOtherObjects(world, 100, 30)
+    world.append(Asteroid(pos))
+
+def spawn_Dragon(world, cfg, pos=None):
+    if pos == None:
+        pos = getPositionAwayFromOtherObjects(world, 128, 16)
+    world.append(Dragon(pos, cfg_rand_min_max(cfg, "Dragon", "range"), cfg_rand_min_max(cfg, "Dragon", "attack_speed"), cfg_rand_min_max(cfg, "Dragon", "health")))
 
 def cfg_rand_min_max(cfg, section, option):
     """Helper method to generate a random int for a config option.

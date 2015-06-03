@@ -158,7 +158,7 @@ if defaults:
             #TODO: Set World Size Here?
         #else:
         #startGame(title, game, fullscreen:bool, (xres, yres), showstats:bool, sound:bool)
-        main.startGame(titlever + title_game, game, cfg.getboolean("Application", "fullscreen"), resolution, cfg.getboolean("Application", "showstats"), cfg.getboolean("Application", "sound"))
+        main.startGame(titlever + title_game, game, cfg.getboolean("Application", "fullscreen"), resolution, cfg.getboolean("Application", "showstats"), cfg.getboolean("Application", "sound"), cfg)
     except:
         logging.error(traceback.format_exc())
         print traceback.format_exc()

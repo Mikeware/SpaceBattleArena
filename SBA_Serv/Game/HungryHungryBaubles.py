@@ -12,7 +12,8 @@ You should have received a copy of the GNU General Public License along with thi
 The full text of the license is available online: http://opensource.org/licenses/GPL-2.0
 """
 
-from Game import BasicGame, RoundTimer
+from Game import BasicGame
+from Utils import CallbackTimer
 from World.WorldGenerator import ConfiguredWorld, getPositionAwayFromOtherObjects
 from World.Entities import PhysicalRound, Entity
 from World.WorldEntities import Ship
@@ -131,7 +132,7 @@ class HungryHungryBaublesGame(BasicGame):
         self.newBaubleTimer()    
         
     def newBaubleTimer(self):
-        self.__btimer = RoundTimer(self.cfg.getint("HungryHungryBaubles", "bauble_timer"), self.spawnBauble)
+        self.__btimer = CallbackTimer(self.cfg.getint("HungryHungryBaubles", "bauble_timer"), self.spawnBauble)
         self.__btimer.start()
 
     def spawnBauble(self):

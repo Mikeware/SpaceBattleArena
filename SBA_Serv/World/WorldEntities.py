@@ -190,7 +190,7 @@ class Nebula(CelestialBody, PhysicalEllipse):
         objData["MAJOR"] = self.major
         objData["MINOR"] = self.minor
 
-class Planet(CelestialBody, Influential, PhysicalRound):
+class Planet(Influential, PhysicalRound):
     """
     Planets (and similar celestial bodies) have gravity which will pull a player towards their center
 
@@ -230,7 +230,7 @@ class Planet(CelestialBody, Influential, PhysicalRound):
         # apply 'gravity' pull amount force towards planet's center
         otherobj.body.apply_impulse((mapped_pos - self.body.position) * -self.pull * t, (0,0))
 
-class BlackHole(Planet):
+class BlackHole(CelestialBody, Planet):
     """
     BlackHoles are similar to planets however have no resources and have stronger gravity fields
     """
@@ -251,7 +251,7 @@ class BlackHole(Planet):
                     if obj.bh_timer >= 5 and not obj.commandQueue.containstype(RaiseShieldsCommand):
                         obj.take_damage(9000, self)
 
-class Star(Planet):
+class Star(CelestialBody, Planet):
     """
     Stars are similar to planets/blackholes however cause damage in relation to how close you are to their center
     """
