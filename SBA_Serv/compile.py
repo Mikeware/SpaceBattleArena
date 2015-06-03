@@ -19,7 +19,7 @@ try:
     import operator
     import pymunk
     from zipfile import ZipFile, ZIP_DEFLATED
-    import zlib
+    import zlib    
 except ImportError, message:
     raise SystemExit,  "Unable to load module. %s" % message
  
@@ -44,6 +44,16 @@ class pygame2exe(py2exe.build_exe.py2exe): #This hack make sure that pygame defa
 
 class BuildExe:
     def __init__(self):
+        #Update build num
+        f = open("buildnum", "r+")
+        bnum = int(f.read()) + 1
+
+        f.seek(0)
+        f.write(str(bnum))
+        f.close()
+
+        from SBA_Serv import __version__
+
         #Name of starting .py
         self.script = "SBA_Serv.py"
  
@@ -54,7 +64,7 @@ class BuildExe:
         self.project_url = "http://www.mikeware.com/"
  
         #Version of program
-        self.project_version = "1.0.1"
+        self.project_version = __version__
  
         #License of the program
         self.license = "GPLv2"
@@ -76,6 +86,7 @@ class BuildExe:
         extra_files = self.find_data_files('GUI\\', '*.png', '*.wav', recursive=True)
         root = [os.path.join(pymunk_dir, 'chipmunk.dll'),
                                   "freesansbold.ttf", 
+                                  "buildnum",
                                   "..\changelog.md", "..\README.md", "..\LICENSE", "..\COPYING"]
         root += glob.glob("*.cfg")
         extra_files += [('', root)]

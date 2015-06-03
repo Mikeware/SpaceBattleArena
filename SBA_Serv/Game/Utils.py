@@ -139,7 +139,7 @@ class SpawnManager:
 
             logging.info("Spawn Manager Found Types: %s", repr(SpawnManager.ENTITY_TYPES.keys()))
 
-            print SpawnManager.ENTITY_TYPES
+            #print SpawnManager.ENTITY_TYPES
 
         self._cfg = cfg
         self._world = world

@@ -486,12 +486,21 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
             windowSurface.blit(font.render("T: " + repr(len(threading.enumerate())), False, (192, 192, 192)), (0, 12))
             windowSurface.blit(font.render("World Offset: " + repr((-offsetx, -offsety)), False, (255, 255, 255)), (0,24))
             windowSurface.blit(font.render("World Size: " + repr(world.size) + " - " + repr((int(x), int(y))), False, (255, 255, 255)), (0,36))
-            windowSurface.blit(font.render("World Objects: " + repr(len(world)), False, (255, 255, 255)), (0,48))
+            windowSurface.blit(font.render("World Objects: " + repr(len(world)), False, (255, 255, 255)), (0,48))            
             
             if mouselock:
-                windowSurface.blit(font.render("MOUSELOCK: ON", False, (255, 255, 255)), (resolution[0]-104,0))
+                windowSurface.blit(font.render("MOUSELOCK: ON", False, (255, 255, 255)), (resolution[0]-114,0))
             else:
-                windowSurface.blit(font.render("MOUSELOCK: OFF", False, (255, 255, 255)), (resolution[0]-104,0))
+                windowSurface.blit(font.render("MOUSELOCK: OFF", False, (255, 255, 255)), (resolution[0]-114,0))
+            if "-" in windowcaption:
+                text = font.render(windowcaption.split("-")[1], False, (192, 192, 192))
+                windowSurface.blit(text, (resolution[0]-text.get_width()-2, 12))
+                text = font.render(windowcaption.split("-")[0][18:-1], False, (192, 192, 192))
+                windowSurface.blit(text, (resolution[0]-text.get_width()-2, 24))
+            else:
+                text = font.render(windowcaption[18:], False, (192, 192, 192))
+                windowSurface.blit(text, (resolution[0]-text.get_width()-2, 24))
+
             windowSurface.blit(font.render(repr(flags), False, (255, 255, 255)), (0, resolution[1]-12))            
 
             if logintercept:
