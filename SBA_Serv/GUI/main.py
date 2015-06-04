@@ -29,7 +29,6 @@ from Game.KingOfTheBubble import Bubble, KingOfTheBubbleGame
 from Game.DiscoveryQuest import Outpost, DiscoveryQuestGame
 from GraphicsCache import Cache
 from World.WorldEntities import Ship, Planet, Asteroid, Torpedo, BlackHole, Nebula, Star, Dragon
-from World.WorldGenerator import *
 from Server.MWNL2 import getIPAddress
 from pymunk import Vec2d
 from Helpers import infofont
@@ -321,7 +320,7 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                         logger.removeHandler(mlh)
                         mlh.messages.clear()
                 elif event.key == K_a:
-                    if mousemode not in ("AddAsteroid", "AddPlanet", "AddBlackHole", "AddStar", "AddNebula", "AddDragon", "AddBubble", "AddOutpost"):
+                    if mousemode == None or not mousemode.startswith("Add"):
                         mousemode = "AddAsteroid"
                     elif mousemode == "AddAsteroid":
                         mousemode = "AddPlanet"
@@ -385,15 +384,9 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                 elif mousemode == "Explode":
                     mousemode = None                
                     world.causeExplosion((x, y), 256, 1000)
-                elif mousemode in ("AddAsteroid", "AddPlanet", "AddBlackHole", "AddStar", "AddNebula", "AddDragon"):
-                    eval("spawn_" + mousemode[3:] + "(world, cfg, (" + str(x) + "," + str(y) + "))")
+                elif mousemode.startswith("Add"):
+                    eval(mousemode[3:] + ".spawn(world, cfg, (" + str(x) + "," + str(y) + "))")
                     mousemode = None
-                elif mousemode == "AddBubble":
-                    mousemode = None
-                    game.addBubbles(world, 1, pos=(x, y))
-                elif mousemode == "AddOutpost":
-                    mousemode = None
-                    world.append(Outpost((x, y)))
                 elif zoomout and event.button == 1:
                     # zoom in
                     zoomout = False

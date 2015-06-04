@@ -21,7 +21,7 @@ import sys
 from WorldCommands import RaiseShieldsCommand, CloakCommand
 from Messaging import MessageQueue
 from Commanding import CommandSystem
-from WorldMath import PlayerStat
+from WorldMath import PlayerStat, getPositionAwayFromOtherObjects, cfg_rand_min_max
 from Entities import PhysicalRound, PhysicalEllipse
 
 class Ship(PhysicalRound):
@@ -190,6 +190,13 @@ class Nebula(CelestialBody, PhysicalEllipse):
         objData["MAJOR"] = self.major
         objData["MINOR"] = self.minor
 
+    @staticmethod
+    def spawn(world, cfg, pos=None):
+        if pos == None:
+            pos = getPositionAwayFromOtherObjects(world, cfg.getint("Nebula", "buffer_object"), cfg.getint("Nebula", "buffer_edge"))
+        world.append(Nebula(pos, random.choice(eval(cfg.get("Nebula", "sizes"))), cfg_rand_min_max(cfg, "Nebula", "pull")))
+
+
 class Planet(Influential, PhysicalRound):
     """
     Planets (and similar celestial bodies) have gravity which will pull a player towards their center
@@ -230,12 +237,19 @@ class Planet(Influential, PhysicalRound):
         # apply 'gravity' pull amount force towards planet's center
         otherobj.body.apply_impulse((mapped_pos - self.body.position) * -self.pull * t, (0,0))
 
+    @staticmethod
+    def spawn(world, cfg, pos=None):
+        if pos == None:
+            pos = getPositionAwayFromOtherObjects(world, cfg.getint("Planet", "buffer_object"), cfg.getint("Planet", "buffer_edge"))
+        world.append(Planet(pos, cfg_rand_min_max(cfg, "Planet", "range"), cfg_rand_min_max(cfg, "Planet", "pull")))
+
 class BlackHole(CelestialBody, Planet):
     """
     BlackHoles are similar to planets however have no resources and have stronger gravity fields
     """
-    def __init__(self, pos, size=96, pull=64):
+    def __init__(self, pos, size=96, pull=64, crushtime=5.0):
         super(BlackHole, self).__init__(pos, size, pull, 16)
+        self._crushtime = crushtime
 
     def collide_start(self, otherobj):
         otherobj.bh_timer = 0
@@ -243,23 +257,30 @@ class BlackHole(CelestialBody, Planet):
         return False
 
     def update(self, t):
-        if self.pull > 0:
+        if self.pull > 0 and self._crushtime > 0.001:
             # Ships in center of BH for too long get crushed
             for obj in self.in_celestialbody:
                 if isinstance(obj, Ship):
                     obj.bh_timer += t
-                    if obj.bh_timer >= 5 and not obj.commandQueue.containstype(RaiseShieldsCommand):
+                    if obj.bh_timer >= self._crushtime and not obj.commandQueue.containstype(RaiseShieldsCommand):
                         obj.take_damage(9000, self)
+
+    @staticmethod
+    def spawn(world, cfg, pos=None):
+        if pos == None:
+            pos = getPositionAwayFromOtherObjects(world, cfg.getint("BlackHole", "buffer_object"), cfg.getint("BlackHole", "buffer_edge"))
+        world.append(BlackHole(pos, cfg_rand_min_max(cfg, "BlackHole", "range"), cfg_rand_min_max(cfg, "BlackHole", "pull"), cfg.getfloat("BlackHole", "crush_time")))
+
 
 class Star(CelestialBody, Planet):
     """
     Stars are similar to planets/blackholes however cause damage in relation to how close you are to their center
     """
-    def __init__(self, pos, size=192, pull=32):
+    def __init__(self, pos, size=192, pull=32, extra=0.0):
         super(Star, self).__init__(pos, size, pull, 90)
 
         # make the star pull have a small impact on the rate of damage
-        self.dmg_divide = 18 - (self.pull / 6.0) 
+        self.dmg_divide = 18 - (self.pull / 6.0) - extra
 
     def collide_start(self, otherobj):
         super(Star, self).collide_start(otherobj)
@@ -274,6 +295,12 @@ class Star(CelestialBody, Planet):
                     obj.take_damage(max(0, (self.radius + obj.radius - self.body.position.get_distance(obj.body.position)) * t / self.dmg_divide), self)
 
         super(Star, self).update(t)
+
+    @staticmethod
+    def spawn(world, cfg, pos=None):
+        if pos == None:
+            pos = getPositionAwayFromOtherObjects(world, cfg.getint("Star", "buffer_object"), cfg.getint("Star", "buffer_edge"))
+        world.append(Star(pos, cfg_rand_min_max(cfg, "Star", "range"), cfg_rand_min_max(cfg, "Star", "pull"), cfg.getfloat("Star", "dmg_mod")))
 
 class Asteroid(PhysicalRound):
     """
@@ -294,13 +321,19 @@ class Asteroid(PhysicalRound):
         v = random.randint(20000, 40000)
         self.body.apply_impulse((random.randint(-1, 1) * v, random.randint(-1, 1) * v), (0,0))
 
+    @staticmethod
+    def spawn(world, cfg, pos=None):
+        if pos == None:
+            pos = getPositionAwayFromOtherObjects(world, cfg.getint("Asteroid", "buffer_object"), cfg.getint("Asteroid", "buffer_edge"))
+        world.append(Asteroid(pos))
+
 class Dragon(CelestialBody, Influential, Asteroid):
     """
     Dragons move around the world and may try and track a nearby player.
 
     Ships are munched on a bit when close to its mouth.
     """
-    def __init__(self, pos, attack_range=64, attack_speed=5, health=400, mass = None):
+    def __init__(self, pos, attack_range=64, attack_speed=5, health=400, attack_time=(1.0, 2.0), attack_amount=(15, 25), mass = None):
         if mass == None:
             mass = random.randint(3000, 5000)
         super(Dragon, self).__init__(pos, mass)
@@ -311,10 +344,17 @@ class Dragon(CelestialBody, Influential, Asteroid):
 
         self.influence_range = attack_range
         self.attack_speed = attack_speed
+        self.attack_time = attack_time
+        self.attack_amt = attack_amount
+        self._get_next_attack()
         self.target = None
         #initial movement
         v = random.randint(12000, 18000)
         self.body.apply_impulse((random.randint(-1, 1) * v, random.randint(-1, 1) * v), (0,0))
+
+    def _get_next_attack(self):
+        self.natk = (random.uniform(self.attack_time[0], self.attack_time[1]),
+                     random.randint(self.attack_amt[0], self.attack_amt[1]))
 
     def collide_start(self, otherobj):
         otherobj.dr_timer = 0
@@ -340,9 +380,10 @@ class Dragon(CelestialBody, Influential, Asteroid):
         for obj in self.in_celestialbody:
             if isinstance(obj, Ship) and not obj.commandQueue.containstype(CloakCommand):
                 obj.dr_timer += t
-                if obj.dr_timer >= 1.5:
+                if obj.dr_timer >= self.natk[0]:
                     obj.dr_timer = 0
-                    obj.take_damage(20, self)
+                    obj.take_damage(self.natk[1], self)
+                    self._get_next_attack()
 
         if self.target != None:
             # turn towards target
@@ -361,6 +402,17 @@ class Dragon(CelestialBody, Influential, Asteroid):
 
         objData["MAJOR"] = self.influence_range
         objData["MINOR"] = self.influence_range
+
+    @staticmethod
+    def spawn(world, cfg, pos=None):
+        if pos == None:
+            pos = getPositionAwayFromOtherObjects(world, cfg.getint("Dragon", "buffer_object"), cfg.getint("Dragon", "buffer_edge"))
+        world.append(Dragon(pos, cfg_rand_min_max(cfg, "Dragon", "range"), 
+                            cfg_rand_min_max(cfg, "Dragon", "attack_speed"), 
+                            cfg_rand_min_max(cfg, "Dragon", "health"),
+                            (cfg.getfloat("Dragon", "attack_time_min"), cfg.getfloat("Dragon", "attack_time_max")),
+                            (cfg.getfloat("Dragon", "attack_amount_min"), cfg.getfloat("Dragon", "attack_amount_max")),
+                            ))
 
 class Torpedo(PhysicalRound):
     """

@@ -14,11 +14,10 @@ The full text of the license is available online: http://opensource.org/licenses
 
 from Game import BasicGame
 from Utils import CallbackTimer
-from World.WorldGenerator import ConfiguredWorld, getPositionAwayFromOtherObjects
 from World.Entities import PhysicalRound, Entity
 from World.WorldEntities import Ship
 from GUI.ObjWrappers.GUIEntity import GUIEntity
-from World.WorldMath import intpos, friendly_type, PlayerStat, aligninstances
+from World.WorldMath import intpos, friendly_type, PlayerStat, aligninstances, getPositionAwayFromOtherObjects
 from GUI.GraphicsCache import Cache
 from GUI.Helpers import debugfont
 import logging
@@ -36,38 +35,30 @@ class HungryHungryBaublesGame(BasicGame):
 
         super(HungryHungryBaublesGame, self).__init__(cfgobj)
 
-    def world_create(self, pys=True):
-        w = ConfiguredWorld(self, self.cfg, pys)
-        
-        # Add some initial small Baubles
-        self.__addBaubles(w, self.cfg.getint("HungryHungryBaubles", "bauble_initial"))
-
-        return w
-
     def game_get_info(self):
         return {"GAMENAME": "HungryHungryBaubles"}
 
     def player_added(self, player, reason):
         if reason == BasicGame._ADD_REASON_START_:
-            self.__addBauble(player)
-            self.__addBaubles(self.world, self.cfg.getint("HungryHungryBaubles", "bauble_per_player"))
+            self.__addBauble(player) # Add Home Base
 
         super(HungryHungryBaublesGame, self).player_added(player, reason)
 
     def __addBauble(self, player, force=False):
         logging.info("Add Bauble (%s) for Player %d", repr(force), player.netid)
         # add player bauble
-        b = Bauble(getPositionAwayFromOtherObjects(self.world, 80, 30, force), self.__points_gold)
+        b = Bauble(getPositionAwayFromOtherObjects(self.world, self.cfg.getint("Bauble", "buffer_object"), self.cfg.getint("Bauble", "buffer_edge"), force), self.__points_gold)
 
         self.__baubles[player.netid] = b
 
         self.world.append(b)
         logging.info("Done Adding Bauble")
 
+    # TODO: Can get rid of this?
     def __addBaubles(self, w, num, force=False):
         logging.info("Adding %d Baubles (%s)", num, repr(force))
         for i in xrange(num):
-            w.append(Bauble(getPositionAwayFromOtherObjects(w, 100, 30, force), self.__points_blue))
+            Bauble.spawn(w, self.cfg)
         logging.info("Done Adding Baubles")
 
     def world_physics_pre_collision(self, obj1, obj2):
@@ -114,32 +105,11 @@ class HungryHungryBaublesGame(BasicGame):
 
         return env
 
-    def round_over(self):
-        self.__btimer.cancel() # prevent more baubles from being spawned!
-
-        super(HungryHungryBaublesGame, self).round_over()
-
     def gui_draw_game_world_info(self, surface, flags, trackplayer):
         for player in self.game_get_current_player_list():
             if player.object != None and self.__baubles.has_key(player.netid):
                 # draw line between player and Bauble
                 pygame.draw.line(surface, player.color, intpos(player.object.body.position), intpos(self.__baubles[player.netid].body.position))
-
-    def round_start(self):
-        super(HungryHungryBaublesGame, self).round_start()
-
-        # start Bauble Spawn Timer
-        self.newBaubleTimer()    
-        
-    def newBaubleTimer(self):
-        self.__btimer = CallbackTimer(self.cfg.getint("HungryHungryBaubles", "bauble_timer"), self.spawnBauble)
-        self.__btimer.start()
-
-    def spawnBauble(self):
-        self.__addBaubles(self.world, self.cfg.getint("HungryHungryBaubles", "bauble_timer_spawns"))
-        
-        self.newBaubleTimer()
-
 
 class BaubleWrapper(GUIEntity):
     def __init__(self, obj, world):
@@ -171,3 +141,9 @@ class Bauble(PhysicalRound):
 
     def getExtraInfo(self, objData, player):
         objData["VALUE"] = self.value
+
+    @staticmethod
+    def spawn(world, cfg, pos=None):
+        if pos == None:
+            pos = getPositionAwayFromOtherObjects(world, cfg.getint("Bauble", "buffer_object"), cfg.getint("Bauble", "buffer_edge"))
+        world.append(Bauble(pos, cfg.getint("HungryHungryBaubles", "bauble_points_blue")))

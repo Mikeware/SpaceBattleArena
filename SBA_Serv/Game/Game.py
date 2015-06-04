@@ -12,12 +12,12 @@ You should have received a copy of the GNU General Public License along with thi
 The full text of the license is available online: http://opensource.org/licenses/GPL-2.0
 """
 
-from World.WorldGenerator import ConfiguredWorld
 from World.WorldEntities import Ship, BlackHole, Nebula
 from Players import Player
 import random, logging, time
 from World.WorldMath import friendly_type
 from World.WorldCommands import RaiseShieldsCommand
+from World.WorldMap import GameWorld
 from ThreadStuff.ThreadSafe import ThreadSafeDict
 import pygame, thread
 from pymunk import Vec2d
@@ -51,6 +51,7 @@ class BasicGame(object):
     def __init__(self, cfgobj):
         self.cfg = cfgobj
         self.__started = False
+        self.__created = False
 
         # Load Config
         self.__autostart = cfgobj.getboolean("Game", "auto_start")
@@ -96,8 +97,7 @@ class BasicGame(object):
         self.__leaderboard_cache = self.game_get_current_player_list()
 
         # Load World
-        self.world = self.world_create()
-        self.world.registerObjectListener(self.world_add_remove_object)
+        self.world = GameWorld(self, (cfgobj.getint("World","width"), cfgobj.getint("World","height")), self.world_add_remove_object)
 
         self._spawnmanager = SpawnManager(cfgobj, self.world)
 
@@ -163,11 +163,22 @@ class BasicGame(object):
                     self._tournamentfinalround = True
                 #eif
             
-
                 # we'll reset the world here so it's "fresh" and ready as soon as the game starts
                 if self.__resetworldround:
+                    logging.info("Resetting World.")
                     self._world_reset()
+                elif not self.__created:
+                    logging.info("Creating Initial World.")
+                    self.world_create()
+
+            elif not self.__created:
+                logging.info("Creating Initial World.")
+                self.world_create()
             #eif
+
+            if not self.__created:
+                self.world.start()
+                self.__created = True
 
             for player in self.game_get_current_player_list():
                 self._game_add_ship_for_player(player.netid, roundstart=True)
@@ -264,23 +275,24 @@ class BasicGame(object):
             self.__autostart = False
             self._tournamentcurrentgroup += 1
             logging.debug("[Tournament] Group Number Now %d", self._tournamentcurrentgroup)
-        if not self.__autostart:
-            # If not autostart, wait for next round to start
-            self.__started = False
-        else:
+
+        # If not autostart, wait for next round to start
+        self.__started = False
+        if self.__autostart:
             self.round_start()
 
-    def world_create(self, pys=True):
+    def world_create(self):
         """
-        Called by constructor to create world and when world reset, defaults to the standard world configuration from the config file definitions.
+        Called by game at start of round to create world and when world reset, defaults to the standard world configuration from the config file definitions.
         """
-        return ConfiguredWorld(self, self.cfg, pys, objlistener=self.world_add_remove_object)
+        self._spawnmanager.spawn_initial()
     
     def _world_reset(self):
         """
         Recreates a world, called when the reset_world_each_round property is set.
         """
-        self.world.newWorld(self.world_create(False))
+        self.world.destroy_all()
+        self.world_create()
 
     def round_get_has_started(self):
         """

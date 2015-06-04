@@ -1,5 +1,6 @@
 
 import math
+import random
 
 def friendly_type(obj):
     """
@@ -59,6 +60,39 @@ def aligninstances(obj1, obj2, class1, class2):
 
 def distancesquared(pos1x, pos1y, pos2x, pos2y):
     return (pos1x - pos2x) ** 2 + (pos1y - pos2y) ** 2
+
+def getPositionAwayFromOtherObjects(world, radius, edgebuffer, force=False):
+    """Returns a Position in the world that is away from other objects in it.
+
+    Args:
+        radius: integer range to detect other objects.
+        edgebuffer: integer range to keep away from the edge of the world.
+        force: internal for the physics engine.
+
+    Returns:
+        position tuple
+    """
+    size = world.size
+    x = random.randint(edgebuffer, size[0] - edgebuffer)
+    y = random.randint(edgebuffer, size[1] - edgebuffer)
+    i = 0
+    while len(world.getObjectsInArea((x, y), radius, force)) > 0 and i < 15:
+        i += 1
+        x = random.randint(edgebuffer, size[0] - edgebuffer)
+        y = random.randint(edgebuffer, size[1] - edgebuffer)
+    return (x, y)
+
+def cfg_rand_min_max(cfg, section, option):
+    """Helper method to generate a random int for a config option.
+
+    Config option should be in the form of option_min = value and option_max = value.
+
+    Args:
+        cfg: ConfigParser object.
+        section: Configuration section name.
+        option: Configuration option name.
+    """
+    return random.randint(cfg.getint(section, option+"_min"), cfg.getint(section, option+"_max"))
 
 # used by clients
 def getlocalposdistance(pos1, pos2, worldsize):

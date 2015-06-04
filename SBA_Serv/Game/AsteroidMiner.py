@@ -14,11 +14,10 @@ The full text of the license is available online: http://opensource.org/licenses
 
 from Game import BasicGame
 from Utils import CallbackTimer
-from World.WorldGenerator import ConfiguredWorld, getPositionAwayFromOtherObjects
 from World.Entities import Entity
 from World.WorldEntities import Ship, Asteroid, Torpedo
 from GUI.ObjWrappers.GUIEntity import GUIEntity
-from World.WorldMath import intpos, friendly_type, PlayerStat
+from World.WorldMath import intpos, friendly_type, PlayerStat, getPositionAwayFromOtherObjects
 from GUI.GraphicsCache import Cache
 from GUI.Helpers import debugfont
 import logging

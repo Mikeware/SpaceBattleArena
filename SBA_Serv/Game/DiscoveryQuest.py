@@ -13,11 +13,10 @@ The full text of the license is available online: http://opensource.org/licenses
 """
 
 from Game import BasicGame
-from World.WorldGenerator import getPositionAwayFromOtherObjects, cfg_rand_min_max
 from World.Entities import PhysicalEllipse
 from World.WorldEntities import Nebula
 from GUI.ObjWrappers.GUIEntity import GUIEntity
-from World.WorldMath import intpos, PlayerStat, friendly_type
+from World.WorldMath import intpos, PlayerStat, friendly_type, getPositionAwayFromOtherObjects, cfg_rand_min_max
 from GUI.GraphicsCache import Cache
 from GUI.Helpers import wrapcircle, debugfont
 from ThreadStuff.ThreadSafe import ThreadSafeDict
@@ -52,6 +51,7 @@ class DiscoveryQuestGame(BasicGame):
         self._missions = cfgobj.get("DiscoveryQuest", "mission_objectives").split(",")
         self.scantime = cfgobj.getfloat("DiscoveryQuest", "scan_time")
         self.scanrange = cfgobj.getint("DiscoveryQuest", "scan_range")
+        self.outpostdist = cfgobj.getint("DiscoveryQuest", "ship_spawn_dist")
 
     def game_get_info(self):
         return {"GAMENAME": "DiscoveryQuest"}
@@ -80,13 +80,13 @@ class DiscoveryQuestGame(BasicGame):
         # pick a random outpost to spawn the player besides
         out = intpos(random.choice(self._outposts.values()).body.position)
 
-        pos = (random.randint(out[0]-150, out[0]+150),
-               random.randint(out[1]-150, out[1]+150))
+        pos = (random.randint(out[0]-self.outpostdist, out[0]+self.outpostdist),
+               random.randint(out[1]-self.outpostdist, out[1]+self.outpostdist))
         x = 0
-        while len(self.world.getObjectsInArea(pos, 100)) > 0 and x < 15:
+        while len(self.world.getObjectsInArea(pos, self.outpostdist / 2)) > 0 and x < 15:
             x += 1
-            pos = (random.randint(out[0]-150, out[0]+150),
-                   random.randint(out[1]-150, out[1]+150))
+            pos = (random.randint(out[0]-self.outpostdist, out[0]+self.outpostdist),
+                   random.randint(out[1]-self.outpostdist, out[1]+self.outpostdist))
         
         return pos
 
@@ -113,12 +113,6 @@ class DiscoveryQuestGame(BasicGame):
             return "%d %s B: %d" % (getattr(player, self._primary_victory), player.name, getattr(player, self._secondary_victory))
         else:
             return "%d %s" % (getattr(player, self._primary_victory), player.name)
-
-    def world_create(self, pys = True):
-        world = super(DiscoveryQuestGame, self).world_create(pys)
-        for x in xrange(self.cfg.getint("DiscoveryQuest", "outpost_number")):
-            world.append(Outpost(getPositionAwayFromOtherObjects(world, 80, 30)))
-        return world
 
     def world_add_remove_object(self, wobj, added):
         if isinstance(wobj, Outpost):
@@ -355,6 +349,12 @@ class Outpost(PhysicalEllipse):
 
     def collide_start(self, otherobj):
         return False
+
+    @staticmethod
+    def spawn(world, cfg, pos=None):
+        if pos == None:
+            pos = getPositionAwayFromOtherObjects(world, cfg.getint("Outpost", "buffer_object"), cfg.getint("Outpost", "buffer_edge"))
+        world.append(Outpost(pos))
 
     #def getExtraInfo(self, objData, player):
     #    objData["OWNERID"] = self.owner.id

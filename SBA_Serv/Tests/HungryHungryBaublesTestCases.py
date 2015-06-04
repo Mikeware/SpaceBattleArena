@@ -16,9 +16,6 @@ class HungryHungryBaublesBaubleTestCases(SBAGUITestCase):
     def get_config_filename(self):
         return "test_hungryhungrybaubles2.cfg"
 
-    def world_create(self, game, pys):
-        return None # use default Hungry Baubles construction
-
     def test_bauble_spawning(self):
         """
         Test that we spawn a new bauble when a ship joins.
@@ -30,7 +27,7 @@ class HungryHungryBaublesBaubleTestCases(SBAGUITestCase):
             if isinstance(obj, Bauble):
                 count += 1
 
-        self.assertEqual(count, self.cfg.getint("HungryHungryBaubles", "bauble_initial"), "Not enough initial baubles")
+        self.assertEqual(count, self.cfg.getint("Bauble", "number"), "Not enough initial baubles")
 
         ship = AIShip_SetList("Nothing", self.game.world.mid_point(0), self.game, [])
 
@@ -42,9 +39,9 @@ class HungryHungryBaublesBaubleTestCases(SBAGUITestCase):
                 count += 1
 
         # +1 for Golden bauble for player
-        self.assertEqual(count, self.cfg.getint("HungryHungryBaubles", "bauble_initial") + self.cfg.getint("HungryHungryBaubles", "bauble_per_player") + 1, "Baubles didn't spawn for player")
+        self.assertEqual(count, self.cfg.getint("Bauble", "number") + self.cfg.getint("Bauble", "spawn_on_player_num") + 1, "Baubles didn't spawn for player")
 
-        time.sleep(4.0)
+        time.sleep(4.5)
 
         count = 0
         for obj in self.game.world:
@@ -52,7 +49,7 @@ class HungryHungryBaublesBaubleTestCases(SBAGUITestCase):
                 count += 1
 
         # +1 for Golden bauble for player
-        self.assertEqual(count, self.cfg.getint("HungryHungryBaubles", "bauble_initial") + self.cfg.getint("HungryHungryBaubles", "bauble_per_player") + self.cfg.getint("HungryHungryBaubles", "bauble_timer_spawns") + 1, "Baubles didn't spawn on timer")
+        self.assertEqual(count, self.cfg.getint("Bauble", "number") + self.cfg.getint("Bauble", "spawn_on_player_num") + self.cfg.getint("Bauble", "spawn_time_num") + 1, "Baubles didn't spawn on timer")
 
 
 class HungryHungryBaublesTestCases(SBAGUITestCase):
@@ -63,9 +60,6 @@ class HungryHungryBaublesTestCases(SBAGUITestCase):
     """
     def get_config_filename(self):
         return "test_hungryhungrybaubles.cfg"
-
-    def world_create(self, game, pys):
-        return None
     
     def test_baubles_dont_spawn(self):
         """

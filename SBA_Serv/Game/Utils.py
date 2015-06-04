@@ -1,14 +1,13 @@
 
 import logging
 import time
+import random
 
-from random import randint
 from threading import Thread
 from importlib import import_module
 
 import World.WorldEntities
-from World.WorldMath import intpos, friendly_type
-from World.WorldGenerator import *
+from World.WorldMath import intpos, friendly_type, cfg_rand_min_max, getPositionAwayFromOtherObjects
 from World.Entities import Entity
 
 class CallbackTimer(Thread):
@@ -57,16 +56,17 @@ class SpawnConfig:
     """
     Class used to track the individual spawning properties of a given Entity Type
     """
-    def __init__(self, name, ctype):
+    def __init__(self, name, ctype, initialnum):
         self.name = name
         self.type = ctype
+        self.num_initial = initialnum
         self._timed = False
         self._min = False
         self._max = False
         self._player = False
 
     def add_timed_spawn(self, time_num, time_min, time_max): # int, int, int
-        if time_num > 0 and time_min > 0 and time_max > time_min:
+        if time_num > 0 and time_min > 0 and time_max >= time_min:
             self._timed = True
             self.time_num = time_num
             self._time_min = time_min
@@ -147,7 +147,7 @@ class SpawnManager:
         for entity, ctype in SpawnManager.ENTITY_TYPES.iteritems():
             # Check each section for the properties we want!
             if cfg.has_section(entity):
-                sc = SpawnConfig(entity, ctype)
+                sc = SpawnConfig(entity, ctype, cfg.getint(entity, "number"))
                 # do we want to spawn any entities over time?
                 if cfg.has_option(entity, "spawn_time_num"):
                     sc.add_timed_spawn(cfg.getint(entity, "spawn_time_num"),
@@ -274,12 +274,20 @@ class SpawnManager:
                 count = sc.time_num
         
             for i in xrange(count):
-                eval("spawn_" + typename + "(self._world, self._cfg)")
+                sc.type.spawn(self._world, self._cfg)
         else:
-            eval("spawn_" + typename + "(self._world, self._cfg, " + repr(intpos(pos)) + ")")
+            sc.type.spawn(self._world, self._cfg, pos)
 
         # readd a timer now that its expired if we haven't hit the max number of objects in world
         if respawntimer and self._should_spawn(sc):
             self.clean_timer(typename)
             self.add_timer(typename)
+
+    def spawn_initial(self):
+        """
+        Spawns the configured number of each object into the world.
+        """
+        for sc in self._spawns.itervalues():
+            for x in xrange(sc.num_initial):
+                sc.type.spawn(self._world, self._cfg)
 

@@ -102,7 +102,6 @@
     <Compile Include="World\WorldEntities.py" />
     <Compile Include="World\Messaging.py" />
     <Compile Include="World\WorldCommands.py" />
-    <Compile Include="World\WorldGenerator.py" />
     <Compile Include="World\WorldMap.py" />
     <Compile Include="World\WorldMath.py" />
     <Compile Include="World\__init__.py" />

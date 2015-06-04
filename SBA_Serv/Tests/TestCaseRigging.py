@@ -26,7 +26,6 @@ from Game.Survivor import SurvivorGame
 from Game.HungryHungryBaubles import HungryHungryBaublesGame
 
 from ConfigParser import ConfigParser
-from World.WorldGenerator import ConfiguredWorld
 import Server.WorldServer as WorldServer
 
 import thread
@@ -37,17 +36,14 @@ import time
 
 class TestGame(BasicGame):
 
-    def world_create(self, pys = True):
+    def world_create(self):
         """
         Method called by game to construct world, by default calls the testcase's world_create with an empty configured world.
 
         If they pass None, then will use the game's default world construction.
         """
-        world = self._testcase.world_create(self, pys)
-        if world == None:
-            return super(TestGame, self).world_create(pys)
-
-        return world
+        super(TestGame, self).world_create()
+        self._testcase.world_create(self)        
 
 #TODO: Investigate the best way to inject this wrapper around any Subgame
 class TestBasicGame(TestGame):
@@ -61,11 +57,6 @@ class TestFindTheMiddleGame(TestGame, FindTheMiddleGame):
         self._testcase = testcase
 
         super(TestFindTheMiddleGame, self).__init__(cfg)
-
-    def world_create(self, pys = True):
-        world = super(TestFindTheMiddleGame, self).world_create(pys)
-        self.midpoint = (int(world.width / 2), int(world.height / 2))
-        return world
 
 class TestAsteroidMinerGame(TestGame, AsteroidMinerGame):
     def __init__(self, cfg, testcase):
@@ -133,7 +124,7 @@ class SBAWorldTestCase(unittest.TestCase):
     def get_config_filename(self):
         return None
 
-    def world_create(self, game, pys=True):
+    def world_create(self, game):
         """
         Test Case should override this method to generate the base world for their test cases.
         Called by 'TestGame'
@@ -144,7 +135,7 @@ class SBAWorldTestCase(unittest.TestCase):
 
         The default return is an empty 'ConfiguredWorld'.
         """
-        return ConfiguredWorld(game, self.cfg, pys) #, empty=True)
+        pass
 
 class SBAServerTestCase(SBAWorldTestCase):
     """

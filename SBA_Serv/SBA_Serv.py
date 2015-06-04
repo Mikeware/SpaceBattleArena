@@ -34,7 +34,6 @@ if __name__ == "__main__":
 
     import Server.WorldServer as WorldServer
     import World.WorldMap as WorldMap
-    from World.WorldGenerator import SimpleWorld
     from Game.Game import BasicGame
 
     from optparse import OptionParser

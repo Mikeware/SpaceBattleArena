@@ -28,7 +28,7 @@ class GameWorld(object):
     represents the virtual space world and the objects in it
     Provides hit detection and radar between objects in the world
     """
-    def __init__(self, game, worldsize, pys=True, objlistener=None):
+    def __init__(self, game, worldsize, objlistener=None):
         """
         Parameters:
             game: game object that manages rules for world
@@ -52,12 +52,16 @@ class GameWorld(object):
             self.__objectListener = [objlistener]
         self.__toremove = []
         self.__toadd = []        
-        self.__active = True
-        self.__pys = pys
+        self.__active = False
+        self.__started = False
         self.gameerror = False
-
         logging.info("Initialized World of size %s", repr(worldsize))
-        if pys:
+
+    def start(self):
+        if not self.__started:
+            self.__started = True
+            self.__active = True
+            self.__pys = True
             logging.debug("Started gameloop for World %s", repr(self))
             threading.Thread(None, self.__THREAD__gameloop, "WorldMap_gameloop_" + repr(self)).start()
 
@@ -67,19 +71,14 @@ class GameWorld(object):
     def endGameLoop(self):
         self.__active = False
             
-    def newWorld(self, world):
-        self.__pys = False
+    def destroy_all(self):
+        self.__pys = False # disable physics step while we add/remove all objects
         time.sleep(0.2)
         
         # Remove All Objects
         for obj in self:
             self.pysremove(obj)
-            
-        # Copy objects from new world to original world
-        for obj in world:
-            #world.pysremove(obj) # need to remove object from space before adding to another
-            self.append(obj, pys=True)
-            
+        
         self.__pys = True
         
     def __beginCollideObject(self, space, arbiter):

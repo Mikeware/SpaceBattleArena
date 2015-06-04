@@ -13,11 +13,10 @@ The full text of the license is available online: http://opensource.org/licenses
 """
 
 from Game import BasicGame
-from World.WorldGenerator import ConfiguredWorld, getPositionAwayFromOtherObjects
 from World.Entities import Entity
 from World.WorldEntities import Ship
 from GUI.ObjWrappers.GUIEntity import GUIEntity
-from World.WorldMath import intpos, friendly_type, PlayerStat, in_circle
+from World.WorldMath import intpos, friendly_type, PlayerStat, in_circle, getPositionAwayFromOtherObjects
 from GUI.GraphicsCache import Cache
 from GUI.Helpers import debugfont, wrapcircle, namefont
 import logging, random
