@@ -54,11 +54,6 @@ class BaubleHuntGame(BasicGame):
     def game_get_info(self):
         return {"GAMENAME": "BaubleHunt"}
 
-    def _world_reset(self):
-        self.__bases = ThreadSafeDict()
-        self.__baubles = ThreadSafeDict()
-        super(BaubleHuntGame, self)._world_reset()
-
     def player_added(self, player, reason):
         super(BaubleHuntGame, self).player_added(player, reason)
         player.carrying = []
@@ -220,6 +215,9 @@ class BaubleHuntGame(BasicGame):
 
     def round_start(self):
         logging.info("Game Start")
+        self.__bases = ThreadSafeDict()
+        self.__baubles = ThreadSafeDict()
+
         super(BaubleHuntGame, self).round_start()
 
         # start Bauble Spawn Timer

@@ -162,17 +162,11 @@ class BasicGame(object):
                     logging.info("[Tournament] Final Round")
                     self._tournamentfinalround = True
                 #eif
+            #eif
             
-                # we'll reset the world here so it's "fresh" and ready as soon as the game starts
-                if self.__resetworldround:
-                    logging.info("Resetting World.")
-                    self._world_reset()
-                elif not self.__created:
-                    logging.info("Creating Initial World.")
-                    self.world_create()
-
-            elif not self.__created:
-                logging.info("Creating Initial World.")
+            # we'll reset the world here so it's "fresh" and ready as soon as the game starts
+            if self.__resetworldround or not self.__created:
+                logging.info("Resetting World.")
                 self.world_create()
             #eif
 
@@ -268,6 +262,10 @@ class BasicGame(object):
                 #player.object.destroyed = True
                 self.world.remove(player.object) # here we're forcibly removing them as we're clearing the game
 
+        if self.__resetworldround:
+            logging.info("Destroying World")
+            self.world.destroy_all()
+
         # overwritten by allowafterstart
         self.__autostart = self.cfg.getboolean("Game", "auto_start")
         # TODO: figure out a better way to tie these together
@@ -286,13 +284,6 @@ class BasicGame(object):
         Called by game at start of round to create world and when world reset, defaults to the standard world configuration from the config file definitions.
         """
         self._spawnmanager.spawn_initial()
-    
-    def _world_reset(self):
-        """
-        Recreates a world, called when the reset_world_each_round property is set.
-        """
-        self.world.destroy_all()
-        self.world_create()
 
     def round_get_has_started(self):
         """
