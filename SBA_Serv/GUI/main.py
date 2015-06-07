@@ -25,8 +25,7 @@ from ObjWrappers.NebulaWrapper import NebulaGUI
 from ObjWrappers.PlanetWrapper import PlanetGUI
 from ObjWrappers.AsteroidWrapper import AsteroidGUI
 from ObjWrappers.WeaponWrappers import TorpedoGUI
-from Game.KingOfTheBubble import Bubble, KingOfTheBubbleGame
-from Game.DiscoveryQuest import Outpost, DiscoveryQuestGame
+from Game.Utils import SpawnManager
 from GraphicsCache import Cache
 from World.WorldEntities import Ship, Planet, Asteroid, Torpedo, BlackHole, Nebula, Star, Dragon
 from Server.MWNL2 import getIPAddress
@@ -321,23 +320,17 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                         mlh.messages.clear()
                 elif event.key == K_a:
                     if mousemode == None or not mousemode.startswith("Add"):
-                        mousemode = "AddAsteroid"
-                    elif mousemode == "AddAsteroid":
-                        mousemode = "AddPlanet"
-                    elif mousemode == "AddPlanet":
-                        mousemode = "AddBlackHole"
-                    elif mousemode == "AddBlackHole":
-                        mousemode = "AddStar"
-                    elif mousemode == "AddStar":
-                        mousemode = "AddNebula"
-                    elif mousemode == "AddNebula":
-                        mousemode = "AddDragon"
-                    elif mousemode == "AddDragon" and isinstance(game, KingOfTheBubbleGame):
-                        mousemode = "AddBubble"
-                    elif mousemode == "AddDragon" and isinstance(game, DiscoveryQuestGame):
-                        mousemode = "AddOutpost"
+                        mousemode = "Add" + SpawnManager.ENTITY_TYPES.keys()[0]
                     else:
-                        mousemode = None
+                        while mousemode != None:
+                            x = SpawnManager.ENTITY_TYPES.keys().index(mousemode[3:])
+                            if x < len(SpawnManager.ENTITY_TYPES.keys()) - 1:
+                                mousemode = "Add" + SpawnManager.ENTITY_TYPES.keys()[x+1]
+                            else:
+                                mousemode = None
+                            # make sure we continue looking for things that we can actually spawn
+                            if mousemode != None and "spawn" in dir(SpawnManager.ENTITY_TYPES[mousemode[3:]]):
+                                break
                 elif event.key == K_k:
                     if mousemode == "Destroy":
                         mousemode = None
@@ -385,7 +378,7 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                     mousemode = None                
                     world.causeExplosion((x, y), 256, 1000)
                 elif mousemode.startswith("Add"):
-                    eval(mousemode[3:] + ".spawn(world, cfg, (" + str(x) + "," + str(y) + "))")
+                    SpawnManager.ENTITY_TYPES[mousemode[3:]].spawn(world, cfg, (x, y))
                     mousemode = None
                 elif zoomout and event.button == 1:
                     # zoom in
