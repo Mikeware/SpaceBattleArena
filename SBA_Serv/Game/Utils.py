@@ -123,14 +123,16 @@ class SpawnManager:
             logging.info("Spawn Manager Initializing Game Object Types")
             SpawnManager.ENTITY_TYPES = {}
             for obj in World.WorldEntities.__dict__.itervalues():
-                if isinstance(obj, type) and Entity in obj.__mro__: # Is this object an Entity
+                if isinstance(obj, type) and Entity in obj.__mro__ and \
+                    "spawn" in dir(obj): # Is this object an Entity we can spawn
                     SpawnManager.ENTITY_TYPES[obj.__name__] = obj
 
             rungame = cfg.get("Game", "game")
             if rungame != "Basic" and rungame != None and rungame.strip() != "":
                 mod = import_module("Game."+rungame)
                 for obj in mod.__dict__.itervalues():
-                    if isinstance(obj, type) and Entity in obj.__mro__ and obj.__name__ not in SpawnManager.ENTITY_TYPES: # Is this object an Entity we haven't seen before?
+                    if isinstance(obj, type) and Entity in obj.__mro__ and obj.__name__ not in SpawnManager.ENTITY_TYPES and \
+                        "spawn" in dir(obj): # Is this object an Entity we haven't seen before from the game we can spawn?
                         SpawnManager.ENTITY_TYPES[obj.__name__] = obj
 
             for obj in World.Entities.__dict__.itervalues():

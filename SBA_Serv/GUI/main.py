@@ -212,6 +212,10 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
 
     #endregion
 
+    # Get spawnable items in alphabetical order
+    SPAWN_TYPES = SpawnManager.ENTITY_TYPES.keys()
+    SPAWN_TYPES.sort()
+
     while notexit or (testcase != None and not testcase.donetest):
         t = pygame.time.get_ticks() / 1000.0
 
@@ -320,17 +324,13 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                         mlh.messages.clear()
                 elif event.key == K_a:
                     if mousemode == None or not mousemode.startswith("Add"):
-                        mousemode = "Add" + SpawnManager.ENTITY_TYPES.keys()[0]
+                        mousemode = "Add" + SPAWN_TYPES[0]
                     else:
-                        while mousemode != None:
-                            x = SpawnManager.ENTITY_TYPES.keys().index(mousemode[3:])
-                            if x < len(SpawnManager.ENTITY_TYPES.keys()) - 1:
-                                mousemode = "Add" + SpawnManager.ENTITY_TYPES.keys()[x+1]
-                            else:
-                                mousemode = None
-                            # make sure we continue looking for things that we can actually spawn
-                            if mousemode != None and "spawn" in dir(SpawnManager.ENTITY_TYPES[mousemode[3:]]):
-                                break
+                        x = SPAWN_TYPES.index(mousemode[3:])
+                        if x < len(SPAWN_TYPES) - 1:
+                            mousemode = "Add" + SPAWN_TYPES[x+1]
+                        else:
+                            mousemode = None
                 elif event.key == K_k:
                     if mousemode == "Destroy":
                         mousemode = None
@@ -351,7 +351,7 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                         zoomout = True
                 elif event.key == K_r:
                     showroundtime = not showroundtime
-            elif event.type == MOUSEBUTTONDOWN:                
+            elif event.type == MOUSEBUTTONDOWN and event.button == 1: #Left Click
                 if zoomout:
                     x = event.pos[0]*scalefactorx
                     y = event.pos[1]*scalefactory
@@ -377,7 +377,7 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                 elif mousemode == "Explode":
                     mousemode = None                
                     world.causeExplosion((x, y), 256, 1000)
-                elif mousemode.startswith("Add"):
+                elif mousemode != None and  mousemode.startswith("Add"):
                     SpawnManager.ENTITY_TYPES[mousemode[3:]].spawn(world, cfg, (x, y))
                     mousemode = None
                 elif zoomout and event.button == 1:
@@ -557,8 +557,19 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
             ip = bigfont.render("CLICK TO CAUSE EXPLOSION FORCE", False, (255, 0, 0))
             windowSurface.blit(ip, (resolution[0]/2-ip.get_width()/2, resolution[1]/2-ip.get_height()/2))
         elif mousemode != None and mousemode[:3] == "Add":
+            x = SPAWN_TYPES.index(mousemode[3:])
+            for i in xrange(x - 1, -1, -1):
+                c = max(0, 128 + (i - x) * 16)
+                ip = bigfont.render(SPAWN_TYPES[i], False, (c, c, c))
+                windowSurface.blit(ip, (resolution[0]/2 + 35, resolution[1]/2-24-((i - x) * -36)))
+
             ip = bigfont.render("Click to Add " + mousemode[3:], False, (255, 255, 0))
-            windowSurface.blit(ip, (resolution[0]/2-ip.get_width()/2, resolution[1]/2-ip.get_height()/2))        
+            windowSurface.blit(ip, (resolution[0]/2-240, resolution[1]/2-ip.get_height()/2))
+
+            for i in xrange(x + 1, len(SPAWN_TYPES)):
+                c = max(0, 128 - (i - x - 1) * 16)
+                ip = bigfont.render(SPAWN_TYPES[i], False, (c, c, c))
+                windowSurface.blit(ip, (resolution[0]/2 + 35, resolution[1]/2+18+((i - x - 1) * 36)))
 
         if mousemode == "Move" and trackplayer == None:
             ip = bigfont.render("TRACK OBJECT BEFORE MOVING", False, (255, 255, 255))
