@@ -54,13 +54,6 @@ class HungryHungryBaublesGame(BasicGame):
         self.world.append(b)
         logging.info("Done Adding Bauble")
 
-    # TODO: Can get rid of this?
-    def __addBaubles(self, w, num, force=False):
-        logging.info("Adding %d Baubles (%s)", num, repr(force))
-        for i in xrange(num):
-            Bauble.spawn(w, self.cfg)
-        logging.info("Done Adding Baubles")
-
     def world_physics_pre_collision(self, obj1, obj2):
         ship, bauble = aligninstances(obj1, obj2, Ship, Bauble)
 
@@ -86,13 +79,13 @@ class HungryHungryBaublesGame(BasicGame):
                     self.__addBauble(self._players[key], True)
                 elif value == bauble:
                     # Gold Bauble no longer owned, add back a regular one
-                    self.__addBaubles(self.world, 1, True)
+                    Bauble.spawn(self.world, self.cfg)
                 #eif
             ship.player.sound = "BAUBLE"
         else:
             logging.info("Collected Regular Bauble #%d", ship.id)
             ship.player.sound = "BAUBLE"
-            self.__addBaubles(self.world, 1, True)
+            Bauble.spawn(self.world, self.cfg)
         #eif
         self.player_update_score(ship.player, bauble.value)
         bauble.destroyed = True

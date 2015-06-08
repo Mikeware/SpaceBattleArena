@@ -28,13 +28,14 @@ import thread
 from operator import attrgetter
 
 class BaubleHuntGame(BasicGame):
+    VALUE_TABLE = []
     
     def __init__(self, cfgobj):
         bb = cfgobj.getfloat("BaubleHunt", "bauble_percent_blue")
         yb = cfgobj.getfloat("BaubleHunt", "bauble_percent_yellow")
         rb = cfgobj.getfloat("BaubleHunt", "bauble_percent_red")
         self._mv = cfgobj.getint("BaubleHunt", "bauble_points_red")
-        self.__valuetable = [(bb, cfgobj.getint("BaubleHunt", "bauble_points_blue")), (bb+yb, cfgobj.getint("BaubleHunt", "bauble_points_yellow")), (bb+yb+rb, self._mv)]
+        BaubleHuntGame.VALUE_TABLE = [(bb, cfgobj.getint("BaubleHunt", "bauble_points_blue")), (bb+yb, cfgobj.getint("BaubleHunt", "bauble_points_yellow")), (bb+yb+rb, self._mv)]
         
         self.__bases = ThreadSafeDict()
         self.__baubles = ThreadSafeDict()
@@ -42,14 +43,6 @@ class BaubleHuntGame(BasicGame):
         super(BaubleHuntGame, self).__init__(cfgobj)
 
         self.__maxcarry = self.cfg.getint("BaubleHunt", "ship_cargo_size")
-
-    def world_create(self, pys=True):
-        w = ConfiguredWorld(self, self.cfg, pys)
-        
-        # Add some initial small Baubles
-        self.__addBaubles(w, self.cfg.getint("BaubleHunt", "bauble_initial"))
-
-        return w
 
     def game_get_info(self):
         return {"GAMENAME": "BaubleHunt"}
@@ -63,7 +56,6 @@ class BaubleHuntGame(BasicGame):
             player.totalcollected = 0            
 
             self.__addHomeBase(player)
-            self.__addBaubles(self.world, self.cfg.getint("BaubleHunt", "bauble_per_player"))
         elif self.__bases.has_key(player.netid):
             self.__bases[player.netid].newOwner(player.object)
 
@@ -93,22 +85,15 @@ class BaubleHuntGame(BasicGame):
                     del objs[i]
             n = len(objs)
             
-        return pos        
+        return pos
 
-    def __addBaubles(self, w, num, force=False):
-        logging.info("Adding %d Baubles (%s)", num, repr(force))
-        for i in xrange(num):
-            r = random.random()
-            v = 0
-            for ent in self.__valuetable:
-                if r < ent[0]:
-                    v = ent[1]
-                    break
-            b = Bauble(getPositionAwayFromOtherObjects(w, 80, 30, force), v)
-            if v == self._mv:
-                self.__baubles[b.id] = b
-            w.append(b)
-        logging.info("Done Adding Baubles")
+    def world_add_remove_object(self, wobj, added):
+        # Check if this is a high-value bauble to add to our list of ones to pass to the client
+        if isinstance(wobj, Bauble):
+            if wobj.value == self._mv:
+                self.__baubles[wobj.id] = wobj
+
+        return super(BaubleHuntGame, self).world_add_remove_object(wobj, added)
 
     def world_physics_pre_collision(self, obj1, obj2):
         ship, other = aligninstances(obj1, obj2, Ship, Entity)
@@ -133,7 +118,7 @@ class BaubleHuntGame(BasicGame):
 
             bauble.destroyed = True
                 
-            self.__addBaubles(self.world, 1, True)
+            Bauble.spawn(self.world, self.cfg)
         #eif
         logging.info("Done Collecting Baubles #%d", ship.id)
 
@@ -195,12 +180,6 @@ class BaubleHuntGame(BasicGame):
     def player_get_stat_string(self, player):
         return str(int(player.score)) + " in " + str(player.totalcollected) + " : " + player.name + " c.v. " + str(sum(b.value for b in player.carrying)) + " in " + str(len(player.carrying))
 
-    def round_over(self):
-        logging.info("Round Over")
-        self.__btimer.cancel() # prevent more baubles from being spawned!
-
-        super(BaubleHuntGame, self).round_over()
-
     def gui_draw_game_world_info(self, surface, flags, trackplayer):
         for player in self.game_get_current_player_list():
             if player.object != None:
@@ -220,20 +199,6 @@ class BaubleHuntGame(BasicGame):
 
         super(BaubleHuntGame, self).round_start()
 
-        # start Bauble Spawn Timer
-        self.newBaubleTimer()    
-        
-    def newBaubleTimer(self):
-        ntime = self.cfg.getint("BaubleHunt", "bauble_timer")
-        if ntime > 0:
-            self.__btimer = CallbackTimer(ntime, self.spawnBauble)
-            self.__btimer.start()
-
-    def spawnBauble(self):
-        logging.info("Spawn Bauble Timer [%d]", thread.get_ident())
-        self.__addBaubles(self.world, self.cfg.getint("BaubleHunt", "bauble_timer_spawns"))
-        
-        self.newBaubleTimer()
 
 class BaubleWrapper(GUIEntity):
     def __init__(self, obj, world):
@@ -264,6 +229,21 @@ class Bauble(PhysicalRound):
 
     def getExtraInfo(self, objData, player):
         objData["VALUE"] = self.value
+
+    @staticmethod
+    def spawn(world, cfg, pos=None):
+        if pos == None:
+            pos = getPositionAwayFromOtherObjects(world, cfg.getint("Bauble", "buffer_object"), cfg.getint("Bauble", "buffer_edge"))
+
+        # Get value within tolerances
+        r = random.random()
+        v = 0
+        for ent in BaubleHuntGame.VALUE_TABLE:
+            if r < ent[0]:
+                v = ent[1]
+                break
+
+        world.append(Bauble(pos, v))
 
 class OutpostWrapper(GUIEntity):
     def __init__(self, obj, world):

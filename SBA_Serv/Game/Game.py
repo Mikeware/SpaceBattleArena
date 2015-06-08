@@ -174,12 +174,13 @@ class BasicGame(object):
                 self.world.start()
                 self.__created = True
 
+            self._spawnmanager.start() # want spawn manager here so it can spawn items on players
+
             for player in self.game_get_current_player_list():
                 self._game_add_ship_for_player(player.netid, roundstart=True)
             #next
 
             self._round_start_timer()
-            self._spawnmanager.start()
 
     
     def player_added(self, player, reason):

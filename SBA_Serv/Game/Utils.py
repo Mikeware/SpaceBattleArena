@@ -224,12 +224,13 @@ class SpawnManager:
         """
         Clean up any completed timers for the given entity name
         """
-        for x in xrange(len(self._timers[entityname]) - 1, -1, -1):
-            if self._timers[entityname][x].iscomplete():
-                del self._timers[entityname][x]
+        if self._timers.has_key(entityname):
+            for x in xrange(len(self._timers[entityname]) - 1, -1, -1):
+                if self._timers[entityname][x].iscomplete():
+                    del self._timers[entityname][x]
 
-        if len(self._timers[entityname]) == 0:
-            del self._timers[entityname]
+            if len(self._timers[entityname]) == 0:
+                del self._timers[entityname]
 
     def stop(self):
         """
