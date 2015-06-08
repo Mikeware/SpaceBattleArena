@@ -487,6 +487,63 @@ class WorldVisualShipDestroyedTestCase(SBAGUITestCase):
 
         self.assertAlmostEqual(dragon.body.velocity.length, speed, None, "Dragon should have lost interest", 4)
 
+    def test_all_stop(self):
+        start = self.game.world.mid_point(0, 0)
+        ship = AIShip_SetListLoop("Doomed", start, self.game, [
+                "RotateCommand(self, 15)",
+                "ThrustCommand(self, 'B', 4.0, 1.0)",
+                "IdleCommand(self, 5.0)",
+                "AllStopCommand(self)"
+            ])  
+
+        time.sleep(2.0)
+
+        self.assertEqual(ship.health, 100, "Player Not Full Health")
+        self.assertEqual(ship.energy, 100, "Player Not Full Energy")
+
+        time.sleep(3.5)
+
+        print ship.health
+        self.assertAlmostEqual(ship.health.value, 50, None, "Player Health not Halved", 1)
+        self.assertLess(ship.energy.value, 100, "Player Energy didn't decrease")
+
+        time.sleep(5.5)
+
+        print ship.health
+        ship.energy.full() # replenish
+        self.assertAlmostEqual(ship.health.value, 25, None, "Player Health not Halved 2", 1)
+
+        time.sleep(5.5)
+
+        print ship.health        
+        self.assertAlmostEqual(ship.health.value, 13, None, "Player Health not Halved 3", 1)
+
+        time.sleep(5.5)
+
+        print ship.health
+        ship.energy.full() # replenish
+        self.assertAlmostEqual(ship.health.value, 7, None, "Player Health not Halved 4", 1)
+
+        time.sleep(5.5)
+
+        print ship.health        
+        self.assertAlmostEqual(ship.health.value, 4, None, "Player Health not Halved 5", 1)
+
+        time.sleep(5.5)
+
+        print ship.health
+        ship.energy.full() # replenish
+        self.assertAlmostEqual(ship.health.value, 2, None, "Player Health not Halved 6", 1)
+
+        time.sleep(5.5)
+
+        print ship.health        
+        self.assertAlmostEqual(ship.health.value, 1, None, "Player Health not Halved 7", 1)
+
+        time.sleep(6)
+
+        print ship.health
+        self.assertFalse(ship in self.game.world, "Doomed Ship not destroyed")
 
 if __name__ == '__main__':
     unittest.main()

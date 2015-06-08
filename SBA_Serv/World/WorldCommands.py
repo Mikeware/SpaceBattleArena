@@ -233,7 +233,7 @@ class AllStopCommand(OneTimeCommand):
 
     def onetime(self):        
         self._obj.body.velocity = Vec2d(0, 0)
-        self._obj.health /= 2
+        self._obj.take_damage(max(1, self._obj.health.value / 2), self._obj, True)
             
 class WarpCommand(Command):
     """
