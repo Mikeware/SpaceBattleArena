@@ -48,7 +48,7 @@ class SurvivorTournamentTestCases(SBAGUITestCase):
         """
         ships = []
         numships = 16
-        groups = self.cfg.getint("Tournament", "tournament_groups")
+        groups = self.cfg.getint("Tournament", "groups")
 
         for x in xrange(numships):
             ships.append(AIShip_SetList("Move", self.game.world.mid_point(random.randint(-400, 400), random.randint(-400, 400)), self.game, [
@@ -66,7 +66,7 @@ class SurvivorTournamentTestCases(SBAGUITestCase):
             time.sleep(2.0)
 
             if x == groups:
-                for player in self.game._tournamentfinalgroup:
+                for player in self.game._tmanager._finalgroup:
                     self.assertLess(player.score, 1, "Players shouldn't have score entering final round")
                     self.assertTrue(player.object in self.game.world, "Player's Ship not in final tournament")
                     # need to readd a command to ships
@@ -93,12 +93,12 @@ class SurvivorTournamentTestCases(SBAGUITestCase):
             self.assertEqual(len(self.game.world), 0, "Objects in World after round")
 
             if x < groups:
-                self.assertEqual(len(self.game._tournamentfinalgroup), x+1, "Ship not added to final group")
-                self.assertIn(leader, self.game._tournamentfinalgroup, "Correct player not added to final group")
+                self.assertEqual(len(self.game._tmanager._finalgroup), x+1, "Ship not added to final group")
+                self.assertIn(leader, self.game._tmanager._finalgroup, "Correct player not added to final group")
             else:
                 # final round
-                self.assertIsNotNone(self.game._tournamentfinalwinner, "Final Winner not marked")
-                self.assertEqual(self.game._tournamentfinalwinner, leader, "Incorrect leader chosen")
+                self.assertIsNotNone(self.game._tmanager._finalwinner, "Final Winner not marked")
+                self.assertEqual(self.game._tmanager._finalwinner, leader, "Incorrect leader chosen")
             #eif
         #next round
 

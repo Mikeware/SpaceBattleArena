@@ -24,6 +24,7 @@ from pymunk import Vec2d
 from GUI.Helpers import debugfont
 from operator import attrgetter
 from Utils import *
+from Tournaments import *
 
 class BasicGame(object):
     """
@@ -71,19 +72,12 @@ class BasicGame(object):
         self._secondary_victory = cfgobj.get("Game", "secondary_victory_attr")
         self._secondary_victory_high = cfgobj.getboolean("Game", "secondary_victory_highest")     
         
-        # TODO: Create Tournament Class
         self._tournament = cfgobj.getboolean("Tournament", "tournament")
-        self._tournamentinitialized = False
+        self._tmanager = eval(cfgobj.get("Tournament", "manager"))(cfgobj)
         if self._tournament:
             self.__autostart = False
         else:
             self.__roundtime = 0 # don't want to return a big round time set in a config, if it's not used.
-        self._tournamentnumgroups = cfgobj.getint("Tournament", "tournament_groups")        
-        self._tournamentgroups = []
-        self._tournamentcurrentgroup = 0
-        self._tournamentfinalgroup = []
-        self._tournamentfinalround = False
-        self._tournamentfinalwinner = None
         self.laststats = None
         self._highscore = 0 # highest score achieved during game
         self._leader = None # player object of who's in lead
@@ -145,22 +139,13 @@ class BasicGame(object):
             self.__autostart = self.__allowafterstart
 
             if self._tournament:
-                logging.info("[Tournament] Round %d of %d", self._tournamentcurrentgroup+1, self._tournamentnumgroups)
-                if not self._tournamentinitialized:
-                    logging.info("[Tournament] Initialized with %d players", len(self._players))
-                    self._tournamentgroups = []
-                    for x in xrange(self._tournamentnumgroups):
-                        self._tournamentgroups.append([])
-                    #next
-                    x = 0
-                    for player in self._players.values():
-                        self._tournamentgroups[x % self._tournamentnumgroups].append(player)
-                        x += 1
-                    #next               
-                    self._tournamentinitialized = True                     
-                elif self._tournamentcurrentgroup == self._tournamentnumgroups:
+                if not self._tmanager.is_initialized():
+                    self._tmanager.initialize(self._players.values())
+                else:
+                    self._tmanager.next_round()
+
+                if self._tmanager.is_final_round():
                     logging.info("[Tournament] Final Round")
-                    self._tournamentfinalround = True
                 #eif
             #eif
             
@@ -245,16 +230,7 @@ class BasicGame(object):
         logging.info("[Game] Stats: %s", repr(self.laststats))
 
         if len(self.laststats) > 0:
-            if not self._tournamentfinalround:
-                # get winner(s)
-                for x in xrange(self.cfg.getint("Tournament", "number_to_final_round")):
-                    logging.info("Adding player to final round %s stats: %s", self.__leaderboard_cache[x].name, self.laststats[x])
-                    self._player_add_to_final_round(self.__leaderboard_cache[x])
-                #next
-            else:
-                logging.info("Final Round Winner %s stats: %s", self._leader.name, self.laststats[0])
-                self._tournamentfinalwinner = self._leader
-            #eif
+            self._tmanager.check_results(self.__leaderboard_cache, self.laststats)
         #eif
         
         for player in self._players:
@@ -272,8 +248,6 @@ class BasicGame(object):
         # TODO: figure out a better way to tie these together
         if self._tournament:
             self.__autostart = False
-            self._tournamentcurrentgroup += 1
-            logging.debug("[Tournament] Group Number Now %d", self._tournamentcurrentgroup)
 
         # If not autostart, wait for next round to start
         self.__started = False
@@ -533,12 +507,6 @@ class BasicGame(object):
         """
         player.score = self._points_initial
 
-    def _player_add_to_final_round(self, player):
-        """
-        Add the player to the final round.  Will be automatically called by the default implementation for round_over.
-        """
-        self._tournamentfinalgroup.append(player)
-
     def game_get_current_leader_list(self, all=False):
         """
         Gets the list of players sorted by their score (highest first) (or all players)
@@ -559,14 +527,7 @@ class BasicGame(object):
         if all or not self._tournament:
             return self._players
         else:
-            if self._tournamentfinalround:
-                return self._tournamentfinalgroup
-            else:
-                if self._tournamentcurrentgroup < len(self._tournamentgroups):
-                    return self._tournamentgroups[self._tournamentcurrentgroup]
-                else:
-                    return []
-            #eif
+            return self._tmanager.get_players_in_round()
         #eif
 
     def player_get_stat_string(self, player):
@@ -701,7 +662,7 @@ class BasicGame(object):
         """
         Used to initialize GUI resources at the appropriate time after the graphics engine has been initialized.
         """
-        self._tfont = pygame.font.Font("freesansbold.ttf", 18)
+        self._tmanager.gui_initialize()
         self._dfont = debugfont()
 
     def gui_draw_game_world_info(self, surface, flags, trackplayer):
@@ -734,42 +695,7 @@ class BasicGame(object):
         Called by GUI to draw info about the round/tournament (optional) when toggled on 'T'.
         (coordinates related to the screen)
         """
-        if self._tournament and self._tournamentinitialized:
-            # draw first Bracket
-            y = 100
-            for x in xrange(self._tournamentnumgroups):
-                py = y
-                for player in self._tournamentgroups[x]:
-                    c = (128, 128, 128)
-                    if x == self._tournamentcurrentgroup:
-                        c = (255, 255, 255)
-                    if trackplayer != None and player == trackplayer:
-                        c = trackplayer.color
-                    screen.blit(self._tfont.render(player.name, False, c), (100, y))
-                    y += 24
-                                
-                # draw bracket lines
-                pygame.draw.line(screen, (192, 192, 192), (400, py), (410, py))
-                pygame.draw.line(screen, (192, 192, 192), (410, py), (410, y))
-                pygame.draw.line(screen, (192, 192, 192), (400, y), (410, y))
-                pygame.draw.line(screen, (192, 192, 192), (410, py + (y - py) / 2), (410, py + (y - py) / 2))
-                                
-                y += 36
-
-            # draw Final Bracket
-            y = 96 + ((y - 96) / 2) - len(self._tournamentfinalgroup) * 16
-            py = y
-            for player in self._tournamentfinalgroup:
-                c = (255, 255, 128)
-                if trackplayer != None and player == trackplayer:
-                    c = trackplayer.color
-                screen.blit(self._tfont.render(player.name, False, c), (435, y))
-                y += 24
-            pygame.draw.line(screen, (192, 192, 192), (800, py), (810, py))
-            pygame.draw.line(screen, (192, 192, 192), (810, py), (810, y))
-            pygame.draw.line(screen, (192, 192, 192), (800, y), (810, y))
-
-            if self._tournamentfinalwinner:
-                screen.blit(self._tfont.render(self._tournamentfinalwinner.name, False, (128, 255, 255)), (835, py + (y - py) / 2))
+        if self._tournament and self._tmanager.is_initialized():
+            self._tmanager.gui_draw_tournament_bracket(screen, flags, trackplayer)
         #eif
     #endregion

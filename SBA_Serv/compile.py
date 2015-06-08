@@ -105,6 +105,7 @@ class BuildExe:
         games.remove('Game\\Game.py')
         games.remove('Game\\Players.py')
         games.remove('Game\\Utils.py')
+        games.remove('Game\\Tournaments.py')
         self.extra_scripts = ",".join(games).replace("\\", ".").replace(".py", "")
         print self.extra_scripts
  
