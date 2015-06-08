@@ -254,6 +254,26 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
         for event in pygame.event.get():
             if event.type == QUIT:
                 notexit = False
+            elif (event.type == KEYDOWN and event.key == K_a) or (event.type == MOUSEBUTTONDOWN and event.button in (4, 5)):
+                if mousemode == None or not mousemode.startswith("Add"):
+                    if event.type == KEYDOWN or event.button == 5:
+                        mousemode = "Add" + SPAWN_TYPES[0]
+                    else:
+                        mousemode = "Add" + SPAWN_TYPES[-1]
+                elif event.type == KEYDOWN or event.button == 5:
+                    x = SPAWN_TYPES.index(mousemode[3:])
+                    if x < len(SPAWN_TYPES) - 1:
+                        mousemode = "Add" + SPAWN_TYPES[x+1]
+                    elif event.type == MOUSEBUTTONDOWN:
+                        mousemode = "Add" + SPAWN_TYPES[0]
+                    else:
+                        mousemode = None
+                else:
+                    x = SPAWN_TYPES.index(mousemode[3:])
+                    if x > 0:
+                        mousemode = "Add" + SPAWN_TYPES[x-1]
+                    else:
+                        mousemode = "Add" + SPAWN_TYPES[-1]
             elif event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     pygame.event.post(pygame.event.Event(QUIT))
@@ -322,15 +342,6 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                     else:
                         logger.removeHandler(mlh)
                         mlh.messages.clear()
-                elif event.key == K_a:
-                    if mousemode == None or not mousemode.startswith("Add"):
-                        mousemode = "Add" + SPAWN_TYPES[0]
-                    else:
-                        x = SPAWN_TYPES.index(mousemode[3:])
-                        if x < len(SPAWN_TYPES) - 1:
-                            mousemode = "Add" + SPAWN_TYPES[x+1]
-                        else:
-                            mousemode = None
                 elif event.key == K_k:
                     if mousemode == "Destroy":
                         mousemode = None
@@ -351,7 +362,7 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                         zoomout = True
                 elif event.key == K_r:
                     showroundtime = not showroundtime
-            elif event.type == MOUSEBUTTONDOWN and event.button == 1: #Left Click
+            elif event.type == MOUSEBUTTONDOWN and event.button in (1, 2): #Left or Middle Click
                 if zoomout:
                     x = event.pos[0]*scalefactorx
                     y = event.pos[1]*scalefactory
@@ -360,11 +371,13 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                 #print zoomout, x, y
 
                 if mousemode == "Move" and trackplayer != None:
-                    mousemode = None
+                    if event.button != 2:
+                        mousemode = None
                     zoomout = prevzoom
                     trackplayer.object.body.position = (x, y)
                 elif mousemode == "Destroy":
-                    mousemode = None                
+                    if event.button != 2:
+                        mousemode = None
                     v = Vec2d(x, y)
                     for lst in objects, bgobjects:
                         for obj in lst:
@@ -375,11 +388,13 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                                 world.remove(obj._worldobj)
                                 break
                 elif mousemode == "Explode":
-                    mousemode = None                
+                    if event.button != 2:
+                        mousemode = None
                     world.causeExplosion((x, y), 256, 1000)
                 elif mousemode != None and  mousemode.startswith("Add"):
                     SpawnManager.ENTITY_TYPES[mousemode[3:]].spawn(world, cfg, (x, y))
-                    mousemode = None
+                    if event.button != 2:
+                        mousemode = None
                 elif zoomout and event.button == 1:
                     # zoom in
                     zoomout = False
