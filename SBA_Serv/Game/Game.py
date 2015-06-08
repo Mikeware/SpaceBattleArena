@@ -73,7 +73,7 @@ class BasicGame(object):
         self._secondary_victory_high = cfgobj.getboolean("Game", "secondary_victory_highest")     
         
         self._tournament = cfgobj.getboolean("Tournament", "tournament")
-        self._tmanager = eval(cfgobj.get("Tournament", "manager"))(cfgobj)
+        self._tmanager = eval(cfgobj.get("Tournament", "manager"))(cfgobj, self.game_get_current_leader_list)
         if self._tournament:
             self.__autostart = False
         else:

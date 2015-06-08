@@ -2,9 +2,10 @@
 import pygame
 import logging
 
-class BasicTournament:
-    def __init__(self, cfg):
+class BasicTournament(object):
+    def __init__(self, cfg, leaderfunc):
         self.cfg = cfg
+        self._name = "Basic Tournament"
         self._initialized = False
         self._numgroups = cfg.getint("Tournament", "groups")
         self._groups = []
@@ -12,6 +13,7 @@ class BasicTournament:
         self._finalgroup = []
         self._finalround = False
         self._finalwinner = None
+        self._leaderfunc = leaderfunc
 
     def is_initialized(self):
         return self._initialized
@@ -77,7 +79,7 @@ class BasicTournament:
         self._tfont = pygame.font.Font("freesansbold.ttf", 18)
 
     def gui_draw_tournament_bracket(self, screen, flags, trackplayer):
-        screen.blit(self._tfont.render("Basic Tournament", False, (255, 255, 255)), (100, 50))
+        screen.blit(self._tfont.render(self._name, False, (255, 255, 255)), (100, 50))
 
         # draw first Bracket
         y = 100
@@ -115,3 +117,90 @@ class BasicTournament:
 
         if self._finalwinner:
             screen.blit(self._tfont.render(self._finalwinner.name, False, (128, 255, 255)), (835, py + (y - py) / 2))
+
+        return y
+
+class WildTournament(BasicTournament):
+    def __init__(self, cfg, leaderfunc):
+        super(WildTournament, self).__init__(cfg, leaderfunc)
+        self._name = "Wild Tournament"
+        self._wildgroup = []
+        self._playwildround = cfg.getboolean("Wildcard", "play_round")
+        self._toplay = cfg.getint("Wildcard", "number")
+        self._wildround = False
+
+    def check_results(self, players, stats):
+        """
+        Get the end results, pre-sorted (top players first in list)
+        """
+        super(WildTournament, self).check_results(players, stats)
+        if not self._finalround and not self._wildround:
+            #self._wildgroup = []
+            self.check_wildcard()
+
+    def check_wildcard(self):
+        x = 0
+        self._wildgroup = []
+        for player in self._leaderfunc(True): # Get all player scores sorted
+            if player not in self._finalgroup:
+                x += 1
+                self._wildgroup.append(player)
+                if x == self._toplay:
+                    break
+
+    def next_round(self):
+        """
+        Setup a subsequent round of players.
+        """
+        super(WildTournament, self).next_round()
+        if self._currentgroup >= self._numgroups and self._playwildround and not self._wildround:
+            logging.info("Wild Tournament Round")
+            self._wildround = True
+            self._finalround = False
+        elif self._playwildround and self._wildround:
+            self._finalround = True
+            self._wildround = False
+
+        if not self._playwildround and self._finalround:
+            #self._wildgroup = []
+            #self.check_wildcard()
+            for player in self._wildgroup:
+                self._finalgroup.append(player)
+
+    def get_players_in_round(self):
+        """
+        Returns the list of players in the current round.
+        """
+        if self._wildround:
+            return self._wildgroup
+        else:
+            return super(WildTournament, self).get_players_in_round()
+
+    def gui_draw_tournament_bracket(self, screen, flags, trackplayer):
+        y = super(WildTournament, self).gui_draw_tournament_bracket(screen, flags, trackplayer)
+
+        if not self._wildround:
+            self.check_wildcard() # update
+
+        # draw Final Bracket
+        if not self._finalround:
+            if self._playwildround:
+                y += 96
+            else:
+                y += 24
+
+            py = y
+
+            for player in self._wildgroup:
+                c = (128, 255, 255)
+                if self._playwildround and self._wildround:
+                    c = (255, 255, 255)
+                if trackplayer != None and player == trackplayer:
+                    c = trackplayer.color
+                screen.blit(self._tfont.render(player.name, False, c), (435, y))
+                y += 24
+        
+            y = py + len(self._wildgroup) * 24
+            pygame.draw.line(screen, (0, 192, 192), (800, py), (810, py))
+            pygame.draw.line(screen, (0, 192, 192), (810, py), (810, y))
+            pygame.draw.line(screen, (0, 192, 192), (800, y), (810, y))
