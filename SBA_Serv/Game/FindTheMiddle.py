@@ -98,7 +98,8 @@ class FindTheMiddleGame(BasicGame):
             x += 1
 
         for player in self.game_get_current_player_list():
-            if player.object != None and player.time > 0:
+            obj = player.object
+            if obj != None and player.time > 0:
                 # draw time left in bubble for player
                 text = self._dfont.render("%.1f" % (self.__objective_time - player.time), False, player.color)
-                surface.blit(text, (player.object.body.position[0]+30, player.object.body.position[1]-4))
+                surface.blit(text, (obj.body.position[0]+30, obj.body.position[1]-4))

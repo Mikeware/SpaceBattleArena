@@ -53,7 +53,7 @@ class ShipGUI(GUIEntity):
         bp = intpos(sp)
         pos = intpos(sp - (w/2, h/2))
 
-        if len(self._worldobj.lasernodes) > 0:
+        if len(self._worldobj.lasernodes) > 0 and sp == self._worldobj.body.position:
             for i in range(0, len(self._worldobj.lasernodes)+1, 2):
                 if i < len(self._worldobj.lasernodes)-1:
                     pygame.draw.line(surface, self._worldobj.player.color, self._worldobj.lasernodes[i], self._worldobj.lasernodes[i+1], 3)

@@ -138,9 +138,10 @@ class DiscoveryQuestGame(BasicGame):
             env["OUTPOST"] = intpos(player.outpost.body.position)
         env["FAILED"] = player.failed
         env["MISSION"] = player.mission
-        if player.object != None:
+        obj = player.object
+        if obj != None:
             cur = []
-            for cmd in player.object.commandQueue:
+            for cmd in obj.commandQueue:
                 if isinstance(cmd, ScanCommand):
                     cur.append(cmd.target)
             env["CURIDS"] = cur
@@ -237,22 +238,25 @@ class DiscoveryQuestGame(BasicGame):
 
     def gui_draw_game_world_info(self, surface, flags, trackplayer):
         for player in self.game_get_current_player_list():
-            if player.object != None:
-                bp = intpos(player.object.body.position)
-                wrapcircle(surface, (0, 255, 255), intpos(player.object.body.position), self.scanrange, self.world.size, 1) # Scan Range
+            obj = player.object
+            if obj != None:
+                bp = intpos(obj.body.position)
+                wrapcircle(surface, (0, 255, 255), bp, self.scanrange, self.world.size, 1) # Scan Range
                 text = debugfont().render("%s [%s]" % (repr(player.mission), player.failed), False, (0, 255, 255))
                 surface.blit(text, (bp[0]-text.get_width()/2, bp[1] - 6))
 
         if trackplayer != None:
             curs = []
             curf = []
-            if trackplayer.object != None:
-                for cmd in trackplayer.object.commandQueue:
+            obj = trackplayer.object
+            if obj != None:
+                for cmd in obj.commandQueue:
                     if isinstance(cmd, ScanCommand):
                         if cmd.success:
                             curs.append(cmd.target)
                         else:
                             curf.append(cmd.target)
+
             for obj in self.world:
                 if trackplayer in obj.scanned_by:
                     wrapcircle(surface, (0, 255, 255), intpos(obj.body.position), obj.radius + 4, self.world.size, 4)

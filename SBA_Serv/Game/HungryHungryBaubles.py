@@ -100,9 +100,10 @@ class HungryHungryBaublesGame(BasicGame):
 
     def gui_draw_game_world_info(self, surface, flags, trackplayer):
         for player in self.game_get_current_player_list():
-            if player.object != None and self.__baubles.has_key(player.netid):
+            obj = player.object
+            if obj != None and self.__baubles.has_key(player.netid):
                 # draw line between player and Bauble
-                pygame.draw.line(surface, player.color, intpos(player.object.body.position), intpos(self.__baubles[player.netid].body.position))
+                pygame.draw.line(surface, player.color, intpos(obj.body.position), intpos(self.__baubles[player.netid].body.position))
 
 class BaubleWrapper(GUIEntity):
     def __init__(self, obj, world):

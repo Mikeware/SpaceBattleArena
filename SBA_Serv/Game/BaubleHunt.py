@@ -182,13 +182,14 @@ class BaubleHuntGame(BasicGame):
 
     def gui_draw_game_world_info(self, surface, flags, trackplayer):
         for player in self.game_get_current_player_list():
-            if player.object != None:
+            obj = player.object
+            if obj != None:
                 # draw number of objects carried
                 text = debugfont().render(repr(len(player.carrying)), False, player.color)
-                surface.blit(text, (player.object.body.position[0]+30, player.object.body.position[1]-4))
+                surface.blit(text, (obj.body.position[0]+30, obj.body.position[1]-4))
                 # draw line between player and HomeBase
                 if flags["DEBUG"] and self.__bases.has_key(player.netid):
-                    pygame.draw.line(surface, player.color, intpos(player.object.body.position), intpos(self.__bases[player.netid].body.position))                
+                    pygame.draw.line(surface, player.color, intpos(obj.body.position), intpos(self.__bases[player.netid].body.position))
 
         # draw number of baubles carried by player
 
