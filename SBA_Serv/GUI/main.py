@@ -392,7 +392,7 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                         mousemode = None
                     world.causeExplosion((x, y), 256, 1000)
                 elif mousemode != None and  mousemode.startswith("Add"):
-                    SpawnManager.ENTITY_TYPES[mousemode[3:]].spawn(world, cfg, (x, y))
+                    game.spawnmanager.spawn_entity(mousemode[3:], (x, y), False)
                     if event.button != 2:
                         mousemode = None
                 elif zoomout and event.button == 1:

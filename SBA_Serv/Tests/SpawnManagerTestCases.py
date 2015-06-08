@@ -66,12 +66,12 @@ class SpawnManagerTestCase(SBAGUITestCase):
         self.assertEqual(self.game.world.get_count_of_objects(Asteroid), 2, "Should be 2 asteroids")
         self.assertEqual(self.game.world.get_count_of_objects(Planet), 1, "Should be 1 planet")
 
-        time.sleep(4)
+        time.sleep(4.25)
 
         self.assertEqual(self.game.world.get_count_of_objects(Asteroid), 4, "Should be 4 asteroids")
         self.assertEqual(self.game.world.get_count_of_objects(Planet), 2, "Should be 2 planets")
 
-        time.sleep(4)
+        time.sleep(4.25)
 
         self.assertEqual(self.game.world.get_count_of_objects(Planet), 2, "Should still be 2 planet")
 

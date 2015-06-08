@@ -354,7 +354,9 @@ class Outpost(PhysicalEllipse):
     def spawn(world, cfg, pos=None):
         if pos == None:
             pos = getPositionAwayFromOtherObjects(world, cfg.getint("Outpost", "buffer_object"), cfg.getint("Outpost", "buffer_edge"))
-        world.append(Outpost(pos))
+        o = Outpost(pos)
+        world.append(o)
+        return o
 
     #def getExtraInfo(self, objData, player):
     #    objData["OWNERID"] = self.owner.id

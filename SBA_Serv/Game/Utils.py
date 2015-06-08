@@ -64,6 +64,7 @@ class SpawnConfig:
         self._min = False
         self._max = False
         self._player = False
+        self._shortlife = False
 
     def add_timed_spawn(self, time_num, time_min, time_max): # int, int, int
         if time_num > 0 and time_min > 0 and time_max >= time_min:
@@ -111,6 +112,20 @@ class SpawnConfig:
 
     def is_player(self, reason):
         return self._player and ((reason == 1 and self._player_start) or (reason == 2 and self._player_respawn))
+
+    def is_shortlife(self):
+        return self._shortlife
+
+    def add_shortlife(self, min, max):
+        if min > 0 and max >= min:
+            self._shortlife = True
+            self._life_min = min
+            self._life_max = max
+        else:
+            logging.error("Check alive time parameters for spawning %s", self.name)
+
+    def get_shortlife(self):
+        return random.randint(self._life_min, self._life_max)
 
 class SpawnManager:
     ENTITY_TYPES = None
@@ -166,6 +181,9 @@ class SpawnManager:
                     sc.add_player_spawn(cfg.getint(entity, "spawn_on_player_num"),
                                         self.bool(cfg.get(entity, "spawn_on_player_start")),
                                         self.bool(cfg.get(entity, "spawn_on_player_respawn")))
+                # do we want this object to have a shortened lifespawn?
+                if cfg.has_option(entity, "spawn_alive_time_min"):
+                    sc.add_shortlife(cfg.getint(entity, "spawn_alive_time_min"), cfg.getint(entity, "spawn_alive_time_max"))
 
                 self._spawns[entity] = sc
 
@@ -267,8 +285,9 @@ class SpawnManager:
 
         number overwritten if respawntimer
         """
-        logging.info("Spawning Entity %s", typename)
+        logging.info("Spawning Entity %s x %d", typename, number)
         sc = self._spawns[typename]
+        obj = None
 
         if pos == None:
             count = number
@@ -277,20 +296,25 @@ class SpawnManager:
                 count = sc.time_num
         
             for i in xrange(count):
-                sc.type.spawn(self._world, self._cfg)
+                obj = sc.type.spawn(self._world, self._cfg)
+                if sc.is_shortlife(): # TODO: Later see if we can work this into the object's spawn somehow without too much work
+                    obj.TTL = sc.get_shortlife()
         else:
-            sc.type.spawn(self._world, self._cfg, pos)
+            obj = sc.type.spawn(self._world, self._cfg, pos)
+            if sc.is_shortlife():
+                obj.TTL = sc.get_shortlife()
 
         # readd a timer now that its expired if we haven't hit the max number of objects in world
         if respawntimer and self._should_spawn(sc):
             self.clean_timer(typename)
             self.add_timer(typename)
 
+        return obj
+
     def spawn_initial(self):
         """
         Spawns the configured number of each object into the world.
         """
         for sc in self._spawns.itervalues():
-            for x in xrange(sc.num_initial):
-                sc.type.spawn(self._world, self._cfg)
+            self.spawn_entity(sc.name, respawntimer=False, number=sc.num_initial)
 

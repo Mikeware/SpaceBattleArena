@@ -61,6 +61,7 @@
     <Compile Include="GUI\SoundCache.py" />
     <Compile Include="GUI\Star.py" />
     <Compile Include="GUI\__init__.py" />
+    <Compile Include="Tests\KingOfTheBubbleTestCases.py" />
     <Compile Include="Tests\BaubleHuntTestCases.py" />
     <Compile Include="Tests\HungryHungryBaublesTestCases.py" />
     <Compile Include="Tests\SurvivorTestCases.py" />
@@ -134,6 +135,7 @@
     <Content Include="no_advanced_commands.cfg" />
     <Content Include="no_collide.cfg" />
     <Content Include="no_gravity_drag.cfg" />
+    <Content Include="Tests\test_kingofthebubble_spawn.cfg" />
     <Content Include="Tests\test_baublehunt.cfg" />
     <Content Include="Tests\test_destroyed.cfg" />
     <Content Include="Tests\test_hungryhungrybaubles.cfg" />

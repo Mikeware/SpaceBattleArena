@@ -139,4 +139,6 @@ class Bauble(PhysicalRound):
     def spawn(world, cfg, pos=None):
         if pos == None:
             pos = getPositionAwayFromOtherObjects(world, cfg.getint("Bauble", "buffer_object"), cfg.getint("Bauble", "buffer_edge"))
-        world.append(Bauble(pos, cfg.getint("HungryHungryBaubles", "bauble_points_blue")))
+        b = Bauble(pos, cfg.getint("HungryHungryBaubles", "bauble_points_blue"))
+        world.append(b)
+        return b

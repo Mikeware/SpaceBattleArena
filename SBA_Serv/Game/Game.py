@@ -99,7 +99,7 @@ class BasicGame(object):
         # Load World
         self.world = GameWorld(self, (cfgobj.getint("World","width"), cfgobj.getint("World","height")), self.world_add_remove_object)
 
-        self._spawnmanager = SpawnManager(cfgobj, self.world)
+        self.spawnmanager = SpawnManager(cfgobj, self.world)
 
         if self.__autostart:
             self.round_start()
@@ -174,7 +174,7 @@ class BasicGame(object):
                 self.world.start()
                 self.__created = True
 
-            self._spawnmanager.start() # want spawn manager here so it can spawn items on players
+            self.spawnmanager.start() # want spawn manager here so it can spawn items on players
 
             for player in self.game_get_current_player_list():
                 self._game_add_ship_for_player(player.netid, roundstart=True)
@@ -210,7 +210,7 @@ class BasicGame(object):
             player.bestscore = self._points_initial
             player.deaths = 0
 
-            self._spawnmanager.player_added(reason)
+            self.spawnmanager.player_added(reason)
 
     
     def player_get_start_position(self, force=False):
@@ -234,7 +234,7 @@ class BasicGame(object):
         if self.__timer != None:
             self.__timer.cancel() # if we get a round-over prematurely or do to some other condition, we should cancel this current timer
             self.__timer = None
-        self._spawnmanager.stop()
+        self.spawnmanager.stop()
 
         logging.debug("[Game] Round Over")
         self.game_update(0) # make sure we do one last update to sync and refresh the leaderboard cache
@@ -284,7 +284,7 @@ class BasicGame(object):
         """
         Called by game at start of round to create world and when world reset, defaults to the standard world configuration from the config file definitions.
         """
-        self._spawnmanager.spawn_initial()
+        self.spawnmanager.spawn_initial()
 
     def round_get_has_started(self):
         """
@@ -627,7 +627,7 @@ class BasicGame(object):
                         self._game_add_ship_for_player(nid, True)
 
         if not added:
-            self._spawnmanager.check_number(wobj)
+            self.spawnmanager.check_number(wobj)
     
     def world_physics_pre_collision(self, obj1, obj2):
         """

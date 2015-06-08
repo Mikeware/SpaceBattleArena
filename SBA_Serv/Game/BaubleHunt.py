@@ -243,7 +243,9 @@ class Bauble(PhysicalRound):
                 v = ent[1]
                 break
 
-        world.append(Bauble(pos, v))
+        b = Bauble(pos, v)
+        world.append(b)
+        return b
 
 class OutpostWrapper(GUIEntity):
     def __init__(self, obj, world):

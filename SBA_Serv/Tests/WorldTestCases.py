@@ -355,7 +355,7 @@ class WorldVisualShipDestroyedTestCase(SBAGUITestCase):
         self.assertEqual(ship2.health, 100, "Free ship took damage")
         self.assertAlmostEqual(ship2.body.position, start2, None, "Free Ship not in same place", 2)
 
-        time.sleep(5.5)
+        time.sleep(6.5)
 
         self.assertFalse(ship in self.game.world, "Doomed Ship not destroyed")
 

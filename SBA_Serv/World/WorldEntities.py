@@ -69,8 +69,9 @@ class Ship(PhysicalRound):
         self.commandQueue = MessageQueue(size)
         self.commandQueue.extend(old)
 
-    def take_damage(self, damage, by=None):
-        if self.commandQueue.containstype(RaiseShieldsCommand) and self.shield.value > 0:
+    def take_damage(self, damage, by=None, force=False):
+        logging.debug("Ship #%d taking damage %d", self.id, damage)
+        if self.commandQueue.containstype(RaiseShieldsCommand, force) and self.shield.value > 0:
             logging.debug("Shields of #%d absorbed %d damage", self.id, damage * self.shieldDamageReduction)
             self.shield -= damage * self.shieldDamageReduction
             super(Ship, self).take_damage(damage * (1.0 - self.shieldDamageReduction), by)
@@ -194,7 +195,9 @@ class Nebula(CelestialBody, PhysicalEllipse):
     def spawn(world, cfg, pos=None):
         if pos == None:
             pos = getPositionAwayFromOtherObjects(world, cfg.getint("Nebula", "buffer_object"), cfg.getint("Nebula", "buffer_edge"))
-        world.append(Nebula(pos, random.choice(eval(cfg.get("Nebula", "sizes"))), cfg_rand_min_max(cfg, "Nebula", "pull")))
+        n = Nebula(pos, random.choice(eval(cfg.get("Nebula", "sizes"))), cfg_rand_min_max(cfg, "Nebula", "pull"))
+        world.append(n)
+        return n
 
 
 class Planet(Influential, PhysicalRound):
@@ -241,7 +244,9 @@ class Planet(Influential, PhysicalRound):
     def spawn(world, cfg, pos=None):
         if pos == None:
             pos = getPositionAwayFromOtherObjects(world, cfg.getint("Planet", "buffer_object"), cfg.getint("Planet", "buffer_edge"))
-        world.append(Planet(pos, cfg_rand_min_max(cfg, "Planet", "range"), cfg_rand_min_max(cfg, "Planet", "pull")))
+        p = Planet(pos, cfg_rand_min_max(cfg, "Planet", "range"), cfg_rand_min_max(cfg, "Planet", "pull"))
+        world.append(p)
+        return p
 
 class BlackHole(CelestialBody, Planet):
     """
@@ -269,7 +274,9 @@ class BlackHole(CelestialBody, Planet):
     def spawn(world, cfg, pos=None):
         if pos == None:
             pos = getPositionAwayFromOtherObjects(world, cfg.getint("BlackHole", "buffer_object"), cfg.getint("BlackHole", "buffer_edge"))
-        world.append(BlackHole(pos, cfg_rand_min_max(cfg, "BlackHole", "range"), cfg_rand_min_max(cfg, "BlackHole", "pull"), cfg.getfloat("BlackHole", "crush_time")))
+        bh = BlackHole(pos, cfg_rand_min_max(cfg, "BlackHole", "range"), cfg_rand_min_max(cfg, "BlackHole", "pull"), cfg.getfloat("BlackHole", "crush_time"))
+        world.append(bh)
+        return bh
 
 
 class Star(CelestialBody, Planet):
@@ -300,7 +307,9 @@ class Star(CelestialBody, Planet):
     def spawn(world, cfg, pos=None):
         if pos == None:
             pos = getPositionAwayFromOtherObjects(world, cfg.getint("Star", "buffer_object"), cfg.getint("Star", "buffer_edge"))
-        world.append(Star(pos, cfg_rand_min_max(cfg, "Star", "range"), cfg_rand_min_max(cfg, "Star", "pull"), cfg.getfloat("Star", "dmg_mod")))
+        s = Star(pos, cfg_rand_min_max(cfg, "Star", "range"), cfg_rand_min_max(cfg, "Star", "pull"), cfg.getfloat("Star", "dmg_mod"))
+        world.append(s)
+        return s
 
 class Asteroid(PhysicalRound):
     """
@@ -325,7 +334,9 @@ class Asteroid(PhysicalRound):
     def spawn(world, cfg, pos=None):
         if pos == None:
             pos = getPositionAwayFromOtherObjects(world, cfg.getint("Asteroid", "buffer_object"), cfg.getint("Asteroid", "buffer_edge"))
-        world.append(Asteroid(pos))
+        a = Asteroid(pos)
+        world.append(a)
+        return a
 
 class Dragon(CelestialBody, Influential, Asteroid):
     """
@@ -407,12 +418,14 @@ class Dragon(CelestialBody, Influential, Asteroid):
     def spawn(world, cfg, pos=None):
         if pos == None:
             pos = getPositionAwayFromOtherObjects(world, cfg.getint("Dragon", "buffer_object"), cfg.getint("Dragon", "buffer_edge"))
-        world.append(Dragon(pos, cfg_rand_min_max(cfg, "Dragon", "range"), 
-                            cfg_rand_min_max(cfg, "Dragon", "attack_speed"), 
-                            cfg_rand_min_max(cfg, "Dragon", "health"),
-                            (cfg.getfloat("Dragon", "attack_time_min"), cfg.getfloat("Dragon", "attack_time_max")),
-                            (cfg.getfloat("Dragon", "attack_amount_min"), cfg.getfloat("Dragon", "attack_amount_max")),
-                            ))
+        d = Dragon(pos, cfg_rand_min_max(cfg, "Dragon", "range"), 
+                        cfg_rand_min_max(cfg, "Dragon", "attack_speed"), 
+                        cfg_rand_min_max(cfg, "Dragon", "health"),
+                        (cfg.getfloat("Dragon", "attack_time_min"), cfg.getfloat("Dragon", "attack_time_max")),
+                        (cfg.getfloat("Dragon", "attack_amount_min"), cfg.getfloat("Dragon", "attack_amount_max")),
+                        )
+        world.append(d)
+        return d
 
 class Torpedo(PhysicalRound):
     """
