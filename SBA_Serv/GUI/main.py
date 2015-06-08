@@ -404,7 +404,8 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                 else:
                     # recenter on new click
                     offsetx, offsety = centerViewOnWorld((event.pos[0]*scalefactorx, event.pos[1]*scalefactory))
-                    
+            elif event.type == MOUSEBUTTONDOWN and event.button == 3: #Right Click
+                mousemode = None
         #endregion 
 
         # Tracks a ship on screen
