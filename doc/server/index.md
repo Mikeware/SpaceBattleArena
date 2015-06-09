@@ -5,6 +5,7 @@ outline:
  - { url: "setup.html", title: "Setup" }
  - { url: "config.html", title: "Configuration" }
  - { url: "usage.html", title: "Usage/Shortcuts" }
+ - { url: "tournaments.html", title: "Tournaments" }
 ---
 
 Server Information

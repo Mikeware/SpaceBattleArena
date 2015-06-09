@@ -1,13 +1,51 @@
+v1.1.0.10?? : 06/??/2015
+----
+* Added Build Numbers
+* Replaced all sounds with Public Domain ones
+* Added **Discovery Quest** Subgame
+    * Subgames can create/intercept Commands
+    * Simplified/Improved Subgame Physics handlers
+        * Added *collidable* property
+    * Radar methods know player who is radaring now
+    * Cleaned up round start/end world life cycle management
+        * Cleaned up object damage/life cycle management
+            * AllStopCommand can destroy ship properly now
+            * Cleaned up GUI player ship references
+    * Spawn Manager
+        * Dynamic GUI Object Spawning 
+            * List Display with Mouse Wheel support
+            * Middle-click performs action and remains in current mode
+            * Right-click cancels mode
+        * Controls timed spawning of objects
+        * Controls minimum and maximum number of objects
+        * Controls initial spawn parameters/world generation
+            * Entities now have static spawn method (to be used by Spawn Manager)
+        * Controls time to live of spawned objects
+        * Controls spawning on player additions/respawns
+    * Abstracted Tournament Management to separate class
+        * Added 'Wild' Tournament which moves 'wildcard' players forward based on top scores across rounds.
+    * Added Influential Body base class (something happens around it)
+        * Added Dragons (chase ships)
+    * Added Stars (players take damage the closer they are to their center)
+        * Added Celestial Body base class (things happen within them)    
+        * Made Black Holes crush ships within them for a period of time
+* Ship Tracker HUD in GUI
+    * Tracking now by player instead of ship
+* Dynamic GUI Image Loader
+* **Breaking Changes:**
+    * Renamed HomeBase to Outpost in Bauble Hunt to align with Discovery Quest
+    * Changed shipDestroyed parameters in client interface
+
 v1.0.1 : 05/26/2015
 ----
 * Added this changelog
 * Functional Updates:
-  * *SteerCommand* can also be **non-blocking** now (optional parameter)
-  * *IdleCommand* costs **no** energy
-  * Survivor game now based on travel to encourage movement.
-  * *Auto-kick* feature for inactive clients (disconnect_on_idle)
-  * Client prints statistics on exit
-  * BasicSpaceship doesn't require shipDestroyed method any more
+    * *SteerCommand* can also be **non-blocking** now (optional parameter)
+    * *IdleCommand* costs **no** energy
+    * Survivor game now based on travel to encourage movement.
+    * *Auto-kick* feature for inactive clients (disconnect_on_idle)
+    * Client prints statistics on exit
+    * BasicSpaceship doesn't require shipDestroyed method any more
 * General Client Disconnect and Threading Improvements
 * Log files now append timestamp to name
 * Fix issues with Planets and Nebulas
@@ -18,12 +56,12 @@ v1.0 : 05/11/2015 [Season 4] - Open Source
 ----
 * Open Sourced under GPLv2
 * Re-architected subgame system on client and server, with new subgames:
-  * King of the Bubble Game (and variant)
-  * 'Basic' Games:
-    * Find the Middle
-    * Survivor
-    * Asteroid Miner
-    * Combat Exercise
+    * King of the Bubble Game (and variant)
+    * 'Basic' Games:
+        * Find the Middle
+        * Survivor
+        * Asteroid Miner
+        * Combat Exercise
 * Nebulas (cause drag)
 * [Steer Command](http://mikeware.github.io/SpaceBattleArena/client/java_doc/ihs/apcs/spacebattle/commands/SteerCommand.html)
 * Improved Client Disconnect

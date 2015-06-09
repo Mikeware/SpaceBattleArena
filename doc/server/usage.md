@@ -32,7 +32,7 @@ The following information will explain keyboard shortcuts as well as various inf
 | Key   	| Description               	|
 |-------	|---------------------------	|
 | **I** 	| IP Address                	|
-| **P** 	| List of Connected Players 	|
+| **P** 	| List of Connected Players/Players in Round 	|
 | **S** 	| Stats on Objects          	|
 | **N** 	| Name on Ships             	|
 | **G** 	| Game Info                 	|
@@ -66,8 +66,8 @@ The following information will explain keyboard shortcuts as well as various inf
 
 | Key                 	| Description                  	|
 |---------------------	|------------------------------	|
-| **PageDown/PageUp** 	| Track Next/Previous Ship     	|
-| **END**             	| Stop Ship Tracking           	|
+| **PageDown/PageUp** 	| Track Next/Previous Player  	|
+| **END**             	| Stop Player Tracking         	|
 | **Y**               	| Toggle Dynamic Ship Tracking 	|
 
 ### 'God' Commands
@@ -89,7 +89,9 @@ Debug mode is useful for getting more insight into what may be occurring between
 <a name="tracking"></a>Tracking Modes
 -----------------------------
 
-Using PageUp/PageDown, you can select a specific ship to track.  In this mode when zoomed in, the camera will continue to follow the specified ship.  Also, in debug mode with logging turned on, only output for this ship will be shown.
+Using PageUp/PageDown, you can select a specific player to track.  In this mode when zoomed in, the camera will continue to follow the specified player.  Also, in debug mode with logging turned on, only output for this ship will be shown.
+
+When a player is being tracked, a display will be shown in the bottom-right corner with information about the ship's current status as well as the commands it is currently trying to execute.
 
 The Dynamic camera mode will switch between ships to show whoever happens to have the highest score in the current game.
 
@@ -97,9 +99,9 @@ The Dynamic camera mode will switch between ships to show whoever happens to hav
 <a name="god"></a>'God' Modes
 -----------------------------
 
-There are four independent modes that allow you to manipulate the SBA world while it is running.  
+There are four independent modes that allow you to manipulate the SBA world while it is running.  Left-Click will perform the action and exit out of the mode.  Middle-Click will perform the action but remain in the same mode (useful for performing the same action multiple times).  Right-Click will close whatever mode you're in.
 
-The first command 'A' allows you to add objects such as Asteroids, Planets, Black Holes, and Bubbles (if playing King of the Bubble).
+The first command 'A' allows you to add objects such as Asteroids, Planets, Black Holes, and Bubbles (if playing King of the Bubble).  It can add any object which has been configured to be spawnable within the default Universe or the current game.  The Mouse Wheel can control scrolling through this list.
 
 The next command 'K' allows you to click on any object in the world to destroy it.
 

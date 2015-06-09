@@ -11,6 +11,7 @@ outline:
  - { url: "baublehunt.html", title: "Bauble Hunt" }
  - { url: "kingofthebubble.html", title: "King of the Bubble" }
  - { url: "kingofthebubble.html#kos", title: "King of Space" }
+ - { url: "discoveryquest.html", title: "Discovery Quest" }
 ---
 
 Competitions

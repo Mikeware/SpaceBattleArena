@@ -37,6 +37,7 @@ Documentation
     * [Server Setup](server/setup.html)
     * [Server Config](server/config.html)
     * [Server Usage/Shortcuts](server/usage.html)
+    * [Tournaments](server/tournaments.html)
 * [Lessons](lessons/index.html)
     * 00 - [Intro and Setup](lessons/intro.html)
     * 01 - [Find the Middle](lessons/findthemiddle.html)
@@ -61,6 +62,7 @@ Documentation
     * [Bauble Hunt](games/baublehunt.html)
     * [King of the Bubble](games/kingofthebubble.html)
         * [King of Space (Variant)](games/kingofthebubble.html#kos)
+    * [Discovery Quest](games/discoveryquest.html)
 * External Resources
     * [YouTube Playlist](https://www.youtube.com/playlist?list=PL1DMX9HzuNPTiYpd1KslkAAsSY1yMrEgh) - Past Competitions
     * [You Have Died of Dysentery: Games in Education Are Still Alive - PAXDev 2014](http://www.mikeware.com/2014/08/you-have-died-of-dysentery-games-in-education-are-still-alive/)
