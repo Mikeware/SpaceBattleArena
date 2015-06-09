@@ -359,6 +359,34 @@ class WorldVisualShipDestroyedTestCase(SBAGUITestCase):
 
         self.assertFalse(ship in self.game.world, "Doomed Ship not destroyed")
 
+    def test_dragon_stopped(self):
+        """
+        Tests a dragon
+        """
+        start = self.game.world.mid_point(0,80)
+        dragon = Dragon(start, 100, 20)
+        dragon.body.velocity = Vec2d(0, 0)
+        self.game.world.append(dragon)
+
+        speed = dragon.body.velocity.length
+        time.sleep(1.5)
+
+        starts = self.game.world.mid_point(50, 0)
+        ship = AIShip_SetList("Doomed", starts, self.game, [])        
+
+        start2 = self.game.world.mid_point(-150, 250)
+        ship2 = AIShip_SetList("Free", start2, self.game, [])        
+
+        time.sleep(2.5)
+
+        self.assertGreater(dragon.body.velocity.length, speed, "Dragon not moving faster")
+
+        print dragon.body.velocity.angle_degrees
+        self.failIfAlmostEqual(dragon.body.position, start, None, "Dragon should have moved", 5)
+        self.assertAlmostEqual(dragon.body.velocity.angle_degrees, -50, None, "Dragon should be facing ship", 15)
+
+        time.sleep(0.5)
+
     def test_dragon_vs_cloak(self):
         """
         Tests a dragon and his ability (or lack of) to see cloaked ships

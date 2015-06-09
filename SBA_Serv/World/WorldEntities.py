@@ -362,6 +362,7 @@ class Dragon(CelestialBody, Influential, Asteroid):
         #initial movement
         v = random.randint(12000, 18000)
         self.body.apply_impulse((random.randint(-1, 1) * v, random.randint(-1, 1) * v), (0,0))
+        self.lv = self.body.velocity.normalized()
 
     def _get_next_attack(self):
         self.natk = (random.uniform(self.attack_time[0], self.attack_time[1]),
@@ -382,7 +383,11 @@ class Dragon(CelestialBody, Influential, Asteroid):
             if self.target == None:
                 if len(self.in_celestialbody) == 0:
                     otherobj.player.sound = "RAWR"
-                self.body.velocity.length += self.attack_speed
+                if self.body.velocity.length == 0:
+                    self.body.velocity = self.lv * self.attack_speed
+                else:
+                    self.body.velocity.length += self.attack_speed
+                self.lv = self.body.velocity.normalized()
             self.target = pymunk.Vec2d(mapped_pos)
 
     def update(self, t):
@@ -403,7 +408,8 @@ class Dragon(CelestialBody, Influential, Asteroid):
 
             # clear target as we'll reaquire to 'readjust course' for moving object...
             if self.body.position.get_dist_sqrd(self.target) < 400:
-                self.body.velocity.length -= self.attack_speed
+                if self.body.velocity.length > self.attack_speed:
+                    self.body.velocity.length -= self.attack_speed
                 self.target = None
 
         super(Dragon, self).update(t)
