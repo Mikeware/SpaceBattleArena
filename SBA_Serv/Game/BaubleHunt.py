@@ -36,6 +36,8 @@ class BaubleHuntGame(BasicGame):
         rb = cfgobj.getfloat("BaubleHunt", "bauble_percent_red")
         self._mv = cfgobj.getint("BaubleHunt", "bauble_points_red")
         BaubleHuntGame.VALUE_TABLE = [(bb, cfgobj.getint("BaubleHunt", "bauble_points_blue")), (bb+yb, cfgobj.getint("BaubleHunt", "bauble_points_yellow")), (bb+yb+rb, self._mv)]
+
+        self._respawn = cfgobj.getboolean("BaubleHunt", "respawn_bauble_on_collect")
         
         self.__bases = ThreadSafeDict()
         self.__baubles = ThreadSafeDict()
@@ -117,8 +119,9 @@ class BaubleHuntGame(BasicGame):
                 del self.__baubles[bauble.id]
 
             bauble.destroyed = True
-                
-            Bauble.spawn(self.world, self.cfg)
+
+            if self._respawn:
+                Bauble.spawn(self.world, self.cfg)
         #eif
         logging.info("Done Collecting Baubles #%d", ship.id)
 
