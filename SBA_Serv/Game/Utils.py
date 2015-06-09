@@ -199,7 +199,7 @@ class SpawnManager:
         """
         if self._running:
             for sc in self._spawns.itervalues():
-                if sc.is_player(reason):
+                if sc.is_player(reason) and self._below_max(sc):
                     self.spawn_entity(sc.name, respawntimer=False, number=sc.player_num)
 
     def start(self):
@@ -208,14 +208,20 @@ class SpawnManager:
         """
         self._running = True
         for sc in self._spawns.itervalues():
-            if self._should_spawn(sc):
+            if self._should_spawn(sc) and self._below_max(sc):
                 self.add_timer(sc.name)
 
     def _should_spawn(self, sc):
         """
         Check maximum boundry of a configuration
         """
-        return sc.is_timed() and (not sc.is_max() or (sc.is_max() and self._world.get_count_of_objects(sc.type) < sc.num_max)) and not self.has_timer(sc.name)
+        return sc.is_timed() and self._below_max(sc) and not self.has_timer(sc.name)
+
+    def _below_max(self, sc):
+        """
+        Check if we've reached the maximum number of objects for this spawn config.
+        """
+        return (not sc.is_max() or (sc.is_max() and self._world.get_count_of_objects(sc.type) < sc.num_max))
 
     def add_timer(self, entityname):
         if self._running and self._spawns.has_key(entityname):
