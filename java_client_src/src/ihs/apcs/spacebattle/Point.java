@@ -64,29 +64,16 @@ public class Point {
 	 * @return the absolute angle from this to other 
 	 */
 	public int getAngleTo(Point other) {
-		double xDiff = other.getX() - this.getX();
-		double yDiff = -1 * (other.getY() - this.getY());
-		
-		int result = 0;
-		if (xDiff > 0 && yDiff > 0) {
-			// first quadrant
-			result = (int)(Math.atan(yDiff / xDiff) * 180 / Math.PI);
-		} else if (xDiff < 0 && yDiff > 0) {
-			// second quadrant
-			result = 180 + (int)(Math.atan(yDiff / xDiff) * 180 / Math.PI);
-		} else if (xDiff < 0 && yDiff < 0) {
-			// third quadrant
-			result = 180 + (int)(Math.atan(yDiff / xDiff) * 180 / Math.PI);
-		} else { // (xDiff > 0 && yDiff < 0)
-			// fourth quadrant
-			result = (int)(Math.atan(yDiff / xDiff) * 180 / Math.PI);
-		}
-		if (result == 360)
-			result = 0;
-		
-		return result;
+
+		double xDiff = this.getX() - other.getX();
+		double yDiff = this.getY() - other.getY();
+
+		if (xDiff == 0 && yDiff == 0) // same point
+			return 0;
+
+		return (180 + (int) Math.round((Math.atan2(yDiff, xDiff) * 180 / Math.PI))) % 360;
 	}
-	
+
 	public String toString() {
 		return String.format("(%f, %f)", getX(), getY());
 	}
