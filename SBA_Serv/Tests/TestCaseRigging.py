@@ -102,6 +102,12 @@ class SBAWorldTestCase(unittest.TestCase):
     """
     def setUp(self):
         try:
+            import coverage
+            coverage.process_startup()
+        except ImportError, EnvironmentError:
+            pass
+
+        try:
             classname = str(self.__class__)        
             classname = classname[classname.find(".")+1:-2]
             print classname

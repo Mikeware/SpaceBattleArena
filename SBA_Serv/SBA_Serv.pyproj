@@ -138,6 +138,7 @@
     <Content Include="no_advanced_commands.cfg" />
     <Content Include="no_collide.cfg" />
     <Content Include="no_gravity_drag.cfg" />
+    <Content Include=".coveragerc" />
     <Content Include="Tests\test_kingofthebubble_spawn.cfg" />
     <Content Include="Tests\test_baublehunt.cfg" />
     <Content Include="Tests\test_destroyed.cfg" />

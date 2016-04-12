@@ -5,3 +5,6 @@
 *.log
 *.pyc
 *.user
+.coverage
+.coverage.*
+/coverage_html_report/
