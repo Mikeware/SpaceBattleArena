@@ -7,7 +7,8 @@ import java.util.*;
  * A class to represent the state of the world at the time a command is requested.
  * An Environment is passed to the {@link ihs.apcs.spacebattle.Spaceship#getNextCommand(Environment) } 
  * method of the {@link ihs.apcs.spacebattle.Spaceship} class to inform the ship of 
- * the current state of the world.
+ * the current state of your ship and the world.
+ * The Environment may contain additional information based on performing other commands like {@link ihs.apcs.spacebattle.commands.RadarCommand }.
  * @author Brett Wortzman
  * @version 2.0
  * @since 1.0
@@ -22,21 +23,21 @@ public class Environment<T> {
 	protected T GAMEDATA;
 		
 	/**
-	 * Gets a list of messages currently received.
+	 * Gets a list of messages currently received. [Not Used]
 	 * @return a list of messages
 	 */
 	public String[] getMessages() { return MESSAGES; }
 	
 	/**
-	 * Gets the level of the last radar sweep.
-	 * @return the level of radar sweep performed on the last command
+	 * Gets the level of the last radar sweep, if the last command issued was a {@link ihs.apcs.spacebattle.commands.RadarCommand }.
+	 * @return the level of radar sweep performed by the {@link ihs.apcs.spacebattle.commands.RadarCommand }.
 	 */
 	public int getRadarLevel() { return RADARLEVEL; }
 	
 	/**
-	 * Gets the results of the most recent radar sweep.
-	 * @return results of the radar sweep performed with the last command,
-	 *   or null if the last command was not a radar sweep 
+	 * Gets the results of the most recent radar sweep, if and only if the last command issued was a {@link ihs.apcs.spacebattle.commands.RadarCommand }.
+	 * @return results of the radar sweep performed with the last {@link ihs.apcs.spacebattle.commands.RadarCommand },
+	 *   or null if the last command issued was not a radar sweep 
 	 */
 	public RadarResults getRadar() { return RADARDATA; }
 	
