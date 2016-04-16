@@ -28,7 +28,7 @@ public class KingOfTheBubbleGameInfo  extends BasicGameInfo {
 		
 	/**
 	 * Gets the positions of all current bubbles in the world.  Note that it is only guaranteed
-	 *   that a bubble existed at this location when the {@link Environment} was created.  The 
+	 *   that a bubble existed at this location when the {@link ihs.apcs.spacebattle.Environment } was created.  The 
 	 *   bubble may have dissipated before you get there.
 	 * @return a list of all bubble positions
 	 */

@@ -37,7 +37,7 @@ public class RepairCommand extends ShipCommand {
 	 * Repairing does not block the processing of other commands.
 	 * 
 	 * @since 2.0
-	 * @return
+	 * @return false, repairing doesn't block.
 	 */
 	public static boolean isBlocking() { return false; }
 }

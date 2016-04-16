@@ -45,7 +45,7 @@ public class RaiseShieldsCommand extends ShipCommand {
 	/**
 	 * Raising Shields does not block the processing of other commands.
 	 * 
-	 * @return
+	 * @return false, raising shields doesn't block.
 	 */
 	public static boolean isBlocking() { return false; }
 }

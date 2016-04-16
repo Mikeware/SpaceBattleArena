@@ -43,7 +43,7 @@ public class CloakCommand extends ShipCommand {
 	 * Cloaking does not block the processing of other commands.
 	 * 
 	 * @since 2.0
-	 * @return
+	 * @return false, cloak doesn't block.
 	 */
 	public static boolean isBlocking() { return false; }
 }

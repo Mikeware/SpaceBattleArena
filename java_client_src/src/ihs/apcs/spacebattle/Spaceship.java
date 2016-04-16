@@ -55,6 +55,8 @@ public interface Spaceship<T> {
 	 * 
 	 * @version 1.2
 	 * @since 1.1
+	 *
+	 * @param lastDestroyedBy string containing the name of the player's ship or the object type name and #ID of the entity which destroyed your ship.
 	 */
 	public void shipDestroyed(String lastDestroyedBy);
 	

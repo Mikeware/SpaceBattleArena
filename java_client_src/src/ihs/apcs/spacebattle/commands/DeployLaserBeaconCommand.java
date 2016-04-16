@@ -25,7 +25,7 @@ public class DeployLaserBeaconCommand extends ShipCommand {
 	 * Deploy Laser Beacons executes immediately.
 	 * 
 	 * @since 2.0
-	 * @return
+	 * @return true
 	 */
 	public static boolean executesImmediately() { return true; }
 }

@@ -28,7 +28,7 @@ public abstract class ShipCommand {
 	 * Returns true if the Command will stop other commands from processing. (default true)
 	 * 
 	 * @since 2.0
-	 * @return
+	 * @return true if the command blocks (default).
 	 */
 	public static boolean isBlocking() { return true; }
 	
@@ -37,7 +37,7 @@ public abstract class ShipCommand {
 	 * 
 	 * All commands which execute immediately are blocking commands; however, since they don't delay, there is not much impact to consider besides energy costs.
 	 * @since 2.0
-	 * @return
+	 * @return false by default
 	 */
 	public static boolean executesImmediately() { return false; }
 	

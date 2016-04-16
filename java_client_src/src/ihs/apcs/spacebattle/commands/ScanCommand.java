@@ -48,7 +48,7 @@ public class ScanCommand extends ShipCommand {
 	 * Scanning does not block the processing of other commands.
 	 * 
 	 * @since 2.0
-	 * @return
+	 * @return false, scanning doesn't block.
 	 */
 	public static boolean isBlocking() { return false; }
 }
