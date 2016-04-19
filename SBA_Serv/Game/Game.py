@@ -491,13 +491,14 @@ class BasicGame(object):
 
         Analog to player_added
         """
-        logging.info("Player %s Died", player.name)
-        player.deaths += 1
-        if self._points_lost_on_death > 0:
-            self.player_update_score(player, -self._points_lost_on_death)
+        if not player.roundover: # only count deaths during the round!
+            logging.info("Player %s Died", player.name)
+            player.deaths += 1
+            if self._points_lost_on_death > 0:
+                self.player_update_score(player, -self._points_lost_on_death)
 
-        if self._reset_score_on_death:
-            self._player_reset_score(player)
+            if self._reset_score_on_death:
+                self._player_reset_score(player)
 
     def _player_reset_score(self, player):
         """

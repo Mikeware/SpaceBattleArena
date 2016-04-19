@@ -67,6 +67,8 @@ class CombatExerciseTestCases(SBAGUITestCase):
 
         self.assertGreaterEqual(self.ship.player.score, 2, "Ship didn't gain 2 points")
 
+        self.assertEqual(self.ship2.player.deaths, 1, "Target Ship didn't get marked as dead")
+
 class CombatExerciseTournamentTestCases(SBAGUITestCase):
     """
     Test cases for Combat Exercise basic game w/ tournamnet.

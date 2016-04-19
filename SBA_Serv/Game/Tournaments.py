@@ -127,7 +127,10 @@ class WildTournament(BasicTournament):
         self._wildgroup = []
         self._playwildround = cfg.getboolean("Wildcard", "play_round")
         self._toplay = cfg.getint("Wildcard", "number")
+        self._andties = cfg.getboolean("Wildcard", "take_ties")
         self._wildround = False
+        self._primary_victory = cfg.get("Game", "primary_victory_attr")
+        self._secondary_victory = cfg.get("Game", "secondary_victory_attr")
 
     def check_results(self, players, stats):
         """
@@ -143,10 +146,19 @@ class WildTournament(BasicTournament):
         self._wildgroup = []
         for player in self._leaderfunc(True): # Get all player scores sorted
             if player not in self._finalgroup:
+                # do check before, so we have 'next' player after appending last to check ties
+                if x >= self._toplay and \
+                    (not self._andties or 
+                     (len(self._wildgroup) >= 1 and not self.__check_score_equal(player, self._wildgroup[-1]))):
+                    break
                 x += 1
                 self._wildgroup.append(player)
-                if x == self._toplay:
-                    break
+
+    def __check_score_equal(self, player1, player2):
+        """
+        Checks to see if two player scores are equal according to the current game rules.
+        """
+        return getattr(player1, self._primary_victory) == getattr(player2, self._primary_victory) and getattr(player1, self._secondary_victory) == getattr(player2, self._secondary_victory)
 
     def next_round(self):
         """
