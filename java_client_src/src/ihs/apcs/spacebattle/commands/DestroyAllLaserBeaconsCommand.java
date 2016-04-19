@@ -20,7 +20,7 @@ public class DestroyAllLaserBeaconsCommand extends ShipCommand {
 	 * Destroy Laser Beacons execute immediately.
 	 * 
 	 * @since 2.0
-	 * @return
+	 * @return true
 	 */
 	public static boolean executesImmediately() { return true; }
 }

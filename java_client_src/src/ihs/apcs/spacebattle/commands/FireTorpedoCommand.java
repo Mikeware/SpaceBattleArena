@@ -34,7 +34,7 @@ public class FireTorpedoCommand extends ShipCommand {
 	 * Fire Torpedo executes immediately.
 	 * 
 	 * @since 2.0
-	 * @return
+	 * @return true
 	 */
 	public static boolean executesImmediately() { return true; }
 }

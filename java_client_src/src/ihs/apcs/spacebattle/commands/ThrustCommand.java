@@ -48,7 +48,7 @@ public class ThrustCommand extends ShipCommand {
 	 * Thrust commands don't prevent you from executing other commands.
 	 * 
 	 * If you want to wait for the Thrust to complete, you should issue an Idle command during your next cycle.
-	 * @return
+	 * @return false, thrusting doesn't block.
 	 */
 	public static boolean isBlocking() { return false; }
 }
