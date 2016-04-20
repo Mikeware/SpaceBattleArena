@@ -18,7 +18,7 @@ import ihs.apcs.spacebattle.Point;
  * 
  * @author Michael A. Hawker
  *
- * @since 2.0
+ * @since 0.75
  * @version 1.0
  */
 public class HungryHungryBaublesGameInfo extends BasicGameInfo {

@@ -21,18 +21,20 @@ import java.util.*;
  *  <p>Scanning their outpost will always give them a new mission.
  *
  *  <p>Your Ship being destroyed clears/fails your mission, so you must return to your established outpost if you want a new one.
+ *
+ *  <p>The Discovery Quest Game prevents a player from warping out of a nebula.
  * 
  * @author Michael A. Hawker
  *
  * @since 1.1
- * @version 1.0
+ * @version 1.1
  */
 public class DiscoveryQuestGameInfo extends BasicGameInfo {
 	private String[] MISSION;
 	private boolean FAILED;
 	private double[] OUTPOST;
-   private int[] CURIDS;
-   private int[] SUCIDS;
+    private int[] CURIDS;
+    private int[] SUCIDS;
 	
 	/**
 	 * Gets the position of your home base outpost.

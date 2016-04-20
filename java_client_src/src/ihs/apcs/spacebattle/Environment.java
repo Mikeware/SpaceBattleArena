@@ -10,8 +10,9 @@ import java.util.*;
  * the current state of your ship and the world.
  * The Environment may contain additional information based on performing other commands like {@link ihs.apcs.spacebattle.commands.RadarCommand }.
  * @author Brett Wortzman
- * @version 2.0
- * @since 1.0
+ *
+ * @since 0.1
+ * @version 1.0
  * 
  * @param <T> specify the corresponding Game class to that being played on the server.  Corresponds to the same class used by the {@link ihs.apcs.spacebattle.Spaceship} interface. 
  */

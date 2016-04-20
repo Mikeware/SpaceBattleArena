@@ -7,7 +7,7 @@ package ihs.apcs.spacebattle;
  * 
  * @author Michael A. Hawker
  *
- * @since 2.0
+ * @since 1.0
  * @version 1.1
  */
 public class BasicGameInfo {
@@ -50,7 +50,7 @@ public class BasicGameInfo {
 	 * Gets a string representing the last thing that destroyed your ship.
 	 * 
 	 * @return name of a player or type of an object with its #ID number
-	 * @since 1.1
+	 * @since 1.0.1
 	 */
 	public String getLastDestroyedBy() { return LSTDSTRBY; }
 	

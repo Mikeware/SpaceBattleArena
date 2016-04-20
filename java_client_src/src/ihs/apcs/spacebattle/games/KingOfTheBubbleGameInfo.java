@@ -18,10 +18,10 @@ import java.util.*;
  * 
  * @author Brett Wortzman
  *
- * @since 1.2
- * @version 2.0
+ * @since 0.95
+ * @version 1.0
  */
-public class KingOfTheBubbleGameInfo  extends BasicGameInfo {
+public class KingOfTheBubbleGameInfo extends BasicGameInfo {
 	private double[][] BUBBLES;
 	
 	private List<Point> bubblePositions;

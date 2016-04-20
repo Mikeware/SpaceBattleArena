@@ -9,6 +9,8 @@ package ihs.apcs.spacebattle.commands;
  * Cloaking is a non-blocking operation.
  * @author Brett Wortzman
  *
+ * @since 0.9
+ * @version 1.1
  */
 public class CloakCommand extends ShipCommand {
 	@SuppressWarnings("unused")
@@ -42,7 +44,7 @@ public class CloakCommand extends ShipCommand {
 	/**
 	 * Cloaking does not block the processing of other commands.
 	 * 
-	 * @since 2.0
+	 * @since 1.1
 	 * @return false, cloak doesn't block.
 	 */
 	public static boolean isBlocking() { return false; }

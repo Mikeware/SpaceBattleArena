@@ -7,6 +7,8 @@ package ihs.apcs.spacebattle.commands;
  * A command to cause a ship to gradually slow down from its current speed.
  * @author Brett Wortzman
  * 
+ * @since 0.1
+ * @version 0.1
  */
 public class BrakeCommand extends ShipCommand {
 	@SuppressWarnings("unused")

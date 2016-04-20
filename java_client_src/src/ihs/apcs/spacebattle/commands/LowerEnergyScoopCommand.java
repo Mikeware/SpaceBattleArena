@@ -15,6 +15,8 @@ import ihs.apcs.spacebattle.commands.ShipCommand;
  * 
  * @author Michael A. Hawker
  *
+ * @since 1.1
+ * @version 1.1
  */
 public class LowerEnergyScoopCommand extends ShipCommand {
 	@SuppressWarnings("unused")
@@ -48,7 +50,6 @@ public class LowerEnergyScoopCommand extends ShipCommand {
 	/**
 	 * Scooping does not block the processing of other commands.
 	 * 
-	 * @since 2.0
 	 * @return false, scooping doesn't block.
 	 */
 	public static boolean isBlocking() { return false; }

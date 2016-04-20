@@ -12,6 +12,8 @@ import java.util.*;
  *   by the radar sweep will result in a zero-equivalent value.
  * @author Brett Wortzman
  * @see ihs.apcs.spacebattle.commands.RadarCommand
+ * @since 0.1
+ * @version 0.1
  */
 public class RadarResults extends ArrayList<ObjectStatus> {
 	private static final long serialVersionUID = -5552710352589416751L;

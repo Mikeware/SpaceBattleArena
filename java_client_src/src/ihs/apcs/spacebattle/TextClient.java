@@ -28,6 +28,8 @@ import java.net.*;
  * Simple, text-based test client for SpaceBattle game for IHS AP CS 2012.
  * @author Brett Wortzman
  *
+ * @since 0.1
+ * @version 1.1
  */
 public class TextClient implements Client {
 	private PrintStream logStream;

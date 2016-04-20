@@ -6,6 +6,8 @@ package ihs.apcs.spacebattle.commands;
  * Will deplete energy by 40 and health by 50%.
  * @author Brett Wortzman
  *
+ * @since 0.9
+ * @version 1.1
  */
 public class AllStopCommand extends ShipCommand {
 	
@@ -28,7 +30,7 @@ public class AllStopCommand extends ShipCommand {
 	/**
 	 * AllStop executes immediately.
 	 * 
-	 * @since 2.0
+	 * @since 1.1
 	 * @return true
 	 */
 	public static boolean executesImmediately() { return true; }

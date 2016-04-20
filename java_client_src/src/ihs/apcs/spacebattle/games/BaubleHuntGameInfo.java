@@ -18,8 +18,8 @@ import java.util.*;
  * 
  * @author Brett Wortzman
  *
- * @since 1.1
- * @version 2.0
+ * @since 0.9
+ * @version 1.0
  */
 public class BaubleHuntGameInfo extends BasicGameInfo {
 	private double[] POSITION;

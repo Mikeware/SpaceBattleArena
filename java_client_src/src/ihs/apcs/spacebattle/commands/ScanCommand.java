@@ -11,6 +11,8 @@ package ihs.apcs.spacebattle.commands;
  * <p>Scanning is a non-blocking operation.
  * 
  * @author Michael A. Hawker
+ * @since 1.1
+ * @version 1.1
  */
 public class ScanCommand extends ShipCommand {
 	@SuppressWarnings("unused")
@@ -47,7 +49,6 @@ public class ScanCommand extends ShipCommand {
 	/**
 	 * Scanning does not block the processing of other commands.
 	 * 
-	 * @since 2.0
 	 * @return false, scanning doesn't block.
 	 */
 	public static boolean isBlocking() { return false; }

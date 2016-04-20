@@ -9,6 +9,8 @@ package ihs.apcs.spacebattle.commands;
  *   data without performing an action.
  * @author Brett Wortzman
  *
+ * @since 0.1
+ * @version 0.1
  */
 public class IdleCommand extends ShipCommand {
 	@SuppressWarnings("unused")

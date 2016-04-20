@@ -3,7 +3,9 @@ package ihs.apcs.spacebattle;
 /**
  * Represents a point in space as an (x, y) coordinate.
  * @author Brett Wortzman
- *
+ * 
+ * @since 0.1
+ * @version 0.1
  */
 public class Point {
 	private double x;

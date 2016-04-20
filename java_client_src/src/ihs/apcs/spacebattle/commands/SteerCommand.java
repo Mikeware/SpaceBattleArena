@@ -9,6 +9,8 @@ package ihs.apcs.spacebattle.commands;
  * Note: This command can be toggled with the optional second parameter to NOT block the ship, this is useful for performing more complex maneuvers.
  * @author Michael A. Hawker
  *
+ * @since 1.0
+ * @version 1.0.1
  */
 public class SteerCommand extends ShipCommand {
 	@SuppressWarnings("unused")

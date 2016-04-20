@@ -9,6 +9,8 @@ import ihs.apcs.spacebattle.commands.ShipCommand;
  * Repairing is a non-blocking operation.
  * @author Brett Wortzman
  *
+ * @since 0.9
+ * @version 1.1
  */
 public class RepairCommand extends ShipCommand {
 	@SuppressWarnings("unused")
@@ -36,7 +38,7 @@ public class RepairCommand extends ShipCommand {
 	/**
 	 * Repairing does not block the processing of other commands.
 	 * 
-	 * @since 2.0
+	 * @since 1.1
 	 * @return false, repairing doesn't block.
 	 */
 	public static boolean isBlocking() { return false; }

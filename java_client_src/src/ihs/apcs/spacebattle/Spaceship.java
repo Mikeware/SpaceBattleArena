@@ -20,8 +20,8 @@ import ihs.apcs.spacebattle.commands.ShipCommand;
  * </ol>  
  * 
  * @author Brett Wortzman
- * @version 2.0
- * @since 1.0
+ * @since 0.1
+ * @version 1.1
  * 
  * @param <T> the Game class being used by the server.  Will correspond to the type of information retrieved by the {@link Environment} class.
  */
@@ -53,8 +53,8 @@ public interface Spaceship<T> {
 	/**
 	 * Notifies a ship that it has been destroyed and respawned.  Ships can use this to track their deaths.
 	 * 
-	 * @version 1.2
-	 * @since 1.1
+	 * @since 0.95
+	 * @version 1.1
 	 *
 	 * @param lastDestroyedBy string containing the name of the player's ship or the object type name and #ID of the entity which destroyed your ship.
 	 */

@@ -7,6 +7,8 @@ import java.awt.Color;
  * receiving commands.
  * @author Brett Wortzman
  *
+ * @since 0.1
+ * @version 0.1
  */
 public class RegistrationData {
 	private String NAME;

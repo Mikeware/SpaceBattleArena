@@ -15,8 +15,8 @@ import ihs.apcs.spacebattle.util.StringMap;
  *   and the status of other objects found by a level 5 (fully-detailed) radar sweep.
  * @author Brett Wortzman
  *
- * @version 2.0
- * @since 1.0
+ * @since 0.1
+ * @version 1.1
  */
 public class ObjectStatus {
 	// Fields
@@ -47,7 +47,7 @@ public class ObjectStatus {
 	private double VALUE; // Bubble, Bauble or Ship Only
 	private int NUMSTORED; // Ship Only - Number of Baubles Carried
 	private double HITRADIUS; // Round Only
-   private boolean SUCCESS; // Game boolean for success for this object
+    private boolean SUCCESS; // Game boolean for success for this object
 	
 	private int PULL; // Planet/BlackHole/Nebula Only
 	private int MAJOR; // Planet/BlackHole/Nebula Only
@@ -168,6 +168,8 @@ public class ObjectStatus {
 	 * Is this object in a celestial object's body of effect?
 	 * @return true if a ship is in a celestial body's main area of effect (could be false but in gravity well still {@link #getAxisMajorLength()}).
 	 * A celestial body will return true if it contains an object like a ship.
+     *
+     * @since 1.1
 	 */
 	public boolean isInCelestialBody() { return INBODY; }
 	
@@ -175,6 +177,8 @@ public class ObjectStatus {
     * Was an object successfully scanned for a game? (Discovery Quest)
     * @return true if this object has a value of success for the current game.
     * i.e. Successfully scanned in Discovery Quest.
+    *
+    * @since 1.1
     */
    public boolean isSuccessful() { return SUCCESS; }
    
@@ -199,6 +203,7 @@ public class ObjectStatus {
 	/**
 	 * Gets the strength of the gravity or drag of a Planet, BlackHole or Nebula. A higher number represents a stronger effect.
 	 * @return pull value.
+     * @since 1.0
 	 */
 	public int getPullStrength() { return PULL; }
 	/**
@@ -208,12 +213,14 @@ public class ObjectStatus {
 	 * <p>
 	 * For Nebula this length is oriented in the Nebula's direction/rotation see {@link #getOrientation() } and represents its major radius.  If your ship is in the Nebula, it will slow down based on the {@link #getPullStrength()} amount.
 	 * @return the elliptical radius along the parallel axis
+     * @since 1.0
 	 */
 	public int getAxisMajorLength() { return MAJOR; }
 	
 	/**
 	 * Gets the length from the center of a Nebula that is perpendicular to the direction/rotation of the Nebula.
 	 * @return the elliptical radius along the perpendicular axis
+     * @since 1.0
 	 */
 	public int getAxisMinorLength() { return MINOR; }
 	
