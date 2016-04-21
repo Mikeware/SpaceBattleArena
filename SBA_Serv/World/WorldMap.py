@@ -113,7 +113,7 @@ class GameWorld(object):
             if obj.explodable:
                 for point in wrappos(obj.body.position, radius, self.size):
                     if in_circle(origin, radius, point):                        
-                        logging.debug("Applying Explosion Force to #%d", obj.id)
+                        logging.debug("Applying Explosion Force of strength %d impulse %s to #%d", strength, repr((point - origin) * strength), obj.id)
                         obj.body.apply_impulse((point - origin) * strength, (0,0))
                         break        
         logging.debug("Done Explosion") 

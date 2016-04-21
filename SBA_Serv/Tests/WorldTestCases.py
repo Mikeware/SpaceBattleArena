@@ -136,6 +136,62 @@ class WorldNoRespawnTestCase(SBAWorldTestCase):
 
         self.assertNotIn(ship, self.game.world, "Ship still in world.")
 
+class WorldVisualShipExplosionTestCase(SBAGUITestCase):
+
+    def test_explosion_force_no_outside_effect(self):
+        """
+        Tests that radius of explosion force is enforced.
+        """
+        start = self.game.world.mid_point(0, -100)
+        ship = AIShip_SetList("Free", start, self.game, [])
+
+        time.sleep(2.0)
+
+        self.game.world.causeExplosion(self.game.world.mid_point(0, 0), 50, 2000)
+
+        time.sleep(3.0)
+
+        self.assertAlmostEqual(ship.body.position, start, None, "Free Ship not in same place", 2)
+
+    def test_explosion_force_effect(self):
+        """
+        Tests that radius has impact on ship movement.
+        """
+        start = self.game.world.mid_point(0, -100)
+        ship = AIShip_SetList("Free", start, self.game, [])
+
+        time.sleep(2.0)
+
+        self.game.world.causeExplosion(self.game.world.mid_point(0, 0), 200, 1000)
+
+        time.sleep(3.0)
+
+        self.failIfAlmostEqual(ship.body.position, start, None, "Free Ship in same place", 2)
+
+    """
+    def test_explosion_force_amount(self):
+        
+        #Tests that different radii have impact on ship movement.
+        
+        start = self.game.world.mid_point(-40, -100)
+        ship = AIShip_SetList("Far", start, self.game, [])
+
+        start2 = self.game.world.mid_point(40, -50)
+        ship2 = AIShip_SetList("Close", start2, self.game, [])
+
+        time.sleep(2.0)
+
+        self.game.world.causeExplosion(self.game.world.mid_point(0, 0), 150, 50)
+
+        time.sleep(3.0)
+
+        self.failIfAlmostEqual(ship.body.position, start, None, "Far Ship in same place", 2)
+        self.failIfAlmostEqual(ship2.body.position, start2, None, "Close Ship in same place", 2)
+
+        self.assertGreater(ship2.body.velocity.length, ship.body.velocity.length, "Ship Close should be traveling faster than Ship Far by being closer to blast radius.")
+        self.assertGreater(abs(ship.body.position[0] - ship2.body.position[0]), abs(start[0] - start2[0]), "Ships Horizontal Positions have not diverged.")
+        self.assertGreater(abs(ship2.body.position - start2), abs(ship.body.position - start), "Ship Close Should be Farther From its Start than Ship Far.")
+    """
 
 class WorldVisualShipRespawnTestCase(SBAGUITestCase):
 
