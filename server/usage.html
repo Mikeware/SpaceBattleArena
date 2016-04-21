@@ -22,9 +22,9 @@
         <h2>A Programming Game in Java for AP CS Students.</h2>
 
         <section id="downloads">
-          <a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.0.1/SpaceBattle.jar" class="btn">Download Client Jar</a>
+          <a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.1.0.1111/SpaceBattle.jar" class="btn">Download Client Jar</a>
           <a href="/SpaceBattleArena/client/java_doc/" class="btn">Java Docs</a>
-          <a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.0.1/SBAserver.zip" class="btn">Download Server (Windows)</a>
+          <a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.1.0.1111/SBAserver.zip" class="btn">Download Server (Windows)</a>
           <a href="https://www.github.com/Mikeware/SpaceBattleArena" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
         </section>
       </div>
@@ -96,7 +96,7 @@
 </tr>
 <tr>
 <td><strong>P</strong></td>
-<td>List of Connected Players</td>
+<td>List of Connected Players/Players in Round</td>
 </tr>
 <tr>
 <td><strong>S</strong></td>
@@ -192,11 +192,11 @@
 </thead><tbody>
 <tr>
 <td><strong>PageDown/PageUp</strong></td>
-<td>Track Next/Previous Ship</td>
+<td>Track Next/Previous Player</td>
 </tr>
 <tr>
 <td><strong>END</strong></td>
-<td>Stop Ship Tracking</td>
+<td>Stop Player Tracking</td>
 </tr>
 <tr>
 <td><strong>Y</strong></td>
@@ -236,15 +236,17 @@
 
 <h2 id="tracking-modes"><a name="tracking"></a>Tracking Modes</h2>
 
-<p>Using PageUp/PageDown, you can select a specific ship to track.  In this mode when zoomed in, the camera will continue to follow the specified ship.  Also, in debug mode with logging turned on, only output for this ship will be shown.</p>
+<p>Using PageUp/PageDown, you can select a specific player to track.  In this mode when zoomed in, the camera will continue to follow the specified player.  Also, in debug mode with logging turned on, only output for this ship will be shown.</p>
+
+<p>When a player is being tracked, a display will be shown in the bottom-right corner with information about the ship&#39;s current status as well as the commands it is currently trying to execute.</p>
 
 <p>The Dynamic camera mode will switch between ships to show whoever happens to have the highest score in the current game.</p>
 
 <h2 id="&#39;god&#39;-modes"><a name="god"></a>&#39;God&#39; Modes</h2>
 
-<p>There are four independent modes that allow you to manipulate the SBA world while it is running.  </p>
+<p>There are four independent modes that allow you to manipulate the SBA world while it is running.  Left-Click will perform the action and exit out of the mode.  Middle-Click will perform the action but remain in the same mode (useful for performing the same action multiple times).  Right-Click will close whatever mode you&#39;re in.</p>
 
-<p>The first command &#39;A&#39; allows you to add objects such as Asteroids, Planets, Black Holes, and Bubbles (if playing King of the Bubble).</p>
+<p>The first command &#39;A&#39; allows you to add objects such as Asteroids, Planets, Black Holes, and Bubbles (if playing King of the Bubble).  It can add any object which has been configured to be spawnable within the default Universe or the current game.  The Mouse Wheel can control scrolling through this list.</p>
 
 <p>The next command &#39;K&#39; allows you to click on any object in the world to destroy it.</p>
 

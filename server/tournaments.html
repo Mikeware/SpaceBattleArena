@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/print.css" media="print">
+
+    <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="/SpaceBattleArena/js/main.js"></script>
+    
+    <title>Space Battle Arena by Mikeware</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="headercontainer">
+        <h1>Space Battle Arena</h1>
+        <h2>A Programming Game in Java for AP CS Students.</h2>
+
+        <section id="downloads">
+          <a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.1.0.1111/SpaceBattle.jar" class="btn">Download Client Jar</a>
+          <a href="/SpaceBattleArena/client/java_doc/" class="btn">Java Docs</a>
+          <a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.1.0.1111/SBAserver.zip" class="btn">Download Server (Windows)</a>
+          <a href="https://www.github.com/Mikeware/SpaceBattleArena" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            
+            <span><a href="/SpaceBattleArena/index.html">Home</a></span>
+            
+            
+            
+                
+                    &nbsp<span><a href="index.html">Server Information</a></span>
+                
+            
+            <span>Tournaments</span>
+        </div>
+    </nav>
+    
+
+    
+<aside>
+    <h1>Outline</h1>
+    <ul>
+    
+        <li><a href="#overview">Overview</a></li>
+    
+        <li><a href="#setup">Setup</a></li>
+    
+        <li><a href="#basic">Basic Tournament</a></li>
+    
+        <li><a href="#wild">Wild Tournament</a></li>
+    
+    </ul>
+</aside>
+
+
+
+    <div class="container">
+      <section id="main_content">
+        <h1 id="tournaments">Tournaments</h1>
+
+<h2 id="overview"><a name="overview"></a>Overview</h2>
+
+<p>Tournaments are a great option for the last day of using Space Battle Arena with a group.  They automatically split players up into groups and manage running multiple games in order to declare a Victor.</p>
+
+<h2 id="setup"><a name="setup"></a>Setup</h2>
+
+<p>A &#39;tournament.cfg&#39; is provided with the server package, so the easiest way to start a basic tournament is to include it at the end of your current game configuration:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">SBA_Serv.exe game_baublehunt.cfg tournament.cfg
+</code></pre></div>
+<p>This will start your Bauble Hunt subgame in tournament mode.  See the <a href="config.html">Configuration</a> section for the basic parameters involved with tournaments, and see the sections below for more advanced setups.</p>
+
+<p>Once Space Battle Arena starts, all players should connect their Ships to the server at once.  You can use the player list to see all the connections.</p>
+
+<p><strong>It is important for players to not disconnect during the course of the tournament.</strong> Especially, if they&#39;re continuing to another round.</p>
+
+<p>Once all players have joined.  Hit the &#39;Space&#39; key to start the first round of the tournament.  The &#39;T&#39; key in the GUI toggles the tournament display and the &#39;P&#39; key can cycle the player list to show just the current round&#39;s players.</p>
+
+<h2 id="basic-tournament"><a name="basic"></a>Basic Tournament</h2>
+
+<p>The <strong>BasicTournament</strong> is the default tournament manager.  It splits players into a number of <em>groups</em> (provided in the settings, default 4) and advances the top X players from each round to a final round (X is configurable with <em>number_to_final_round</em> and defaults to 1).</p>
+
+<p>After each initial round has completed, the final round is played with the seeded players, and a winner is crowned from the top of that pool.</p>
+
+<h2 id="wild-tournament"><a name="wild"></a>Wild Tournament</h2>
+
+<p>The <strong>WildTournament</strong> manager is the same as the Basic Tournament; however, there are two additional options available.  Configured by the following configuration section:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">[Wildcard]
+number = integer
+play_round = boolean
+</code></pre></div>
+<h3 id="number-=-integer">number = integer</h3>
+
+<p>Number of wildcard slots to provide.  A wildcard is the top scoring players across all players which did <strong>not</strong> advance.  This can be across groups.  Scoring is still defined by the subgame which is being played.</p>
+
+<h3 id="play_round-=-boolean">play_round = boolean</h3>
+
+<p>If set to true, after the preliminary rounds, but before the final, another &#39;Wildcard&#39; round will be played with the number of wildcard players specified taken from the pool of non-seeded players.  The top players from this group will advance to the final group.</p>
+
+<p>If set to false, the number of wildcard players will automatically be added to the final round after the preliminaries finish, but before the final round begins.</p>
+
+<h3 id="take_ties-=-boolean">take_ties = boolean</h3>
+
+<p>If set to true, any number of players tied for scoring will advance into the bonus round or final round.</p>
+
+      </section>
+    </div>
+
+
+		<footer>
+		  <div class="container">
+		    <div class="owner">
+		      <p><a href="https://github.com/Mikeware" class="avatar"><img src="https://avatars3.githubusercontent.com/u/8961203?v=3&s=48" width="48" height="48"/></a> <a href="https://github.com/Mikeware">Mikeware</a> maintains <a href="https://github.com/Mikeware/SpaceBattleArena">Space Battle Arena</a></p>
+		    </div>
+		    <div class="creds">
+			  <small>This page generated using <a href="https://pages.github.com/">GitHub Pages</a> themes and <a href="http://www.jekyllrb.com/">Jekyll</a>.</small>
+		    </div>
+		  </div>
+		</footer>
+
+		  <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-39650553-3");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>

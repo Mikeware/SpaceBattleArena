@@ -22,9 +22,9 @@
         <h2>A Programming Game in Java for AP CS Students.</h2>
 
         <section id="downloads">
-          <a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.0.1/SpaceBattle.jar" class="btn">Download Client Jar</a>
+          <a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.1.0.1111/SpaceBattle.jar" class="btn">Download Client Jar</a>
           <a href="/SpaceBattleArena/client/java_doc/" class="btn">Java Docs</a>
-          <a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.0.1/SBAserver.zip" class="btn">Download Server (Windows)</a>
+          <a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.1.0.1111/SBAserver.zip" class="btn">Download Server (Windows)</a>
           <a href="https://www.github.com/Mikeware/SpaceBattleArena" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
         </section>
       </div>
@@ -61,11 +61,17 @@
     
         <li><a href="#server">[Server]</a></li>
     
+        <li><a href="spawnmanager">Spawn Manager</a></li>
+    
         <li><a href="#asteroid">[Asteroid]</a></li>
+    
+        <li><a href="#dragon">[Dragon]</a></li>
     
         <li><a href="#planet">[Planet]</a></li>
     
         <li><a href="#blackhole">[BlackHole]</a></li>
+    
+        <li><a href="#star">[Star]</a></li>
     
         <li><a href="#nebula">[Nebula]</a></li>
     
@@ -195,13 +201,101 @@ etc...
 </code></pre></div>
 <p>A list of commands can be found in the Command chapter. When a command is invoked that has been disabled, it is simply ignored. A message should return to the client, but they will get a new environment and their ship should continue running.  Its state might just not be what was expected.</p>
 
+<h2 id="spawn-manager"><a name="spawnmanager"></a>Spawn Manager</h2>
+
+<p>Spawn Manager itself is not a specific configuration section.  It manages the life cycle for all the entities below.  Each entity has a set of common properties (listed here) which can be applied to them.  Place these properties within the specific [Entity] section for it to apply to that particular one.</p>
+
+<p>E.g.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"># Spawns two Asteroids into the Universe, ensures there&#39;s always one
+[Asteroid]
+number = 2
+spawn_keep_min = 1
+</code></pre></div>
+<h3 id="number-=-integer">number = integer</h3>
+
+<p>The number of [Entity] to generate in the universe.</p>
+
+<h3 id="buffer_object-=-integer">buffer_object = integer</h3>
+
+<p>Amount of space (in pixels) to leave between this object and all others when spawning it.</p>
+
+<h3 id="buffer_edge-=-integer">buffer_edge = integer</h3>
+
+<p>Amount of space (in pixels) to leave between this object and the edge of space when spawning it.</p>
+
+<h3 id="spawn_keep_min-=-integer">spawn_keep_min = integer</h3>
+
+<p>Minimum number of [Entity] to keep in the world.  If the number falls below this value, more entities will automatically be added instantly to meet this threshold.</p>
+
+<h3 id="spawn_keep_max-=-integer">spawn_keep_max = integer</h3>
+
+<p>Maximum cut-off for spawning new [Entity] types on the timer.  If the number of objects has reached this level, no new entities will be spawned using the spawn timing settings below. Games or other events may still spawn entities of this type however.</p>
+
+<h3 id="spawn_time_num-=-integer">spawn_time_num = integer</h3>
+
+<p>Number of entities to spawn at a time with the timing settings below.  If specified, you must also specify the spawn_time_min and spawn_time_max options.</p>
+
+<h3 id="spawn_time_min-=-integer">spawn_time_min = integer</h3>
+
+<p>Minimum time in seconds before spawning the spawn_time_num of [Entity] unless spawn_keep_max has been reached.</p>
+
+<h3 id="spawn_time_max-=-integer">spawn_time_max = integer</h3>
+
+<p>Maximum time in seconds before spawning an [Entity] on a timer.</p>
+
+<h3 id="spawn_alive_time_min-=-integer">spawn_alive_time_min = integer</h3>
+
+<h3 id="spawn_alive_time_max-=-integer">spawn_alive_time_max = integer</h3>
+
+<p>Specified together in order to cut-short the life span of an [Entity].  The [Entity] will live for a time between the range specified by these two values and then be automatically destroyed.</p>
+
+<h3 id="spawn_on_player_num-=-integer">spawn_on_player_num = integer</h3>
+
+<p>Number of [Entity] to add to the universe when a player is added to it.</p>
+
+<h3 id="spawn_on_player_start-=-boolean">spawn_on_player_start = boolean</h3>
+
+<h3 id="spawn_on_player_respawn-=-boolean">spawn_on_player_respawn = boolean</h3>
+
+<p>Specify which scenarios (first created in round and/or whenever re-added) to add the spawn_on_player_num [Entity] to the world.</p>
+
 <h2 id="[asteroid]"><a name="asteroid"></a>[Asteroid]</h2>
 
 <p>Asteroids are flying debris in space.  They start off with a set amount of momentum and will continue flying in space until impacting ships or destroyed by torpedos.</p>
 
-<h3 id="number-=-integer">number = integer</h3>
+<h2 id="[dragon]"><a name="dragon"></a>[Dragon]</h2>
 
-<p>The number of asteroids to generate in the universe.</p>
+<p>Dragons fly around space and will attack (and eat) nearby uncloaked ships.</p>
+
+<h3 id="range_min-=-int">range_min = int</h3>
+
+<h3 id="range_max-=-int">range_max = int</h3>
+
+<p>Range for the size of the Dragon&#39;s visibility radius.  It will attack ships that enter this range centered on its head.</p>
+
+<h3 id="attack_speed_min-=-int">attack_speed_min = int</h3>
+
+<h3 id="attack_speed_max-=-int">attack_speed_max = int</h3>
+
+<p>Range for the amount of speed a Dragon will increase by when it sees a Ship.</p>
+
+<h3 id="attack_time_min-=-float">attack_time_min = float</h3>
+
+<h3 id="attack_time_max-=-float">attack_time_max = float</h3>
+
+<p>Range for the interval between times that the Dragon bites a Ship in its jaws.  This range is randomized for each attack.</p>
+
+<h3 id="attack_amount_min-=-float">attack_amount_min = float</h3>
+
+<h3 id="attack_amount_max-=-float">attack_amount_max = float</h3>
+
+<p>Range for the amount of damage every bite causes a Ship.  This amount is randomized for each attack.</p>
+
+<h3 id="health_min-=-int">health_min = int</h3>
+
+<h3 id="health_max-=-int">health_max = int</h3>
+
+<p>Range for the amount of health a Dragon will start with.</p>
 
 <h2 id="[planet]"><a name="planet"></a>[Planet]</h2>
 
@@ -232,6 +326,30 @@ etc...
 <p>Black Holes have stronger gravity wells than planets, but can be passed through their center.  They are harder to escape from.</p>
 
 <p>They have the exact same configuration values as <a href="#planet">Planets</a>.  However, the default range values are <strong>64</strong> and <strong>208</strong>.  The default pull values are <strong>52</strong> and <strong>72</strong>.</p>
+
+<h3 id="crush_time-=-float">crush_time = float</h3>
+
+<p>Amount of time in seconds before a ship will be crushed (destroyed) when in the center of a black hole.  The Ship must be in the center for the whole duration to be crushed.  Shields will protect the ship from crushing as long as they are up.  Set to 0.0 to turn off crushing.  Defaults to <strong>5.0</strong>.</p>
+
+<h2 id="[star]"><a name="star"></a>[Star]</h2>
+
+<p>Stars can be flown into, but cause progressively more damage the closer a Ship is to its center.</p>
+
+<h3 id="range_min-=-int">range_min = int</h3>
+
+<h3 id="range_max-=-int">range_max = int</h3>
+
+<p>Range for the star&#39;s gravity well radius.  Defaults to <strong>96</strong> and <strong>224</strong>.</p>
+
+<h3 id="pull_min-=-int">pull_min = int</h3>
+
+<h3 id="pull_max-=-int">pull_max = int</h3>
+
+<p>Range for the amount of gravity the star will have.  Defaults to <strong>12</strong> and <strong>48</strong>.</p>
+
+<h3 id="dmg_mod-=-float">dmg_mod = float</h3>
+
+<p>Additional damage modifier for growth of damage caused by approaching Star&#39;s center.  Defaults to <strong>0.0</strong>.  Equation for damage calculation is currently in part <em>18 - (pull / 6.0) - dmg_mod</em>.</p>
 
 <h2 id="[nebula]"><a name="nebula"></a>[Nebula]</h2>
 
@@ -314,7 +432,11 @@ etc...
 
 <p>Should the game be run in a tournament setting where connected players are split into a number of groups.  Each winner of the game in a group proceeds to a final bracket to determine a winner.  Each round will automatically be paired, timed, and calculated.  Just hit space to start each round.</p>
 
-<h3 id="tournament_groups-=-integer">tournament_groups = integer</h3>
+<h3 id="manager-=-string">manager = string</h3>
+
+<p>Name of the Tournament Manager to use for controlling the tournament.  Current options are <strong>BasicTournament</strong> or <strong>WildTournament</strong>.  See <a href="tournaments.html">Tournaments</a> page for more details.</p>
+
+<h3 id="groups-=-integer">groups = integer</h3>
 
 <p>How many groups should the number of clients connected be broken into for the tournament?  E.g. Setting this value to 5 and having 30 clients connected would result in 5 rounds of 6 players each and a final round with the winners of each group.  Raising this number to higher values requires more vertical real-estate for the tournament display board.</p>
 

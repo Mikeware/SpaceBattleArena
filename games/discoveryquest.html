@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/print.css" media="print">
+
+    <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="/SpaceBattleArena/js/main.js"></script>
+    
+    <title>Space Battle Arena by Mikeware</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="headercontainer">
+        <h1>Space Battle Arena</h1>
+        <h2>A Programming Game in Java for AP CS Students.</h2>
+
+        <section id="downloads">
+          <a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.1.0.1111/SpaceBattle.jar" class="btn">Download Client Jar</a>
+          <a href="/SpaceBattleArena/client/java_doc/" class="btn">Java Docs</a>
+          <a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.1.0.1111/SBAserver.zip" class="btn">Download Server (Windows)</a>
+          <a href="https://www.github.com/Mikeware/SpaceBattleArena" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            
+            <span><a href="/SpaceBattleArena/index.html">Home</a></span>
+            
+            
+            
+                
+                    &nbsp<span><a href="index.html">Competitions</a></span>
+                
+            
+            <span>Discovery Quest</span>
+        </div>
+    </nav>
+    
+
+    
+<aside>
+    <h1>Outline</h1>
+    <ul>
+    
+        <li><a href="#overview">Overview</a></li>
+    
+        <li><a href="#config">Configuration</a></li>
+    
+    </ul>
+</aside>
+
+
+
+    <div class="container">
+      <section id="main_content">
+        <h1 id="discovery-quest">Discovery Quest</h1>
+
+<h2 id="overview"><a name="overview"></a>Overview</h2>
+
+<p><strong>Discovery Quest</strong> is an exploration game where players must navigate space in order to &#39;scan&#39; objects and accumulate points.  They establish a research <strong>Outpost</strong> which can also provide them with specific missions for additional points.</p>
+
+<p>Players must establish an <strong>Outpost</strong> by scanning it before any points will count towards their placement within the game.  Any points earned prior to establishing an Outpost will be banked and awarded when an Outpost is first established. (Multiple players may establish and share the same Outpost.)</p>
+
+<p><em>Scanning</em> is a specific command that must be used within 150 pixels of an object and must be directed towards a specific object by using its ID number.  Scanning is <strong>not</strong> the same as Radar.  The object being scanned must remain in range for the entire duration of the scan.</p>
+
+<p>A <strong>Mission</strong> dictates which objects a ship should go scan.  If a ship goes and scans ONLY those things, bonus points will be awarded when they return to their outpost and Scan it again.  Scanning your Outpost will always give you a new mission.</p>
+
+<p>Your Ship being destroyed clears/fails your mission, so you must return to your established Outpost if you want a new one.</p>
+
+<p>Discovery Quest prevents warping out of Nebulas.</p>
+
+<h2 id="configuration"><a name="config"></a>Configuration</h2>
+
+<h3 id="scan_time-=-float">scan_time = float</h3>
+
+<p>Amount of time required to complete a successful scan in seconds. (3.5 default)</p>
+
+<h3 id="scan_range-=-int">scan_range = int</h3>
+
+<p>Distance required to be in range for a scan in pixels. (150 default)</p>
+
+<h3 id="ship_spawn_dist-=-int">ship_spawn_dist = int</h3>
+
+<p>Maximum distance a ship will spawn away from an Outpost.</p>
+
+<h3 id="disable_warp_in_nebula-=-boolean">disable_warp_in_nebula = boolean</h3>
+
+<p>Set to prevent players from Warping out of Nebulas. (true default)</p>
+
+<h3 id="mission_objectives-=-string">mission_objectives = string</h3>
+
+<p>Comma separated list of object types which can appear within Missions.</p>
+
+<h3 id="mission_num_min-=-int">mission_num_min = int</h3>
+
+<p>Minimum number of objectives for a Mission to contain. (1 default)</p>
+
+<h3 id="mission_num_max-=-int">mission_num_max = int</h3>
+
+<p>Maximum number of objects for a Mission to contain. (3 default)</p>
+
+<h3 id="mission_bonus_multiplier-=-float">mission_bonus_multiplier = float</h3>
+
+<p>Multiplier to apply to set of mission objectives and add to the player&#39;s score when the mission is completed. (3.0 default)</p>
+
+<h3 id="points_asteroid-=-int">points_asteroid = int</h3>
+
+<p>Number of points an Asteroid is worth when successfully scanned. (2 default)</p>
+
+<h3 id="points_planet-=-int">points_planet = int</h3>
+
+<p>Number of points a Planet is worth when successfully scanned. (2 default)</p>
+
+<h3 id="points_blackhole-=-int">points_blackhole = int</h3>
+
+<p>Number of points a Black Hole is worth when successfully scanned. (3 default)</p>
+
+<h3 id="points_nebula-=-int">points_nebula = int</h3>
+
+<p>Number of points a Nebula is worth when successfully scanned. (1 default)</p>
+
+<h3 id="points_star-=-int">points_star = int</h3>
+
+<p>Number of points a Star is worth when successfully scanned. (3 default)</p>
+
+<h3 id="points_outpost-=-int">points_outpost = int</h3>
+
+<p>Number of points an Outpost is worth when successfully scanned. (2 default)  Establishing your own Outpost is worth double points.</p>
+
+<h3 id="points_dragon-=-int">points_dragon = int</h3>
+
+<p>Number of points a Dragon is worth when successfully scanned. (6 default)</p>
+
+<h3 id="points_ship-=-int">points_ship = int</h3>
+
+<p>Number of points another Ship is worth when successfully scanned. (4 default)</p>
+
+      </section>
+    </div>
+
+
+		<footer>
+		  <div class="container">
+		    <div class="owner">
+		      <p><a href="https://github.com/Mikeware" class="avatar"><img src="https://avatars3.githubusercontent.com/u/8961203?v=3&s=48" width="48" height="48"/></a> <a href="https://github.com/Mikeware">Mikeware</a> maintains <a href="https://github.com/Mikeware/SpaceBattleArena">Space Battle Arena</a></p>
+		    </div>
+		    <div class="creds">
+			  <small>This page generated using <a href="https://pages.github.com/">GitHub Pages</a> themes and <a href="http://www.jekyllrb.com/">Jekyll</a>.</small>
+		    </div>
+		  </div>
+		</footer>
+
+		  <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-39650553-3");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
