@@ -54,7 +54,7 @@ class Entity(object):
         """
         logging.debug("Object #%d took %d damage", self.id, damage)
         self.health -= damage
-        if self.health.maximum > 0 and self.health.value <= 0:
+        if self.health.maximum > 0 and self.health.value <= 0 and not self.destroyed:
             if by != None:
                 logging.info("Object #%d killed by #%d", self.id, by.id)
             self.killedby = by

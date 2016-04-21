@@ -244,10 +244,10 @@ class WorldVisualShipDestroyedTestCase(SBAGUITestCase):
         self.game.world.append(planet)
 
         start = self.game.world.mid_point(20, -20)
-        ship = AIShip_SetList("Doomed", start, self.game, [])        
+        ship = AIShip_SetList("Doomed", start, self.game, [])
 
         start2 = self.game.world.mid_point(-50, 250)
-        ship2 = AIShip_SetList("Free", start2, self.game, [])        
+        ship2 = AIShip_SetList("Free", start2, self.game, [])
 
         time.sleep(1.0)
 
@@ -260,6 +260,44 @@ class WorldVisualShipDestroyedTestCase(SBAGUITestCase):
         time.sleep(2.5)
 
         self.assertFalse(ship in self.game.world, "Doomed Ship not destroyed")
+        print ship.killedby
+        self.assertIsNotNone(ship.killedby, "Ship Killed By Not Set.")
+        self.assertTrue(isinstance(ship.killedby, Star), "Ship not marked as destroyed by Star.")
+
+    def test_star_damage_ship_destory_ship(self):
+        """
+        Tests a ship inside a star takes damage.
+        """
+        planet = Star(self.game.world.mid_point(0,0), 100, 100) # high pull = faster test for Star
+        self.game.world.append(planet)
+
+        start = self.game.world.mid_point(30, -20)
+        ship = AIShip_SetList("Doomed", start, self.game, [])
+
+        start2 = self.game.world.mid_point(-50, 250)
+        ship2 = AIShip_SetList("Free", start2, self.game, [
+                "RotateCommand(self, 70)",
+                "FireTorpedoCommand(self, 'F')",
+                "FireTorpedoCommand(self, 'F')",
+                "FireTorpedoCommand(self, 'F')",
+                "FireTorpedoCommand(self, 'F')",
+        ])
+
+        time.sleep(1.0)
+
+        self.failIfAlmostEqual(ship.body.position, start, None, "Doomed ship should have moved", 5)
+        self.failIfEqual(ship.health, 100, "Doomed ship did not take damage")
+
+        self.assertEqual(ship2.health, 100, "Free ship took damage")
+        self.assertAlmostEqual(ship2.body.position, start2, None, "Free Ship not in same place", 2)
+
+        time.sleep(2.5)
+
+        self.assertFalse(ship in self.game.world, "Doomed Ship not destroyed")
+        print ship.killedby
+        self.assertIsNotNone(ship.killedby, "Ship Killed By Not Set.")
+        self.assertTrue(isinstance(ship.killedby, Torpedo), "Ship not marked as destroyed by Torpedo.")
+        self.assertEqual(ship.killedby.owner, ship2, "Torpedo was not marked as belonging to Ship.")
 
     def test_blackhole_crush(self):
         """

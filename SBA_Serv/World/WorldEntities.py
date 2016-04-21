@@ -80,10 +80,10 @@ class Ship(PhysicalRound):
         #eif
 
         if self.health == 0:
-            if by != None:
-                if isinstance(by, Star):
+            if self.killedby != None:
+                if isinstance(self.killedby, Star):
                     self.player.sound = "BURN"
-                elif isinstance(by, BlackHole):
+                elif isinstance(self.killedby, BlackHole):
                     self.player.sound = "CRUSH"
                 else:
                     self.player.sound = "EXPLODE"
