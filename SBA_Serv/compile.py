@@ -95,7 +95,7 @@ class BuildExe:
  
         #Extra/excludes python modules
         self.extra_modules = []
-        self.exclude_modules = ['ssl', '_ssl']
+        self.exclude_modules = ['ssl', '_ssl', 'tcl', 'numpy', 'distutils', 'email']
         
         #DLL Excludes
         self.exclude_dll = ['CRYPT32.dll']
