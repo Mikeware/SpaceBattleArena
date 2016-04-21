@@ -52,6 +52,7 @@ class DiscoveryQuestGame(BasicGame):
         self.scantime = cfgobj.getfloat("DiscoveryQuest", "scan_time")
         self.scanrange = cfgobj.getint("DiscoveryQuest", "scan_range")
         self.outpostdist = cfgobj.getint("DiscoveryQuest", "ship_spawn_dist")
+        self.limitwarp = cfgobj.getboolean("DiscoveryQuest", "disable_warp_in_nebula")
 
     def game_get_info(self):
         return {"GAMENAME": "DiscoveryQuest"}
@@ -181,9 +182,11 @@ class DiscoveryQuestGame(BasicGame):
 
     def server_process_command(self, ship, command):
         # Discovery Quest prevents warp in a nebula
-        if isinstance(command, WarpCommand):
+        #logging.info("Checking Command %s %s", repr(command), repr(ship.in_celestialbody))
+        if self.limitwarp and isinstance(command, WarpCommand):
             for body in ship.in_celestialbody:
                 if isinstance(body, Nebula):
+                    logging.info("Preventing Ship #%d From Warping As In Nebula", ship.id)
                     return "Discovery Quest Rule - Can't warp when in Nebula"
 
         return command

@@ -1,4 +1,4 @@
-v1.1.0.10?? : 06/??/2015
+v1.1.0.111? : 04/21/2016
 ----
 * Added Build Numbers
 * Replaced all sounds with Public Domain ones
@@ -32,6 +32,7 @@ v1.1.0.10?? : 06/??/2015
 * Ship Tracker HUD in GUI
     * Tracking now by player instead of ship
 * Dynamic GUI Image Loader
+* Aligned JavaDoc Version Numbers with Server
 * **Breaking Changes:**
     * Renamed HomeBase to Outpost in Bauble Hunt to align with Discovery Quest
     * Changed shipDestroyed parameters in client interface

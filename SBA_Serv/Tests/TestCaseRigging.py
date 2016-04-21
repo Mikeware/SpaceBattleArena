@@ -26,6 +26,7 @@ from Game.Survivor import SurvivorGame
 from Game.HungryHungryBaubles import HungryHungryBaublesGame
 from Game.BaubleHunt import BaubleHuntGame
 from Game.KingOfTheBubble import KingOfTheBubbleGame
+from Game.DiscoveryQuest import DiscoveryQuestGame
 
 from ConfigParser import ConfigParser
 import Server.WorldServer as WorldServer
@@ -95,6 +96,12 @@ class TestKingOfTheBubbleGame(TestGame, KingOfTheBubbleGame):
         self._testcase = testcase
 
         super(TestKingOfTheBubbleGame, self).__init__(cfg)
+
+class TestDiscoveryQuestGame(TestGame, DiscoveryQuestGame):
+    def __init__(self, cfg, testcase):
+        self._testcase = testcase
+
+        super(TestDiscoveryQuestGame, self).__init__(cfg)
 
 class SBAWorldTestCase(unittest.TestCase):
     """

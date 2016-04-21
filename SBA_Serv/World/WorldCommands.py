@@ -252,6 +252,7 @@ class WarpCommand(Command):
         super(WarpCommand, self).__init__(obj, WarpCommand.NAME, 11, block=True, required=10) #maximum duration of warp is 10.5
         self.__stage = 0
         self.__time = 0.0
+        self.__initial_distance = distance
         self.energycost = 9
         if distance <= 0.1:
             self.__mode = 0
@@ -299,6 +300,9 @@ class WarpCommand(Command):
     def __repr__(self):
         return super(WarpCommand, self).__repr__() + " DEST: " + repr(intpos(self.__dest))
             
+    def net_repr(self):
+        return (WarpCommand.NAME, {"DIST": self.__initial_distance})
+
 class RotateCommand(Command):
     NAME = SHIP_CMD_ROTATE
 

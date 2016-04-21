@@ -64,6 +64,7 @@
     <Compile Include="GUI\SoundCache.py" />
     <Compile Include="GUI\Star.py" />
     <Compile Include="GUI\__init__.py" />
+    <Compile Include="Tests\DiscoveryQuestTestCases.py" />
     <Compile Include="Tests\KingOfTheBubbleTestCases.py" />
     <Compile Include="Tests\BaubleHuntTestCases.py" />
     <Compile Include="Tests\HungryHungryBaublesTestCases.py" />
@@ -139,6 +140,8 @@
     <Content Include="no_collide.cfg" />
     <Content Include="no_gravity_drag.cfg" />
     <Content Include=".coveragerc" />
+    <Content Include="Tests\test_discovery_quest2.cfg" />
+    <Content Include="Tests\test_discovery_quest.cfg" />
     <Content Include="Tests\test_kingofthebubble_spawn.cfg" />
     <Content Include="Tests\test_baublehunt.cfg" />
     <Content Include="Tests\test_destroyed.cfg" />

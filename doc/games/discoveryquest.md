@@ -37,6 +37,9 @@ Distance required to be in range for a scan in pixels. (150 default)
 ###ship_spawn_dist = int
 Maximum distance a ship will spawn away from an Outpost.
 
+###disable_warp_in_nebula = boolean
+Set to prevent players from Warping out of Nebulas. (true default)
+
 ###mission_objectives = string
 Comma separated list of object types which can appear within Missions.
 
