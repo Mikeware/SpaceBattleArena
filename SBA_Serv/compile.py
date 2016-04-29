@@ -72,7 +72,7 @@ class BuildExe:
         #Auhor of program
         self.author_name = "Michael A. Hawker"
         self.author_email = "questions@mikeware.com"
-        self.copyright = "Copyright (c) 2012-2015 Michael A. Hawker."
+        self.copyright = "Copyright (c) 2012-2016 Michael A. Hawker."
  
         #Description
         self.project_description = "Space Battle Arena Programming Game"
