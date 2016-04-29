@@ -116,16 +116,24 @@ class Ship(PhysicalRound):
 
 class CelestialBody:
     """
-    Celestial Bodies are a sub-baseclass to denote Entities which have an effect when the player is within their range of influence.
+    Celestial Bodies are a sub-baseclass to denote Entities which have an effect when the player is within their hit 'radius'.
 
     They can also be 'mined' for energy with the LowerEnergyScoopCommand, though this is most effective in Nebulas and Stars
     """
     
     def collide_start(self, otherobj):
+        """
+        Notification that this object is now starting to collide with the otherobj.
+
+        return False in order to force the Physics Engine to ignore the normal processing of the collision (e.g. bounce/damage)
+        """
         self.in_celestialbody.append(otherobj)
         otherobj.in_celestialbody.append(self)
 
     def collide_end(self, otherobj):
+        """
+        Notification that this object is no longer colliding with the otherobj.
+        """
         if otherobj in self.in_celestialbody:
             self.in_celestialbody.remove(otherobj)
         if self in otherobj.in_celestialbody:
@@ -162,6 +170,7 @@ class Nebula(CelestialBody, PhysicalEllipse):
         
         # Nebulas can't be moved by explosions
         self.explodable = False
+        self.gravitable = False
         
         self.health = PlayerStat(0)
         self.pull = pull
@@ -205,13 +214,10 @@ class Planet(Influential, PhysicalRound):
     Planets (and similar celestial bodies) have gravity which will pull a player towards their center
 
     TODO:
-    Planets have stockpiles of energy which slowly recharge overtime
-    Player's can leach energy off of a planet at twice their Energy Recharge Rate (Recover Energy Twice as Fast)
-    Planet's also have resources which can be mined, as the planet's resources are mined, the planet recovers energy less
+    Planet's also have resources which can be mined
     """
-    EnergyRechargeRateFactor = 2
 
-    def __init__(self, pos, size=128, pull=15, radius=60, mass=-1):
+    def __init__(self, pos, size=128, pull=15, radius=60, torpedo=False, mass=-1):
         if mass == -1: mass = sys.maxint
         super(Planet, self).__init__(radius, mass, pos)
 
@@ -223,12 +229,15 @@ class Planet(Influential, PhysicalRound):
         
         # Planets can't be moved by explosions
         self.explodable = False
+        self.gravitable = False
         
         # Planet specific
         self.health = PlayerStat(0)
         self.pull = pull
         self.influence_range = size
         #self.resources = PlayerStat(random.randint(500, 2000))
+
+        self.effect_torpedo = torpedo
 
     def getExtraInfo(self, objData, player):
         objData["PULL"] = self.pull
@@ -237,14 +246,15 @@ class Planet(Influential, PhysicalRound):
         objData["MINOR"] = self.influence_range
 
     def apply_influence(self, otherobj, mapped_pos, t):
-        # apply 'gravity' pull amount force towards planet's center
-        otherobj.body.apply_impulse((mapped_pos - self.body.position) * -self.pull * t, (0,0))
+        # apply 'gravity' pull amount force towards planet's center if not a Torpedo (hard math) or another Planet thing (fixed)
+        if self.effect_torpedo or not isinstance(otherobj, Torpedo):
+            otherobj.body.apply_impulse((mapped_pos - self.body.position) * -self.pull * t, (0,0))
 
     @staticmethod
     def spawn(world, cfg, pos=None):
         if pos == None:
             pos = getPositionAwayFromOtherObjects(world, cfg.getint("Planet", "buffer_object"), cfg.getint("Planet", "buffer_edge"))
-        p = Planet(pos, cfg_rand_min_max(cfg, "Planet", "range"), cfg_rand_min_max(cfg, "Planet", "pull"))
+        p = Planet(pos, cfg_rand_min_max(cfg, "Planet", "range"), cfg_rand_min_max(cfg, "Planet", "pull"), torpedo=cfg.getboolean("Planet", "pull_torpedo"))
         world.append(p)
         return p
 
@@ -252,8 +262,8 @@ class BlackHole(CelestialBody, Planet):
     """
     BlackHoles are similar to planets however have no resources and have stronger gravity fields
     """
-    def __init__(self, pos, size=96, pull=64, crushtime=5.0):
-        super(BlackHole, self).__init__(pos, size, pull, 16)
+    def __init__(self, pos, size=96, pull=64, crushtime=5.0, torpedo=False):
+        super(BlackHole, self).__init__(pos, size, pull, 16, torpedo)
         self._crushtime = crushtime
 
     def collide_start(self, otherobj):
@@ -274,7 +284,7 @@ class BlackHole(CelestialBody, Planet):
     def spawn(world, cfg, pos=None):
         if pos == None:
             pos = getPositionAwayFromOtherObjects(world, cfg.getint("BlackHole", "buffer_object"), cfg.getint("BlackHole", "buffer_edge"))
-        bh = BlackHole(pos, cfg_rand_min_max(cfg, "BlackHole", "range"), cfg_rand_min_max(cfg, "BlackHole", "pull"), cfg.getfloat("BlackHole", "crush_time"))
+        bh = BlackHole(pos, cfg_rand_min_max(cfg, "BlackHole", "range"), cfg_rand_min_max(cfg, "BlackHole", "pull"), cfg.getfloat("BlackHole", "crush_time"), cfg.getboolean("Planet", "pull_torpedo"))
         world.append(bh)
         return bh
 
@@ -283,8 +293,8 @@ class Star(CelestialBody, Planet):
     """
     Stars are similar to planets/blackholes however cause damage in relation to how close you are to their center
     """
-    def __init__(self, pos, size=192, pull=32, extra=0.0):
-        super(Star, self).__init__(pos, size, pull, 90)
+    def __init__(self, pos, size=192, pull=32, extra=0.0, torpedo=False):
+        super(Star, self).__init__(pos, size, pull, 90, torpedo)
 
         # make the star pull have a small impact on the rate of damage
         self.dmg_divide = 18 - (self.pull / 6.0) - extra
@@ -307,9 +317,103 @@ class Star(CelestialBody, Planet):
     def spawn(world, cfg, pos=None):
         if pos == None:
             pos = getPositionAwayFromOtherObjects(world, cfg.getint("Star", "buffer_object"), cfg.getint("Star", "buffer_edge"))
-        s = Star(pos, cfg_rand_min_max(cfg, "Star", "range"), cfg_rand_min_max(cfg, "Star", "pull"), cfg.getfloat("Star", "dmg_mod"))
+        s = Star(pos, cfg_rand_min_max(cfg, "Star", "range"), cfg_rand_min_max(cfg, "Star", "pull"), cfg.getfloat("Star", "dmg_mod"), cfg.getboolean("Planet", "pull_torpedo"))
         world.append(s)
         return s
+
+class WormHole(CelestialBody, Influential, PhysicalRound):
+    """
+    WormHoles can teleport players to other areas of space or to other WormHoles paired with one another.
+
+    Note: Worm Hole's size should be less than its radius for special processing requirements.
+    """
+
+    RANDOM = 1
+    OTHER_CELESTIALBODY = 2
+    FIXED_POINT = 3
+
+    def __init__(self, pos, size=44, radius=96, whtype=1, exitpos=None): # need pairing option
+        """
+        whtype should be the type of WormHole (RANDOM, OTHER_CELESTIALBODY, FIXED_POINT)
+
+        if you choose type FIXED_POINT, pass in an exitpos as a position
+        if you choose type RANDOM, pass in an exitpos as a function which returns a random point.
+        """
+        super(WormHole, self).__init__(radius, sys.maxint, pos)
+
+        # Everything in Group 1 won't hit anything else in Group 1
+        self.shape.group = 1
+
+        self.health = PlayerStat(0)
+        self.influence_range = size # just used for consistency
+        
+        # WormHoles can't be moved by explosions
+        self.explodable = False
+        self.gravitable = False
+
+        self.type = whtype
+        self.exit = exitpos
+
+    def link_wormhole(self, other_wormhole):
+        """
+        Links the given object to this one so that it will be the 'exit' to this wormhole. (Could be a blackhole, star, or nebula for instance)
+        """
+        self.exit = other_wormhole
+
+    def collide_start(self, otherobj):
+        super(WormHole, self).collide_start(otherobj)
+        return False
+
+    def apply_influence(self, otherobj, mapped_pos, t):
+        # teleport ships, todo: cooldown check
+        if (not hasattr(otherobj, "teleported") or otherobj.teleported == False):
+            if isinstance(otherobj, Ship):
+                otherobj.player.sound = "WORMHOLE"
+
+            if self.type == WormHole.RANDOM:
+                otherobj.body.position = self.exit()
+            elif self.type == WormHole.OTHER_CELESTIALBODY:
+                otherobj.body.position = self.exit.body.position + (random.randint(-self.influence_range, self.influence_range), random.randint(-self.influence_range, self.influence_range))
+            elif self.type == WormHole.FIXED_POINT:
+                otherobj.body.position = pymunk.Vec2d(self.exit) + (random.randint(-self.influence_range, self.influence_range), random.randint(-self.influence_range, self.influence_range))
+
+            otherobj.teleported = self.id
+            logging.info("Ship #%d entered wormhole of type %d and was moved to position %s.", otherobj.id, self.type, repr(otherobj.body.position))
+
+        return False
+    
+    def collide_end(self, otherobj):
+        super(WormHole, self).collide_end(otherobj)
+
+        if not hasattr(otherobj, "teleported") or (otherobj.teleported and otherobj.teleported != self.id):
+            otherobj.teleported = False
+
+    def getExtraInfo(self, objData, player):
+        objData["MAJOR"] = self.influence_range
+        objData["MINOR"] = self.influence_range
+
+    @staticmethod
+    def spawn(world, cfg, pos=None):
+        get_random_point = lambda : getPositionAwayFromOtherObjects(world, cfg.getint("WormHole", "buffer_exit_object"), cfg.getint("WormHole", "buffer_exit_edge"))
+
+        if pos == None:
+            pos = getPositionAwayFromOtherObjects(world, cfg.getint("WormHole", "buffer_object"), cfg.getint("WormHole", "buffer_edge"))
+        wht = random.choice(eval(cfg.get("WormHole", "types")))
+        if wht == WormHole.RANDOM:
+            p = WormHole(pos, whtype=WormHole.RANDOM, exitpos=get_random_point)
+        elif wht == WormHole.FIXED_POINT:
+            p = WormHole(pos, whtype=WormHole.FIXED_POINT, exitpos=get_random_point())
+        elif wht == WormHole.OTHER_CELESTIALBODY:
+            pos2 = getPositionAwayFromOtherObjects(world, cfg.getint("WormHole", "buffer_object"), cfg.getint("WormHole", "buffer_edge"))
+            p2 = WormHole(pos2, whtype=WormHole.OTHER_CELESTIALBODY)
+            world.append(p2)
+
+            p = WormHole(pos, whtype=WormHole.OTHER_CELESTIALBODY)
+            
+            p.link_wormhole(p2)
+            p2.link_wormhole(p)
+        world.append(p)
+        return p
 
 class Asteroid(PhysicalRound):
     """

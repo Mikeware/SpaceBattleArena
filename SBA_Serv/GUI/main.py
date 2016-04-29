@@ -24,10 +24,11 @@ from ObjWrappers.ShipWrapper import ShipGUI
 from ObjWrappers.NebulaWrapper import NebulaGUI
 from ObjWrappers.PlanetWrapper import PlanetGUI
 from ObjWrappers.AsteroidWrapper import AsteroidGUI
+from ObjWrappers.WormHoleWrapper import WormHoleGUI
 from ObjWrappers.WeaponWrappers import TorpedoGUI
 from Game.Utils import SpawnManager
 from GraphicsCache import Cache
-from World.WorldEntities import Ship, Planet, Asteroid, Torpedo, BlackHole, Nebula, Star, Dragon
+from World.WorldEntities import Ship, Planet, Asteroid, Torpedo, BlackHole, Nebula, Star, Dragon, WormHole
 from Server.MWNL2 import getIPAddress
 from pymunk import Vec2d
 from Helpers import infofont
@@ -50,7 +51,7 @@ class MessageLogHandler(logging.Handler):
         if self.filter == None or (self.filter != None and str(record.message).find(self.filter) != -1):
             self.messages.append(record.message)
 
-def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=False, sound=False, cfg=None, testcase=None):
+def startGame(windowcaption, game, fullscreen=True, resolution=None, cfg=None, testcase=None):
     #region Initialization
     logging.info("Initiating PyGame...")
 
@@ -60,7 +61,7 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
 
     logging.debug("Initiating Screen...")
 
-    if sound:
+    if cfg.getboolean("Application", "sound"):
         logging.info("Starting Sound...")
         pygame.mixer.init()
         SCache(True)
@@ -106,6 +107,10 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                     logging.debug("GUI: Adding Planet #%d", obj.id)
                     bgobjects[obj.id] = PlanetGUI(obj, world)
                     logging.debug("GUI: Added Planet #%d", obj.id)
+                elif isinstance(obj, WormHole):
+                    logging.debug("GUI: Adding WormHole #%d", obj.id)
+                    bgobjects[obj.id] = WormHoleGUI(obj, world)
+                    logging.debug("GUI: Added WormHole #%d", obj.id)
                 elif isinstance(obj, Asteroid):
                     logging.debug("GUI: Adding Asteroid #%d", obj.id)
                     objects[obj.id] = AsteroidGUI(obj, world)
@@ -187,15 +192,15 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
 
     mousemode = None
     prevzoom = zoomout
-    showip = showstats
-    showplayerlist = showstats
-    showroundtime = game.cfg.getboolean("Tournament", "tournament")
-    tournamentinfo = game.cfg.getboolean("Tournament", "tournament")
+    showip = cfg.getboolean("Application", "showip")
+    showplayerlist = cfg.getboolean("Application", "showstats")
+    showroundtime = cfg.getboolean("Tournament", "tournament")
+    tournamentinfo = cfg.getboolean("Tournament", "tournament")
     
     flags = {"DEBUG":False,
-             "STATS":showstats,
+             "STATS":cfg.getboolean("Application", "showstats"),
              "NAMES":True,
-             "GAME":showstats}
+             "GAME":cfg.getboolean("Application", "showstats")}
     
     logging.info("Create Main Surface...")
     #TODO: Optimize by only drawing objects in viewport...
@@ -449,7 +454,7 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
         else:
             windowSurface.blit(worldsurface, (offsetx, offsety)) 
 
-        if flags["DEBUG"] or showip:
+        if showip:
             ip = bigfont.render(ipaddress, False, (255, 255, 255))
             windowSurface.blit(ip, (resolution[0]/2-ip.get_width()/2,0))
 
@@ -476,9 +481,16 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
             else:
                 windowSurface.blit(font.render(repr(x) + " Players In Round", False, (192, 192, 192)), (resolution[0]-300, 64 + 12 * x))
 
-        if showroundtime:
+        if showroundtime and testcase == None:
             ip = bigfont.render(str(datetime.timedelta(seconds=game.round_get_time_remaining())), False, (255, 255, 255))
             windowSurface.blit(ip, (resolution[0]/2-ip.get_width()/2,32))
+        elif testcase != None:
+            if testcase.flashcolor == False:
+                testcase.flashcolor = (255, 255, 255)
+            ip = bigfont.render(str(datetime.timedelta(milliseconds=pygame.time.get_ticks())), False, testcase.flashcolor)
+            windowSurface.blit(ip, (32,32))
+
+            testcase.flashcolor = False
             
         if flags["DEBUG"]:
             mpos = pygame.mouse.get_pos()

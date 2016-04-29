@@ -123,6 +123,7 @@ class Bubble(PhysicalRound):
         self.shape.group = 1
         
         self.explodable = False
+        self.gravitable = False
         self.pname = pname
         
         self.basesize = basesize

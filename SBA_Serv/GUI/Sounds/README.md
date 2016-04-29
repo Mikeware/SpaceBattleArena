@@ -76,6 +76,12 @@ Played when Dragon attacks.
 
 *Monster Short Roar* by **ecfike**
 
+[WORMHOLE](http://freesound.org/people/Adam_N/sounds/164594/)
+----
+Played when a Ship uses a Worm Hole.
+
+*Water splash 1* by **Adam_N**
+
 Subgame
 =======
 

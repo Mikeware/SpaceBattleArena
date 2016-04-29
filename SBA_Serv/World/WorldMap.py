@@ -220,7 +220,7 @@ class GameWorld(object):
                         obj.body.position[1] -= self.height
 
                     # Apply Gravity for Planets
-                    if obj.explodable:
+                    if obj.gravitable:
                         for influencer in self.__influential:
                             for point in wrappos(obj.body.position, influencer.influence_range, self.size):
                                 if in_circle(influencer.body.position, influencer.influence_range, point):
@@ -277,8 +277,11 @@ class GameWorld(object):
             self.gameerror = True
         logging.debug("Gameloop Ended")
 
-    def getObjectsInArea(self, pos, radius, force=False):
-        logging.debug("Get Objects In Area %s %d (%s) [%d]", repr(pos), radius, repr(force), thread.get_ident())
+    def getObjectsInArea(self, pos, radius, radar=False):
+        """
+        Returns objects within the given radius from the position (even wrapping around edge of world), pass radar = True if for environment
+        """
+        logging.debug("Get Objects In Area %s %d [%d]", repr(pos), radius, thread.get_ident())
         objList = []
         for obj in self.__objects.values():
             for point in wrappos(obj.body.position, radius, self.size):
@@ -330,7 +333,7 @@ class GameWorld(object):
         #TODO: abstract radar to game level?
         radardata = None
         if radarlevel > 0:
-            objs = self.getObjectsInArea(ship.body.position, ship.radarRange)
+            objs = self.getObjectsInArea(ship.body.position, ship.radarRange, True)
             #TODO: Need to wait lock the removing of ships with accessing...???
             if ship in objs: objs.remove(ship) # Get rid of self...
 

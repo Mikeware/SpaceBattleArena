@@ -47,7 +47,7 @@ class HungryHungryBaublesGame(BasicGame):
     def __addBauble(self, player, force=False):
         logging.info("Add Bauble (%s) for Player %d", repr(force), player.netid)
         # add player bauble
-        b = Bauble(getPositionAwayFromOtherObjects(self.world, self.cfg.getint("Bauble", "buffer_object"), self.cfg.getint("Bauble", "buffer_edge"), force), self.__points_gold)
+        b = Bauble(getPositionAwayFromOtherObjects(self.world, self.cfg.getint("Bauble", "buffer_object"), self.cfg.getint("Bauble", "buffer_edge")), self.__points_gold)
 
         self.__baubles[player.netid] = b
 

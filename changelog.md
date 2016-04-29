@@ -1,5 +1,9 @@
 v1.2 : Planned - May 2016 [Season 5]
 ----
+* Added Worm Holes (teleports objects across space)
+* Added option for Torpedoes to be effected by gravity
+* Split 'explodable' from 'gravitable' for Entities, two separate object flags now.
+* Separated option for 'showip' in Application settings to decouple from showing statistics, no longer always show IP in Debug mode.
 
 v1.1.0.1111 : 04/21/2016 [Season 4 Release] - Discovery Quest
 ----

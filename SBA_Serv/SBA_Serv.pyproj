@@ -56,6 +56,7 @@
     <Compile Include="GUI\Helpers.py" />
     <Compile Include="GUI\main.py" />
     <Compile Include="GUI\ObjWrappers\AsteroidWrapper.py" />
+    <Compile Include="GUI\ObjWrappers\WormHoleWrapper.py" />
     <Compile Include="GUI\ObjWrappers\NebulaWrapper.py" />
     <Compile Include="GUI\ObjWrappers\PlanetWrapper.py" />
     <Compile Include="GUI\ObjWrappers\ShipWrapper.py" />
@@ -86,6 +87,9 @@
     </Compile>
     <Compile Include="Tests\SpawnManagerTestCases.py" />
     <Compile Include="Tests\WorldTestCases.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tests\WormHoleTestCases.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Tests\__init__.py">
