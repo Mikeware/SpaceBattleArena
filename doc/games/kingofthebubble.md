@@ -26,28 +26,25 @@ Bubbles will eventually start to shrink and disappear on their own at which poin
 
 Players will be given the location of some bubbles in the world.
 
+<a name="server"></a>[Bubble] Configuration
+---------------------------------------
+Control Bubble spawning behavior by using the standard [Spawn Manager](../server/config.html#spawnmanager) properties.
+
+(**spawn_keep_max** does not effect a player dropping a bubble unless it didn't meet the threshold for points.)
+
+###points_min = int
+The minimum number of points a generated bubble can be worth.
+
+###points_max = int
+The maximum number of points a generated bubble can be worth.
+
 <a name="config"></a>Configuration
 -----------
 ###bubble_radius_min = int
 The radius of the bubble when it worth 0 points.  The bubble point value is added to this base radius to determine its size.  See bubble_points_min and max.
 
-###bubble_points_min = int
-The minimum number of points a generated bubble can be worth.
-
-###bubble_points_max = int
-The maximum number of points a generated bubble can be worth.
-
 ###bubble_points_drain_speed = int
 How many points per second a single ship can drain from a bubble (ship's absorption rate).  If multiple ships are in a bubble, they can each drain points from it at this same rate.
-
-###bubble_number_max = int
-Maximum number of generated bubbles to exist in the world at a time.  (Does not effect a player dropping a bubble unless it didn't meet the threshold for points.)  If this value is reached, a new bubble will not try to spawn until another one disappears.
-
-###bubble_time_alive_min = int
-Minimum time for a bubble to live before it starts to shrink.  If this is zero, a bubble will stay around indefinitely on its own without player interaction.
-
-###bubble_time_alive_variance = int
-A random value between 0 and this number will be added to the minimum **bubble_time_alive_min** value to determine the total time for each bubble to remain before shrinking.  This value is ignored if bubble_time_alive_min is zero.
 
 ###steal_points_min = int
 The minimum number of points for a player to lose when destroyed.  This is also the minimum threshold for a new bubble to be created from a player, though points will always be added to an existing nearby bubble if that is the case.

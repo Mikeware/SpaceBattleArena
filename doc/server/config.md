@@ -9,7 +9,7 @@ outline:
  - { url: "#application", title: "[Application]" }
  - { url: "#world", title: "[World]" }
  - { url: "#server", title: "[Server]" }
- - { url: "spawnmanager", title: "Spawn Manager" }
+ - { url: "#spawnmanager", title: "Spawn Manager" }
  - { url: "#asteroid", title: "[Asteroid]" }
  - { url: "#dragon", title: "[Dragon]" }
  - { url: "#planet", title: "[Planet]" }

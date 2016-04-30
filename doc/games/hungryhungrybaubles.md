@@ -22,28 +22,18 @@ However, every player is also provided the location of a **golden** bauble.  If 
 
 If they happen to collect someone else's golden bauble it's only worth 3 points.
 
-The default configuration also specifies that you lose 4 points when dying.
+The default configuration also specifies that you lose 4 points when dying. See [[Game] Properties](../server/config.html#game).
+
+Control Bauble spawning behavior by using the standard [Spawn Manager](../server/config.html#spawnmanager) properties.
 
 <a name="config"></a>Configuration
 -----------
 
-###bauble_initial = int
-Number of initial baubles to place in the world.
-
-###bauble_per_player = int
-How many extra baubles should be added every time a player joins.
-
-###bauble_timer = int
-How long before more baubles should be spawned in the world (in seconds).
-
-###bauble_timer_spawns = int
-How many baubles should spawn when the timer expires.
-
 ###bauble_points_blue = int
-How many points is the standard bauble worth. **Note:** *modifying the point values requires that adequate images be placed in the GUI/Graphics/Games folder to represent that value.*
+How many points a standard blue bauble is worth. **Note:** *modifying the point values requires that adequate images be placed in the GUI/Graphics/Games folder to represent that value.*
 
 ###bauble_points_gold = int
-How many points is a golden bauble worth.
+How many points a golden bauble worth.
 
 ###bauble_points_extra = int
-How many extra points is your specific golden bauble worth to you.
+How many extra points is your specific golden bauble worth to you (doesn't require special image).
