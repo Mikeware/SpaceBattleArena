@@ -344,7 +344,7 @@ class BasicGame(object):
         """
         return command
 
-    def _game_add_ship_for_player(self, netid, force=False, roundstart=False):
+    def _game_add_ship_for_player(self, netid, roundstart=False):
         """
         Called internally when a player registers if autostart is true, or when round_start is called
         Also called when a player respawns.
@@ -370,7 +370,7 @@ class BasicGame(object):
             self._players[netid].object.ship_added() # tell AI ship to start
         else:
             self._players[netid].object = Ship(self.player_get_start_position(True), self.world)
-        logging.info("Adding Ship for Player %d (%s) id #%d with Name %s", netid, repr(force), self._players[netid].object.id, self._players[netid].name)
+        logging.info("Adding Ship for Player %d (%s) id #%d with Name %s", netid, self._players[netid].object.id, self._players[netid].name)
         self._players[netid].object.player = self._players[netid]
         self._players[netid].object.owner = self._players[netid].object # Make ships owners of themselves for easier logic with ownership?
         self._players[netid].roundover = False
@@ -586,7 +586,7 @@ class BasicGame(object):
                 else:
                     if not self._players[nid].roundover:
                         # if the round isn't over, then re-add the ship
-                        self._game_add_ship_for_player(nid, True)
+                        self._game_add_ship_for_player(nid)
 
         if not added:
             self.spawnmanager.check_number(wobj)
