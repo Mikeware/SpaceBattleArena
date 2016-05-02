@@ -92,7 +92,7 @@ class Ship(PhysicalRound):
         elif by != None:
             if isinstance(by, Dragon):
                 self.player.sound = "CHOMP"
-            elif isinstance(by, Torpedo):
+            elif isinstance(by, Weapon):
                 self.player.sound = "IMPACT"
             elif not isinstance(by, Star):
                 self.player.sound = "HIT"
@@ -237,7 +237,7 @@ class Planet(Influential, PhysicalRound):
         self.influence_range = size
         #self.resources = PlayerStat(random.randint(500, 2000))
 
-        self.effect_torpedo = torpedo
+        self.effect_weapon = torpedo
 
     def getExtraInfo(self, objData, player):
         objData["PULL"] = self.pull
@@ -247,14 +247,14 @@ class Planet(Influential, PhysicalRound):
 
     def apply_influence(self, otherobj, mapped_pos, t):
         # apply 'gravity' pull amount force towards planet's center if not a Torpedo (hard math) or another Planet thing (fixed)
-        if self.effect_torpedo or not isinstance(otherobj, Torpedo):
+        if self.effect_weapon or not isinstance(otherobj, Weapon):
             otherobj.body.apply_impulse((mapped_pos - self.body.position) * -self.pull * t, (0,0))
 
     @staticmethod
     def spawn(world, cfg, pos=None):
         if pos == None:
             pos = getPositionAwayFromOtherObjects(world, cfg.getint("Planet", "buffer_object"), cfg.getint("Planet", "buffer_edge"))
-        p = Planet(pos, cfg_rand_min_max(cfg, "Planet", "range"), cfg_rand_min_max(cfg, "Planet", "pull"), torpedo=cfg.getboolean("Planet", "pull_torpedo"))
+        p = Planet(pos, cfg_rand_min_max(cfg, "Planet", "range"), cfg_rand_min_max(cfg, "Planet", "pull"), torpedo=cfg.getboolean("Planet", "pull_weapon"))
         world.append(p)
         return p
 
@@ -284,7 +284,7 @@ class BlackHole(CelestialBody, Planet):
     def spawn(world, cfg, pos=None):
         if pos == None:
             pos = getPositionAwayFromOtherObjects(world, cfg.getint("BlackHole", "buffer_object"), cfg.getint("BlackHole", "buffer_edge"))
-        bh = BlackHole(pos, cfg_rand_min_max(cfg, "BlackHole", "range"), cfg_rand_min_max(cfg, "BlackHole", "pull"), cfg.getfloat("BlackHole", "crush_time"), cfg.getboolean("Planet", "pull_torpedo"))
+        bh = BlackHole(pos, cfg_rand_min_max(cfg, "BlackHole", "range"), cfg_rand_min_max(cfg, "BlackHole", "pull"), cfg.getfloat("BlackHole", "crush_time"), cfg.getboolean("Planet", "pull_weapon"))
         world.append(bh)
         return bh
 
@@ -317,7 +317,7 @@ class Star(CelestialBody, Planet):
     def spawn(world, cfg, pos=None):
         if pos == None:
             pos = getPositionAwayFromOtherObjects(world, cfg.getint("Star", "buffer_object"), cfg.getint("Star", "buffer_edge"))
-        s = Star(pos, cfg_rand_min_max(cfg, "Star", "range"), cfg_rand_min_max(cfg, "Star", "pull"), cfg.getfloat("Star", "dmg_mod"), cfg.getboolean("Planet", "pull_torpedo"))
+        s = Star(pos, cfg_rand_min_max(cfg, "Star", "range"), cfg_rand_min_max(cfg, "Star", "pull"), cfg.getfloat("Star", "dmg_mod"), cfg.getboolean("Planet", "pull_weapon"))
         world.append(s)
         return s
 
@@ -475,7 +475,7 @@ class Dragon(CelestialBody, Influential, Asteroid):
     def collide_start(self, otherobj):
         otherobj.dr_timer = 0
         super(Dragon, self).collide_start(otherobj)
-        if isinstance(otherobj, Torpedo): # Torpedos can hit Dragons
+        if isinstance(otherobj, Weapon): # Torpedos & SpaceMines can hit Dragons
             return True
 
         return False
@@ -537,7 +537,11 @@ class Dragon(CelestialBody, Influential, Asteroid):
         world.append(d)
         return d
 
-class Torpedo(PhysicalRound):
+class Weapon(PhysicalRound):
+    def __init__(self, radius, mass, position):
+        super(Weapon, self).__init__(radius, mass, position)
+
+class Torpedo(Weapon):
     """
     Torpedos are weapons which are launched from ships at a given position and direction
     """
@@ -556,5 +560,86 @@ class Torpedo(PhysicalRound):
         self.body.apply_impulse((math.cos(math.radians(-direction)) * v,
                                  math.sin(math.radians(-direction)) * v), (0,0))
                                  
+    def getExtraInfo(self, objData, player):
+        objData["OWNERID"] = self.owner.id
+
+class SpaceMine(Influential, Weapon):
+    """
+    SpaceMines are weapons which are dropped from a ship
+    """
+
+    STATIONARY = 1
+    AUTONOMOUS = 2
+    HOMING = 3
+    
+    RADIUS = 128
+    FORCE = 600
+
+    def __init__(self, pos, delay, wmode, direction=None, speed=None, duration=None, owner=None):
+        super(SpaceMine, self).__init__(7, 120, pos)
+        self.shape.elasticity = 0.7
+        self.health = PlayerStat(1)
+        self.owner = owner
+        self.explodable = False
+        self.delay = delay
+        self.active = False
+        self.mode = wmode
+        self.direction = direction
+        self.speed = speed
+        self.duration = duration
+        self.influence_range = 96
+        self.attack_speed = 5
+        self.target = None
+        self.lv = self.body.velocity.normalized()
+
+    def collide_start(self, otherobj):
+        if not self.active:
+            return False
+
+        return super(SpaceMine, self).collide_start(otherobj)
+
+    def update(self, t):
+        super(SpaceMine, self).update(t)
+        self.delay -= t
+
+        if self.delay <= 0:
+            if self.mode == SpaceMine.AUTONOMOUS and not self.active:
+                v = 500 * self.speed
+                self.body.apply_impulse((math.cos(math.radians(-self.direction)) * v,
+                                         math.sin(math.radians(-self.direction)) * v), (0,0))
+                self.TTL = self.timealive + self.duration
+            elif self.mode == SpaceMine.HOMING:
+                if self.target != None:
+                    # turn towards target
+                    nang = self.body.velocity.get_angle_degrees_between(self.target - self.body.position)
+                    self.body.velocity.angle_degrees += nang * t
+
+                    # clear target as we'll reaquire to 'readjust course' for moving object...
+                    if self.body.position.get_dist_sqrd(self.target) < 300:
+                        if self.body.velocity.length > self.attack_speed:
+                            self.body.velocity.length -= self.attack_speed
+                        self.target = None
+            self.active = True
+
+    def apply_influence(self, otherobj, mapped_pos, t):
+        if not self.active or self.mode != SpaceMine.HOMING:
+            return
+
+        # get closest ship though cloak protects ship from dragon 'seeing' it
+        if isinstance(otherobj, Ship) and not otherobj.commandQueue.containstype(CloakCommand) and \
+                (self.target == None or self.body.position.get_dist_sqrd(mapped_pos) < self.body.position.get_dist_sqrd(self.target)):
+            if self.target == None:
+                if self.body.velocity.length < 1:
+                    if self.body.velocity.length == 0:
+                        nang = 0
+                    else:
+                        nang = self.body.velocity.get_angle_degrees_between(mapped_pos - self.body.position)
+                    self.body.apply_impulse((math.cos(math.radians(nang)) * self.attack_speed * 100,
+                                             math.sin(math.radians(nang)) * self.attack_speed * 100), (0,0))
+                else:
+                    self.body.velocity.length += self.attack_speed
+                self.lv = self.body.velocity.normalized()
+            self.target = pymunk.Vec2d(mapped_pos)
+                                   
     def getExtraInfo(self, objData, player):
         objData["OWNERID"] = self.owner.id

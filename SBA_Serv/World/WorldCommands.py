@@ -35,7 +35,7 @@ SHIP_CMD_ALL_STOP = "STOP"
 SHIP_CMD_WARP = "WARP"
 
 SHIP_CMD_TORPEDO = "FIRE"
-SHIP_CMD_MINE = "MINE"
+SHIP_CMD_SPACEMINE = "MINE"
 
 SHIP_CMD_SHIELD = "SHLD"
 SHIP_CMD_CLOAK = "CLOAK"
@@ -130,6 +130,28 @@ def ConvertNetworkMessageToCommand(ship, cmdname, cmddict):
             else:
                 return "Firing a torpedo requires a direction 'F'orward or 'B'ackwards"
             #eif
+        elif cmdname == SHIP_CMD_SPACEMINE:
+            if cmddict.has_key("MODE") and cmddict.has_key("DELAY") and isinstance(cmddict["DELAY"], float) and cmddict["DELAY"] > 0:
+                if cmddict["MODE"] not in [WorldEntities.SpaceMine.STATIONARY, WorldEntities.SpaceMine.AUTONOMOUS, WorldEntities.SpaceMine.HOMING]:
+                    return "Invalid Mine Mode, use 1, 2, or 3"
+                elif cmddict["MODE"] == WorldEntities.SpaceMine.AUTONOMOUS:
+                    if cmddict.has_key("SPEED") and cmddict.has_key("DUR") and cmddict.has_key("DIR"):
+                        if isinstance(cmddict["SPEED"], int) and isinstance(cmddict["DUR"], float) and isinstance(cmddict["DIR"], int):
+                            if cmddict["SPEED"] > 0 and cmddict["SPEED"] <= 5:
+                                if cmddict["DUR"] > 0:
+                                    return DeploySpaceMineCommand(ship, cmddict["DELAY"], cmddict["MODE"], cmddict["DIR"], cmddict["SPEED"], cmddict["DUR"])
+                                else:
+                                    return "Must have positive mine duration"
+                            else:
+                                return "Invalid Mine Speed use 1-5"
+                        else:
+                            return "Mine paramter type incorrect"
+                    else:
+                        return "Missing Parameter for Auto Mine"
+                else:
+                    return DeploySpaceMineCommand(ship, cmddict["DELAY"], cmddict["MODE"])
+            else:
+                return "Mines need a mode and positive float delay"
         elif cmdname == SHIP_CMD_REPAIR:
             if cmddict.has_key("AMT") and isinstance(cmddict["AMT"], int) and cmddict["AMT"] > 0:
                 return RepairCommand(ship, cmddict["AMT"])
@@ -431,6 +453,26 @@ class FireTorpedoCommand(OneTimeCommand):
         elif self.__direction == 'B':
             self._obj._world.append(WorldEntities.Torpedo(self._obj.body.position, self._obj.rotationAngle - 180, self._obj))
         #eif
+
+class DeploySpaceMineCommand(OneTimeCommand):
+    NAME = SHIP_CMD_SPACEMINE
+
+    def __init__(self, ship, delay, wmode, direction=None, speed=None, duration=None):
+        self.__delay = delay
+        self.__wmode = wmode
+        self.__direction = direction
+        self.__speed = speed
+        self.__duration = duration
+        super(DeploySpaceMineCommand, self).__init__(ship, DeploySpaceMineCommand.NAME, required=(33 + self.__wmode * 11))
+
+    def onetime(self):
+        self._obj.player.sound = "MINE"
+        if self.__wmode == WorldEntities.SpaceMine.STATIONARY:
+            self._obj._world.append(WorldEntities.SpaceMine(self._obj.body.position, self.__delay, WorldEntities.SpaceMine.STATIONARY, owner=self._obj))
+        elif self.__wmode == WorldEntities.SpaceMine.HOMING:
+            self._obj._world.append(WorldEntities.SpaceMine(self._obj.body.position, self.__delay, WorldEntities.SpaceMine.HOMING, owner=self._obj))
+        elif self.__wmode == WorldEntities.SpaceMine.AUTONOMOUS:
+            self._obj._world.append(WorldEntities.SpaceMine(self._obj.body.position, self.__delay, WorldEntities.SpaceMine.AUTONOMOUS, self.__direction, self.__speed, self.__duration, owner=self._obj))
 
 class RepairCommand(Command):
     NAME = SHIP_CMD_REPAIR

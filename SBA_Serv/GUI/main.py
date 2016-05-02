@@ -25,10 +25,10 @@ from ObjWrappers.NebulaWrapper import NebulaGUI
 from ObjWrappers.PlanetWrapper import PlanetGUI
 from ObjWrappers.AsteroidWrapper import AsteroidGUI
 from ObjWrappers.WormHoleWrapper import WormHoleGUI
-from ObjWrappers.WeaponWrappers import TorpedoGUI
+from ObjWrappers.WeaponWrappers import TorpedoGUI, SpaceMineGUI
 from Game.Utils import SpawnManager
 from GraphicsCache import Cache
-from World.WorldEntities import Ship, Planet, Asteroid, Torpedo, BlackHole, Nebula, Star, Dragon, WormHole
+from World.WorldEntities import Ship, Planet, Asteroid, Torpedo, SpaceMine, BlackHole, Nebula, Star, Dragon, WormHole
 from Server.MWNL2 import getIPAddress
 from pymunk import Vec2d
 from Helpers import infofont
@@ -119,6 +119,10 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, cfg=None, t
                     logging.debug("GUI: Adding Torpedo #%d", obj.id)
                     objects[obj.id] = TorpedoGUI(obj, world)
                     logging.debug("GUI: Added Torpedo #%d", obj.id)
+                elif isinstance(obj, SpaceMine):
+                    logging.debug("GUI: Adding SpaceMine #%d", obj.id)
+                    objects[obj.id] = SpaceMineGUI(obj, world)
+                    logging.debug("GUI: Added SpaceMine #%d", obj.id)
                 else:
                     logging.debug("GUI: Adding %s #%d", repr(obj), obj.id)
                     objects[obj.id] = obj.WRAPPERCLASS(obj, world)

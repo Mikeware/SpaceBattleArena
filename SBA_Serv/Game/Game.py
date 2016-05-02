@@ -12,7 +12,7 @@ You should have received a copy of the GNU General Public License along with thi
 The full text of the license is available online: http://opensource.org/licenses/GPL-2.0
 """
 
-from World.WorldEntities import Ship, BlackHole, Nebula
+from World.WorldEntities import Ship, BlackHole, Nebula, SpaceMine
 from Players import Player
 import random, logging, time
 from World.WorldMath import friendly_type
@@ -370,7 +370,7 @@ class BasicGame(object):
             self._players[netid].object.ship_added() # tell AI ship to start
         else:
             self._players[netid].object = Ship(self.player_get_start_position(True), self.world)
-        logging.info("Adding Ship for Player %d (%s) id #%d with Name %s", netid, self._players[netid].object.id, self._players[netid].name)
+        logging.info("Adding Ship for Player %d id #%d with Name %s", netid, self._players[netid].object.id, self._players[netid].name)
         self._players[netid].object.player = self._players[netid]
         self._players[netid].object.owner = self._players[netid].object # Make ships owners of themselves for easier logic with ownership?
         self._players[netid].roundover = False
@@ -557,6 +557,10 @@ class BasicGame(object):
         killed ships will not return (used to prevent respawn)
         """
         logging.debug("[Game] Add Object(%s): #%d (%s)", repr(added), wobj.id, friendly_type(wobj))
+        if not added and isinstance(wobj, SpaceMine) and wobj.active:
+            self.world.causeExplosion(wobj.body.position, SpaceMine.RADIUS, SpaceMine.FORCE, True)
+            # TODO: Cause splash damage?
+
         if not added and isinstance(wobj, Ship) and wobj.player.netid in self._players:
             nid = wobj.player.netid
 

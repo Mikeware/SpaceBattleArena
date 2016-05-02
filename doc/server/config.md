@@ -225,8 +225,8 @@ see pull_max
 ###pull_max = integer
 These two values correspond to the amount of pull the gravity will have on ships.  Larger values mean ships will get pulled in quicker and will have a harder time escaping.  A random value will be generated between **pull_min** and **pull_max**.  These are typically **8** and **24**.  Setting pull to zero, will turn off gravity.
 
-###pull_torpedo = boolean
-If enabled, Planets', BlackHoles', and Stars' gravity wells will effect torpedos.
+###pull_weapon = boolean
+If enabled, Planets', BlackHoles', and Stars' gravity wells will effect torpedos and space mines.
 
 
 <a name="blackhole"></a>[BlackHole]
