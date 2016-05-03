@@ -42,6 +42,8 @@ class FindTheMiddleGame(BasicGame):
     def world_create(self):
         self.midpoint = (int(self.world.width / 2), int(self.world.height / 2))
 
+        super(FindTheMiddleGame, self).world_create()
+
     def player_added(self, player, reason):
         player.time = 0
 
