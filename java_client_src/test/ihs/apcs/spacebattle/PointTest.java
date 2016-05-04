@@ -22,7 +22,9 @@ public class PointTest {
 
 	@Test
 	public void testGetAngleTo() {
-		assertEquals(45, (new Point(0, 0)).getAngleTo(new Point(1, -1)), 0.01);
+		Point zeropt = new Point(0, 0);
+		assertEquals(0, zeropt.getAngleTo(zeropt));
+		assertEquals(45, zeropt.getAngleTo(new Point(1, -1)), 0.01);
 		
 		for (int i = 0; i < 360; i++)
 		{
