@@ -109,7 +109,7 @@ class Ship(PhysicalRound):
 
     def getExtraInfo(self, objData, player):
         objData["RADARRANGE"] = self.radarRange
-        objData["ROTATION"] = self.rotationAngle
+        objData["ROTATION"] = int(self.rotationAngle) % 360
         objData["ROTATIONSPEED"] = self.rotationSpeed
         objData["CURSHIELD"] = self.shield.value
         objData["MAXSHIELD"] = self.shield.maximum
@@ -194,8 +194,8 @@ class Nebula(CelestialBody, PhysicalEllipse):
         objData["PULL"] = self.pull
 
         # Overrides
-        objData["DIRECTION"] = -math.degrees(self.body.angle)
-        objData["ROTATION"] = -math.degrees(self.body.angle)
+        objData["DIRECTION"] = -math.degrees(self.body.angle) % 360
+        objData["ROTATION"] = int(round(-math.degrees(self.body.angle)) % 360)
 
         objData["MAJOR"] = self.major
         objData["MINOR"] = self.minor

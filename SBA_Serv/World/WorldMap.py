@@ -310,7 +310,7 @@ class GameWorld(object):
         objData["POSITION"] = intpos(obj.body.position)
         objData["SPEED"] = obj.body.velocity.length
         # TODO: deal with -0.0 case OR match physics library coordinates?
-        objData["DIRECTION"] = -obj.body.velocity.angle_degrees # 30 = -120?, -80 = -10
+        objData["DIRECTION"] = -obj.body.velocity.angle_degrees % 360 # 30 = -120?, -80 = -10
         #objData["VELOCITYDIRECTION"] = obj.velocity.direction
         objData["MAXSPEED"] = obj.body.velocity_limit
         objData["CURHEALTH"] = obj.health.value

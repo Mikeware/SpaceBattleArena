@@ -24,7 +24,7 @@ def in_circle(center, radius, point):
 
 def wrappos(pos, bound, worldsize):
     """
-    Returns an array of up to 5 points translated to wrap around the given worldsize.
+    Returns an array of up to 4 points translated to wrap around the given worldsize.
 
     Parameters:
         pos: the position to wrap
@@ -33,8 +33,14 @@ def wrappos(pos, bound, worldsize):
     """
     pl = [pos]
     if pos[0] < bound:
+        if pos[1] < bound:
+            pl.append((pos[0] + worldsize[0], pos[1] + worldsize[1]))
+        
         pl.append((pos[0] + worldsize[0], pos[1]))
     elif pos[0] > worldsize[0] - bound:
+        if pos[1] > worldsize[1] - bound:
+            pl.append((pos[0] - worldsize[0], pos[1] - worldsize[1]))
+
         pl.append((pos[0] - worldsize[0], pos[1]))
 
     if pos[1] < bound:

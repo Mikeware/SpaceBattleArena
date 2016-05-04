@@ -2,6 +2,16 @@ v1.2 : Planned - May 2016 [Season 5]
 ----
 * Added Worm Holes (teleports objects across space)
 * Added Deployable Space Mines
+* Updated Client Angle/Point Methods
+    * Orientations are always integers now and should be between 0-360
+        * Rotate and Steer Command parameters updated
+    * Movement direction can still be a double
+    * Added Test Cases for Point Class
+       * Fixed **getAngleTo** method to use built-in atan2
+    * Added **closeTo** box test method
+    * Added **getPointFromAngleAndDistance** for point projections
+    * Added **inEllipse** check method
+    * Added **getPointsOnTorus** for world bounds assistance
 * Added option for Torpedoes to be effected by gravity
 * Split 'explodable' from 'gravitable' for Entities, two separate object flags now.
 * Separated option for 'showip' in Application settings to decouple from showing statistics, no longer always show IP in Debug mode.
