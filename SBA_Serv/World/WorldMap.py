@@ -17,7 +17,7 @@ import thread, threading, time, math
 import pymunk
 import traceback
 from WorldMath import in_circle, wrappos, intpos, friendly_type
-from World.WorldEntities import Planet, Ship, Nebula
+from World.WorldEntities import Influential, Ship
 from WorldCommands import CloakCommand
 from ThreadStuff.ThreadSafe import ThreadSafeDict
 
@@ -28,12 +28,13 @@ class GameWorld(object):
     represents the virtual space world and the objects in it
     Provides hit detection and radar between objects in the world
     """
-    def __init__(self, game, worldsize, pys=True):
+    def __init__(self, game, worldsize, objlistener=None):
         """
         Parameters:
             game: game object that manages rules for world
             worldsize: tuple of world width,height
             pys: flag to indicate whether this should be the main world running a physics/game loop or not
+            objlistener: initial listner callback function
         """
         self.__game = game
         self.size = intpos(worldsize)
@@ -41,20 +42,26 @@ class GameWorld(object):
         self.height = worldsize[1]
         self.__space = pymunk.Space()
         #self.__space.add_collision_handler(0, 0, post_solve=self.collideShipStellarObject)
-        self.__space.set_default_collision_handler(begin=self.__beginCollideObject, post_solve=self.__collideObject)
+        self.__space.set_default_collision_handler(begin=self.__beginCollideObject, post_solve=self.__collideObject, separate=self.__endCollideObject)
         self.__objects = ThreadSafeDict()
         self.__addremovesem = threading.Semaphore()
-        self.__planets = []
-        self.__nebulas = []
-        self.__objectListener = []
+        self.__influential = []
+        if objlistener == None:
+            self.__objectListener = []
+        else:
+            self.__objectListener = [objlistener]
         self.__toremove = []
         self.__toadd = []        
-        self.__active = True
-        self.__pys = pys
+        self.__active = False
+        self.__started = False
         self.gameerror = False
-
         logging.info("Initialized World of size %s", repr(worldsize))
-        if pys:
+
+    def start(self):
+        if not self.__started:
+            self.__started = True
+            self.__active = True
+            self.__pys = True
             logging.debug("Started gameloop for World %s", repr(self))
             threading.Thread(None, self.__THREAD__gameloop, "WorldMap_gameloop_" + repr(self)).start()
 
@@ -64,39 +71,41 @@ class GameWorld(object):
     def endGameLoop(self):
         self.__active = False
             
-    def newWorld(self, world):
-        self.__pys = False
+    def destroy_all(self):
+        self.__pys = False # disable physics step while we add/remove all objects
         time.sleep(0.2)
         
         # Remove All Objects
         for obj in self:
             self.pysremove(obj)
-            
-        # Copy objects from new world to original world
-        for obj in world:
-            #world.pysremove(obj) # need to remove object from space before adding to another
-            self.append(obj, pys=True)
-            
+        
         self.__pys = True
         
     def __beginCollideObject(self, space, arbiter):
         if arbiter.is_first_contact:
-            r = self.__game.world_physics_pre_collision( arbiter.shapes )
+            r = self.__game.world_physics_pre_collision( arbiter.shapes[0].world_object, arbiter.shapes[1].world_object )
             if r != None:
-                for i in r[1]:
-                    space.add_post_step_callback(i[0], i[1], i[2:])
-                return r[0]  
+                if r == False or r == True:
+                    return r
+                for i in r[1:]:
+                    space.add_post_step_callback(i[0], i[1], i[2])
+                return r[0]
 
         return True       
         
     def __collideObject(self, space, arbiter):        
         if arbiter.is_first_contact:
-            r = self.__game.world_physics_collision( arbiter.shapes, arbiter.total_impulse.length / 250.0 )
+            r = self.__game.world_physics_collision( arbiter.shapes[0].world_object, arbiter.shapes[1].world_object, arbiter.total_impulse.length / 250.0 )
             if r != None:
                 for i in r:
-                    space.add_post_step_callback(i[0], i[1], i[2:])            
+                    space.add_post_step_callback(i[0], i[1], i[2])
         #eif
 
+    def __endCollideObject(self, space, arbiter):
+        # when object is destroyed in callback, arbiter may be empty
+        if hasattr(arbiter, "shapes"):            
+            self.__game.world_physics_end_collision( arbiter.shapes[0].world_object, arbiter.shapes[1].world_object )
+        
     def causeExplosion(self, origin, radius, strength, force=False):
         logging.debug("Start Explosion %s, %d, %d [%d]", origin, radius, strength, thread.get_ident())
         origin = pymunk.Vec2d(origin)
@@ -104,13 +113,14 @@ class GameWorld(object):
             if obj.explodable:
                 for point in wrappos(obj.body.position, radius, self.size):
                     if in_circle(origin, radius, point):                        
-                        logging.debug("Applying Explosion Force to #%d", obj.id)
+                        logging.debug("Applying Explosion Force of strength %d impulse %s to #%d", strength, repr((point - origin) * strength), obj.id)
                         obj.body.apply_impulse((point - origin) * strength, (0,0))
                         break        
         logging.debug("Done Explosion") 
         
     def registerObjectListener(self, callback):
-        self.__objectListener.append(callback)
+        if callback not in self.__objectListener:
+            self.__objectListener.append(callback)
 
     def __len__(self):
         return len(self.__objects)
@@ -146,10 +156,8 @@ class GameWorld(object):
             else:
                 self.__toadd.append(item)
 
-            if isinstance(item, Planet) and not item in self.__planets and item.pull > 0:
-                self.__planets.append(item)
-            elif isinstance(item, Nebula) and not item in self.__nebulas and item.pull > 0:
-                self.__nebulas.append(item)
+            if isinstance(item, Influential) and item.influence_range > 0:
+                self.__influential.append(item)
         self.__addremovesem.release()
         logging.debug("SEMAPHORE REL append [%d]", thread.get_ident())                
 
@@ -164,6 +172,12 @@ class GameWorld(object):
         
     def __delitem__(self, key, pys=False):
         logging.debug("Removing Object from World %s [%d]", repr(key), thread.get_ident())
+        # Notify each item this may be in that it's no longer colliding
+        # HACK: Get around issue with PyMunk not telling us shapes when object removed already before separate callback
+        if len(key.in_celestialbody) > 0:
+            for item in key.in_celestialbody[:]:
+                item.collide_end(key)
+
         logging.debug("SEMAPHORE ACQ delitem [%d]", thread.get_ident())
         self.__addremovesem.acquire()            
         if self.__objects.has_key(key.id):
@@ -175,10 +189,8 @@ class GameWorld(object):
                 self.__toremove.append(key)
             
             del self.__objects[key.id]
-            if key in self.__planets:
-                self.__planets.remove(key)
-            elif key in self.__nebulas:
-                self.__nebulas.remove(key)
+            if key in self.__influential:
+                self.__influential.remove(key)
         self.__addremovesem.release()           
         logging.debug("SEMAPHORE REL delitem [%d]", thread.get_ident())
         
@@ -195,15 +207,6 @@ class GameWorld(object):
                 
                 tstamp = time.time()
 
-                # find objects in nebulas
-                for neb in self.__nebulas:
-                    for shape in self.__space.shape_query(neb.shape):
-                        # Set value to two, so that if we're still in the nebula
-                        # for another loop, that we don't toggle in/out of nebula between slices
-                        # across threads
-                        if self.has_key(shape.id):
-                            self[shape.id].in_nebula = [2, neb]
-
                 # update all game objects
                 for obj in self: # self is dictionary
                     # Wrap Object in World
@@ -218,24 +221,17 @@ class GameWorld(object):
 
                     # Apply Gravity for Planets
                     if obj.explodable:
-                        for planet in self.__planets:
-                            for point in wrappos(obj.body.position, planet.gravityFieldLength, self.size):
-                                if in_circle(planet.body.position, planet.gravityFieldLength, point):                        
-                                    obj.body.apply_impulse((point - planet.body.position) * -planet.pull * lasttime, (0,0))
+                        for influencer in self.__influential:
+                            for point in wrappos(obj.body.position, influencer.influence_range, self.size):
+                                if in_circle(influencer.body.position, influencer.influence_range, point):
+                                    influencer.apply_influence(obj, point, lasttime)
                                     break
                     
                     # Update and Run Commands
                     obj.update(lasttime)
-                    if obj.in_nebula != None:
-                        # slow down objects in Nebula
-                        if obj.body.velocity.length > 0.1:
-                            obj.body.velocity.length -= (obj.in_nebula[1].pull / obj.mass) * lasttime
-                        obj.in_nebula[0] -= 1 # decrement count
-                        if obj.in_nebula[0] <= 0:
-                            obj.in_nebula = None
 
-                    if obj.has_expired():
-                        del self[obj]                        
+                    if obj.has_expired() or obj.destroyed:
+                        del self[obj]
                 #next            
 
                 # game time notification
@@ -294,7 +290,16 @@ class GameWorld(object):
         #next
         return objList
 
-    def getObjectData(self, obj):
+    def get_count_of_objects(self, type):
+        count = 0
+        for obj in self.__objects.values():
+            if isinstance(obj, type):
+                count += 1
+            #eif
+        #next
+        return count
+
+    def getObjectData(self, obj, player):
         objData = {}
         # Convert Type of Object to String
         objData["TYPE"] = friendly_type(obj)
@@ -313,10 +318,11 @@ class GameWorld(object):
         objData["MASS"] = obj.mass
         objData["HITRADIUS"] = obj.radius #TODO: Move to entites that have this i.e. physicalround?
         objData["TIMEALIVE"] = obj.timealive
+        objData["INBODY"] = (len(obj.in_celestialbody) > 0)
 
-        obj.getExtraInfo(objData)
+        obj.getExtraInfo(objData, player)
 
-        self.__game.game_get_extra_radar_info(obj, objData)
+        self.__game.game_get_extra_radar_info(obj, objData, player)
 
         return objData
 
@@ -349,7 +355,7 @@ class GameWorld(object):
             elif radarlevel == 3:
                 for obj in objs:
                     if obj.id == target:
-                        radardata = [self.getObjectData(obj)]
+                        radardata = [self.getObjectData(obj, ship.player)]
                         break
             elif radarlevel == 4:
                 # (pos, id, type)
@@ -360,7 +366,7 @@ class GameWorld(object):
             elif radarlevel == 5:
                 radardata = []
                 for e in objs:
-                    radardata.append(self.getObjectData(e))
+                    radardata.append(self.getObjectData(e, ship.player))
                 #next
             #eif
         #eif
@@ -369,7 +375,7 @@ class GameWorld(object):
         if getMessages:
             msqQueue = list(ship.messageQueue)
 
-        return {"SHIPDATA": self.getObjectData(ship),
+        return {"SHIPDATA": self.getObjectData(ship, ship.player),
                 "RADARLEVEL": radarlevel,
                 "RADARDATA": radardata,
                 "GAMEDATA": self.__game.game_get_extra_environment(ship.player),

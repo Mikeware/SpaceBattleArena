@@ -1,6 +1,10 @@
 /bin/
 /dist/
+/build/
 /obj/
 *.log
 *.pyc
 *.user
+.coverage
+.coverage.*
+/coverage_html_report/

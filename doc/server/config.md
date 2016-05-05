@@ -9,9 +9,12 @@ outline:
  - { url: "#application", title: "[Application]" }
  - { url: "#world", title: "[World]" }
  - { url: "#server", title: "[Server]" }
+ - { url: "spawnmanager", title: "Spawn Manager" }
  - { url: "#asteroid", title: "[Asteroid]" }
+ - { url: "#dragon", title: "[Dragon]" }
  - { url: "#planet", title: "[Planet]" }
  - { url: "#blackhole", title: "[BlackHole]" }
+ - { url: "#star", title: "[Star]" }
  - { url: "#nebula", title: "[Nebula]" }
  - { url: "#game", title: "[Game]" }
  - { url: "#tournament", title: "[Tournament]" }
@@ -126,12 +129,80 @@ Comma separated list of ship commands to disable on the server.  E.g.
 A list of commands can be found in the Command chapter. When a command is invoked that has been disabled, it is simply ignored. A message should return to the client, but they will get a new environment and their ship should continue running.  Its state might just not be what was expected.
 
 
+<a name="spawnmanager"></a>Spawn Manager
+---------------------------------------
+Spawn Manager itself is not a specific configuration section.  It manages the life cycle for all the entities below.  Each entity has a set of common properties (listed here) which can be applied to them.  Place these properties within the specific [Entity] section for it to apply to that particular one.
+
+E.g.
+
+	# Spawns two Asteroids into the Universe, ensures there's always one
+	[Asteroid]
+	number = 2
+	spawn_keep_min = 1
+
+###number = integer
+The number of [Entity] to generate in the universe.
+
+###buffer_object = integer
+Amount of space (in pixels) to leave between this object and all others when spawning it.
+
+###buffer_edge = integer
+Amount of space (in pixels) to leave between this object and the edge of space when spawning it.
+
+###spawn_keep_min = integer
+Minimum number of [Entity] to keep in the world.  If the number falls below this value, more entities will automatically be added instantly to meet this threshold.
+
+###spawn_keep_max = integer
+Maximum cut-off for spawning new [Entity] types on the timer.  If the number of objects has reached this level, no new entities will be spawned using the spawn timing settings below. Games or other events may still spawn entities of this type however.
+
+###spawn_time_num = integer
+Number of entities to spawn at a time with the timing settings below.  If specified, you must also specify the spawn_time_min and spawn_time_max options.
+
+###spawn_time_min = integer
+Minimum time in seconds before spawning the spawn_time_num of [Entity] unless spawn_keep_max has been reached.
+
+###spawn_time_max = integer
+Maximum time in seconds before spawning an [Entity] on a timer.
+
+###spawn_alive_time_min = integer
+###spawn_alive_time_max = integer
+Specified together in order to cut-short the life span of an [Entity].  The [Entity] will live for a time between the range specified by these two values and then be automatically destroyed.
+
+###spawn_on_player_num = integer
+Number of [Entity] to add to the universe when a player is added to it.
+
+###spawn_on_player_start = boolean
+###spawn_on_player_respawn = boolean
+Specify which scenarios (first created in round and/or whenever re-added) to add the spawn_on_player_num [Entity] to the world.
+
 <a name="asteroid"></a>[Asteroid]
 ---------------------------------------
 Asteroids are flying debris in space.  They start off with a set amount of momentum and will continue flying in space until impacting ships or destroyed by torpedos.
 
-###number = integer
-The number of asteroids to generate in the universe.
+
+<a name="dragon"></a>[Dragon]
+---------------------------------------
+Dragons fly around space and will attack (and eat) nearby uncloaked ships.
+
+###range_min = int
+###range_max = int
+Range for the size of the Dragon's visibility radius.  It will attack ships that enter this range centered on its head.
+
+###attack_speed_min = int
+###attack_speed_max = int
+Range for the amount of speed a Dragon will increase by when it sees a Ship.
+
+###attack_time_min = float
+###attack_time_max = float
+Range for the interval between times that the Dragon bites a Ship in its jaws.  This range is randomized for each attack.
+
+###attack_amount_min = float
+###attack_amount_max = float
+Range for the amount of damage every bite causes a Ship.  This amount is randomized for each attack.
+
+###health_min = int
+###health_max = int
+Range for the amount of health a Dragon will start with.
 
 
 <a name="planet"></a>[Planet]
@@ -159,6 +230,25 @@ These two values correspond to the amount of pull the gravity will have on ships
 Black Holes have stronger gravity wells than planets, but can be passed through their center.  They are harder to escape from.
 
 They have the exact same configuration values as [Planets](#planet).  However, the default range values are **64** and **208**.  The default pull values are **52** and **72**.
+
+###crush_time = float
+Amount of time in seconds before a ship will be crushed (destroyed) when in the center of a black hole.  The Ship must be in the center for the whole duration to be crushed.  Shields will protect the ship from crushing as long as they are up.  Set to 0.0 to turn off crushing.  Defaults to **5.0**.
+
+
+<a name="star"></a>[Star]
+---------------------------------------
+Stars can be flown into, but cause progressively more damage the closer a Ship is to its center.
+
+###range_min = int
+###range_max = int
+Range for the star's gravity well radius.  Defaults to **96** and **224**.
+
+###pull_min = int
+###pull_max = int
+Range for the amount of gravity the star will have.  Defaults to **12** and **48**.
+
+###dmg_mod = float
+Additional damage modifier for growth of damage caused by approaching Star's center.  Defaults to **0.0**.  Equation for damage calculation is currently in part *18 - (pull / 6.0) - dmg_mod*.
 
 
 <a name="nebula"></a>[Nebula]
@@ -229,7 +319,10 @@ Tournaments are run for more advanced games and divide players into groups to co
 ###tournament = boolean
 Should the game be run in a tournament setting where connected players are split into a number of groups.  Each winner of the game in a group proceeds to a final bracket to determine a winner.  Each round will automatically be paired, timed, and calculated.  Just hit space to start each round.
 
-###tournament_groups = integer
+###manager = string
+Name of the Tournament Manager to use for controlling the tournament.  Current options are **BasicTournament** or **WildTournament**.  See [Tournaments](tournaments.html) page for more details.
+
+###groups = integer
 How many groups should the number of clients connected be broken into for the tournament?  E.g. Setting this value to 5 and having 30 clients connected would result in 5 rounds of 6 players each and a final round with the winners of each group.  Raising this number to higher values requires more vertical real-estate for the tournament display board.
 
 ###number_to_final_round = integer

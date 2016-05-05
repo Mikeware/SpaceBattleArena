@@ -1,18 +1,36 @@
 
 import math
+import random
 
 def friendly_type(obj):
+    """
+    Returns the classname of the object.
+    """
     t = repr(type(obj))
     di = t.rfind('.')
     return t[di+1:t.find("'",di)]
 
 def intpos(pos):
+    """
+    Returns a rounded position of the given position.
+    """
     return (int(pos[0]), int(pos[1]))
 
 def in_circle(center, radius, point): 
+    """
+    Determines if the given point is within the circle positioned at center with the given radius.
+    """
     return (center[0] - point[0]) ** 2 + (center[1] - point[1]) ** 2  <= radius ** 2 
 
 def wrappos(pos, bound, worldsize):
+    """
+    Returns an array of up to 5 points translated to wrap around the given worldsize.
+
+    Parameters:
+        pos: the position to wrap
+        bound: distance away from the position that we care about, i.e. if the position coordinate +/- bound doesn't cross an edge, an extra point won't be generated in that direction
+        worldsize: dimensions of the world
+    """
     pl = [pos]
     if pos[0] < bound:
         pl.append((pos[0] + worldsize[0], pos[1]))
@@ -26,8 +44,55 @@ def wrappos(pos, bound, worldsize):
 
     return pl
 
+def aligninstances(obj1, obj2, class1, class2):
+    """
+    aligninstances performs two functions, it ensures that obj1 & obj2 are of the types class1 & class2
+    it then returns a tuple such that the first element is that of class1 and the second is class2
+    
+    in the case that there is a mismatch between object and type (the pair doesn't exist), None is returned for both
+    """
+    if isinstance(obj1, class1) and isinstance(obj2, class2):
+        return obj1, obj2
+    elif isinstance(obj2, class1) and isinstance(obj1, class2):
+        return obj2, obj1
+
+    return None, None
+
 def distancesquared(pos1x, pos1y, pos2x, pos2y):
     return (pos1x - pos2x) ** 2 + (pos1y - pos2y) ** 2
+
+def getPositionAwayFromOtherObjects(world, radius, edgebuffer, force=False):
+    """Returns a Position in the world that is away from other objects in it.
+
+    Args:
+        radius: integer range to detect other objects.
+        edgebuffer: integer range to keep away from the edge of the world.
+        force: internal for the physics engine.
+
+    Returns:
+        position tuple
+    """
+    size = world.size
+    x = random.randint(edgebuffer, size[0] - edgebuffer)
+    y = random.randint(edgebuffer, size[1] - edgebuffer)
+    i = 0
+    while len(world.getObjectsInArea((x, y), radius, force)) > 0 and i < 15:
+        i += 1
+        x = random.randint(edgebuffer, size[0] - edgebuffer)
+        y = random.randint(edgebuffer, size[1] - edgebuffer)
+    return (x, y)
+
+def cfg_rand_min_max(cfg, section, option):
+    """Helper method to generate a random int for a config option.
+
+    Config option should be in the form of option_min = value and option_max = value.
+
+    Args:
+        cfg: ConfigParser object.
+        section: Configuration section name.
+        option: Configuration option name.
+    """
+    return random.randint(cfg.getint(section, option+"_min"), cfg.getint(section, option+"_max"))
 
 # used by clients
 def getlocalposdistance(pos1, pos2, worldsize):

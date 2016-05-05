@@ -41,6 +41,7 @@ SHIP_CMD_SHIELD = "SHLD"
 SHIP_CMD_CLOAK = "CLOAK"
 
 SHIP_CMD_REPAIR = "REP"
+SHIP_CMD_SCOOP = "SCOOP"
 
 from Messaging import Command, OneTimeCommand
 
@@ -134,6 +135,14 @@ def ConvertNetworkMessageToCommand(ship, cmdname, cmddict):
                 return RepairCommand(ship, cmddict["AMT"])
             else:
                 return "Repair amount must be a positive integer"
+        elif cmdname == SHIP_CMD_SCOOP:
+            if cmddict.has_key("SHORT") and isinstance(cmddict["SHORT"], bool):
+                if cmddict["SHORT"]:
+                    return LowerEnergyScoopCommand(ship)
+                else:
+                    return LowerEnergyScoopCommand(ship, 2)
+            else:
+                return "LowerEnergyScoop expects a boolean to indicate if short or long duration is requested"
         elif cmdname == SHIP_CMD_CLOAK:
             if cmddict.has_key("DUR") and isinstance(cmddict["DUR"], float) and cmddict["DUR"] > 0:
                 return CloakCommand(ship, cmddict["DUR"])
@@ -146,8 +155,6 @@ def ConvertNetworkMessageToCommand(ship, cmdname, cmddict):
             else:
                 return "Shield Command Needs a Positive Float for Duration"
             #eif
-        else:
-            return "Command " + repr(cmdname) + " Not Found"
         #eif
     else:
         return "Command Format Not Recognized"
@@ -188,7 +195,7 @@ class ThrustCommand(Command):
         #logging.debug("Executing Thrust on %s for %f", repr(obj), t)
         
     def __repr__(self):
-        return super(ThrustCommand, self).__repr__() + " DIR: " + self.direction + " POW: " + repr(self.power)
+        return super(ThrustCommand, self).__repr__() + " DIR: " + self.direction + " POW: %.2f" % self.power
 
     def net_repr(self):
         return (ThrustCommand.NAME, {"DIR": self.direction, "DUR":self.timeToLive, "PER":self.power})
@@ -226,7 +233,7 @@ class AllStopCommand(OneTimeCommand):
 
     def onetime(self):        
         self._obj.body.velocity = Vec2d(0, 0)
-        self._obj.health /= 2
+        self._obj.take_damage(max(1, self._obj.health.value / 2), self._obj, True)
             
 class WarpCommand(Command):
     """
@@ -245,6 +252,7 @@ class WarpCommand(Command):
         super(WarpCommand, self).__init__(obj, WarpCommand.NAME, 11, block=True, required=10) #maximum duration of warp is 10.5
         self.__stage = 0
         self.__time = 0.0
+        self.__initial_distance = distance
         self.energycost = 9
         if distance <= 0.1:
             self.__mode = 0
@@ -290,8 +298,11 @@ class WarpCommand(Command):
             self.__stage = 2
             
     def __repr__(self):
-        return super(WarpCommand, self).__repr__() + " DEST: " + repr(self.__dest)
+        return super(WarpCommand, self).__repr__() + " DEST: " + repr(intpos(self.__dest))
             
+    def net_repr(self):
+        return (WarpCommand.NAME, {"DIST": self.__initial_distance})
+
 class RotateCommand(Command):
     NAME = SHIP_CMD_ROTATE
 
@@ -327,7 +338,7 @@ class RotateCommand(Command):
         #logging.debug("Executing Rotate on #%d for %f", self._obj.id, t)
         
     def __repr__(self):
-        return super(RotateCommand, self).__repr__() + " DEG: " + repr(self.__deg)
+        return super(RotateCommand, self).__repr__() + " DEG: %d" % self.__deg
 
     def net_repr(self):
         return (RotateCommand.NAME, {"DEG":self.__deg})
@@ -356,7 +367,7 @@ class SteerCommand(Command):
         #logging.debug("Executing Steering on #%d for %f", self._obj.id, t)
         
     def __repr__(self):
-        return super(SteerCommand, self).__repr__() + " DEG: " + repr(self.__deg)
+        return super(SteerCommand, self).__repr__() + " DEG: %d" % self.__deg
 
 class IdleCommand(Command):
     NAME = SHIP_CMD_IDLE
@@ -439,6 +450,36 @@ class RepairCommand(Command):
         self.left -= amt
         self._obj.health += amt
         self._obj.shield += amt / self._obj.shieldConversionRate
+
+    def __repr__(self):
+        return super(RepairCommand, self).__repr__() + " LEFT: %.1f" % self.left
+
+class LowerEnergyScoopCommand(Command):
+    """
+    The LowerEnergyScoopCommand deploys an energy collector under your ship.
+
+    If flying through a celestial body (like a Sun or Nebula), this scoop will collect a massive amount of energy.
+    It will additionally cause some drag.
+
+    If not in an energy source, this command will drain energy quickly.
+
+    It can be run for a 'short period' of 3 seconds or a 'long period' of 6 seconds.  A long period will restore almost all energy from the initial requirements to start this command.
+    """
+    NAME = SHIP_CMD_SCOOP
+
+    def __init__(self, obj, short=1):
+        super(LowerEnergyScoopCommand, self).__init__(obj, LowerEnergyScoopCommand.NAME, 3 * short, required=4)
+        self.energycost = 8
+
+    def execute(self, t):
+        bpull = 500
+        for body in self._obj.in_celestialbody:
+            if isinstance(body, WorldEntities.CelestialBody):
+                self._obj.energy += t * 24
+                bpull = body.pull
+                break
+        if self._obj.body.velocity.length > 0.1:
+            self._obj.body.velocity.length -= (bpull / self._obj.mass) * t
 
 class CloakCommand(Command):
     NAME = SHIP_CMD_CLOAK

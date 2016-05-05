@@ -18,8 +18,8 @@ import java.util.*;
  * 
  * @author Brett Wortzman
  *
- * @since 1.1
- * @version 2.0
+ * @since 0.9
+ * @version 1.0
  */
 public class BaubleHuntGameInfo extends BasicGameInfo {
 	private double[] POSITION;
@@ -29,8 +29,8 @@ public class BaubleHuntGameInfo extends BasicGameInfo {
 	private int STOREDVALUE;
 	
 	/**
-	 * Gets the position of your home base.
-	 * @return the position of your home base
+	 * Gets the position of your home base outpost.
+	 * @return the position of your home base outpost
 	 */
 	public Point getHomeBasePosition() { return new Point(POSITION); }
 	

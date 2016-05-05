@@ -7,14 +7,15 @@ package ihs.apcs.spacebattle;
  * 
  * @author Michael A. Hawker
  *
- * @since 2.0
- * @version 1.0
+ * @since 1.0
+ * @version 1.1
  */
 public class BasicGameInfo {
 	// Info about the player
 	private double SCORE;
 	private double BESTSCORE;
 	private int DEATHS;
+	private String LSTDSTRBY;
 	
 	// Info about the game
 	private double HIGHSCORE;
@@ -44,6 +45,14 @@ public class BasicGameInfo {
 	 * @return your number of deaths for this game 
 	 */
 	public int getNumDeaths() { return DEATHS; }
+	
+	/**
+	 * Gets a string representing the last thing that destroyed your ship.
+	 * 
+	 * @return name of a player or type of an object with its #ID number
+	 * @since 1.0.1
+	 */
+	public String getLastDestroyedBy() { return LSTDSTRBY; }
 	
 	/**
 	 * Gets the current time remaining in the round (in seconds).

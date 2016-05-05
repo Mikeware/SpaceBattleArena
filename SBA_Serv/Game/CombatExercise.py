@@ -12,12 +12,11 @@ You should have received a copy of the GNU General Public License along with thi
 The full text of the license is available online: http://opensource.org/licenses/GPL-2.0
 """
 
-from Game import BasicGame, RoundTimer
-from World.WorldGenerator import ConfiguredWorld, getPositionAwayFromOtherObjects
+from Game import BasicGame
 from World.Entities import Entity
 from World.WorldEntities import *
 from GUI.ObjWrappers.GUIEntity import GUIEntity
-from World.WorldMath import intpos, friendly_type, PlayerStat
+from World.WorldMath import intpos, friendly_type, PlayerStat, getPositionAwayFromOtherObjects
 from GUI.GraphicsCache import Cache
 from GUI.Helpers import debugfont
 import logging
@@ -76,9 +75,10 @@ class CombatExerciseGame(BasicGame):
 
         super(CombatExerciseGame, self).world_add_remove_object(wobj, added)
 
-    def gui_draw_game_world_info(self, surface, flags):
+    def gui_draw_game_world_info(self, surface, flags, trackplayer):
         for player in self.game_get_current_player_list():
-            if player.object != None:
+            obj = player.object
+            if obj != None:
                 # draw time alive by player
-                text = self._dfont.render("%.1f" % player.object.timealive, False, player.color)
-                surface.blit(text, (player.object.body.position[0]+30, player.object.body.position[1]-4))
+                text = self._dfont.render("%.1f" % obj.timealive, False, player.color)
+                surface.blit(text, (obj.body.position[0]+30, obj.body.position[1]-4))

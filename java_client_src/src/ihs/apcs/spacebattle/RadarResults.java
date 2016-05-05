@@ -12,6 +12,8 @@ import java.util.*;
  *   by the radar sweep will result in a zero-equivalent value.
  * @author Brett Wortzman
  * @see ihs.apcs.spacebattle.commands.RadarCommand
+ * @since 0.1
+ * @version 0.1
  */
 public class RadarResults extends ArrayList<ObjectStatus> {
 	private static final long serialVersionUID = -5552710352589416751L;
@@ -60,8 +62,8 @@ public class RadarResults extends ArrayList<ObjectStatus> {
 	 * Gets the details read by this radar sweep for all objects of the given
 	 *   type.  Case-insensitive comparison is used for type names.
 	 *
-	 * <p>Could be Ship, Planet, BlackHole, Asteroid, Torpedo, Nebula,
-	 * Bauble, Bubble, or HomeBase.
+	 * <p>Could be Ship, Planet, BlackHole, Star, Nebula, Asteroid, Torpedo,
+	 * Bauble, Bubble, or Outpost.     
 	 *
 	 * @param type the type of object for which to return results
 	 * @return a list of radar details for all objects of the given type (may be empty)

@@ -13,6 +13,8 @@ import ihs.apcs.spacebattle.util.StringMap;
  * warp is completed.  The cool-down period and energy cost of a warp vary based on the type and distance.
  * @author Brett Wortzman
  *
+ * @since 0.9
+ * @version 0.9
  */
 public class WarpCommand extends ShipCommand {
 	private double DIST;

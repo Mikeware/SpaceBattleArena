@@ -12,12 +12,11 @@ You should have received a copy of the GNU General Public License along with thi
 The full text of the license is available online: http://opensource.org/licenses/GPL-2.0
 """
 
-from Game import BasicGame, RoundTimer
-from World.WorldGenerator import ConfiguredWorld, getPositionAwayFromOtherObjects
+from Game import BasicGame
 from World.Entities import Entity
 from World.WorldEntities import Ship
 from GUI.ObjWrappers.GUIEntity import GUIEntity
-from World.WorldMath import intpos, friendly_type, PlayerStat, in_circle
+from World.WorldMath import intpos, friendly_type, PlayerStat, in_circle, getPositionAwayFromOtherObjects
 from GUI.GraphicsCache import Cache
 from GUI.Helpers import debugfont, wrapcircle, namefont
 import logging, random
@@ -33,17 +32,15 @@ import pygame
 class FindTheMiddleGame(BasicGame):
     
     def __init__(self, cfgobj):
-        self.__objective_radii = eval(cfgobj.get("FindTheMiddle", "objective_radii"))
-        self.__objective_points = eval(cfgobj.get("FindTheMiddle", "objective_points"))
+        self.__objective_radii = map(int, cfgobj.get("FindTheMiddle", "objective_radii").split(","))
+        self.__objective_points = map(int, cfgobj.get("FindTheMiddle", "objective_points").split(","))
         self.__objective_time = float(cfgobj.getint("FindTheMiddle", "objective_time"))
         self.__objective_velocity = cfgobj.getint("FindTheMiddle", "objective_velocity")
 
         super(FindTheMiddleGame, self).__init__(cfgobj)
 
-    def world_create(self, pys=True):
-        world = super(FindTheMiddleGame, self).world_create(pys)
-        self.midpoint = (int(world.width / 2), int(world.height / 2))
-        return world
+    def world_create(self):
+        self.midpoint = (int(self.world.width / 2), int(self.world.height / 2))
 
     def player_added(self, player, reason):
         player.time = 0
@@ -88,7 +85,7 @@ class FindTheMiddleGame(BasicGame):
 
         super(FindTheMiddleGame, self).game_update(t)
 
-    def gui_draw_game_world_info(self, surface, flags):
+    def gui_draw_game_world_info(self, surface, flags, trackplayer):
         # Draw circles in middle of world
         x = 1
         inc = int(255 / len(self.__objective_radii))
@@ -101,7 +98,8 @@ class FindTheMiddleGame(BasicGame):
             x += 1
 
         for player in self.game_get_current_player_list():
-            if player.object != None and player.time > 0:
+            obj = player.object
+            if obj != None and player.time > 0:
                 # draw time left in bubble for player
                 text = self._dfont.render("%.1f" % (self.__objective_time - player.time), False, player.color)
-                surface.blit(text, (player.object.body.position[0]+30, player.object.body.position[1]-4))
+                surface.blit(text, (obj.body.position[0]+30, obj.body.position[1]-4))

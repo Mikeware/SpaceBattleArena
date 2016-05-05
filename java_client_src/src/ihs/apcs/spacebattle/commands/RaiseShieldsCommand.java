@@ -11,6 +11,8 @@ package ihs.apcs.spacebattle.commands;
  *   Raising shields is a non-blocking operation.
  * @author Brett Wortzman
  *
+ * @since 0.9
+ * @version 1.1
  */
 public class RaiseShieldsCommand extends ShipCommand {
 	@SuppressWarnings("unused")
@@ -45,7 +47,8 @@ public class RaiseShieldsCommand extends ShipCommand {
 	/**
 	 * Raising Shields does not block the processing of other commands.
 	 * 
-	 * @return
+     * @since 1.1
+	 * @return false, raising shields doesn't block.
 	 */
 	public static boolean isBlocking() { return false; }
 }

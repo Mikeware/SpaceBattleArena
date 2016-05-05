@@ -34,7 +34,7 @@ public class KingShip implements Spaceship<KingOfTheBubbleGameInfo> {
 	}
 
 	@Override
-	public void shipDestroyed() {
+	public void shipDestroyed(String lastDestroyedBy) {
 		// TODO Auto-generated method stub
 		
 	}

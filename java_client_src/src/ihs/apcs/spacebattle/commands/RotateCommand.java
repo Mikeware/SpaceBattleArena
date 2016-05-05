@@ -5,6 +5,8 @@ package ihs.apcs.spacebattle.commands;
  *   counter-clockwise; negative rotations are clockwise
  * @author Brett Wortzman
  *
+ * @since 0.1
+ * @version 0.1
  */
 public class RotateCommand extends ShipCommand {
 	@SuppressWarnings("unused")

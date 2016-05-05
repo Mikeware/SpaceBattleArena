@@ -34,6 +34,9 @@
   <ItemGroup>
     <Compile Include="compile.py" />
     <Compile Include="Game\BaubleHunt.py" />
+    <Compile Include="Game\DiscoveryQuest.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Game\HungryHungryBaubles.py" />
     <Compile Include="Game\AsteroidMiner.py" />
     <Compile Include="Game\CombatExercise.py" />
@@ -42,6 +45,12 @@
     <Compile Include="Game\FindTheMiddle.py" />
     <Compile Include="Game\KingOfTheBubble.py" />
     <Compile Include="Game\Players.py" />
+    <Compile Include="Game\Tournaments.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Game\Utils.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Game\__init__.py" />
     <Compile Include="GUI\GraphicsCache.py" />
     <Compile Include="GUI\Helpers.py" />
@@ -55,6 +64,10 @@
     <Compile Include="GUI\SoundCache.py" />
     <Compile Include="GUI\Star.py" />
     <Compile Include="GUI\__init__.py" />
+    <Compile Include="Tests\DiscoveryQuestTestCases.py" />
+    <Compile Include="Tests\KingOfTheBubbleTestCases.py" />
+    <Compile Include="Tests\BaubleHuntTestCases.py" />
+    <Compile Include="Tests\HungryHungryBaublesTestCases.py" />
     <Compile Include="Tests\SurvivorTestCases.py" />
     <Compile Include="Tests\CombatExerciseTestCases.py" />
     <Compile Include="Tests\AsteroidMinerTestCases.py" />
@@ -71,6 +84,7 @@
     <Compile Include="Tests\ThrustSteeringTestCases.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Tests\SpawnManagerTestCases.py" />
     <Compile Include="Tests\WorldTestCases.py">
       <SubType>Code</SubType>
     </Compile>
@@ -94,7 +108,6 @@
     <Compile Include="World\WorldEntities.py" />
     <Compile Include="World\Messaging.py" />
     <Compile Include="World\WorldCommands.py" />
-    <Compile Include="World\WorldGenerator.py" />
     <Compile Include="World\WorldMap.py" />
     <Compile Include="World\WorldMath.py" />
     <Compile Include="World\__init__.py" />
@@ -121,10 +134,20 @@
     <Content Include="empty.cfg" />
     <Content Include="game_hungryhungrybaubles.cfg" />
     <Content Include="game_kingofspace.cfg" />
+    <Content Include="game_discoveryquest.cfg" />
     <Content Include="game_kingofthebubble.cfg" />
     <Content Include="no_advanced_commands.cfg" />
     <Content Include="no_collide.cfg" />
     <Content Include="no_gravity_drag.cfg" />
+    <Content Include=".coveragerc" />
+    <Content Include="Tests\test_discovery_quest2.cfg" />
+    <Content Include="Tests\test_discovery_quest.cfg" />
+    <Content Include="Tests\test_kingofthebubble_spawn.cfg" />
+    <Content Include="Tests\test_baublehunt.cfg" />
+    <Content Include="Tests\test_destroyed.cfg" />
+    <Content Include="Tests\test_hungryhungrybaubles.cfg" />
+    <Content Include="Tests\test_hungryhungrybaubles2.cfg" />
+    <Content Include="Tests\test_spawning.cfg" />
     <Content Include="Tests\test_survivor.cfg" />
     <Content Include="Tests\test_combatexercise.cfg" />
     <Content Include="Tests\test_asteroidminer.cfg" />
@@ -141,7 +164,10 @@
     <Content Include="basicgame_combatexercise.cfg" />
     <Content Include="Tests\test_server.cfg" />
     <Content Include="Tests\test_singlegroup.cfg" />
+    <Content Include="Tests\test_tournament_wild_ties.cfg" />
+    <Content Include="Tests\test_tournament_wild.cfg" />
     <Content Include="Tests\test_tournament.cfg" />
+    <Content Include="tournament_wildcard.cfg" />
     <Content Include="tournament.cfg" />
   </ItemGroup>
   <Import Project="$(PtvsTargetsFile)" Condition="Exists($(PtvsTargetsFile))" />

@@ -7,8 +7,8 @@ import ihs.apcs.spacebattle.commands.ShipCommand;
  * 
  * @author Michael A. Hawker
  *
- * @since 2.0
- * @version 1.0
+ * @since 1.0
+ * @version 1.0.1
  */
 public abstract class BasicSpaceship implements Spaceship<BasicGameInfo> {
 	
@@ -32,5 +32,5 @@ public abstract class BasicSpaceship implements Spaceship<BasicGameInfo> {
 	 * @see ihs.apcs.spacebattle.Spaceship#shipDestroyed()
 	 */
 	@Override
-	public void shipDestroyed() { }	
+	public void shipDestroyed(String lastDestroyedBy) { }	
 }

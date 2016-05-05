@@ -5,7 +5,7 @@ Space Battle Arena is a ‘[Programming Game](http://en.wikipedia.org/wiki/Progr
 
 To find out more visit our **[GitHub Website](http://mikeware.github.io/SpaceBattleArena)**.  Complete Learning materials and other guides are available there as well.
 
-Space Battle Arena is [licensed](LICENSE) under the GPLv2.  [Gson](https://github.com/google/gson) is licensed under the Apache license and provided for convenience in the [bin](bin/) directory.
+Space Battle Arena is [licensed](LICENSE) under the GPLv2.  [Gson](https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.1.0.1111/gson-2.2.jar) is licensed under the Apache license and provided for convenience on our [release](https://github.com/Mikeware/SpaceBattleArena/releases) page.
 
 Student Environment
 -------------------------
@@ -17,6 +17,7 @@ Resources
 ------------
 * [Client Setup](http://mikeware.github.io/SpaceBattleArena/client/)
     * [Client Java Docs](http://mikeware.github.io/SpaceBattleArena/client/java_doc/)
+    * [Initial Guides](http://mikeware.github.io/SpaceBattleArena/client/guides/)
 * [Server Setup](http://mikeware.github.io/SpaceBattleArena/server/)
 * Talks
     * [You Have Died of Dysentery: Games in Education Are Still Alive - PAXDev 2014](http://www.mikeware.com/2014/08/you-have-died-of-dysentery-games-in-education-are-still-alive/)

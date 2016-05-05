@@ -17,6 +17,7 @@ from collections import deque
 from pygame.locals import *
 from operator import attrgetter
 
+# REQUIRED FOR DEPENDENCIES IN LOADING
 from World.WorldMap import GameWorld
 
 from ObjWrappers.ShipWrapper import ShipGUI
@@ -24,11 +25,12 @@ from ObjWrappers.NebulaWrapper import NebulaGUI
 from ObjWrappers.PlanetWrapper import PlanetGUI
 from ObjWrappers.AsteroidWrapper import AsteroidGUI
 from ObjWrappers.WeaponWrappers import TorpedoGUI
-from Game.KingOfTheBubble import Bubble, KingOfTheBubbleGame
+from Game.Utils import SpawnManager
 from GraphicsCache import Cache
-from World.WorldEntities import Ship, Planet, Asteroid, Torpedo, BlackHole, Nebula
+from World.WorldEntities import Ship, Planet, Asteroid, Torpedo, BlackHole, Nebula, Star, Dragon
 from Server.MWNL2 import getIPAddress
 from pymunk import Vec2d
+from Helpers import infofont
 from ThreadStuff.ThreadSafe import ThreadSafeDict
 import threading, thread, traceback
 from SoundCache import SCache
@@ -48,7 +50,7 @@ class MessageLogHandler(logging.Handler):
         if self.filter == None or (self.filter != None and str(record.message).find(self.filter) != -1):
             self.messages.append(record.message)
 
-def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=False, sound=False, testcase=None):    
+def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=False, sound=False, cfg=None, testcase=None):
     #region Initialization
     logging.info("Initiating PyGame...")
 
@@ -86,8 +88,7 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
     #region World Registration
     bgobjects = ThreadSafeDict() # items we want always in the background
     objects = ThreadSafeDict()
-    shipids = []
-    trackshipid = None
+    trackplayer = None
     def addorremove(obj, added):
         logging.debug("GUI: Add/Remove Obj %s (%s) [%d]", repr(obj), repr(added), thread.get_ident())
         try:
@@ -96,7 +97,6 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                 if isinstance(obj, Ship):
                     logging.debug("GUI: Adding Ship #%d", obj.id)
                     objects[obj.id] = ShipGUI(obj, world)
-                    shipids.append(obj.id)
                     logging.debug("GUI: Added Ship #%d", obj.id)
                 elif isinstance(obj, Nebula):
                     logging.debug("GUI: Adding Nebula #%d", obj.id)
@@ -117,7 +117,7 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                 else:
                     logging.debug("GUI: Adding %s #%d", repr(obj), obj.id)
                     objects[obj.id] = obj.WRAPPERCLASS(obj, world)
-                    logging.debug("GUI: Added %s %%d", repr(obj), obj.id)
+                    logging.debug("GUI: Added %s %d", repr(obj), obj.id)
                 #eif
             else:
                 if isinstance(obj, Ship):
@@ -212,6 +212,10 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
 
     #endregion
 
+    # Get spawnable items in alphabetical order
+    SPAWN_TYPES = SpawnManager.ENTITY_TYPES.keys()
+    SPAWN_TYPES.sort()
+
     while notexit or (testcase != None and not testcase.donetest):
         t = pygame.time.get_ticks() / 1000.0
 
@@ -242,16 +246,34 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                 obj._worldobj.player.sound = None
             if obj.dead:
                 del objects[obj._worldobj.id]
-                if isinstance(obj, ShipGUI):
-                    shipids.remove(obj._worldobj.id)
                             
         if flags["GAME"]:
-            game.gui_draw_game_world_info(worldsurface, flags)
+            game.gui_draw_game_world_info(worldsurface, flags, trackplayer)
 
         #region Key/Mouse Event Handling
         for event in pygame.event.get():
             if event.type == QUIT:
                 notexit = False
+            elif (event.type == KEYDOWN and event.key == K_a) or (event.type == MOUSEBUTTONDOWN and event.button in (4, 5)):
+                if mousemode == None or not mousemode.startswith("Add"):
+                    if event.type == KEYDOWN or event.button == 5:
+                        mousemode = "Add" + SPAWN_TYPES[0]
+                    else:
+                        mousemode = "Add" + SPAWN_TYPES[-1]
+                elif event.type == KEYDOWN or event.button == 5:
+                    x = SPAWN_TYPES.index(mousemode[3:])
+                    if x < len(SPAWN_TYPES) - 1:
+                        mousemode = "Add" + SPAWN_TYPES[x+1]
+                    elif event.type == MOUSEBUTTONDOWN:
+                        mousemode = "Add" + SPAWN_TYPES[0]
+                    else:
+                        mousemode = None
+                else:
+                    x = SPAWN_TYPES.index(mousemode[3:])
+                    if x > 0:
+                        mousemode = "Add" + SPAWN_TYPES[x-1]
+                    else:
+                        mousemode = "Add" + SPAWN_TYPES[-1]
             elif event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     pygame.event.post(pygame.event.Event(QUIT))
@@ -283,23 +305,35 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                     zoomout = not zoomout
                 elif event.key == K_m:
                     mouselock = not mouselock
-                elif event.key == K_PAGEUP and len(shipids) > 0:
-                    if trackshipid == None: 
-                        trackshipid = shipids[0]
+                elif event.key == K_PAGEUP and len(game.game_get_current_player_list()) > 0:
+                    if trackplayer == None:
+                        trackplayer = game.game_get_current_leader_list()[-1]
                     else:
-                        trackshipid = shipids[shipids.index(trackshipid) - 1]
-                elif event.key == K_PAGEDOWN and len(shipids) > 0:
-                    if trackshipid == None: 
-                        trackshipid = shipids[-1]
+                        lst = game.game_get_current_leader_list()
+                        for x in xrange(len(lst) - 1, -1, -1):
+                            if lst[x] == trackplayer:
+                                if x == 0:
+                                    x = len(lst)
+                                trackplayer = lst[x-1]
+                                break
+                elif event.key == K_PAGEDOWN and len(game.game_get_current_player_list()) > 0:
+                    if trackplayer == None: 
+                        trackplayer = game.game_get_current_leader_list()[0]
                     else:
-                        trackshipid = shipids[(shipids.index(trackshipid) + 1) % len(shipids)]
+                        lst = game.game_get_current_leader_list()
+                        for x in xrange(len(lst)):
+                            if lst[x] == trackplayer:
+                                if x == len(lst) - 1:
+                                    x = -1
+                                trackplayer = lst[x+1]
+                                break
                 elif event.key == K_END:
-                    trackshipid = None
+                    trackplayer = None
                     mlh.filter = None
                 elif event.key == K_y:
                     dynamiccamera = not dynamiccamera
                     if not dynamiccamera:
-                        trackshipid = None
+                        trackplayer = None
                 elif event.key == K_l:
                     logintercept = not logintercept
                     logger = logging.getLogger()
@@ -308,19 +342,6 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                     else:
                         logger.removeHandler(mlh)
                         mlh.messages.clear()
-                elif event.key == K_a:
-                    if mousemode not in ("AddAsteroid", "AddPlanet", "AddBlackHole", "AddNebula", "AddBubble"):
-                        mousemode = "AddAsteroid"
-                    elif mousemode == "AddAsteroid":
-                        mousemode = "AddPlanet"
-                    elif mousemode == "AddPlanet":
-                        mousemode = "AddBlackHole"
-                    elif mousemode == "AddBlackHole":
-                        mousemode = "AddNebula"
-                    elif mousemode == "AddNebula" and isinstance(game, KingOfTheBubbleGame):
-                        mousemode = "AddBubble"
-                    else:
-                        mousemode = None
                 elif event.key == K_k:
                     if mousemode == "Destroy":
                         mousemode = None
@@ -341,7 +362,7 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                         zoomout = True
                 elif event.key == K_r:
                     showroundtime = not showroundtime
-            elif event.type == MOUSEBUTTONDOWN:                
+            elif event.type == MOUSEBUTTONDOWN and event.button in (1, 2): #Left or Middle Click
                 if zoomout:
                     x = event.pos[0]*scalefactorx
                     y = event.pos[1]*scalefactory
@@ -349,12 +370,16 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                     x, y = event.pos[0]-offsetx, event.pos[1]-offsety
                 #print zoomout, x, y
 
-                if mousemode == "Move" and trackshipid != None:
-                    mousemode = None
+                if mousemode == "Move" and trackplayer != None:
+                    if event.button != 2:
+                        mousemode = None
                     zoomout = prevzoom
-                    objects[trackshipid]._worldobj.body.position = (x, y)
+                    obj = trackplayer.object
+                    if obj != None:
+                        obj.body.position = (x, y)
                 elif mousemode == "Destroy":
-                    mousemode = None                
+                    if event.button != 2:
+                        mousemode = None
                     v = Vec2d(x, y)
                     for lst in objects, bgobjects:
                         for obj in lst:
@@ -365,23 +390,13 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                                 world.remove(obj._worldobj)
                                 break
                 elif mousemode == "Explode":
-                    mousemode = None                
+                    if event.button != 2:
+                        mousemode = None
                     world.causeExplosion((x, y), 256, 1000)
-                elif mousemode == "AddAsteroid":
-                    mousemode = None
-                    world.append(Asteroid((x, y)))
-                elif mousemode == "AddPlanet":
-                    mousemode = None
-                    world.append(Planet((x, y)))
-                elif mousemode == "AddBlackHole":
-                    mousemode = None
-                    world.append(BlackHole((x, y)))
-                elif mousemode == "AddNebula":
-                    mousemode = None
-                    world.append(Nebula((x, y), (512, 128)))
-                elif mousemode == "AddBubble":
-                    mousemode = None
-                    game.addBubbles(world, 1, pos=(x, y))
+                elif mousemode != None and  mousemode.startswith("Add"):
+                    game.spawnmanager.spawn_entity(mousemode[3:], (x, y), False)
+                    if event.button != 2:
+                        mousemode = None
                 elif zoomout and event.button == 1:
                     # zoom in
                     zoomout = False
@@ -391,19 +406,23 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                 else:
                     # recenter on new click
                     offsetx, offsety = centerViewOnWorld((event.pos[0]*scalefactorx, event.pos[1]*scalefactory))
-                    
+            elif event.type == MOUSEBUTTONDOWN and event.button == 3: #Right Click
+                mousemode = None
         #endregion 
 
         # Tracks a ship on screen
-        if len(shipids) == 0 or trackshipid not in objects: 
-            trackshipid = None
+        if len(game.game_get_current_player_list()) == 0 or trackplayer not in game.game_get_current_leader_list():
+            trackplayer = None
         
-        if dynamiccamera:
-            trackshipid = game.game_get_current_leader_list()[0].id
+        if dynamiccamera and len(game.game_get_current_leader_list()) > 0:
+            trackplayer = game.game_get_current_leader_list()[0]
             
-        if trackshipid != None:
-            mlh.filter = "#" + repr(trackshipid)
-            offsetx, offsety = centerViewOnWorld(objects[trackshipid]._worldobj.body.position)
+        
+        if trackplayer != None:
+            obj = trackplayer.object
+            if obj != None:
+                mlh.filter = "#" + repr(obj.id)
+                offsetx, offsety = centerViewOnWorld(obj.body.position)
 
         # Pans world with mouse
         if not mouselock:
@@ -447,7 +466,10 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
         if showplayerlist > 0:
             x = 0
             for i in game.gui_get_player_stats(all=(showplayerlist == 1)):
-                windowSurface.blit(font.render(i, False, (192, 192, 192)), (resolution[0]-300, 64 + 12*x))
+                c = (192, 192, 192)
+                if trackplayer != None and trackplayer.name in i:
+                    c = trackplayer.color
+                windowSurface.blit(font.render(i, False, c), (resolution[0]-300, 64 + 12*x))
                 x += 1
             if showplayerlist == 1:
                 windowSurface.blit(font.render(repr(x) + " Players Connected", False, (192, 192, 192)), (resolution[0]-300, 64 + 12 * x))
@@ -471,12 +493,21 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
             windowSurface.blit(font.render("T: " + repr(len(threading.enumerate())), False, (192, 192, 192)), (0, 12))
             windowSurface.blit(font.render("World Offset: " + repr((-offsetx, -offsety)), False, (255, 255, 255)), (0,24))
             windowSurface.blit(font.render("World Size: " + repr(world.size) + " - " + repr((int(x), int(y))), False, (255, 255, 255)), (0,36))
-            windowSurface.blit(font.render("World Objects: " + repr(len(world)), False, (255, 255, 255)), (0,48))
+            windowSurface.blit(font.render("World Objects: " + repr(len(world)), False, (255, 255, 255)), (0,48))            
             
             if mouselock:
-                windowSurface.blit(font.render("MOUSELOCK: ON", False, (255, 255, 255)), (resolution[0]-104,0))
+                windowSurface.blit(font.render("MOUSELOCK: ON", False, (255, 255, 255)), (resolution[0]-114,0))
             else:
-                windowSurface.blit(font.render("MOUSELOCK: OFF", False, (255, 255, 255)), (resolution[0]-104,0))
+                windowSurface.blit(font.render("MOUSELOCK: OFF", False, (255, 255, 255)), (resolution[0]-114,0))
+            if "-" in windowcaption:
+                text = font.render(windowcaption.split("-")[1], False, (192, 192, 192))
+                windowSurface.blit(text, (resolution[0]-text.get_width()-2, 12))
+                text = font.render(windowcaption.split("-")[0][18:-1], False, (192, 192, 192))
+                windowSurface.blit(text, (resolution[0]-text.get_width()-2, 24))
+            else:
+                text = font.render(windowcaption[18:], False, (192, 192, 192))
+                windowSurface.blit(text, (resolution[0]-text.get_width()-2, 24))
+
             windowSurface.blit(font.render(repr(flags), False, (255, 255, 255)), (0, resolution[1]-12))            
 
             if logintercept:
@@ -485,17 +516,60 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
                     c = 145 + i*2
                     windowSurface.blit(font.render(mlh.messages[i], False, (c, c, c)), (10, 64 + 12*i))
 
-            if trackshipid == None:
+            if trackplayer == None:
                 windowSurface.blit(font.render("Tracking Off", False, (255, 255, 255)), (resolution[0]/2-36,resolution[1]-12))
 
+        if trackplayer != None:
+            to = trackplayer.object
+            if to != None and objects.has_key(to.id):
+                # if we're tracking a ship, let's print some useful info about it.
+                #windowSurface.blit(font.render(trackplayer.name, False, trackplayer.color), (resolution[0] - 200, resolution[1] - 120))
+                windowSurface.fill((128, 128, 128), Rect(resolution[0] - 310, resolution[1] - 120, 300, 110), pygame.BLEND_ADD)
+                pygame.draw.rect(windowSurface, (192, 192, 192, 128), Rect(resolution[0] - 310, resolution[1] - 120, 300, 110), 1)
+                objects[to.id].draw(windowSurface, 
+                                                    {"DEBUG":False,
+                                                        "STATS":False,
+                                                        "NAMES":True,
+                                                        "GAME":False}, Vec2d(resolution[0] - 250, resolution[1] - 64))
+                windowSurface.blit(font.render("%d" % to.body.velocity.length, False, (255, 255, 255)), (resolution[0] - 298, resolution[1] - 86))
+
+                netenergy = 4
+                x = 0
+                for cmd in to.commandQueue:
+                    netenergy -= cmd.energycost
+                    windowSurface.blit(font.render("%.1f (%s" % (cmd.energycost, repr(cmd)[14:]), False, trackplayer.color), (resolution[0] - 300, resolution[1] - 28 - x * 12))
+                    x += 1
+                x = "+"
+                if netenergy < 0:
+                    x = "-"
+                #windowSurface.blit(infofont().render("Energy %d  %s%.1f" % (to.energy.value, x, netenergy), False, trackplayer.color), (resolution[0] - 190, resolution[1] - 110))
+
+                # Energy Bar
+                windowSurface.fill((0, 64, 0), Rect(resolution[0] - 190, resolution[1] - 114, 170, 18))
+                windowSurface.blit(pygame.transform.scale(Cache().getImage("HUD/Energy"), (166, 14)), (resolution[0] - 188, resolution[1] - 112), pygame.Rect(0, 0, 166 * to.energy.percent, 14))
+                windowSurface.blit(infofont().render("%d %s%.1f" % (to.energy.value, x, netenergy), False, (255, 255, 255)), (resolution[0] - 180, resolution[1] - 112))
+
+                # Shield Bar
+                windowSurface.fill((0, 0, 96), Rect(resolution[0] - 190, resolution[1] - 94, 170, 8))
+                windowSurface.blit(pygame.transform.scale(Cache().getImage("HUD/Shield"), (166, 14)), (resolution[0] - 188, resolution[1] - 93), pygame.Rect(0, 0, 166 * to.shield.percent, 6))
+                windowSurface.blit(font.render(repr(int(100 * to.shield.percent)), False, (255, 255, 255)), (resolution[0] - 178, resolution[1] - 95))
+
+                # Health Bar
+                windowSurface.fill((64, 0, 0), Rect(resolution[0] - 190, resolution[1] - 84, 170, 16))
+                windowSurface.blit(pygame.transform.scale(Cache().getImage("HUD/Health"), (166, 14)), (resolution[0] - 188, resolution[1] - 82), pygame.Rect(0, 0, 166 * to.health.percent, 12))
+                windowSurface.blit(infofont().render(repr(int(100 * to.health.percent)), False, (255, 255, 255)), (resolution[0] - 180, resolution[1] - 83))
+
+                if trackplayer.lastkilledby != None:
+                    windowSurface.blit(font.render("LD: " + trackplayer.lastkilledby, False, (255, 255, 255)), (resolution[0] - 298, resolution[1] - 118))
+
         if flags["GAME"]:
-            game.gui_draw_game_screen_info(windowSurface, flags)
+            game.gui_draw_game_screen_info(windowSurface, flags, trackplayer)
 
         if tournamentinfo:
-            game.gui_draw_tournament_bracket(windowSurface, flags)
+            game.gui_draw_tournament_bracket(windowSurface, flags, trackplayer)
 
-        if trackshipid != None:
-            n = font.render("Tracking: " + objects[trackshipid]._worldobj.player.name, False, objects[trackshipid]._worldobj.player.color)
+        if trackplayer != None:
+            n = font.render("Tracking: " + trackplayer.name, False, trackplayer.color)
             windowSurface.blit(n, (resolution[0]/2-n.get_width()/2,resolution[1]-12))                          
 
         if mousemode == "Destroy":
@@ -505,14 +579,25 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, showstats=F
             ip = bigfont.render("CLICK TO CAUSE EXPLOSION FORCE", False, (255, 0, 0))
             windowSurface.blit(ip, (resolution[0]/2-ip.get_width()/2, resolution[1]/2-ip.get_height()/2))
         elif mousemode != None and mousemode[:3] == "Add":
-            ip = bigfont.render("Click to Add " + mousemode[3:], False, (255, 255, 0))
-            windowSurface.blit(ip, (resolution[0]/2-ip.get_width()/2, resolution[1]/2-ip.get_height()/2))        
+            x = SPAWN_TYPES.index(mousemode[3:])
+            for i in xrange(x - 1, -1, -1):
+                c = max(0, 128 + (i - x) * 16)
+                ip = bigfont.render(SPAWN_TYPES[i], False, (c, c, c))
+                windowSurface.blit(ip, (resolution[0]/2 + 35, resolution[1]/2-24-((i - x) * -36)))
 
-        if mousemode == "Move" and trackshipid == None:
+            ip = bigfont.render("Click to Add " + mousemode[3:], False, (255, 255, 0))
+            windowSurface.blit(ip, (resolution[0]/2-240, resolution[1]/2-ip.get_height()/2))
+
+            for i in xrange(x + 1, len(SPAWN_TYPES)):
+                c = max(0, 128 - (i - x - 1) * 16)
+                ip = bigfont.render(SPAWN_TYPES[i], False, (c, c, c))
+                windowSurface.blit(ip, (resolution[0]/2 + 35, resolution[1]/2+18+((i - x - 1) * 36)))
+
+        if mousemode == "Move" and trackplayer == None:
             ip = bigfont.render("TRACK OBJECT BEFORE MOVING", False, (255, 255, 255))
             windowSurface.blit(ip, (resolution[0]/2-ip.get_width()/2, resolution[1]/2-ip.get_height()/2))
         elif mousemode == "Move":
-            ip = bigfont.render("CLICK TO MOVE "+objects[trackshipid]._worldobj.player.name, False, (255, 255, 255))
+            ip = bigfont.render("CLICK TO MOVE "+trackplayer.name, False, (255, 255, 255))
             windowSurface.blit(ip, (resolution[0]/2-ip.get_width()/2, resolution[1]/2-ip.get_height()/2))        
 
         pygame.display.update()

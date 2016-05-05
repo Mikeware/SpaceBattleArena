@@ -5,6 +5,8 @@ package ihs.apcs.spacebattle.commands;
  *   has the effect of clearing all lines you have drawn.
  * @author Brett Wortzman
  *
+ * @since 0.1
+ * @version 1.1
  */
 public class DestroyAllLaserBeaconsCommand extends ShipCommand {
 
@@ -19,8 +21,8 @@ public class DestroyAllLaserBeaconsCommand extends ShipCommand {
 	/**
 	 * Destroy Laser Beacons execute immediately.
 	 * 
-	 * @since 2.0
-	 * @return
+	 * @since 1.1
+	 * @return true
 	 */
 	public static boolean executesImmediately() { return true; }
 }

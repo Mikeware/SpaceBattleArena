@@ -15,6 +15,7 @@ class Player(object):
         self.bestscore = 0
         self.deaths = 0
         self.disconnected = False
+        self.lastkilledby = None
 
 #TODO: Put alliegiences in here?
 

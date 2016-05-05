@@ -135,11 +135,27 @@ class WorldServer(object):
                 elif len(cmd[1]) == 1:
                     scmd = ConvertNetworkMessageToCommand(ship, cmd[1][0], {})
 
+                # see if game can process this message if we didn't convert it above
+                if scmd == None:
+                    if len(cmd[1]) == 2:
+                        scmd = self.__game.server_process_network_message(ship, cmd[1][0], cmd[1][1])
+                    elif len(cmd[1]) == 1:
+                        scmd = self.__game.server_process_network_message(ship, cmd[1][0])
+
+                # see if the game wants to block a regular command or possibly do something with it
+
+                if scmd != None and not isinstance(scmd, str):
+                    scmd = self.__game.server_process_command(ship, scmd)
+
+                # if we have a string then we have an error
                 if scmd == None or isinstance(scmd, str):
-                    # TODO: Insert Game Hook Here?
+                    if scmd == None:
+                        scmd = "Command " + repr(cmd[1][0]) + " Not Found"
+
                     logging.error("Bad Command #%d: %s", ship.id, repr(scmd))
                     self.sendErrorMessage(cmd[1], "Invalid Ship Command: " + repr(scmd), sender)
                     scmd = None
+                # server config hard-disabled this type of message
                 elif self.__badcmds != None and scmd.__class__.__name__ in self.__badcmds:
                     self.sendErrorMessage(cmd[1], "Ship Command Has Been Disabled: " + repr(scmd), sender)
                     scmd = None

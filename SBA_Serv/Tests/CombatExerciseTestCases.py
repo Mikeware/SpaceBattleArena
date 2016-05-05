@@ -67,6 +67,8 @@ class CombatExerciseTestCases(SBAGUITestCase):
 
         self.assertGreaterEqual(self.ship.player.score, 2, "Ship didn't gain 2 points")
 
+        self.assertEqual(self.ship2.player.deaths, 1, "Target Ship didn't get marked as dead")
+
 class CombatExerciseTournamentTestCases(SBAGUITestCase):
     """
     Test cases for Combat Exercise basic game w/ tournamnet.
@@ -129,8 +131,8 @@ class CombatExerciseTournamentTestCases(SBAGUITestCase):
 
         self.assertEqual(len(self.game.world), 0, "Ships still in world after round ended")
 
-        self.assertNotEqual(len(self.game._tournamentfinalgroup), 0, "Ship not added to final group")
-        self.assertIn(ship.player, self.game._tournamentfinalgroup, "Correct player not added to final group")
+        self.assertNotEqual(len(self.game._tmanager._finalgroup), 0, "Ship not added to final group")
+        self.assertIn(ship.player, self.game._tmanager._finalgroup, "Correct player not added to final group")
 
 
 if __name__ == "__main__":

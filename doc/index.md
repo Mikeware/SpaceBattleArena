@@ -33,10 +33,18 @@ Documentation
     * [jGRASP](client/jGRASP/index.html)
     * [Eclipse](client/Eclipse/index.html)
     * [BlueJ](client/BlueJ/index.html)    
+* [Guides](client/guides/index.html)
+    * [Coordinates](client/guides/space.html)
+    * [Maneuvering](client/guides/maneuvering.html)
+    * [Your Ship](client/guides/ship.html)
+    * [Ship Commands](client/guides/commands.html)
+    * [Celestial Objects](client/guides/objects.html)
+    * [Ship Image Index](https://github.com/Mikeware/SpaceBattleArena/tree/master/SBA_Serv/GUI/Graphics/Ships)
 * [Server Information](server/index.html)
     * [Server Setup](server/setup.html)
     * [Server Config](server/config.html)
     * [Server Usage/Shortcuts](server/usage.html)
+    * [Tournaments](server/tournaments.html)
 * [Lessons](lessons/index.html)
     * 00 - [Intro and Setup](lessons/intro.html)
     * 01 - [Find the Middle](lessons/findthemiddle.html)
@@ -44,13 +52,6 @@ Documentation
     * 03 - [Intro to Radar](lessons/radar.html)
     * 04 - Finite State Machines
     * 05 - Competitions
-* Guides
-    * Physics
-    * Objects
-    * Coding Paradigm
-    * Your Ship's 'Computer'
-    * Commands
-    * [Ship Image Index](https://github.com/Mikeware/SpaceBattleArena/tree/master/SBA_Serv/GUI/Graphics/Ships)
 * [Competitions](games/index.html)
     * ['Basic' Games](games/basic.html)
         * [Find The Middle](games/findthemiddle.html)
@@ -61,6 +62,7 @@ Documentation
     * [Bauble Hunt](games/baublehunt.html)
     * [King of the Bubble](games/kingofthebubble.html)
         * [King of Space (Variant)](games/kingofthebubble.html#kos)
+    * [Discovery Quest](games/discoveryquest.html)
 * External Resources
     * [YouTube Playlist](https://www.youtube.com/playlist?list=PL1DMX9HzuNPTiYpd1KslkAAsSY1yMrEgh) - Past Competitions
     * [You Have Died of Dysentery: Games in Education Are Still Alive - PAXDev 2014](http://www.mikeware.com/2014/08/you-have-died-of-dysentery-games-in-education-are-still-alive/)

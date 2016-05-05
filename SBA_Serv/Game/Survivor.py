@@ -12,12 +12,11 @@ You should have received a copy of the GNU General Public License along with thi
 The full text of the license is available online: http://opensource.org/licenses/GPL-2.0
 """
 
-from Game import BasicGame, RoundTimer
-from World.WorldGenerator import ConfiguredWorld, getPositionAwayFromOtherObjects
+from Game import BasicGame
 from World.Entities import Entity
 from World.WorldEntities import Ship
 from GUI.ObjWrappers.GUIEntity import GUIEntity
-from World.WorldMath import intpos, friendly_type, PlayerStat, in_circle
+from World.WorldMath import intpos, friendly_type, PlayerStat, in_circle, getPositionAwayFromOtherObjects
 from GUI.GraphicsCache import Cache
 from GUI.Helpers import debugfont, wrapcircle, namefont
 import logging, random

@@ -9,6 +9,8 @@ package ihs.apcs.spacebattle.commands;
  *   beacons directly.
  * @author Brett Wortzman
  *
+ * @since 0.1
+ * @version 1.1
  */
 public class DeployLaserBeaconCommand extends ShipCommand {
 
@@ -24,8 +26,8 @@ public class DeployLaserBeaconCommand extends ShipCommand {
 	/**
 	 * Deploy Laser Beacons executes immediately.
 	 * 
-	 * @since 2.0
-	 * @return
+	 * @since 1.1
+	 * @return true
 	 */
 	public static boolean executesImmediately() { return true; }
 }

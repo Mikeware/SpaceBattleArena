@@ -12,12 +12,12 @@ class AIShip(Ship):
     NetIDs = -3 # ID Should be -3 or less, auto-assign (unused by network engine)
 
     def __init__(self, name, pos, game, callback, color=(64, 64, 64), image=8):
+        self._callback = callback
         super(AIShip, self).__init__(pos, game.world)
         game.server_register_player("* "+name+str(AIShip.NetIDs)+" *", color, image, AIShip.NetIDs, self)
         AIShip.NetIDs -= 1
         self._name = name
         self.rotationAngle = 0
-        self._callback = callback
 
     def ship_added(self):
         """
@@ -33,13 +33,13 @@ class AIShip(Ship):
 
 
 class AIShip_SetList(AIShip):
-    def __init__(self, name, pos, world, cmdlist, color=(64, 64, 64), image=8):
+    def __init__(self, name, pos, game, cmdlist, color=(64, 64, 64), image=8):
         """
         Note cmdlist should be in list of string form, not objects directly
             pass 'self' as ship
         """
         self.cmdlist = cmdlist
-        super(AIShip_SetList, self).__init__(name, pos, world, self.__callback, color, image)
+        super(AIShip_SetList, self).__init__(name, pos, game, self.__callback, color, image)
 
     def ship_added(self):
         self.__callback() # queue up first command when added to world
@@ -59,11 +59,11 @@ class AIShip_SetList(AIShip):
 
 
 class AIShip_SetListLoop(AIShip_SetList): # Need to use string and eval to reinitialize commands for current states?    
-    def __init__(self, name, pos, world, cmdlist, numtimes = 0, color=(64, 64, 64), image=8):
+    def __init__(self, name, pos, game, cmdlist, numtimes = 0, color=(64, 64, 64), image=8):
         self.current = 0
         self.loop = 0
         self.max_loop = numtimes
-        return super(AIShip_SetListLoop, self).__init__(name, pos, world, cmdlist, color, image)
+        return super(AIShip_SetListLoop, self).__init__(name, pos, game, cmdlist, color, image)
 
     def get_next_command(self):
         cmd = eval(self.cmdlist[self.current])

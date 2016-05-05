@@ -23,8 +23,12 @@ from Game.CombatExercise import CombatExerciseGame
 from Game.FindTheMiddle import FindTheMiddleGame
 from Game.Survivor import SurvivorGame
 
+from Game.HungryHungryBaubles import HungryHungryBaublesGame
+from Game.BaubleHunt import BaubleHuntGame
+from Game.KingOfTheBubble import KingOfTheBubbleGame
+from Game.DiscoveryQuest import DiscoveryQuestGame
+
 from ConfigParser import ConfigParser
-from World.WorldGenerator import ConfiguredWorld
 import Server.WorldServer as WorldServer
 
 import thread
@@ -35,8 +39,14 @@ import time
 
 class TestGame(BasicGame):
 
-    def world_create(self, pys = True):
-        return self._testcase.world_create(ConfiguredWorld(self, self.cfg, pys, empty=True))
+    def world_create(self):
+        """
+        Method called by game to construct world, by default calls the testcase's world_create with an empty configured world.
+
+        If they pass None, then will use the game's default world construction.
+        """
+        super(TestGame, self).world_create()
+        self._testcase.world_create(self)        
 
 #TODO: Investigate the best way to inject this wrapper around any Subgame
 class TestBasicGame(TestGame):
@@ -50,11 +60,6 @@ class TestFindTheMiddleGame(TestGame, FindTheMiddleGame):
         self._testcase = testcase
 
         super(TestFindTheMiddleGame, self).__init__(cfg)
-
-    def world_create(self, pys = True):
-        world = super(TestFindTheMiddleGame, self).world_create(pys)
-        self.midpoint = (int(world.width / 2), int(world.height / 2))
-        return world
 
 class TestAsteroidMinerGame(TestGame, AsteroidMinerGame):
     def __init__(self, cfg, testcase):
@@ -74,29 +79,64 @@ class TestSurvivorGame(TestGame, SurvivorGame):
 
         super(TestSurvivorGame, self).__init__(cfg)
 
+class TestHungryHungryBaublesGame(TestGame, HungryHungryBaublesGame):
+    def __init__(self, cfg, testcase):
+        self._testcase = testcase
+
+        super(TestHungryHungryBaublesGame, self).__init__(cfg)
+
+class TestBaubleHuntGame(TestGame, BaubleHuntGame):
+    def __init__(self, cfg, testcase):
+        self._testcase = testcase
+
+        super(TestBaubleHuntGame, self).__init__(cfg)
+
+class TestKingOfTheBubbleGame(TestGame, KingOfTheBubbleGame):
+    def __init__(self, cfg, testcase):
+        self._testcase = testcase
+
+        super(TestKingOfTheBubbleGame, self).__init__(cfg)
+
+class TestDiscoveryQuestGame(TestGame, DiscoveryQuestGame):
+    def __init__(self, cfg, testcase):
+        self._testcase = testcase
+
+        super(TestDiscoveryQuestGame, self).__init__(cfg)
+
 class SBAWorldTestCase(unittest.TestCase):
     """
     Base Test Case which sets up a blank world and game for testing without the server or UI.
     """
     def setUp(self):
-        classname = str(self.__class__)        
-        classname = classname[classname.find(".")+1:-2]
-        print classname
-        with open("SBA_Test_"+classname+"_"+self._testMethodName+".log", "w") as file:
+        try:
+            import coverage
+            coverage.process_startup()
+        except ImportError, EnvironmentError:
             pass
-        logging.basicConfig(level=logging.DEBUG, filename="SBA_Test_"+classname+"_"+self._testMethodName+".log", format='%(asctime)s|%(relativeCreated)d|%(levelname)s|%(threadName)s|%(module)s|%(lineno)d|%(funcName)s|%(message)s')
-        logging.info("Running Test: %s", self._testMethodName)
 
-        self.cfg = ConfigParser()
-        self.cfg.readfp(open("Tests/defaulttest.cfg"))
-        configs = self.get_config_filename()
-        if configs != None:
-            if isinstance(configs, str):
-                configs = [configs]
-            for config in configs:
-                self.cfg.readfp(open("Tests/"+config))
-        self.game = globals()["Test"+self.cfg.get("Game", "game")+"Game"](self.cfg, self)
-        logging.info("Using Game %s", repr(self.game))
+        try:
+            classname = str(self.__class__)        
+            classname = classname[classname.find(".")+1:-2]
+            print classname
+            with open("SBA_Test_"+classname+"_"+self._testMethodName+".log", "w") as file:
+                pass
+            logging.basicConfig(level=logging.DEBUG, filename="SBA_Test_"+classname+"_"+self._testMethodName+".log", format='%(asctime)s|%(relativeCreated)d|%(levelname)s|%(threadName)s|%(module)s|%(lineno)d|%(funcName)s|%(message)s')
+            logging.info("Running Test: %s", self._testMethodName)
+
+            self.cfg = ConfigParser()
+            self.cfg.readfp(open("Tests/defaulttest.cfg"))
+            configs = self.get_config_filename()
+            if configs != None:
+                if isinstance(configs, str):
+                    configs = [configs]
+                for config in configs:
+                    self.cfg.readfp(open("Tests/"+config))
+            self.game = globals()["Test"+self.cfg.get("Game", "game")+"Game"](self.cfg, self)
+            logging.info("Using Game %s", repr(self.game))
+        except:
+            logging.error(traceback.format_exc())
+            print traceback.format_exc()
+            self.fail()
 
     def tearDown(self):
         self.assertFalse(self.game.world.gameerror, "Gameloop Exception Occured")
@@ -110,11 +150,18 @@ class SBAWorldTestCase(unittest.TestCase):
     def get_config_filename(self):
         return None
 
-    def world_create(self, world):
+    def world_create(self, game):
         """
-        Test Case should override this method to generate a world for their test.
+        Test Case should override this method to generate the base world for their test cases.
+        Called by 'TestGame'
+
+        pys - main world instance or not
+
+        Return None to return to the game's default generation methods.
+
+        The default return is an empty 'ConfiguredWorld'.
         """
-        return world
+        pass
 
 class SBAServerTestCase(SBAWorldTestCase):
     """
@@ -147,16 +194,20 @@ class SBAGUITestCase(SBAWorldTestCase):
     """
     Test Case with GUI hook for visualization
     """
-    def setUp(self):
+    def setUp(self):        
         super(SBAGUITestCase, self).setUp()
 
         self.donetest = False
 
         # TODO: Investigate doing this statically, so it remains open for multiple tests in a suite???
         # Start GUI in separate Thread, so test can run
-        thread.start_new_thread(main.startGame, ("Space Battle Tests - " + self._testMethodName, self.game, False, (self.cfg.getint("Application", "horz_res"), self.cfg.getint("Application", "vert_res")), self.cfg.getboolean("Application", "showstats"), self.cfg.getboolean("Application", "sound"), self))
+        thread.start_new_thread(main.startGame, ("Space Battle Tests - " + self._testMethodName, self.game, False, (self.cfg.getint("Application", "horz_res"), self.cfg.getint("Application", "vert_res")), self.cfg.getboolean("Application", "showstats"), self.cfg.getboolean("Application", "sound"), self.cfg, self))
 
     def tearDown(self):
+        self._resultForDoCleanups.printErrors()
+
+        logging.error(self._resultForDoCleanups.errors)
+
         self.donetest = True
 
         time.sleep(1)

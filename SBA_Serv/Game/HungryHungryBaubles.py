@@ -12,12 +12,12 @@ You should have received a copy of the GNU General Public License along with thi
 The full text of the license is available online: http://opensource.org/licenses/GPL-2.0
 """
 
-from Game import BasicGame, RoundTimer
-from World.WorldGenerator import ConfiguredWorld, getPositionAwayFromOtherObjects
+from Game import BasicGame
+from Utils import CallbackTimer
 from World.Entities import PhysicalRound, Entity
 from World.WorldEntities import Ship
 from GUI.ObjWrappers.GUIEntity import GUIEntity
-from World.WorldMath import intpos, friendly_type, PlayerStat
+from World.WorldMath import intpos, friendly_type, PlayerStat, aligninstances, getPositionAwayFromOtherObjects
 from GUI.GraphicsCache import Cache
 from GUI.Helpers import debugfont
 import logging
@@ -35,86 +35,60 @@ class HungryHungryBaublesGame(BasicGame):
 
         super(HungryHungryBaublesGame, self).__init__(cfgobj)
 
-    def world_create(self, pys=True):
-        w = ConfiguredWorld(self, self.cfg, pys)
-        
-        # Add some initial small Baubles
-        self.__addBaubles(w, self.cfg.getint("HungryHungryBaubles", "bauble_initial"))
-
-        return w
-
     def game_get_info(self):
         return {"GAMENAME": "HungryHungryBaubles"}
 
     def player_added(self, player, reason):
         if reason == BasicGame._ADD_REASON_START_:
-            self.__addBauble(player)
-            self.__addBaubles(self.world, self.cfg.getint("HungryHungryBaubles", "bauble_per_player"))
+            self.__addBauble(player) # Add Home Base
 
         super(HungryHungryBaublesGame, self).player_added(player, reason)
 
     def __addBauble(self, player, force=False):
         logging.info("Add Bauble (%s) for Player %d", repr(force), player.netid)
         # add player bauble
-        b = Bauble(getPositionAwayFromOtherObjects(self.world, 80, 30, force), self.__points_gold)
+        b = Bauble(getPositionAwayFromOtherObjects(self.world, self.cfg.getint("Bauble", "buffer_object"), self.cfg.getint("Bauble", "buffer_edge"), force), self.__points_gold)
 
         self.__baubles[player.netid] = b
 
         self.world.append(b)
         logging.info("Done Adding Bauble")
 
-    def __addBaubles(self, w, num, force=False):
-        logging.info("Adding %d Baubles (%s)", num, repr(force))
-        for i in xrange(num):
-            w.append(Bauble(getPositionAwayFromOtherObjects(w, 100, 30, force), self.__points_blue))
-        logging.info("Done Adding Baubles")
+    def world_physics_pre_collision(self, obj1, obj2):
+        ship, bauble = aligninstances(obj1, obj2, Ship, Bauble)
 
-    def world_physics_pre_collision(self, shapes):
-        types = []
-        objs = []
-        for shape in shapes:
-            objs.append(self.world[shape.id])
-            types.append(friendly_type(objs[-1]))
-        
-        if "Ship" in types and "Bauble" in types:
-            b = []
-            ship = None
-            for i in xrange(len(objs)-1, -1, -1):
-                if isinstance(objs[i], Bauble):
-                    b.append(objs[i])
-                    del objs[i]
-                elif isinstance(objs[i], Ship):
-                    ship = objs[i]
+        if ship != None:
+            return [ False, [self.collectBaubles, ship, bauble] ]
 
-            return [ False, [ [self.collectBaubles, ship, b] ] ]
+        return super(HungryHungryBaublesGame, self).world_physics_pre_collision(obj1, obj2)
 
-    def collectBaubles(self, ship, para):
+    def collectBaubles(self, ship, bauble):
         logging.info("Collected Baubles Ship #%d", ship.id)
-        for bauble in para[0]:
-            # collect own Bauble?
-            if bauble == self.__baubles[ship.player.netid]:
-                logging.info("Collected Own Bauble #%d", ship.id)
-                self.player_update_score(ship.player, self.__points_extra)
-
-                # add new bauble
-                self.__addBauble(ship.player, True)
-            elif bauble in self.__baubles.values():
-                logging.info("Collected Gold Bauble #%d", ship.id)
-                # someone else's bauble
-                for key, value in self.__baubles.iteritems():
-                    if self._players.has_key(key) and value == bauble:
-                        self.__addBauble(self._players[key], True)
-                    elif value == bauble:
-                        # Gold Bauble no longer owned, add back a regular one
-                        self.__addBaubles(self.world, 1, True)
-                    #eif
-            else:
-                logging.info("Collected Regular Bauble #%d", ship.id)
-                self.__addBaubles(self.world, 1, True)
-            #eif
-            self.player_update_score(ship.player, bauble.value)
-            bauble.destroyed = True
-            self.world.remove(bauble)
+        # collect own Bauble?
+        if bauble == self.__baubles[ship.player.netid]:
+            logging.info("Collected Own Bauble #%d", ship.id)
+            self.player_update_score(ship.player, self.__points_extra)
+            ship.player.sound = "COLLECT"
+            # add new bauble
+            self.__addBauble(ship.player, True)
+        elif bauble in self.__baubles.values():
+            logging.info("Collected Gold Bauble #%d", ship.id)
+            # someone else's bauble
+            for key, value in self.__baubles.iteritems():
+                if self._players.has_key(key) and value == bauble:
+                    self.__addBauble(self._players[key], True)
+                elif value == bauble:
+                    # Gold Bauble no longer owned, add back a regular one
+                    Bauble.spawn(self.world, self.cfg)
+                #eif
+            ship.player.sound = "BAUBLE"
+        else:
+            logging.info("Collected Regular Bauble #%d", ship.id)
+            ship.player.sound = "BAUBLE"
+            Bauble.spawn(self.world, self.cfg)
+        #eif
+        self.player_update_score(ship.player, bauble.value)
+        bauble.destroyed = True
 
         logging.info("Done Collecting Baubles #%d", ship.id)
 
@@ -124,32 +98,12 @@ class HungryHungryBaublesGame(BasicGame):
 
         return env
 
-    def round_over(self):
-        self.__btimer.cancel() # prevent more baubles from being spawned!
-
-        super(HungryHungryBaublesGame, self).round_over()
-
-    def gui_draw_game_world_info(self, surface, flags):
+    def gui_draw_game_world_info(self, surface, flags, trackplayer):
         for player in self.game_get_current_player_list():
-            if player.object != None and self.__baubles.has_key(player.netid):
+            obj = player.object
+            if obj != None and self.__baubles.has_key(player.netid):
                 # draw line between player and Bauble
-                pygame.draw.line(surface, player.color, intpos(player.object.body.position), intpos(self.__baubles[player.netid].body.position))
-
-    def round_start(self):
-        super(HungryHungryBaublesGame, self).round_start()
-
-        # start Bauble Spawn Timer
-        self.newBaubleTimer()    
-        
-    def newBaubleTimer(self):
-        self.__btimer = RoundTimer(self.cfg.getint("HungryHungryBaubles", "bauble_timer"), self.spawnBauble)
-        self.__btimer.start()
-
-    def spawnBauble(self):
-        self.__addBaubles(self.world, self.cfg.getint("HungryHungryBaubles", "bauble_timer_spawns"))
-        
-        self.newBaubleTimer()
-
+                pygame.draw.line(surface, player.color, intpos(obj.body.position), intpos(self.__baubles[player.netid].body.position))
 
 class BaubleWrapper(GUIEntity):
     def __init__(self, obj, world):
@@ -176,5 +130,16 @@ class Bauble(PhysicalRound):
 
         self.value = value
 
-    def getExtraInfo(self, objData):
+    def collide_start(self, otherobj):
+        return False
+
+    def getExtraInfo(self, objData, player):
         objData["VALUE"] = self.value
+
+    @staticmethod
+    def spawn(world, cfg, pos=None):
+        if pos == None:
+            pos = getPositionAwayFromOtherObjects(world, cfg.getint("Bauble", "buffer_object"), cfg.getint("Bauble", "buffer_edge"))
+        b = Bauble(pos, cfg.getint("HungryHungryBaubles", "bauble_points_blue"))
+        world.append(b)
+        return b

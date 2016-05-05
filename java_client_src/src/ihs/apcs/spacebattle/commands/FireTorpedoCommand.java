@@ -5,6 +5,8 @@ package ihs.apcs.spacebattle.commands;
  *   back of a ship.
  * @author Brett Wortzman
  *
+ * @since 0.9
+ * @version 1.1
  */
 public class FireTorpedoCommand extends ShipCommand {
 	@SuppressWarnings("unused")
@@ -33,8 +35,8 @@ public class FireTorpedoCommand extends ShipCommand {
 	/**
 	 * Fire Torpedo executes immediately.
 	 * 
-	 * @since 2.0
-	 * @return
+	 * @since 1.1
+	 * @return true
 	 */
 	public static boolean executesImmediately() { return true; }
 }

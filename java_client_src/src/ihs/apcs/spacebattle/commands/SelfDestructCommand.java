@@ -7,6 +7,8 @@ package ihs.apcs.spacebattle.commands;
  *          client and interpreted as a request to disconnect rather than send a new command.</i>
  * @author Brett Wortzman
  *
+ * @since 0.1
+ * @version 0.1
  */
 public class SelfDestructCommand extends ShipCommand {
 	

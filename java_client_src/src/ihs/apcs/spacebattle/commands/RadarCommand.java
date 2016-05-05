@@ -9,7 +9,7 @@ package ihs.apcs.spacebattle.commands;
  * There are five levels of radar sweep that can be performed.  Higher levels
  * provide more information about objects in range, but also require more time.  
  * The levels are as follows:
- * <table border="1">
+ * <table border="1" summary="Table of Radar Levels and Behavior">
  * <tr><th>Level</th><th>Duration</th><th>Information Gathered</th></tr>
  * <tr><td>1</td><td>0.03 s</td><td>None (number of objects only)</td></tr>
  * <tr><td>2</td><td>0.10 s</td><td>ID# and position</td></tr>
@@ -19,6 +19,8 @@ package ihs.apcs.spacebattle.commands;
  * </table>
  *
  * @author Brett Wortzman
+ * @since 0.1
+ * @version 0.1
  */
 public class RadarCommand extends ShipCommand {
 	@SuppressWarnings("unused")

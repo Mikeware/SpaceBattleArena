@@ -1,5 +1,6 @@
 
 import pygame
+import glob
 
 MIN_STEP = 10
 
@@ -22,6 +23,18 @@ class GraphicsCache(object):
         else:
             self.__ext = ""
         self.__cache = {}
+        self.__maxfound = {}
+
+    def getMaxImages(self, key):
+        """
+        Returns the maximum number of images found for that key
+        """
+        if not self.__maxfound.has_key(key):
+            lst = glob.glob(self.__rootdir + key + "*" + self.__ext)
+            for x in xrange(len(lst)):
+                lst[x] = int(lst[x][len(self.__rootdir + key):-len(self.__ext)])
+            self.__maxfound[key] = max(lst)
+        return self.__maxfound[key]
 
     def getImage(self, key):
         if not self.__cache.has_key(key):

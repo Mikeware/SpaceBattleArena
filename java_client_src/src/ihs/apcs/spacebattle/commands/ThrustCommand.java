@@ -8,6 +8,8 @@ package ihs.apcs.spacebattle.commands;
  *   cannot be exceeded by the combined power of the four thrusters.
  * @author Brett Wortzman
  *
+ * @since 0.1
+ * @version 1.1
  */
 public class ThrustCommand extends ShipCommand {
 	@SuppressWarnings("unused")
@@ -48,7 +50,9 @@ public class ThrustCommand extends ShipCommand {
 	 * Thrust commands don't prevent you from executing other commands.
 	 * 
 	 * If you want to wait for the Thrust to complete, you should issue an Idle command during your next cycle.
-	 * @return
+     *
+     * @since 1.1
+	 * @return false, thrusting doesn't block.
 	 */
 	public static boolean isBlocking() { return false; }
 }

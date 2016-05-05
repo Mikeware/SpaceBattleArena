@@ -31,7 +31,34 @@ class Entity(object):
         self.timealive = 0
         self.TTL = None # None means will live 'forever', otherwise if timealive > TTL (time to live), then the object will be automatically cleaned up in gameloop and destroyed.
 
-        self.in_nebula = None
+        self.in_celestialbody = [] # keeps track of celestial bodies this object is in
+        self.destroyed = False # keeps track of if the object has been destroyed and needs to be removed from the world in the next gameloop.
+
+    def collide_start(self, otherobj):
+        """
+        Called on both objects when a collision first occurs, the other object is the one being hit
+
+        If either object returns False, then no collision will occur
+        """
+        return True
+
+    def collide_end(self, otherobj):
+        """
+        Called when two objects finish colliding/overlapping (even if they didn't actually 'collide')
+        """
+        pass
+
+    def take_damage(self, damage, by=None):
+        """
+        Called when damage is taken.
+        """
+        logging.debug("Object #%d took %d damage", self.id, damage)
+        self.health -= damage
+        if self.health.maximum > 0 and self.health.value <= 0 and not self.destroyed:
+            if by != None:
+                logging.info("Object #%d killed by #%d", self.id, by.id)
+            self.killedby = by
+            self.destroyed = True
 
     def has_expired(self):
         """
@@ -51,11 +78,12 @@ class Entity(object):
         #self.energy += self.energyRechargeRate * t
         #self.position = self.velocity.updatePosition(self.position, t)
     
-    def getExtraInfo(self, objData):
+    def getExtraInfo(self, objData, player):
         """Method called by world to get extra Radar info about a particular Entity.
 
         Args:
             objData: dictionary[string] = obj Should add keys to objData for extra properties object has over base properties.
+            player: player requesting the extra info
 
         See WorldMap.getObjectData.
         """
@@ -82,8 +110,7 @@ class PhysicsCore(Entity):
         super(PhysicsCore, self).__init__()
         self._constructPhysics(mass, pos)
         self.body.position = pos
-        
-        self.destroyed = False        
+                
         self.explodable = True
 
     def _constructPhysics(self, mass, pos):
