@@ -38,61 +38,63 @@ public class PointTest {
 	
 	@Test
 	public void testGetPointFromAngleAndDistance() {
-		assertTrue((new Point(0, 0)).getPointFromAngleAndDistance(45, 10).closeTo(new Point(7.07, -7.07), 0.1));
-		assertTrue((new Point(0, 0)).getPointFromAngleAndDistance(135, 10).closeTo(new Point(-7.07, -7.07), 0.1));
-		assertTrue((new Point(0, 0)).getPointFromAngleAndDistance(-45, 10).closeTo(new Point(7.07, 7.07), 0.1));
+		assertTrue((new Point(0, 0)).getPointAt(45, 10).isCloseTo(new Point(7.07, -7.07), 0.1));
+		assertTrue((new Point(0, 0)).getPointAt(135, 10).isCloseTo(new Point(-7.07, -7.07), 0.1));
+		assertTrue((new Point(0, 0)).getPointAt(-45, 10).isCloseTo(new Point(7.07, 7.07), 0.1));
 		
 		for (int i = 0; i < 360; i++)
 		{
 			Point zero = new Point(0, 0);
-			Point loc = zero.getPointFromAngleAndDistance(i, 1);
-			assertTrue(loc.closeTo(new Point(Math.cos(Math.toRadians(i)), -Math.sin(Math.toRadians(i))), 0.05));
+			Point loc = zero.getPointAt(i, 1);
+			assertTrue(loc.isCloseTo(new Point(Math.cos(Math.toRadians(i)), -Math.sin(Math.toRadians(i))), 0.05));
 		}
 	}
 	
 	@Test
-	public void testInEllipse() {
+	public void testIsInEllipse() {
 		// Test Basic Points Edges in Standard Ellipse
-		assertTrue((new Point(0, 1)).inEllipse(new Point(0, 0), 4, 1, 0));
-		assertTrue((new Point(0, -1)).inEllipse(new Point(0, 0), 4, 1, 0));
-		assertFalse((new Point(0, -1.01)).inEllipse(new Point(0, 0), 4, 1, 0));
-		assertTrue((new Point(0, 0)).inEllipse(new Point(0, 0), 4, 1, 0));
-		assertFalse((new Point(4, 1)).inEllipse(new Point(0, 0), 4, 1, 0));
-		assertTrue((new Point(4, 0)).inEllipse(new Point(0, 0), 4, 1, 0));
-		assertTrue((new Point(-4, 0)).inEllipse(new Point(0, 0), 4, 1, 0));
-		assertFalse((new Point(-4.01, 0)).inEllipse(new Point(0, 0), 4, 1, 0));
+		assertTrue((new Point(0, 1)).isInEllipse(new Point(0, 0), 4, 1, 0));
+		assertTrue((new Point(0, -1)).isInEllipse(new Point(0, 0), 4, 1, 0));
+		assertFalse((new Point(0, -1.01)).isInEllipse(new Point(0, 0), 4, 1, 0));
+		assertTrue((new Point(0, 0)).isInEllipse(new Point(0, 0), 4, 1, 0));
+		assertFalse((new Point(4, 1)).isInEllipse(new Point(0, 0), 4, 1, 0));
+		assertTrue((new Point(4, 0)).isInEllipse(new Point(0, 0), 4, 1, 0));
+		assertTrue((new Point(-4, 0)).isInEllipse(new Point(0, 0), 4, 1, 0));
+		assertFalse((new Point(-4.01, 0)).isInEllipse(new Point(0, 0), 4, 1, 0));
 		
 		// Test Rotation
-		assertFalse((new Point(-1, -1)).inEllipse(new Point(0, 0), 2, 1, 0));
-		assertFalse((new Point(1, -1)).inEllipse(new Point(0, 0), 2, 1, 0));
-		assertFalse((new Point(-1, 1)).inEllipse(new Point(0, 0), 2, 1, 0));
-		assertFalse((new Point(1, 1)).inEllipse(new Point(0, 0), 2, 1, 0));
-		assertTrue((new Point(1, 1)).inEllipse(new Point(0, 0), 2, 1, -45));
-		assertFalse((new Point(1, -1)).inEllipse(new Point(0, 0), 2, 1, -45));
-		assertTrue((new Point(-1, -1)).inEllipse(new Point(0, 0), 2, 1, -45));
-		assertFalse((new Point(1, 1)).inEllipse(new Point(0, 0), 2, 1, 45));
+		assertFalse((new Point(-1, -1)).isInEllipse(new Point(0, 0), 2, 1, 0));
+		assertFalse((new Point(1, -1)).isInEllipse(new Point(0, 0), 2, 1, 0));
+		assertFalse((new Point(-1, 1)).isInEllipse(new Point(0, 0), 2, 1, 0));
+		assertFalse((new Point(1, 1)).isInEllipse(new Point(0, 0), 2, 1, 0));
+		assertTrue((new Point(1, 1)).isInEllipse(new Point(0, 0), 2, 1, -45));
+		assertFalse((new Point(1, -1)).isInEllipse(new Point(0, 0), 2, 1, -45));
+		assertTrue((new Point(-1, -1)).isInEllipse(new Point(0, 0), 2, 1, -45));
+		assertFalse((new Point(1, 1)).isInEllipse(new Point(0, 0), 2, 1, 45));
 	}
 	
 	@Test
-	public void testGetPointsOnTorus() {
-		// TODO: deal with checking actual results
-		List<Point> points = (new Point(5.0, 5.0)).getPointsOnTorus(200, 100, 10);
+	public void testGetClosestMappedPoint() {
+		Point me = new Point(5, 5);
 		
-		assertEquals(4, points.size());
+		assertTrue((new Point(-5, 5)).isCloseTo(me.getClosestMappedPoint(new Point(95, 5), 100, 100), 0.1));		
+		assertEquals(10, me.getDistanceTo(me.getClosestMappedPoint(new Point(95, 5), 100, 100)), 0.1);
 		
-		System.out.println(points);
+		assertTrue((new Point(-5, -5)).isCloseTo(me.getClosestMappedPoint(new Point(95, 95), 100, 100), 0.1));
 		
-		points = (new Point(15.0, 5.0)).getPointsOnTorus(200, 100, 10);
+		assertTrue((new Point(95, 5)).isCloseTo(me.getClosestMappedPoint(new Point(95, 5), 200, 100), 0.1));
 		
-		assertEquals(2, points.size());
+		me = new Point(50, 10);
 		
-		System.out.println(points);
+		assertTrue((new Point(95, 5)).isCloseTo(me.getClosestMappedPoint(new Point(95, 5), 100, 100), 0.1));
 		
-		points = (new Point(15.0, 15.0)).getPointsOnTorus(200, 100, 10);
+		assertTrue((new Point(50, -35)).isCloseTo(me.getClosestMappedPoint(new Point(50, 65), 100, 100), 0.1));
+		assertTrue((new Point(50, 55)).isCloseTo(me.getClosestMappedPoint(new Point(50, 55), 100, 100), 0.1));
+
+		me = new Point(95, 90);
 		
-		assertEquals(1, points.size());
-		
-		System.out.println(points);
+		assertTrue((new Point(90, 75)).isCloseTo(me.getClosestMappedPoint(new Point(90, 75), 100, 100), 0.1));
+		assertTrue((new Point(110, 120)).isCloseTo(me.getClosestMappedPoint(new Point(10, 20), 100, 100), 0.1));
 	}
 
 	@Test
@@ -107,12 +109,12 @@ public class PointTest {
 	}
 
 	@Test
-	public void testCloseTo()
+	public void testIsCloseTo()
 	{
 		Point one = new Point(25.1, 49.9);
 		Point two = new Point(24.9, 50.1);
 		
-		assertTrue(one.closeTo(two, 0.20001));
-		assertFalse(one.closeTo(two, 0.1));
+		assertTrue(one.isCloseTo(two, 0.20001));
+		assertFalse(one.isCloseTo(two, 0.1));
 	}
 }

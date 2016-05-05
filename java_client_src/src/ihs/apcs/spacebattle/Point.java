@@ -86,14 +86,13 @@ public class Point {
 	 * 
 	 * @since 1.2
 	 */
-	public Point getPointFromAngleAndDistance(double angle, double distance)
-	{
+	public Point getPointAt(double angle, double distance) {
 		return new Point(this.getX() + distance * Math.cos(Math.toRadians(angle)), 
 						 this.getY() - distance * Math.sin(Math.toRadians(angle)));
 	}
 	
 	/**
-	 * Checks if this point is in an Ellipse with the given center point, major/minor axis lengths and orientation.
+	 * Checks if this point is in an Ellipse with the given center point, major/minor axis lengths at the given orientation.
 	 * 
 	 * @param center of the ellipse
 	 * @param major axis length
@@ -103,7 +102,7 @@ public class Point {
 	 * 
 	 * @since 1.2
 	 */
-	public boolean inEllipse(Point center, int major, int minor, int orientation)
+	public boolean isInEllipse(Point center, int major, int minor, int orientation)
 	{
 		double xDiff = this.getX() - center.getX();
 		double yDiff = -1 * (this.getY() - center.getY()); // Our coordinates are flipped compared to regular math functions.
@@ -116,42 +115,51 @@ public class Point {
 	}
 	
 	/**
-	 * Wraps this point on a torus of size width, height if the point is within the given tolerance of the edge of the Torus.
+	 * Maps the other point across world boundaries to return the closest form of the given point.
+	 * 
+	 * Note: This point may map outside the bounds of the world, it should only be used for orientation purposes and distance only.
+	 *  
+	 * @param other point to map from this one
+	 * @param width of the world
+	 * @param height of the world
+	 * @return form of the point that is closest to this one
+	 * 
+	 * @since 1.2
+	 */
+	public Point getClosestMappedPoint(Point other, int width, int height) 
+	{
+		Point closest = null;
+		for (Point p : other.getPointsOnTorus(width, height)) {
+			if (closest == null || this.getDistanceTo(p) < this.getDistanceTo(closest)) {
+				closest = p;
+			}
+		}
+		
+		return closest == null ? other : closest;
+	}
+	
+	/**
+	 * Wraps this point on a torus of size width, height of the edge of the Torus.
 	 * 
 	 * Returns a List of points (including this one) which represent the coordinates of this point projected beyond the bounds of the 'world' on a Torus.
 	 * This can be used to determine if a point is actually close to a position when it exists beyond the bounds of the 'world'.
 	 * 
 	 * @param width of torus
 	 * @param height of torus
-	 * @param tolerance to wrap coordinates
 	 * @return set of points projected beyond bounds of torus
 	 * 
 	 * @since 1.2
 	 */
-	public List<Point> getPointsOnTorus(int width, int height, int tolerance)
-	{
+	private List<Point> getPointsOnTorus(int width, int height) {
 		List<Point> points = new ArrayList<Point>();
-		points.add(new Point(this.getX(), this.getY()));
 		
-		if (this.getX() < tolerance) {
-			if (this.getY() < tolerance) {
-				points.add(new Point(this.getX() + width, this.getY() + height));
-			}
-			
-			points.add(new Point(this.getX() + width, this.getY()));				
-		} else if (this.getX() > width - tolerance) {
-			if (this.getY() > height - tolerance) {
-				points.add(new Point(this.getX() - width, this.getY() - height));
-			}
-			
-			points.add(new Point(this.getX() - width, this.getY()));
-		}
-		
-		if (this.getY() < tolerance) {
-			points.add(new Point(this.getX(), this.getY() + height));				
-		} else if (this.getY() > height - tolerance) {
-			points.add(new Point(this.getX(), this.getY() - height));
-		}
+		points.add(new Point(this.getX(), this.getY()));		
+		points.add(new Point(this.getX() + width, this.getY() + height));
+		points.add(new Point(this.getX() + width, this.getY()));				
+		points.add(new Point(this.getX(), this.getY() + height));
+		points.add(new Point(this.getX() - width, this.getY() - height));
+		points.add(new Point(this.getX() - width, this.getY()));
+		points.add(new Point(this.getX(), this.getY() - height));
 		
 		return points;
 	}
@@ -166,8 +174,7 @@ public class Point {
 	 * 
 	 * @since 1.2
 	 */
-	public boolean closeTo(Point other, double tolerance)
-	{
+	public boolean isCloseTo(Point other, double tolerance) {
 		return (Math.abs(this.getX() - other.getX()) <= tolerance &&
 				Math.abs(this.getY() - other.getY()) <= tolerance);
 	}
