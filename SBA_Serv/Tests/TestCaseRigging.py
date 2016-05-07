@@ -141,10 +141,11 @@ class SBAWorldTestCase(unittest.TestCase):
     def tearDown(self):
         self.assertFalse(self.game.world.gameerror, "Gameloop Exception Occured")
         # finish round
-        self.game._tournament = True # force it to not restart timers again
-        self.game.round_over()
+        if not self.game.world.gameerror:
+            self.game._tournament = True # force it to not restart timers again
+            self.game.round_over()
 
-        self.game.world.endGameLoop()
+            self.game.world.endGameLoop()
         logging.info("Done Running Test: %s", self._testMethodName)
 
     def get_config_filename(self):

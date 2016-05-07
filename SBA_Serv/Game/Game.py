@@ -133,7 +133,7 @@ class BasicGame(object):
 
         Called every time a new round starts or once if a tournament is not being played.
         """
-        if not self.__started:
+        if not self.__started and not self.world.gameerror:
             logging.info("Starting Game")
             self.__started = True
             self.__autostart = self.__allowafterstart
@@ -155,7 +155,7 @@ class BasicGame(object):
                 self.world_create()
             #eif
 
-            if not self.__created:
+            if not self.__created and not self.world.gameerror:
                 self.world.start()
                 self.__created = True
 

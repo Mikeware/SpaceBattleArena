@@ -83,3 +83,29 @@ class FindTheMiddleTestCases(SBAGUITestCase):
         print self.ship.player.bestscore
         logging.debug("Ship Best score %d, expected 5", self.ship.player.bestscore)
         self.assertEqual(self.ship.player.bestscore, 5, "Ship Best Score Not 5")
+
+class FindTheMiddleTournamentTestCases(SBAGUITestCase):
+    """
+    Test cases for Find the Middle game w/ tournamnet.
+    """
+    def get_config_filename(self):
+        return "test_findthemiddle.cfg", "test_tournament.cfg"
+
+    def test_find_the_middle_tournament_start(self):
+        """
+        Test that we can start a find the middle tournament
+        """
+        ship = AIShip_SetList("Nothing", self.game.world.mid_point(0), self.game, [])
+
+        self.assertEqual(len(self.game.world), 0, "Objects in World")
+
+        time.sleep(2.0)
+
+        self.assertFalse(ship in self.game.world, "Ship added to world")
+        
+        self.game.round_start()
+
+        time.sleep(3)
+
+        self.assertTrue(ship in self.game.world, "Ship didn't get added to world")
+

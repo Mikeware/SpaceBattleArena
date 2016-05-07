@@ -153,16 +153,12 @@ if __name__ == "__main__":
 
         server = WorldServer.WorldServer(cfg.getint("Server", "port"), game)
 
-        try:
-            #if options.headless:
-                #logging.info("Running Headless without GUI")
-                #TODO: Set World Size Here?
-            #else:
-            #startGame(title, game, fullscreen:bool, (xres, yres), showstats:bool, sound:bool)
-            main.startGame(titlever + title_game, game, cfg.getboolean("Application", "fullscreen"), resolution, cfg)
-        except:
-            logging.error(traceback.format_exc())
-            print traceback.format_exc()
+        #if options.headless:
+            #logging.info("Running Headless without GUI")
+            #TODO: Set World Size Here?
+        #else:
+        #startGame(title, game, fullscreen:bool, (xres, yres), showstats:bool, sound:bool)
+        main.startGame(titlever + title_game, game, cfg.getboolean("Application", "fullscreen"), resolution, cfg)
 
         print "Sending Disconnect..."
         logging.info("Server Request Disconnect All")

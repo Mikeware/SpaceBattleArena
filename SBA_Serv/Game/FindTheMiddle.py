@@ -89,19 +89,20 @@ class FindTheMiddleGame(BasicGame):
 
     def gui_draw_game_world_info(self, surface, flags, trackplayer):
         # Draw circles in middle of world
-        x = 1
-        inc = int(255 / len(self.__objective_radii))
-        for radius in self.__objective_radii:
-            pygame.draw.circle(surface, (0, inc * x, 255 - inc * x), self.midpoint, radius, len(self.__objective_radii) - x + 1)
-            text = self._dfont.render(repr(int(self.__objective_points[x-1])) + " Points", False, (128, 128, 128))
-            surface.blit(text, (self.midpoint[0]-text.get_width()/2, self.midpoint[1]-radius+18))
-            text = self._dfont.render("Radius " + repr(int(self.__objective_radii[x-1])), False, (128, 128, 128))
-            surface.blit(text, (self.midpoint[0]-text.get_width()/2, self.midpoint[1]+radius-36))
-            x += 1
+        if self.round_get_has_started():
+            x = 1
+            inc = int(255 / len(self.__objective_radii))
+            for radius in self.__objective_radii:
+                pygame.draw.circle(surface, (0, inc * x, 255 - inc * x), self.midpoint, radius, len(self.__objective_radii) - x + 1)
+                text = self._dfont.render(repr(int(self.__objective_points[x-1])) + " Points", False, (128, 128, 128))
+                surface.blit(text, (self.midpoint[0]-text.get_width()/2, self.midpoint[1]-radius+18))
+                text = self._dfont.render("Radius " + repr(int(self.__objective_radii[x-1])), False, (128, 128, 128))
+                surface.blit(text, (self.midpoint[0]-text.get_width()/2, self.midpoint[1]+radius-36))
+                x += 1
 
-        for player in self.game_get_current_player_list():
-            obj = player.object
-            if obj != None and player.time > 0:
-                # draw time left in bubble for player
-                text = self._dfont.render("%.1f" % (self.__objective_time - player.time), False, player.color)
-                surface.blit(text, (obj.body.position[0]+30, obj.body.position[1]-4))
+            for player in self.game_get_current_player_list():
+                obj = player.object
+                if obj != None and player.time > 0:
+                    # draw time left in bubble for player
+                    text = self._dfont.render("%.1f" % (self.__objective_time - player.time), False, player.color)
+                    surface.blit(text, (obj.body.position[0]+30, obj.body.position[1]-4))
