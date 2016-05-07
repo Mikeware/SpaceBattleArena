@@ -16,8 +16,8 @@ public class RotateCommand extends ShipCommand {
 	 * Creates a command to rotate a ship.  
 	 * @param degrees the number of degrees to rotate
 	 */
-	public RotateCommand(double degrees) {
-		DEG = (int)degrees;
+	public RotateCommand(int degrees) {
+		DEG = degrees;
 	}
 
 	@Override

@@ -73,5 +73,8 @@ Number of points an Outpost is worth when successfully scanned. (2 default)  Est
 ###points_dragon = int
 Number of points a Dragon is worth when successfully scanned. (6 default)
 
+###points_wormhole = int
+Number of points a Worm Hole is worth when successfully scanned. (2 default)
+
 ###points_ship = int
 Number of points another Ship is worth when successfully scanned. (4 default)

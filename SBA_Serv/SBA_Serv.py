@@ -1,7 +1,7 @@
 """
 Space Battle Arena is a Programming Game.
 
-Copyright (C) 2012-2015 Michael A. Hawker and Brett Wortzman
+Copyright (C) 2012-2016 Michael A. Hawker and Brett Wortzman
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 
@@ -13,9 +13,9 @@ The full text of the license is available online: http://opensource.org/licenses
 """
 
 __author__ = "Michael A. Hawker"
-__copyright__ = "Copyright 2012-2015 Mikeware"
+__copyright__ = "Copyright 2012-2016 Mikeware"
 __license__ = "GPLv2"
-__version__ = "1.1.0." + open("buildnum").read()
+__version__ = "1.2.0." + open("buildnum").read()
 __email__ = "questions@mikeware.com"
 __status__ = "Production"
 
@@ -159,7 +159,7 @@ if __name__ == "__main__":
                 #TODO: Set World Size Here?
             #else:
             #startGame(title, game, fullscreen:bool, (xres, yres), showstats:bool, sound:bool)
-            main.startGame(titlever + title_game, game, cfg.getboolean("Application", "fullscreen"), resolution, cfg.getboolean("Application", "showstats"), cfg.getboolean("Application", "sound"), cfg)
+            main.startGame(titlever + title_game, game, cfg.getboolean("Application", "fullscreen"), resolution, cfg)
         except:
             logging.error(traceback.format_exc())
             print traceback.format_exc()

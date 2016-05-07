@@ -1,7 +1,7 @@
 """
 Space Battle Arena is a Programming Game.
 
-Copyright (C) 2012-2015 Michael A. Hawker and Brett Wortzman
+Copyright (C) 2012-2016 Michael A. Hawker and Brett Wortzman
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 
@@ -47,7 +47,7 @@ class HungryHungryBaublesGame(BasicGame):
     def __addBauble(self, player, force=False):
         logging.info("Add Bauble (%s) for Player %d", repr(force), player.netid)
         # add player bauble
-        b = Bauble(getPositionAwayFromOtherObjects(self.world, self.cfg.getint("Bauble", "buffer_object"), self.cfg.getint("Bauble", "buffer_edge"), force), self.__points_gold)
+        b = Bauble(getPositionAwayFromOtherObjects(self.world, self.cfg.getint("Bauble", "buffer_object"), self.cfg.getint("Bauble", "buffer_edge")), self.__points_gold)
 
         self.__baubles[player.netid] = b
 

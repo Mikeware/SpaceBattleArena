@@ -1,3 +1,3 @@
-__all__ = ["ShipWrapper", "PlanetWrapper", "AsteroidWrapper"]
+__all__ = ["ShipWrapper", "PlanetWrapper", "AsteroidWrapper", "NebulaWrapper", "WeaponWrappers", "WormHoleWrapper"]
 
 

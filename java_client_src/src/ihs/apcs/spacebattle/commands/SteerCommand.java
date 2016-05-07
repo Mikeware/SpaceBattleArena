@@ -22,7 +22,7 @@ public class SteerCommand extends ShipCommand {
 	 * Creates a Blocking command to steer a ship.  
 	 * @param degrees the number of degrees to adjust course
 	 */
-	public SteerCommand(double degrees) {
+	public SteerCommand(int degrees) {
 		this(degrees, true);
 	}
 	
@@ -31,9 +31,9 @@ public class SteerCommand extends ShipCommand {
 	 * @param degrees the number of degrees to adjust course
 	 * @param block indicates if the command should block or not
 	 */
-	public SteerCommand(double degrees, boolean block) {
-		DEG = (int)degrees;
-		BLOCK = (boolean)block;
+	public SteerCommand(int degrees, boolean block) {
+		DEG = degrees;
+		BLOCK = block;
 	}
 
 	@Override

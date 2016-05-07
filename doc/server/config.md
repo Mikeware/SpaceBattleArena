@@ -9,13 +9,14 @@ outline:
  - { url: "#application", title: "[Application]" }
  - { url: "#world", title: "[World]" }
  - { url: "#server", title: "[Server]" }
- - { url: "spawnmanager", title: "Spawn Manager" }
+ - { url: "#spawnmanager", title: "Spawn Manager" }
  - { url: "#asteroid", title: "[Asteroid]" }
  - { url: "#dragon", title: "[Dragon]" }
  - { url: "#planet", title: "[Planet]" }
  - { url: "#blackhole", title: "[BlackHole]" }
  - { url: "#star", title: "[Star]" }
  - { url: "#nebula", title: "[Nebula]" }
+ - { url: "#wormhole", title: "[WormHole]" }
  - { url: "#game", title: "[Game]" }
  - { url: "#tournament", title: "[Tournament]" }
 ---
@@ -80,6 +81,9 @@ Specifies the vertical resolution of the SBA window (in pixels).  This should ma
 
 ###sound = boolean
 Determines if sounds should be played or not.
+
+###showip = boolean
+If this option is enabled, the server will start displaying the computer's IP Address at the top of the screen.  It can still be toggled manually on/off regardless of this setting with the [keyboard shortcut](usage.html).
 
 ###showstats = boolean
 If this option is enabled, the server will start with some basic GUI options already enabled showing statistics about a player’s ship.
@@ -209,9 +213,6 @@ Range for the amount of health a Dragon will start with.
 ---------------------------------------
 Planets have gravity wells which can pull ships towards them.  They are solid and will cause damage to ships that impact them.
 
-###number = integer
-The number of planets to generate in the universe.
-
 ###range_min = integer
 see range_max
 
@@ -223,6 +224,9 @@ see pull_max
 
 ###pull_max = integer
 These two values correspond to the amount of pull the gravity will have on ships.  Larger values mean ships will get pulled in quicker and will have a harder time escaping.  A random value will be generated between **pull_min** and **pull_max**.  These are typically **8** and **24**.  Setting pull to zero, will turn off gravity.
+
+###pull_weapon = boolean
+If enabled, Planets', BlackHoles', and Stars' gravity wells will effect torpedos and space mines.
 
 
 <a name="blackhole"></a>[BlackHole]
@@ -239,13 +243,7 @@ Amount of time in seconds before a ship will be crushed (destroyed) when in the 
 ---------------------------------------
 Stars can be flown into, but cause progressively more damage the closer a Ship is to its center.
 
-###range_min = int
-###range_max = int
-Range for the star's gravity well radius.  Defaults to **96** and **224**.
-
-###pull_min = int
-###pull_max = int
-Range for the amount of gravity the star will have.  Defaults to **12** and **48**.
+They have the exact same configuration values as [Planets](#planet).  However, the default range values are **96** to **224**.  The default pull values are **12** to **48**.
 
 ###dmg_mod = float
 Additional damage modifier for growth of damage caused by approaching Star's center.  Defaults to **0.0**.  Equation for damage calculation is currently in part *18 - (pull / 6.0) - dmg_mod*.
@@ -254,9 +252,6 @@ Additional damage modifier for growth of damage caused by approaching Star's cen
 <a name="nebula"></a>[Nebula]
 ---------------------------------------
 Nebulas are a celestial body which impart a drag effect on ships causing them to slow down or eventually stop if they are not thrusting.
-
-###number = integer
-The number of Nebulas to generate in the universe.
 
 ###sizes = list of tuples
 This is a list of the available sizes of nebulas.  The tuple pair is the total length of the **major** and **minor** axes of an ellipse.  There also needs to be a corresponding image in the *GUI\Graphics\Nebula* folder with the name **NebulaMAJORxMINOR** where 'MAJOR' and 'MINOR' are replaced with the values of the size of the Nebula.  These values should be placed in a list.  E.g.
@@ -268,6 +263,28 @@ see pull_max
 
 ###pull_max = integer
 These two values correspond to the amount of pull the drag will have on ships.  Larger values mean ships will slow down faster.  It'd best not to make these values higher than the Ship's Thruster force of 3500.  A random value will be generated between **pull_min** and **pull_max**.  These are typically **1750** and **2500**.  Setting pull to zero, will turn off drag.
+
+
+<a name="wormhole"></a>[WormHole]
+---------------------------------------
+Worm Holes transport ships vast distances instantaneously.  Each particular Worm Hole will always behave in the same manner depending on its type.  It could always teleport you to a random location, a fixed location, or another worm hole entrance.  If exiting near an existing Worm Hole, you must leave its vicinity before entering again.
+
+Extra Worm Holes above the number specified may be generated as two-way 'linked' Worm Holes.
+
+###types = list of ints
+This is a list of the types of Worm Hole exits which should be generated.  The following is a list of numbers and their corresponding type:
+
+ 1. Random
+ 2. Other Worm Hole
+ 3. Fixed Point
+
+For instance the following would create Worm Holes which transport ships to random or fixed locations only:
+
+	types=[1,3]
+
+###buffer_exit_object = int
+###buffer_exit_edge = int
+Amount of space between objects/world edge to leave at exit of random/fixed point worm holes.  See (Spawn Manager)[#spawnmanager]'s similar properties.
 
 
 <a name="game"></a>[Game]

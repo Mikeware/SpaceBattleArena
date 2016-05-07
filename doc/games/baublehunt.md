@@ -29,23 +29,16 @@ You will be provided a list of locations for where valuable baubles are located.
 
 In the case of a tie, who ever has the fewest baubles collected will be the winner (i.e. density of points is rewarded in a tie).
 
+Control Bauble spawning behavior by using the standard [Spawn Manager](../server/config.html#spawnmanager) properties.
+
 <a name="config"></a>Configuration
 -----------
 
-###bauble_initial = int
-Number of initial baubles to place in the world.
-
-###bauble_per_player = int
-How many extra baubles should be added every time a player joins.
-
-###bauble_timer = int
-How long before more baubles should be spawned in the world (in seconds).
-
-###bauble_timer_spawns = int
-How many baubles should spawn when the timer expires.
-
 ###ship_cargo_size = int
 The maximum number of baubles each ship can carry.
+
+###respawn_bauble_on_collect = boolean
+Should a new bauble be spawned every time one is collected?
 
 ###bauble_percent_blue = float
 The percentage of baubles which should generate as blue from [0.0-1.0].  The total of **bauble_percent_blue**, **bauble_percent_yellow**, and **bauble_percent_red** should equal 1.0.

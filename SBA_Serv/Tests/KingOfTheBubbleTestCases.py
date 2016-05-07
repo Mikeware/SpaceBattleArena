@@ -52,7 +52,7 @@ class KingOfTheBubbleSpawnTestCases(SBAGUITestCase):
 
         self.assertLess(bubble.size - bubble.basesize, self.cfg.getint("Bubble", "points_min"), "Bubble should be shrinking") 
 
-        time.sleep(6.5)
+        time.sleep(7.0)
 
         self.assertFalse(bubble in self.game.world, "Bubble shouldn't be in world")
 
