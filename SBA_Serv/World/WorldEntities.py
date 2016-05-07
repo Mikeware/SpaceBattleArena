@@ -366,7 +366,7 @@ class WormHole(CelestialBody, Influential, PhysicalRound):
 
     def apply_influence(self, otherobj, mapped_pos, t):
         # teleport ships, todo: cooldown check
-        if (not hasattr(otherobj, "teleported") or otherobj.teleported == False):
+        if (not hasattr(otherobj, "teleported") or otherobj.teleported == False or otherobj.teleported == self.id):
             if isinstance(otherobj, Ship):
                 otherobj.player.sound = "WORMHOLE"
 

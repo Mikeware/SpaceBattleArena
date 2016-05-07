@@ -81,7 +81,7 @@ class WormHoleVisualShipOneWayTestCase(SBAGUITestCase):
         self.assertEqual(ship.health.value, ship.health.maximum, "Ship One not at full health.")
         self.assertEqual(ship2.health.value, ship2.health.maximum, "Ship Two not at full health.")
 
-        time.sleep(5.0)
+        time.sleep(3.0)
 
         self.assertEqual(ship.health.value, ship.health.maximum, "Ship One not at full health.")
         self.assertNotEqual(ship2.health.value, ship2.health.maximum, "Ship Two at full health.")
@@ -101,7 +101,7 @@ class WormHoleVisualShipOneWayTestCase(SBAGUITestCase):
 
         self.assertAlmostEqual(ship.body.position, start, None, "Not Doomed ship shouldn't have moved", 2)
 
-        time.sleep(6.0)
+        time.sleep(5.9)
 
         self.assertAlmostEqual(ship.body.position[0], self.game.world.mid_point(0,0)[0], None, "Not Doomed ship should be near center. X", 100)
         self.assertAlmostEqual(ship.body.position[1], self.game.world.mid_point(0,0)[1], None, "Not Doomed ship should be near center. Y", 4)
@@ -115,6 +115,49 @@ class WormHoleVisualShipOneWayTestCase(SBAGUITestCase):
 
         self.failIfAlmostEqual(ship.body.position[0], wormhole.body.position[0]+300, None, "Not Doomed ship should have continued moving after teleport. X", 96)
 
+    def test_wormhole_travel_back(self):
+        """
+        Tests if a ship enters a wormhole and returns, that they'll be re-teleported
+        """
+        wormhole = WormHole(self.game.world.mid_point(0,0), whtype=WormHole.FIXED_POINT, exitpos=self.game.world.mid_point(200,200))
+        self.game.world.append(wormhole)
+
+        start = self.game.world.mid_point(100, 0)
+        ship = AIShip_SetList("Not Doomed", start, self.game, [
+                "RotateCommand(self, 180)",
+                "ThrustCommand(self, 'B', 3.0, 1.0)",
+                "IdleCommand(self, 4.0)",
+                "ThrustCommand(self, 'F', 3.0, 1.0)",
+                "IdleCommand(self, 3.0)",
+                "RotateCommand(self, -45)",
+                "ThrustCommand(self, 'B', 4.0, 1.0)",
+            ])
+
+        self.assertAlmostEqual(ship.body.position, start, None, "Not Doomed ship shouldn't have moved", 2)
+
+        time.sleep(5.5)
+
+        self.assertAlmostEqual(ship.body.position[0], self.game.world.mid_point(0,0)[0], None, "Not Doomed ship should be near center. X", 100)
+        self.assertAlmostEqual(ship.body.position[1], self.game.world.mid_point(0,0)[1], None, "Not Doomed ship should be near center. Y", 4)
+
+        time.sleep(2.0)
+
+        self.assertAlmostEqual(ship.body.position[0], wormhole.body.position[0]+200, None, "Not Doomed ship didn't teleport to the right location. X", 64)
+        self.assertAlmostEqual(ship.body.position[1], wormhole.body.position[1]+200, None, "Not Doomed ship didn't teleport to the right location. Y", 64)
+
+        time.sleep(12.5)
+
+        self.assertAlmostEqual(ship.body.position[0], self.game.world.mid_point(0,0)[0], None, "Not Doomed ship should be near center. X", 100)
+        self.assertAlmostEqual(ship.body.position[1], self.game.world.mid_point(0,0)[1], None, "Not Doomed ship should be near center. Y", 100)
+
+        time.sleep(2.5)
+
+        self.assertAlmostEqual(ship.body.position[0], wormhole.body.position[0]+200, None, "Not Doomed ship didn't teleport to the right location. X", 64)
+        self.assertAlmostEqual(ship.body.position[1], wormhole.body.position[1]+200, None, "Not Doomed ship didn't teleport to the right location. Y", 64)
+
+        time.sleep(5.5)
+
+        self.failIfAlmostEqual(ship.body.position[0], wormhole.body.position[0]+200, None, "Not Doomed ship should have continued moving after teleport. X", 48)
 
     def test_wormhole_other_wormhole_one_way(self):
         """

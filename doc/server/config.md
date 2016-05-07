@@ -284,7 +284,7 @@ For instance the following would create Worm Holes which transport ships to rand
 
 ###buffer_exit_object = int
 ###buffer_exit_edge = int
-Amount of space between objects/world edge to leave at exit of random/fixed point worm holes.  See (Spawn Manager)[#spawnmanager]'s similar properties.
+Amount of space between objects/world edge to leave at exit of random/fixed point worm holes.  See [Spawn Manager](#spawnmanager)'s similar properties.
 
 
 <a name="game"></a>[Game]

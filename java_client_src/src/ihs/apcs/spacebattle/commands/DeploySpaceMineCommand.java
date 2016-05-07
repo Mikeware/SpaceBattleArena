@@ -4,9 +4,9 @@ package ihs.apcs.spacebattle.commands;
  * A command to deploy a Space Mine.  Space Mines will remain inactive for a period of time.  Once active, they will explode on impact.
  * 
  * Space Mines have three modes:
- * 	Stationary (will activate after given time and remain in place), 44
- *  Autonomous (will activate, boost in the given direction and speed, and then detonate after the given period of time), 55
- *  Homing (will activate after the given time and then start tracking nearby ships), 66
+ *  Stationary (will activate after given time and remain in place) and cost 44 energy.
+ *  Autonomous (will activate, boost in the given direction and speed, and then detonate after the given period of time) and cost 55 energy.
+ *  Homing (will activate after the given time and then start tracking nearby ships) and cost 66 energy.
  * 
  * @author Michael A. Hawker
  *
