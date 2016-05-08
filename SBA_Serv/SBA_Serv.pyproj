@@ -89,6 +89,7 @@
     <Compile Include="Tests\WorldTestCases.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Tests\SpaceMineTestCases.py" />
     <Compile Include="Tests\WormHoleTestCases.py">
       <SubType>Code</SubType>
     </Compile>

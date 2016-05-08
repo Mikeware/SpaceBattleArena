@@ -12,6 +12,7 @@ outline:
  - { url: "#spawnmanager", title: "Spawn Manager" }
  - { url: "#asteroid", title: "[Asteroid]" }
  - { url: "#dragon", title: "[Dragon]" }
+ - { url: "#spacemine", title: "[SpaceMine]" }
  - { url: "#planet", title: "[Planet]" }
  - { url: "#blackhole", title: "[BlackHole]" }
  - { url: "#star", title: "[Star]" }
@@ -207,6 +208,30 @@ Range for the amount of damage every bite causes a Ship.  This amount is randomi
 ###health_min = int
 ###health_max = int
 Range for the amount of health a Dragon will start with.
+
+
+<a name="spacemine"></a>[SpaceMine]
+---------------------------------------
+Space Mines will stay in place, move and explode, or track ships.  On contact, they will detonate and create an explosion force around them.
+
+###delay_min = float
+###delay_max = float
+Delay in seconds before the space mine becomes active (inactive mines can't be hit and won't explode).
+
+###types = list of int
+Types of mines to spawn (1 for stationary, 2 for autonomous, 3 for homing).
+
+###direction_min = int
+###direction_max = int
+Direction of movement of an autonomous mine.  It starts moving after it's initial delay.
+
+###speed_min = int
+###speed_max = int
+Speed factor of autonomous mine (1-5).
+
+###duration_min = float
+###duration_max = float
+Amount of time an autonomous mine will move after the initial delay before it explodes automatically.
 
 
 <a name="planet"></a>[Planet]

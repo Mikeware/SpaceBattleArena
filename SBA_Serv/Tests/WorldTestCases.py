@@ -66,6 +66,10 @@ class WorldMathTestCases(TestCase):
         self.assertIsInstance(x[0], int, "First value not integer")
         self.assertIsInstance(x[1], int, "Second value not integer")
 
+    def test_istypeinlist(self):
+        self.assertTrue(istypeinlist(int, [5.0, "asd", 6]), "Failed to find integer.")
+        self.assertTrue(istypeinlist(Ship, ["asdfasdf", Ship((0, 0), None)]), "Failed to find ship.")
+
 class WorldTestCase(SBAGUITestCase):
     """
     Dummy test to create a planet and check it was added to the world of the game.

@@ -21,7 +21,7 @@ import sys
 from WorldCommands import RaiseShieldsCommand, CloakCommand
 from Messaging import MessageQueue
 from Commanding import CommandSystem
-from WorldMath import PlayerStat, getPositionAwayFromOtherObjects, cfg_rand_min_max
+from WorldMath import PlayerStat, getPositionAwayFromOtherObjects, cfg_rand_min_max, istypeinlist
 from Entities import PhysicalRound, PhysicalEllipse
 
 class Ship(PhysicalRound):
@@ -563,7 +563,7 @@ class Torpedo(Weapon):
     def getExtraInfo(self, objData, player):
         objData["OWNERID"] = self.owner.id
 
-class SpaceMine(Influential, Weapon):
+class SpaceMine(CelestialBody, Influential, Weapon):
     """
     SpaceMines are weapons which are dropped from a ship
     """
@@ -593,17 +593,22 @@ class SpaceMine(Influential, Weapon):
         self.lv = self.body.velocity.normalized()
 
     def collide_start(self, otherobj):
+        #TODO: Test if we say False, if we ever get collide_end notification...?
+        parent = super(SpaceMine, self).collide_start(otherobj)
         if not self.active:
             return False
 
-        return super(SpaceMine, self).collide_start(otherobj)
+        return parent
 
     def update(self, t):
         super(SpaceMine, self).update(t)
         self.delay -= t
 
         if self.delay <= 0:
-            if self.mode == SpaceMine.AUTONOMOUS and not self.active:
+            if istypeinlist(Ship, self.in_celestialbody):
+                logging.info("Ship still touching mine when activated!")
+                self.TTL = self.timealive - 1
+            elif self.mode == SpaceMine.AUTONOMOUS and not self.active:
                 v = 500 * self.speed
                 self.body.apply_impulse((math.cos(math.radians(-self.direction)) * v,
                                          math.sin(math.radians(-self.direction)) * v), (0,0))
@@ -643,3 +648,15 @@ class SpaceMine(Influential, Weapon):
                                    
     def getExtraInfo(self, objData, player):
         objData["OWNERID"] = self.owner.id
+
+    @staticmethod
+    def spawn(world, cfg, pos=None):
+        if pos == None:
+            pos = getPositionAwayFromOtherObjects(world, cfg.getint("SpaceMine", "buffer_object"), cfg.getint("SpaceMine", "buffer_edge"))
+        t = random.choice(eval(cfg.get("SpaceMine", "types")))
+        if t == SpaceMine.AUTONOMOUS:
+            sm = SpaceMine(pos, cfg_rand_min_max(cfg, "SpaceMine", "delay"), t, cfg_rand_min_max(cfg, "SpaceMine", "direction"), cfg_rand_min_max(cfg, "SpaceMine", "speed"), cfg_rand_min_max(cfg, "SpaceMine", "duration"))
+        else:
+            sm = SpaceMine(pos, cfg_rand_min_max(cfg, "SpaceMine", "delay"), t)
+        world.append(sm)
+        return sm

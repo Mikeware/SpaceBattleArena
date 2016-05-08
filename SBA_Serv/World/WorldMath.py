@@ -64,6 +64,16 @@ def aligninstances(obj1, obj2, class1, class2):
 
     return None, None
 
+def istypeinlist(t, lst):
+    """
+    Tests if the given type exists within the list.
+    """
+    for item in lst:
+        if isinstance(item, t):
+            return True
+
+    return False
+
 def distancesquared(pos1x, pos1y, pos2x, pos2y):
     return (pos1x - pos2x) ** 2 + (pos1y - pos2y) ** 2
 
@@ -98,7 +108,11 @@ def cfg_rand_min_max(cfg, section, option):
         section: Configuration section name.
         option: Configuration option name.
     """
-    return random.randint(cfg.getint(section, option+"_min"), cfg.getint(section, option+"_max"))
+    low = cfg.get(section, option+"_min")
+    if low.isdigit():
+        return random.randint(int(low), cfg.getint(section, option+"_max"))
+    else:
+        return random.uniform(float(low), cfg.getfloat(section, option+"_max"))
 
 # used by clients
 def getlocalposdistance(pos1, pos2, worldsize):

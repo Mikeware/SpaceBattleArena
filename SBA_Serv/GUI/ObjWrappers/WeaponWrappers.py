@@ -1,4 +1,5 @@
 import pygame
+import math
 
 from GUIEntity import GUIEntity
 from World.WorldCommands import ThrustCommand, BrakeCommand, WarpCommand
@@ -38,8 +39,18 @@ class SpaceMineGUI(GUIEntity):
         if flags["DEBUG"]:                        
             # position text
             if self._worldobj.mode == 3:
-                surface.blit(debugfont().render(repr(self._worldobj.target), False, (192, 192, 192)), (bp[0]-30, bp[1]-self._worldobj.radius-4))
+                # Homing
+                wrapcircle(surface, (64, 64, 255), bp, self._worldobj.influence_range, self._world.size, 3)
+                if self._worldobj.target != None:
+                    surface.blit(debugfont().render(repr(intpos(self._worldobj.target)), False, (192, 192, 192)), (bp[0]-30, bp[1]-self._worldobj.radius-10))
+            elif self._worldobj.mode == 2:
+                # Autonomnous
+                distance = self._worldobj.speed * 10
+                dest = (math.cos(math.radians(-self._worldobj.direction)) * distance,
+                        math.sin(math.radians(-self._worldobj.direction)) * distance)
+
+                pygame.draw.line(surface, (64, 64, 255), bp, (bp[0] + dest[0], bp[1] + dest[1])) # Preview of where Mine is heading
             # id text
-            surface.blit(debugfont().render("#"+str(self._worldobj.id)+" "+repr(self._worldobj.mode), False, (192, 192, 192)), (bp[0]-8, bp[1]+self._worldobj.radius+4))
+            surface.blit(debugfont().render("#"+str(self._worldobj.id)+" T"+repr(self._worldobj.mode), False, (192, 192, 192)), (bp[0]-20, bp[1]+self._worldobj.radius+4))
 
         #super(TorpedoGUI, self).draw(surface, flags)
