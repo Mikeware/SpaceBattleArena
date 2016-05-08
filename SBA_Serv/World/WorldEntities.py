@@ -113,6 +113,7 @@ class Ship(PhysicalRound):
         objData["ROTATIONSPEED"] = self.rotationSpeed
         objData["CURSHIELD"] = self.shield.value
         objData["MAXSHIELD"] = self.shield.maximum
+        objData["CMDLEN"] = len(self.commandQueue)
 
 class CelestialBody:
     """

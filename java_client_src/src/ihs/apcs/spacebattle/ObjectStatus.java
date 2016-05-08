@@ -41,6 +41,7 @@ public class ObjectStatus {
 	private double CURSHIELD; // Ship Only
 	private double MAXSHIELD; // Ship Only
 	private int RADARRANGE; // Ship Only
+	private int CMDLEN; // Ship Only
 	private boolean INBODY; // Ship or Celestial Body Only;
 	
 	// Game Specific
@@ -147,6 +148,7 @@ public class ObjectStatus {
 	 * @version 1.2
 	 */
 	public int getOrientation() { return (ROTATION + 360) % 360; }
+	
 	/**
 	 * Gets the number of degrees this Ship can turn in a second (default is 120).
 	 * @return speed in degrees per second the ship can rotate.
@@ -154,21 +156,30 @@ public class ObjectStatus {
 	 * @version 1.2
 	 */
 	public int getRotationSpeed() { return ROTATIONSPEED; }
+	
 	/**
 	 * Gets the current Shield strength of a Ship.
 	 * @return shields remaining.
 	 */
 	public double getShieldLevel() { return CURSHIELD; }
+	
 	/**
 	 * Gets the maximum amount of Shields the Ship object could have. (default is 100)
 	 * @return upper-bound of shield value.
 	 */
 	public double getMaxShield() { return MAXSHIELD; }
+	
 	/**
 	 * Gets the radius from a Ship object that its radar can detect objects. 
 	 * @return radar radius.
 	 */
 	public int getRadarRange() { return RADARRANGE; }
+	
+	/**
+	 * Gets the number of commands your Ship is currently executing.
+	 * @return number of commands being executed
+	 */
+	public int getCommandQueueLength() { return CMDLEN; }
 	
 	/**
 	 * Is this object in a celestial object's body of effect?
