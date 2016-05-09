@@ -96,6 +96,51 @@ class SpaceMineStationaryTestCase(SBAGUITestCase):
 
         time.sleep(1.0)
 
+    def test_mine_explode_on_impact(self):
+        """
+        Tests if a ship hits a mine that it explodes
+        """
+        shipstart = self.game.world.mid_point(100, 0)
+        ship = AIShip_SetList("Miner", shipstart, self.game, [
+                "RotateCommand(self, 180)",
+                "ThrustCommand(self, 'B', 1.5, 1.0)"
+            ])
+
+        minestart = self.game.world.mid_point(0, 0)
+        mine = SpaceMine(minestart, 0.0, 1)
+        self.game.world.append(mine)
+
+        time.sleep(0.5)
+
+        self.assertIn(ship, self.game.world, "Ship not in world.")
+        self.assertIn(mine, self.game.world, "Mine not in world.")
+        self.assertEqual(len(self.game.world), 2, "More than just ship & mine in world.")
+
+        self.assertGreater(ship.body.position[0], mine.body.position[0], "Ship not to right of mine")
+        
+        time.sleep(6.0)
+
+        self.assertLess(ship.body.position[0], shipstart[0], "Ship not moving left.")
+        pos = ship.body.position[0]
+
+        time.sleep(2.8)
+
+        vel = ship.body.velocity.length
+        
+        self.assertAlmostEqual(mine.body.position[0], ship.body.position[0], None, "Mine not near ship", 48)
+        self.assertAlmostEqual(mine.body.position[1], ship.body.position[1], None, "Mine not near ship", 48)
+
+        time.sleep(2.0)
+
+        self.assertIn(ship, self.game.world, "Ship not in world.")
+        self.assertEqual(len(self.game.world), 1, "More than just ship in world.")
+        self.assertLess(ship.health.value, ship.health.maximum, "Ship didn't take damage.")
+
+        self.assertGreater(ship.body.velocity.length, vel + 3, "Mine did not propel ship on explosion.")
+        self.assertGreater(ship.body.position[0], pos, "Ship not moving towards the right.")
+
+        time.sleep(1.0)
+
 
 class SpaceMineAutonomousTestCase(SBAGUITestCase):
 
