@@ -1,7 +1,7 @@
 """
 Space Battle Arena is a Programming Game.
 
-Copyright (C) 2012-2015 Michael A. Hawker and Brett Wortzman
+Copyright (C) 2012-2016 Michael A. Hawker and Brett Wortzman
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 
@@ -198,10 +198,12 @@ class SBAGUITestCase(SBAWorldTestCase):
         super(SBAGUITestCase, self).setUp()
 
         self.donetest = False
+        self.flashcolor = False # Used to flash a border of color around the GUI, set to triplet
+        #self.resettimer = False # TODO: Used to reset timer in GUI when set to true (need different timing mechanism, should record 'laps'/legs underneath timer each time...)
 
         # TODO: Investigate doing this statically, so it remains open for multiple tests in a suite???
         # Start GUI in separate Thread, so test can run
-        thread.start_new_thread(main.startGame, ("Space Battle Tests - " + self._testMethodName, self.game, False, (self.cfg.getint("Application", "horz_res"), self.cfg.getint("Application", "vert_res")), self.cfg.getboolean("Application", "showstats"), self.cfg.getboolean("Application", "sound"), self.cfg, self))
+        thread.start_new_thread(main.startGame, ("Space Battle Tests - " + self._testMethodName, self.game, False, (self.cfg.getint("Application", "horz_res"), self.cfg.getint("Application", "vert_res")), self.cfg, self))
 
     def tearDown(self):
         self._resultForDoCleanups.printErrors()

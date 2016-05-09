@@ -97,6 +97,7 @@ class PhysicsCore(Entity):
         destroyed: boolean should this object be removed on the next cycle.
         TTL: if set as number, will automatically remove the object after this time has elapsed.
         explodable: will this object be influenced by explosions in the game world.
+        gravitable: will this object by influenced by 'gravitational' forces of objects (like planets) see Influential.
 
         inertia: physical moment for this object.
         body: pymunk Body for this object.
@@ -104,7 +105,6 @@ class PhysicsCore(Entity):
 
         destroyed: this object has lost all its health and was removed from the world
         TTL: time to live, amount of time before this object should get removed from the world, if None will be ignored
-        explodable: boolean should this object be effected by explosion forces
     """
     def __init__(self, mass, pos):
         super(PhysicsCore, self).__init__()
@@ -112,6 +112,7 @@ class PhysicsCore(Entity):
         self.body.position = pos
                 
         self.explodable = True
+        self.gravitable = True
 
     def _constructPhysics(self, mass, pos):
         """To be called by the parent class to define the Physical model of this shape.

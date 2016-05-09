@@ -16,7 +16,7 @@ import ihs.apcs.spacebattle.util.StringMap;
  * @author Brett Wortzman
  *
  * @since 0.1
- * @version 1.1
+ * @version 1.2
  */
 public class ObjectStatus {
 	// Fields
@@ -36,8 +36,8 @@ public class ObjectStatus {
 	private double MAXENERGY;
 	private double ENERGYRECHARGERATE;
 
-	private double ROTATION; // Ship,Nebula Only
-	private double ROTATIONSPEED; // Ship Only
+	private int ROTATION; // Ship,Nebula Only
+	private int ROTATIONSPEED; // Ship Only
 	private double CURSHIELD; // Ship Only
 	private double MAXSHIELD; // Ship Only
 	private int RADARRANGE; // Ship Only
@@ -101,8 +101,10 @@ public class ObjectStatus {
 	/**
 	 * Get the actual direction of travel for this object.  This may not equal its the direction it is facing (orientation) {@link #getOrientation() }
 	 * @return angle in degrees
+	 * 
+	 * @version 1.2
 	 */
-	public double getMovementDirection() { return DIRECTION; }
+	public double getMovementDirection() { return (DIRECTION + 360.0) % 360.0; }
 	/**
 	 * Gets this object's mass.
 	 * @return mass value.
@@ -141,13 +143,17 @@ public class ObjectStatus {
 	/**
 	 * Gets the current Orientation of a Ship or Nebula.
 	 * @return the orientation in degrees.
+	 * 
+	 * @version 1.2
 	 */
-	public double getOrientation() { return ROTATION; }
+	public int getOrientation() { return (ROTATION + 360) % 360; }
 	/**
 	 * Gets the number of degrees this Ship can turn in a second (default is 120).
 	 * @return speed in degrees per second the ship can rotate.
+	 * 
+	 * @version 1.2
 	 */
-	public double getRotationSpeed() { return ROTATIONSPEED; }
+	public int getRotationSpeed() { return ROTATIONSPEED; }
 	/**
 	 * Gets the current Shield strength of a Ship.
 	 * @return shields remaining.

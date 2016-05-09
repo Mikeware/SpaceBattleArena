@@ -1,7 +1,7 @@
 """
 Space Battle Arena is a Programming Game.
 
-Copyright (C) 2012-2015 Michael A. Hawker and Brett Wortzman
+Copyright (C) 2012-2016 Michael A. Hawker and Brett Wortzman
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 
@@ -113,8 +113,9 @@ class WorldTestCase(SBAGUITestCase):
 
         self.assertIn(ship, self.game.world, "Ship not in world.")
         self.assertNotEqual(ship.body.position, start, "Ship didn't move") # should move when respawn
+        #self.assertTrue(ship.destroyed, "Ship not marked destroyed")
 
-        # TODO, need to respawn ship!
+        # TODO, need to respawn ship! Issue with _game_add_ship_for_player?
 
 
 class WorldNoRespawnTestCase(SBAWorldTestCase):
@@ -195,6 +196,58 @@ class WorldVisualShipExplosionTestCase(SBAGUITestCase):
 
 class WorldVisualShipRespawnTestCase(SBAGUITestCase):
 
+    def test_ship_ram_planet(self):
+        """
+        Tests a ship raming into a planet should take damange.
+        """
+        planet = Planet(self.game.world.mid_point(0,0))
+        self.game.world.append(planet)
+
+        start = self.game.world.mid_point(300, 0)
+        ship = AIShip_SetList("Doomed", start, self.game, [
+                "RotateCommand(self, 180)",
+                "ThrustCommand(self, 'B', 6.0, 1.0)"
+            ])
+        health = ship.health.value
+
+        start2 = self.game.world.mid_point(-50, 250)
+        ship2 = AIShip_SetList("Free", start2, self.game, [])
+
+        time.sleep(15.0)
+
+        self.failIfAlmostEqual(ship.body.position, start, None, "Doomed ship should have moved", 5)
+        self.assertAlmostEqual(ship2.body.position, start2, None, "Free Ship not in same place", 2)
+
+        self.failIfAlmostEqual(ship.health.value, health, None, "Doomed ship should have taken damage", 5)
+        #self.assertAlmostEqual(planet.body.position, self.game.world.mid_point(0, 0), None, "Planet shouldn't move when hit", 1)
+
+    def test_ship_ram_planet_destroyed(self):
+        """
+        Tests a ship raming into a planet should take damange.
+        """
+        planet = Planet(self.game.world.mid_point(0,0))
+        self.game.world.append(planet)
+
+        start = self.game.world.mid_point(300, 0)
+        ship = AIShip_SetList("Doomed", start, self.game, [
+                "RotateCommand(self, 180)",
+                "ThrustCommand(self, 'B', 6.0, 1.0)"
+            ])
+        ship.health /= 2
+        health = ship.health.value
+
+        start2 = self.game.world.mid_point(-50, 250)
+        ship2 = AIShip_SetList("Free", start2, self.game, [])
+
+        time.sleep(15.0)
+
+        self.failIfAlmostEqual(ship.body.position, start, None, "Doomed ship should have moved", 5)
+        self.assertAlmostEqual(ship2.body.position, start2, None, "Free Ship not in same place", 2)
+
+        self.failIfAlmostEqual(ship.health.value, health, None, "Doomed ship should have taken damage", 5)
+        self.assertEqual(ship.killedby, planet, "Planet not set as killer")
+        #self.assertTrue(ship.destroyed, "Doomed not marked destroyed") # Issue with _game_add_ship_for_player dealing with AI_Ships, moving it and resetting... boo
+
     def test_planet_gravity(self):
         """
         Tests a ship inside a gravity well vs outside.
@@ -226,6 +279,88 @@ class WorldVisualShipRespawnTestCase(SBAGUITestCase):
         time.sleep(5.0)
 
         self.assertAlmostEqual(ship.body.position, start, None, "Doomed ship shouldn't have moved", 2)
+
+    def test_planet_torpedo_no_gravity(self):
+        """
+        Tests torpedos aren't effected by planet's gravity.
+        """
+        planet = Planet(self.game.world.mid_point(0,0), 256, 100)
+        self.game.world.append(planet)
+
+        start = self.game.world.mid_point(0, -100)
+        ship = AIShip_SetList("Bully", start, self.game, [
+                "RotateCommand(self, 170)",
+                "FireTorpedoCommand(self, 'F')",
+                "IdleCommand(self, 1.0)",
+                "FireTorpedoCommand(self, 'F')",
+                "IdleCommand(self, 1.0)",
+                "FireTorpedoCommand(self, 'F')",
+                "IdleCommand(self, 1.0)",
+                "FireTorpedoCommand(self, 'F')",
+                "IdleCommand(self, 1.0)",
+                "FireTorpedoCommand(self, 'F')",
+                "IdleCommand(self, 1.0)",
+            ])
+
+        start2 = self.game.world.mid_point(-100, 50)
+        ship2 = AIShip_SetList("Doomed", start2, self.game, [])
+
+        self.assertEqual(ship.health.value, ship.health.maximum, "Ship Bully not at full health.")
+        self.assertEqual(ship2.health.value, ship2.health.maximum, "Ship Doomed not at full health.")
+
+        time.sleep(12.0)
+
+        self.assertTrue(ship in self.game.world, "Bully Ship missing")
+        self.assertTrue(ship2 in self.game.world, "Doomed Ship missing")
+        self.assertGreater(ship.health.value, ship.health.maximum / 2, "Ship Bully not at 'full' health.")
+        self.assertGreater(ship2.health.value, ship2.health.maximum / 3, "Ship Doomed not at 'full' health.")
+
+        self.assertEqual(len(self.game.world), 3, "Not all objects still in world")
+    
+    def test_planet_torpedo_gravity(self):
+        """
+        Tests torpedos aren't effected by planet's gravity.
+        """
+        planet = Planet(self.game.world.mid_point(0,0), 256, 100, torpedo = True)
+        self.game.world.append(planet)
+
+        start = self.game.world.mid_point(0, -100)
+        ship = AIShip_SetList("Bully", start, self.game, [
+                "RotateCommand(self, 170)",
+                "FireTorpedoCommand(self, 'F')",
+                "IdleCommand(self, 1.0)",
+                "FireTorpedoCommand(self, 'F')",
+                "IdleCommand(self, 1.0)",
+                "FireTorpedoCommand(self, 'F')",
+                "IdleCommand(self, 1.0)",
+                "FireTorpedoCommand(self, 'F')",
+                "IdleCommand(self, 1.0)",
+                "FireTorpedoCommand(self, 'F')",
+                "IdleCommand(self, 1.0)",
+            ])
+
+        start2 = self.game.world.mid_point(-100, 50)
+        ship2 = AIShip_SetList("Doomed", start2, self.game, [])
+
+        self.assertEqual(ship.health.value, ship.health.maximum, "Ship Bully not at full health.")
+        self.assertEqual(ship2.health.value, ship2.health.maximum, "Ship Doomed not at full health.")
+
+        time.sleep(6.0)
+
+        self.assertGreater(ship.health.value, ship.health.maximum / 2, "Ship Bully not at 'full' health.")
+        #self.assertLess(ship2.health.value, ship2.health.maximum / 3, "Ship Doomed at 'full' health.")
+
+        self.assertTrue(ship in self.game.world, "Bully Ship missing")
+        #self.assertFalse(ship2 in self.game.world, "Doomed Ship not destroyed") # BUGBUG: AI setup overwriting this, should redo how AI-Ships 'respawn'?
+        print ship2.killedby
+        self.assertIsNotNone(ship2.killedby, "Ship Killed By Not Set.")
+        self.assertTrue(isinstance(ship2.killedby, Torpedo), "Ship not marked as destroyed by Torpedo.")
+        self.assertEqual(ship2.killedby.owner, ship, "Torpedo was not marked as belonging to Ship Bully.")
+
+        time.sleep(6.0)
+
+        # should be 2, but other AI-ship sticks around...?
+        self.assertEqual(len(self.game.world), 3, "Not all objects still in world")
 
     def test_nebula_drag(self):
         """
