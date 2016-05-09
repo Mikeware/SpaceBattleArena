@@ -113,7 +113,13 @@ class Ship(PhysicalRound):
         objData["ROTATIONSPEED"] = self.rotationSpeed
         objData["CURSHIELD"] = self.shield.value
         objData["MAXSHIELD"] = self.shield.maximum
-        objData["CMDLEN"] = len(self.commandQueue)
+
+        # Only show some properties to the owner of the ship
+        if player != None and hasattr(self, "player") and self.player != None and self.player.netid == player.netid:
+            objData["CMDQ"] = self.commandQueue.getRadarRepr()
+        else:
+            # Remove this property for other ships
+            del objData["CURENERGY"]
 
 class CelestialBody:
     """

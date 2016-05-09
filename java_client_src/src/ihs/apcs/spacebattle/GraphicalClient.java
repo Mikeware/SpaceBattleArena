@@ -15,7 +15,6 @@
 package ihs.apcs.spacebattle;
 
 import ihs.apcs.spacebattle.commands.IdleCommand;
-import ihs.apcs.spacebattle.commands.SelfDestructCommand;
 import ihs.apcs.spacebattle.commands.ShipCommand;
 import ihs.apcs.spacebattle.networking.*;
 import ihs.apcs.spacebattle.util.StringStringMap;
@@ -137,8 +136,6 @@ public class GraphicalClient implements Runnable, Client {
 			
 			if (cmd == null) {
 				cmd = new IdleCommand(0.1);
-			} else if (cmd instanceof SelfDestructCommand) {
-				disconnect();
 			} else {
 				MwnpMessage response = new MwnpMessage(new Integer[]{netId, 0}, cmd);
 				messenger.sendMessage(response);

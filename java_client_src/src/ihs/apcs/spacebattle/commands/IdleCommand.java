@@ -29,8 +29,8 @@ public class IdleCommand extends ShipCommand {
 	 * @see ihs.apcs.spacebattle.commands.ShipCommand#getName()
 	 */
 	@Override
-	protected String getName() {
-		return "IDLE";
+	public String getName() {
+		return CommandNames.Idle.toString();
 	}
 
 	/**

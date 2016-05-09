@@ -24,9 +24,12 @@ public class RepairCommand extends ShipCommand {
 		this.AMT = amount;
 	}
 
+	/* (non-Javadoc)
+	 * @see ihs.apcs.spacebattle.commands.ShipCommand#getName()
+	 */
 	@Override
-	protected String getName() {
-		return "REP";
+	public String getName() {
+		return CommandNames.Repair.toString();
 	}
 
 	/**

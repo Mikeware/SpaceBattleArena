@@ -20,10 +20,12 @@ public class FireTorpedoCommand extends ShipCommand {
 		this.DIR = direction;
 	}
 	
+	/* (non-Javadoc)
+	 * @see ihs.apcs.spacebattle.commands.ShipCommand#getName()
+	 */
 	@Override
-	protected String getName() {
-		// TODO Auto-generated method stub
-		return "FIRE";
+	public String getName() {
+		return CommandNames.FireTorpedo.toString();
 	}
 	
 	/**

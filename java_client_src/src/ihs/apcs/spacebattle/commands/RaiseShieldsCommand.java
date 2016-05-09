@@ -26,10 +26,12 @@ public class RaiseShieldsCommand extends ShipCommand {
 		this.DUR = duration;
 	}
 
+	/* (non-Javadoc)
+	 * @see ihs.apcs.spacebattle.commands.ShipCommand#getName()
+	 */
 	@Override
-	protected String getName() {
-		// TODO Auto-generated method stub
-		return "SHLD";
+	public String getName() {
+		return CommandNames.RaiseShields.toString();
 	}
 
 	/**

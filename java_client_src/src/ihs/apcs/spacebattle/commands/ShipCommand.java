@@ -9,10 +9,10 @@ import ihs.apcs.spacebattle.util.*;
  * @author Brett Wortzman
  *
  * @since 0.1
- * @version 1.1
+ * @version 1.2
  */
 public abstract class ShipCommand {
-	protected abstract String getName();
+	public abstract String getName();
 	
 	/**
 	 * Gets the one-time energy cost to initiate this command.

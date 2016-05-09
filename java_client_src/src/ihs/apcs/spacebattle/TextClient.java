@@ -211,8 +211,6 @@ public class TextClient implements Client {
 			}
 			if (cmd == null) {
 				cmd = new IdleCommand(0.1);
-			} else if (cmd instanceof SelfDestructCommand) {
-				disconnect();
 			} else {
 				MwnpMessage response = new MwnpMessage(new Integer[]{netId, 0}, cmd);
 				messenger.sendMessage(response);

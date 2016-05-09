@@ -55,8 +55,8 @@ public class RadarCommand extends ShipCommand {
 	 * @see ihs.apcs.spacebattle.commands.ShipCommand#getName()
 	 */
 	@Override
-	protected String getName() {
-		return "RADAR";
+	public String getName() {
+		return CommandNames.Radar.toString();
 	}
 
 	/**

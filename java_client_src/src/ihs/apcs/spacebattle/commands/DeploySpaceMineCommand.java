@@ -66,10 +66,12 @@ public class DeploySpaceMineCommand extends ShipCommand {
 		this.DUR = duration;
 	}
 	
+	/* (non-Javadoc)
+	 * @see ihs.apcs.spacebattle.commands.ShipCommand#getName()
+	 */
 	@Override
-	protected String getName() {
-		// TODO Auto-generated method stub
-		return "MINE";
+	public String getName() {
+		return CommandNames.DeploySpaceMine.toString();
 	}
 	
 	/**

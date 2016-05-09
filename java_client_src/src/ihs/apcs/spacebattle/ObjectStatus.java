@@ -7,6 +7,7 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 
 import ihs.apcs.spacebattle.util.StringMap;
+import ihs.apcs.spacebattle.commands.CommandNames;
 
 /**
  * A class to represent the status of a ship or other object.  This class is used both to
@@ -41,7 +42,7 @@ public class ObjectStatus {
 	private double CURSHIELD; // Ship Only
 	private double MAXSHIELD; // Ship Only
 	private int RADARRANGE; // Ship Only
-	private int CMDLEN; // Ship Only
+	private String[] CMDQ; // Ship Only
 	private boolean INBODY; // Ship or Celestial Body Only;
 	
 	// Game Specific
@@ -126,6 +127,8 @@ public class ObjectStatus {
 	public double getMaxHealth() { return MAXHEALTH; }
 	/**
 	 * Gets the current amount of energy this object has.
+	 * This is only provided for your own ship. (i.e. You can't see other ship's energy levels through radar.)
+	 * 
 	 * @return energy remaining.
 	 */
 	public double getEnergy() { return CURENERGY; }
@@ -176,10 +179,13 @@ public class ObjectStatus {
 	public int getRadarRange() { return RADARRANGE; }
 	
 	/**
-	 * Gets the number of commands your Ship is currently executing.
-	 * @return number of commands being executed
+	 * Gets the list of {@link CommandNames} your Ship is currently executing.
+	 * This is only provided for your own ship. (i.e. You can't see other ship's queues through radar.)
+	 * If the last command requested was a blocking command, it will have finished before this list is populated.
+	 * 
+	 * @return commands still being executed
 	 */
-	public int getCommandQueueLength() { return CMDLEN; }
+	public String[] getCommandQueue() { return CMDQ; }
 	
 	/**
 	 * Is this object in a celestial object's body of effect?

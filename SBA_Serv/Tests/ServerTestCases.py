@@ -228,5 +228,70 @@ class ServerGUISingleShipRemoteTestCase(SBAGUIWithServerTestCase):
         # means we should be more prudent with testing for those cases with asserts to prevent bad tests.
         raise Exception
 
+
+class ServerGUITwoShipRemoteTestCase(SBAGUIWithServerTestCase):
+
+    def get_config_filename(self):
+        return "test_server.cfg"
+
+    # TODO: Expected Failure - Issue #112
+    def test_add_two_ships_and_disconnect(self):
+        """
+        Tests adding two networked clients to a server and that they can disconnect
+        """
+        self.__env_target = None
+        self.__env_radar = None
+
+        self.targetship = AIShip_Network_Harness("Target", self.__target_ship)
+        self.assertTrue(self.targetship.connect(self.cfg.getint("Server", "port")), "Target Didn't connect to server.")
+
+        self.radarship = AIShip_Network_Harness("Radar", self.__radar_ship)
+        self.assertTrue(self.radarship.connect(self.cfg.getint("Server", "port")), "Radar Didn't connect to server.")
+
+        time.sleep(0.25)
+
+        self.assertTrue(self.targetship.isconnected(), "Target Client not connected to server.")
+        self.assertTrue(self.radarship.isconnected(), "Radar Client not connected to server.")
+
+        self.assertIsNotNone(self.__env_target, "Target Never received environment.")
+        self.assertIsNotNone(self.__env_radar, "Radar Never received environment.")
+
+        self.assertEqual(len(self.game.world), 2, "Both Ships not in world.")
+
+        tship = None
+        rship = None
+
+        for obj in self.game.world:
+            if "Target" in obj.player.name:
+                tship = obj
+            elif "Radar" in obj.player.name:
+                rship = obj
+        
+        self.assertIsNotNone(tship, "Couldn't find Target Ship")
+        self.assertIsNotNone(rship, "Couldn't find Radar Ship")
+
+        time.sleep(0.25)
+
+        self._endServer() # Note, Ship will still be visible as we're not removing it from world in this test.
+
+        time.sleep(0.5)
+
+        self.assertFalse(self.targetship.isconnected(), "Target Client still connected to server after disconnect.")
+        self.assertFalse(self.radarship.isconnected(), "Radar Client still connected to server after disconnect.")
+
+        self.assertEqual(len(self.game.world), 0, "Objects still in world.")
+
+        time.sleep(0.5)
+
+    def __target_ship(self, env):
+        logging.info("Test Case got Callback from Network for Target Ship")
+        self.__env_target = env
+        return RotateCommand(self.targetship, 240)
+
+    def __radar_ship(self, env):
+        logging.info("Test Case got Callback from Network for Radar Ship")
+        self.__env_radar = env
+        return RotateCommand(self.radarship, 240)
+
 if __name__ == '__main__':
     unittest.main()

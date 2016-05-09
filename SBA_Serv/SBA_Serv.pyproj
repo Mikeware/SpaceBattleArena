@@ -69,6 +69,7 @@
     <Compile Include="Tests\KingOfTheBubbleTestCases.py" />
     <Compile Include="Tests\BaubleHuntTestCases.py" />
     <Compile Include="Tests\HungryHungryBaublesTestCases.py" />
+    <Compile Include="Tests\RadarTestCases.py" />
     <Compile Include="Tests\SurvivorTestCases.py" />
     <Compile Include="Tests\CombatExerciseTestCases.py" />
     <Compile Include="Tests\AsteroidMinerTestCases.py" />

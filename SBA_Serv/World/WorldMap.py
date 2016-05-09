@@ -303,6 +303,7 @@ class GameWorld(object):
         return count
 
     def getObjectData(self, obj, player):
+        #TODO: Move these properties to the 'getExtraInfo' of the base Entity and have child classes call super...
         objData = {}
         # Convert Type of Object to String
         objData["TYPE"] = friendly_type(obj)

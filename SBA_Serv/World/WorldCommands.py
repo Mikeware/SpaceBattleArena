@@ -423,6 +423,9 @@ class RadarCommand(Command):
     def __repr__(self):
         return super(RadarCommand, self).__repr__() + " LVL: " + repr(self.level) + " TAR: " + repr(self.target)
 
+    def net_repr(self):
+        return (RadarCommand.NAME, {"LVL": self.level, "TAR":self.target})
+
 class DeployLaserBeaconCommand(OneTimeCommand):
     NAME = SHIP_CMD_DEPLOY_LASER_BEACON
 
@@ -529,7 +532,8 @@ class CloakCommand(Command):
     def __init__(self, obj, duration):
         super(CloakCommand, self).__init__(obj, CloakCommand.NAME, duration, block=False, required=15)
         self.energycost = 2
-        self._obj.player.sound = "CLOAK"
+        if hasattr(self._obj, "player") and self._obj.player != None:
+            self._obj.player.sound = "CLOAK"
         self._done = False
         
     def isComplete(self):
@@ -540,6 +544,9 @@ class CloakCommand(Command):
     def execute(self, t):
         if self._obj.commandQueue.containstype(FireTorpedoCommand, True) or self._obj.commandQueue.containstype(RaiseShieldsCommand, True):
             self._done = True
+
+    def net_repr(self):
+        return (CloakCommand.NAME, {"DUR": self.timeToLive})
 
 class RaiseShieldsCommand(Command):
     NAME = SHIP_CMD_SHIELD

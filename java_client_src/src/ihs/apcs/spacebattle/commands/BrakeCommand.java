@@ -29,8 +29,8 @@ public class BrakeCommand extends ShipCommand {
 	 * @see ihs.apcs.spacebattle.commands.ShipCommand#getName()
 	 */
 	@Override
-	protected String getName() {
-		return "BRAKE";
+	public String getName() {
+		return CommandNames.Brake.toString();
 	}
 
 	/**

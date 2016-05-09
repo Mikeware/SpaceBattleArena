@@ -36,8 +36,8 @@ public class ThrustCommand extends ShipCommand {
 	 * @see ihs.apcs.spacebattle.commands.ShipCommand#getName()
 	 */
 	@Override
-	protected String getName() {
-		return "THRST";
+	public String getName() {
+		return CommandNames.Thrust.toString();
 	}
 
 	/**

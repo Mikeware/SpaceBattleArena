@@ -21,12 +21,15 @@ public class CloakCommand extends ShipCommand {
 	 * @param duration the amount of time to remain cloaked (in seconds)
 	 */
 	public CloakCommand(double duration)  {
-		this.DUR= duration;
+		this.DUR = duration;
 	}
 	
+	/* (non-Javadoc)
+	 * @see ihs.apcs.spacebattle.commands.ShipCommand#getName()
+	 */
 	@Override
-	protected String getName() {
-		return "CLOAK";
+	public String getName() {
+		return CommandNames.Cloak.toString();
 	}
 
 	/**

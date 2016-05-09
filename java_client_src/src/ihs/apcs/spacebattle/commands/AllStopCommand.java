@@ -16,9 +16,12 @@ public class AllStopCommand extends ShipCommand {
 	 */
 	public AllStopCommand() { }
 
+	/* (non-Javadoc)
+	 * @see ihs.apcs.spacebattle.commands.ShipCommand#getName()
+	 */
 	@Override
-	protected String getName() {
-		return "STOP";
+	public String getName() {
+		return CommandNames.AllStop.toString();
 	}
 
 	/**

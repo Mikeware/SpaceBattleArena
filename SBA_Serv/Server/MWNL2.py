@@ -276,7 +276,7 @@ class MWNL_Init:
             else:
                 # Broadcast Message
                 for conn in self.__connections.values():
-                    logging.debug("Broadcasting to " + repr(conn))
+                    logging.debug("Broadcasting to " + repr(conn.getAddress()))
                     conn.send(info, command, data)
                 #END FOR
             #END IF

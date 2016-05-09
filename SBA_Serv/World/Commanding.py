@@ -126,5 +126,14 @@ class CommandSystem(object):
         self.__queueSemaphore.release()
         return x
 
+    def getRadarRepr(self):
+        # Returns a short form of list with just the command names
+        lst = []
+        self.__queueSemaphore.acquire()
+        for cmd in self.__queue:
+            lst.append(cmd.NAME)
+        self.__queueSemaphore.release()
+        return lst
+
     def __repr__(self):
         return "CommandSystem(" + repr(self.__queue) + ")"

@@ -12,6 +12,9 @@ v1.2 : Planned - May 2016 [Season 5]
     * Added **getPointAt** for point projections based on angles and distance
     * Added **isInEllipse** check method
     * Added **getClosestMappedPoint** for world bounds assistance
+* Added ability for client to get info on ship's running commands **getCommandQueue** in the environment *getShipStatus*.
+	 * Command Queue and Current Energy Properties are now only available to its own ship (can't be seen with radar).
+* **Removed SelfDestructCommand**
 * Added option for Torpedoes to be effected by gravity
 * Split 'explodable' from 'gravitable' for Entities, two separate object flags now.
 * Separated option for 'showip' in Application settings to decouple from showing statistics, no longer always show IP in Debug mode.

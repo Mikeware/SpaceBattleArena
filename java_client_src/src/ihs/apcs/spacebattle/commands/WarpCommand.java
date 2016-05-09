@@ -38,9 +38,12 @@ public class WarpCommand extends ShipCommand {
 		this.DIST = distance;
 	}
 
+	/* (non-Javadoc)
+	 * @see ihs.apcs.spacebattle.commands.ShipCommand#getName()
+	 */
 	@Override
-	protected String getName() {
-		return "WARP";
+	public String getName() {
+		return CommandNames.Warp.toString();
 	}
 	
 	/**

@@ -36,9 +36,12 @@ public class SteerCommand extends ShipCommand {
 		BLOCK = block;
 	}
 
+	/* (non-Javadoc)
+	 * @see ihs.apcs.spacebattle.commands.ShipCommand#getName()
+	 */
 	@Override
-	protected String getName() {
-		return "STEER";
+	public String getName() {
+		return CommandNames.Steer.toString();
 	}
 	
 	/**

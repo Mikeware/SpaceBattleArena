@@ -18,9 +18,13 @@ public class DeployLaserBeaconCommand extends ShipCommand {
 	 * Creates a command to deploy a laser beacon at the ship's current
 	 *   position.
 	 */
+	
+	/* (non-Javadoc)
+	 * @see ihs.apcs.spacebattle.commands.ShipCommand#getName()
+	 */
 	@Override
-	protected String getName() {
-		return "DLBN";
+	public String getName() {
+		return CommandNames.DeployLaserBeacon.toString();
 	}
 
 	/**

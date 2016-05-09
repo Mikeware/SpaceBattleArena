@@ -20,9 +20,12 @@ public class RotateCommand extends ShipCommand {
 		DEG = degrees;
 	}
 
+	/* (non-Javadoc)
+	 * @see ihs.apcs.spacebattle.commands.ShipCommand#getName()
+	 */
 	@Override
-	protected String getName() {
-		return "ROT";
+	public String getName() {
+		return CommandNames.Rotate.toString();
 	}
 	
 	/**
