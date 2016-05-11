@@ -36,6 +36,7 @@ class FindTheMiddleGame(BasicGame):
         self.__objective_points = map(int, cfgobj.get("FindTheMiddle", "objective_points").split(","))
         self.__objective_time = float(cfgobj.getint("FindTheMiddle", "objective_time"))
         self.__objective_velocity = cfgobj.getint("FindTheMiddle", "objective_velocity")
+        self.__reset_timer = cfgobj.getboolean("FindTheMiddle", "reset_timer")
 
         super(FindTheMiddleGame, self).__init__(cfgobj)
 
@@ -57,7 +58,7 @@ class FindTheMiddleGame(BasicGame):
         pos = (random.randint(50, self.world.width - 50),
                random.randint(50, self.world.height - 50))
         x = 0
-        while (len(self.world.getObjectsInArea(pos, 75)) > 0 or in_circle(self.midpoint, self.__objective_radii[-1], pos)) and x < 15:
+        while ((len(self.world.getObjectsInArea(pos, 75)) > 0 and x < 25) or in_circle(self.midpoint, self.__objective_radii[-1] + 32, pos)):
             x += 1
             pos = (random.randint(50, self.world.width - 50),
                    random.randint(50, self.world.height - 50))
@@ -78,12 +79,14 @@ class FindTheMiddleGame(BasicGame):
                         # slowed enough, figure out how many points to give
                         x = 0
                         for radius in self.__objective_radii:
-                            if in_circle(self.midpoint, radius + 28, ship.body.position):                                
+                            if in_circle(self.midpoint, radius + 28, ship.body.position):
                                 break
                             x += 1
                         ship.body.position = self.player_get_start_position() 
                         self.player_update_score(ship.player, self.__objective_points[x])
                         ship.player.time = 0
+                elif self.__reset_timer:
+                    ship.player.time = 0
 
         super(FindTheMiddleGame, self).game_update(t)
 

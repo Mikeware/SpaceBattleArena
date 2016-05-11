@@ -31,5 +31,8 @@ Specifies how much each corresponding ring above is worth in number of points.  
 ###objective_time = int
 How long must a player remain at a low speed to collect the points.
 
+###reset_timer = boolean
+Should the objective timer reset if the ship's speed increases past the objective velocity again.
+
 ###objective_velocity = int
 What speed is considered slow to start counting towards the **objective_time**.
