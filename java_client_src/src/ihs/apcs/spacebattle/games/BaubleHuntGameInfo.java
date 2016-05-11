@@ -22,17 +22,10 @@ import java.util.*;
  * @version 1.0
  */
 public class BaubleHuntGameInfo extends BasicGameInfo {
-	private double[] POSITION;
 	private double[][] BAUBLES;
 	private int COLLECTED;
 	private int STORED;
 	private int STOREDVALUE;
-	
-	/**
-	 * Gets the position of your home base outpost.
-	 * @return the position of your home base outpost
-	 */
-	public Point getHomeBasePosition() { return new Point(POSITION); }
 	
 	/**
 	 * Gets a list of positions where there are high-value baubles.  Not all
@@ -68,6 +61,6 @@ public class BaubleHuntGameInfo extends BasicGameInfo {
 	
 	@Override
 	public String toString() {
-		return String.format("{Target: %s; Score: %f; Deaths: %d; High Score: %f}", getHomeBasePosition(), getScore(), getNumDeaths(), getHighScore());
+		return String.format("{Target: %s; Score: %f; Deaths: %d; High Score: %f}", getObjectiveLocation(), getScore(), getNumDeaths(), getHighScore());
 	}
 }

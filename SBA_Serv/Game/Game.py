@@ -477,7 +477,7 @@ class BasicGame(object):
         if player.score < 0:
             player.score = 0
 
-        # TODO: should probably check if primary highest flag to see if we want to keep track of lowest or highest score here
+        # TODO: #118 should probably check if primary highest flag to see if we want to keep track of lowest or highest score here
         # update if this is a new personal best
         if player.score > player.bestscore:
             player.bestscore = player.score

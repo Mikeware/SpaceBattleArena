@@ -12,7 +12,7 @@ You should have received a copy of the GNU General Public License along with thi
 The full text of the license is available online: http://opensource.org/licenses/GPL-2.0
 """
 
-from Game import BasicGame
+from BaubleGame import *
 from Utils import CallbackTimer
 from World.Entities import Entity, PhysicalRound
 from World.WorldEntities import Ship
@@ -27,15 +27,11 @@ import random
 import thread
 from operator import attrgetter
 
-class BaubleHuntGame(BasicGame):
+class BaubleHuntGame(BaseBaubleGame):
     VALUE_TABLE = []
     
     def __init__(self, cfgobj):
-        bb = cfgobj.getfloat("BaubleHunt", "bauble_percent_blue")
-        yb = cfgobj.getfloat("BaubleHunt", "bauble_percent_yellow")
-        rb = cfgobj.getfloat("BaubleHunt", "bauble_percent_red")
-        self._mv = cfgobj.getint("BaubleHunt", "bauble_points_red")
-        BaubleHuntGame.VALUE_TABLE = [(bb, cfgobj.getint("BaubleHunt", "bauble_points_blue")), (bb+yb, cfgobj.getint("BaubleHunt", "bauble_points_yellow")), (bb+yb+rb, self._mv)]
+        self._mv = cfgobj.getint("BaubleGame", "bauble_points_red")
 
         self._respawn = cfgobj.getboolean("BaubleHunt", "respawn_bauble_on_collect")
         
@@ -202,54 +198,6 @@ class BaubleHuntGame(BasicGame):
         self.__baubles = ThreadSafeDict()
 
         super(BaubleHuntGame, self).round_start()
-
-
-class BaubleWrapper(GUIEntity):
-    def __init__(self, obj, world):
-        super(BaubleWrapper, self).__init__(obj, world)
-        self.surface = Cache().getImage("Games/Bauble" + str(obj.value))
-
-    def draw(self, surface, flags):
-        surface.blit(self.surface, intpos((self._worldobj.body.position[0] - 8, self._worldobj.body.position[1] - 8)))
-
-        super(BaubleWrapper, self).draw(surface, flags)
-
-class Bauble(PhysicalRound):
-    WRAPPERCLASS = BaubleWrapper
-    """
-    Baubles are small prizes worth different amounts of points
-    """
-    def __init__(self, pos, value=1):
-        super(Bauble, self).__init__(8, 2000, pos)
-        self.shape.elasticity = 0.8
-        self.health = PlayerStat(0)
-
-        self.shape.group = 1
-
-        self.value = value
-
-    def collide_start(self, otherobj):
-        return False
-
-    def getExtraInfo(self, objData, player):
-        objData["VALUE"] = self.value
-
-    @staticmethod
-    def spawn(world, cfg, pos=None):
-        if pos == None:
-            pos = getPositionAwayFromOtherObjects(world, cfg.getint("Bauble", "buffer_object"), cfg.getint("Bauble", "buffer_edge"))
-
-        # Get value within tolerances
-        r = random.random()
-        v = 0
-        for ent in BaubleHuntGame.VALUE_TABLE:
-            if r < ent[0]:
-                v = ent[1]
-                break
-
-        b = Bauble(pos, v)
-        world.append(b)
-        return b
 
 class OutpostWrapper(GUIEntity):
     def __init__(self, obj, world):

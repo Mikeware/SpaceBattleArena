@@ -21,6 +21,9 @@ public class BasicGameInfo {
 	private double HIGHSCORE;
 	private double TIMELEFT;
 	private double ROUNDTIME;
+	
+	// Possible Objective Location
+	private double[] POSITION;
 
 	/**
 	 * Gets your current score.
@@ -66,7 +69,13 @@ public class BasicGameInfo {
 	 * Will be 0 if there is currently no time limit.
 	 * @return total length of time for the current game's round
 	 */
-	public double getTotalRoundTime() { return ROUNDTIME; } 
+	public double getTotalRoundTime() { return ROUNDTIME; }
+	
+	/**
+	 * Gets a potential position of an assigned game location (read game rules for details).
+	 * @return the objective's position
+	 */
+	public Point getObjectiveLocation() { return POSITION != null ? new Point(POSITION) : null; }
 
 	@Override
 	public String toString() {

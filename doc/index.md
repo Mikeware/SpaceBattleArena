@@ -58,7 +58,7 @@ Documentation
         * [Survivor](games/survivor.html)
         * [Asteroid Miner](games/asteroidminer.html)
         * [Combat Exercise](games/combatexercise.html)
-    * [Hungry Hungry Baubles](games/hungryhungrybaubles.html)
+    	* [Hungry Hungry Baubles](games/hungryhungrybaubles.html)
     * [Bauble Hunt](games/baublehunt.html)
     * [King of the Bubble](games/kingofthebubble.html)
         * [King of Space (Variant)](games/kingofthebubble.html#kos)

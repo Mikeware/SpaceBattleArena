@@ -84,11 +84,11 @@ class HungryHungryBaublesTestCases(SBAGUITestCase):
 
         time.sleep(5)
 
-        self.assertEqual(ship.player.score, self.cfg.getint("HungryHungryBaubles", "bauble_points_blue"), "Player didn't earn point")
+        self.assertEqual(ship.player.score, self.cfg.getint("BaubleGame", "bauble_points_blue"), "Player didn't earn point")
 
         time.sleep(6)
 
-        self.assertEqual(ship.player.score, self.cfg.getint("HungryHungryBaubles", "bauble_points_blue") + self.cfg.getint("HungryHungryBaubles", "bauble_points_gold"), "Player didn't earn point gold")
+        self.assertEqual(ship.player.score, self.cfg.getint("BaubleGame", "bauble_points_blue") + self.cfg.getint("BaubleGame", "bauble_points_yellow"), "Player didn't earn point gold")
 
         time.sleep(0.5)
         # move to golden bauble position
@@ -97,7 +97,7 @@ class HungryHungryBaublesTestCases(SBAGUITestCase):
 
         time.sleep(0.5)
 
-        self.assertEqual(ship.player.score, self.cfg.getint("HungryHungryBaubles", "bauble_points_blue") + self.cfg.getint("HungryHungryBaubles", "bauble_points_gold") * 2 + self.cfg.getint("HungryHungryBaubles", "bauble_points_extra"), "Player didn't earn golden bauble points")
+        self.assertEqual(ship.player.score, self.cfg.getint("BaubleGame", "bauble_points_blue") + self.cfg.getint("BaubleGame", "bauble_points_yellow") * 2 + self.cfg.getint("HungryHungryBaubles", "bauble_points_extra"), "Player didn't earn golden bauble points")
 
         time.sleep(0.5)
 

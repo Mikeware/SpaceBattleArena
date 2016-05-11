@@ -14,10 +14,16 @@ v1.2 : Planned - May 2016 [Season 5]
     * Added **getClosestMappedPoint** for world bounds assistance
 * Added ability for client to get info on ship's running commands **getCommandQueue** in the environment *getShipStatus*.
 	 * Command Queue and Current Energy Properties are now only available to its own ship (can't be seen with radar).
-* **Removed SelfDestructCommand**
+* Added new *reset_timer* option to Find the Middle Basic Game
 * Added option for Torpedoes to be effected by gravity
 * Split 'explodable' from 'gravitable' for Entities, two separate object flags now.
 * Separated option for 'showip' in Application settings to decouple from showing statistics, no longer always show IP in Debug mode.
+* **Breaking Changes:**
+    * Made **Hungry Hungry Baubles** a Basic Game by creating a *getObjectiveLocation()* method on BasicGameInfo (instead of *getGoldenBaublePosition()*).  This is now also used by **Bauble Hunt** and **Discovery Quest** instead of *getHomeBasePosition()*.
+        * Hungry Hungry Baubles has new options for configuration (default is similar to previous incarnation).
+        * Hungry Hungry Baubles and Bauble Hunt now share new *[BaubleGame]* point/percentage spawning parameters.
+    * RotateCommand/Orientation Related Client code now uses **int** vs. **double**.
+    * **Removed SelfDestructCommand**
 
 v1.1.0.1111 : 04/21/2016 [Season 4 Release] - Discovery Quest
 ----

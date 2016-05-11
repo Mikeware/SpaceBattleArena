@@ -136,7 +136,7 @@ class DiscoveryQuestGame(BasicGame):
         env = super(DiscoveryQuestGame, self).game_get_extra_environment(player)
 
         if player.outpost != None:
-            env["OUTPOST"] = intpos(player.outpost.body.position)
+            env["POSITION"] = intpos(player.outpost.body.position)
         env["FAILED"] = player.failed
         env["MISSION"] = player.mission
         obj = player.object

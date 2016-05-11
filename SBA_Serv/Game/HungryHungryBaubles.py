@@ -12,11 +12,9 @@ You should have received a copy of the GNU General Public License along with thi
 The full text of the license is available online: http://opensource.org/licenses/GPL-2.0
 """
 
-from Game import BasicGame
+from BaubleGame import *
 from Utils import CallbackTimer
-from World.Entities import PhysicalRound, Entity
 from World.WorldEntities import Ship
-from GUI.ObjWrappers.GUIEntity import GUIEntity
 from World.WorldMath import intpos, friendly_type, PlayerStat, aligninstances, getPositionAwayFromOtherObjects
 from GUI.GraphicsCache import Cache
 from GUI.Helpers import debugfont
@@ -24,23 +22,21 @@ import logging
 import pygame
 from operator import attrgetter
 
-class HungryHungryBaublesGame(BasicGame):
+class HungryHungryBaublesGame(BaseBaubleGame):
     
     def __init__(self, cfgobj):
-        self.__points_blue = cfgobj.getint("HungryHungryBaubles", "bauble_points_blue")
-        self.__points_gold = cfgobj.getint("HungryHungryBaubles", "bauble_points_gold")
+        self.__points_blue = cfgobj.getint("BaubleGame", "bauble_points_blue")
+        self.__points_gold = cfgobj.getint("BaubleGame", "bauble_points_yellow")
         self.__points_extra = cfgobj.getint("HungryHungryBaubles", "bauble_points_extra")
+        self.__assign_specific_bauble = cfgobj.getboolean("HungryHungryBaubles", "assign_specific_bauble")
 
         self.__baubles = {}
 
         super(HungryHungryBaublesGame, self).__init__(cfgobj)
 
-    def game_get_info(self):
-        return {"GAMENAME": "HungryHungryBaubles"}
-
     def player_added(self, player, reason):
-        if reason == BasicGame._ADD_REASON_START_:
-            self.__addBauble(player) # Add Home Base
+        if reason == BasicGame._ADD_REASON_START_ and self.__assign_specific_bauble:
+            self.__addBauble(player) # Add Golden Bauble
 
         super(HungryHungryBaublesGame, self).player_added(player, reason)
 
@@ -65,13 +61,13 @@ class HungryHungryBaublesGame(BasicGame):
     def collectBaubles(self, ship, bauble):
         logging.info("Collected Baubles Ship #%d", ship.id)
         # collect own Bauble?
-        if bauble == self.__baubles[ship.player.netid]:
+        if self.__assign_specific_bauble and bauble == self.__baubles[ship.player.netid]:
             logging.info("Collected Own Bauble #%d", ship.id)
             self.player_update_score(ship.player, self.__points_extra)
             ship.player.sound = "COLLECT"
             # add new bauble
             self.__addBauble(ship.player, True)
-        elif bauble in self.__baubles.values():
+        elif self.__assign_specific_bauble and bauble in self.__baubles.values():
             logging.info("Collected Gold Bauble #%d", ship.id)
             # someone else's bauble
             for key, value in self.__baubles.iteritems():
@@ -94,52 +90,15 @@ class HungryHungryBaublesGame(BasicGame):
 
     def game_get_extra_environment(self, player):
         env = super(HungryHungryBaublesGame, self).game_get_extra_environment(player)
-        env["POSITION"] = intpos(self.__baubles[player.netid].body.position)
+        if self.__assign_specific_bauble:
+            env["POSITION"] = intpos(self.__baubles[player.netid].body.position)
 
         return env
 
     def gui_draw_game_world_info(self, surface, flags, trackplayer):
-        for player in self.game_get_current_player_list():
-            obj = player.object
-            if obj != None and self.__baubles.has_key(player.netid):
-                # draw line between player and Bauble
-                pygame.draw.line(surface, player.color, intpos(obj.body.position), intpos(self.__baubles[player.netid].body.position))
-
-class BaubleWrapper(GUIEntity):
-    def __init__(self, obj, world):
-        super(BaubleWrapper, self).__init__(obj, world)
-        self.surface = Cache().getImage("Games/Bauble" + str(obj.value))
-
-    def draw(self, surface, flags):
-        # Check if Thrusting or Braking
-        surface.blit(self.surface, intpos((self._worldobj.body.position[0] - 8, self._worldobj.body.position[1] - 8)))
-
-        super(BaubleWrapper, self).draw(surface, flags)
-
-class Bauble(PhysicalRound):
-    WRAPPERCLASS = BaubleWrapper
-    """
-    Baubles are small prizes worth different amounts of points
-    """
-    def __init__(self, pos, value=1):
-        super(Bauble, self).__init__(8, 2000, pos)
-        self.shape.elasticity = 0.8
-        self.health = PlayerStat(0)
-
-        self.shape.group = 1
-
-        self.value = value
-
-    def collide_start(self, otherobj):
-        return False
-
-    def getExtraInfo(self, objData, player):
-        objData["VALUE"] = self.value
-
-    @staticmethod
-    def spawn(world, cfg, pos=None):
-        if pos == None:
-            pos = getPositionAwayFromOtherObjects(world, cfg.getint("Bauble", "buffer_object"), cfg.getint("Bauble", "buffer_edge"))
-        b = Bauble(pos, cfg.getint("HungryHungryBaubles", "bauble_points_blue"))
-        world.append(b)
-        return b
+        if self.__assign_specific_bauble:
+            for player in self.game_get_current_player_list():
+                obj = player.object
+                if obj != None and self.__baubles.has_key(player.netid):
+                    # draw line between player and Bauble
+                    pygame.draw.line(surface, player.color, intpos(obj.body.position), intpos(self.__baubles[player.netid].body.position))

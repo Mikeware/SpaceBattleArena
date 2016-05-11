@@ -15,7 +15,7 @@ Discovery Quest
 -----------
 **Discovery Quest** is an exploration game where players must navigate space in order to 'scan' objects and accumulate points.  They establish a research **Outpost** which can also provide them with specific missions for additional points.
  
-Players must establish an **Outpost** by scanning it before any points will count towards their placement within the game.  Any points earned prior to establishing an Outpost will be banked and awarded when an Outpost is first established. (Multiple players may establish and share the same Outpost.)
+Players must establish an **Outpost** by scanning it before any points will count towards their placement within the game.  Any points earned prior to establishing an Outpost will be banked and awarded when an Outpost is first established. (Multiple players may establish and share the same Outpost.)  An established Outpost's location can be later retrieved with the *getObjectiveLocation()* method of the environment's getGameInfo().
 
 *Scanning* is a specific command that must be used within 150 pixels of an object and must be directed towards a specific object by using its ID number.  Scanning is **not** the same as Radar.  The object being scanned must remain in range for the entire duration of the scan.
 

@@ -1,7 +1,6 @@
 package ihs.apcs.spacebattle.games;
 
 import ihs.apcs.spacebattle.BasicGameInfo;
-import ihs.apcs.spacebattle.Point;
 import ihs.apcs.spacebattle.commands.ScanCommand;
 
 import java.util.*;
@@ -32,19 +31,9 @@ import java.util.*;
 public class DiscoveryQuestGameInfo extends BasicGameInfo {
 	private String[] MISSION;
 	private boolean FAILED;
-	private double[] OUTPOST;
     private int[] CURIDS;
     private int[] SUCIDS;
-	
-	/**
-	 * Gets the position of your home base outpost.
-	 * 
-	 * <p>This value will be null initially, until your first Outpost is Scanned.
-	 * 
-	 * @return the position of your home base outpost
-	 */
-	public Point getHomeBasePosition() { return OUTPOST != null ? new Point(OUTPOST) : null; }
-	
+		
 	/**
 	 * Indicates if the current missions is still a success or not.
 	 * This value will be true at the start of the game.
@@ -85,6 +74,6 @@ public class DiscoveryQuestGameInfo extends BasicGameInfo {
       
 	@Override
 	public String toString() {
-		return String.format("{Mission: %s; Outpost: %s; Score: %f; Deaths: %d; High Score: %f}", Arrays.toString(getMissionLeft()), getHomeBasePosition(), getScore(), getNumDeaths(), getHighScore());
+		return String.format("{Mission: %s; Outpost: %s; Score: %f; Deaths: %d; High Score: %f}", Arrays.toString(getMissionLeft()), getObjectiveLocation(), getScore(), getNumDeaths(), getHighScore());
 	}
 }
