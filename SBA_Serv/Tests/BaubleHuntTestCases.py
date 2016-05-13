@@ -119,7 +119,7 @@ class BaubleHuntTestCases(SBAGUITestCase):
         time.sleep(0.5)
 
         self.assertEqual(len(ship.player.carrying), 0, "Player didn't drop off baubles")
-        self.assertEqual(ship.player.score, self.cfg.getint("BaubleGame", "bauble_points_blue") + self.cfg.getint("BaubleGame", "bauble_points_yellow") + self.cfg.getint("BaubleGame", "bauble_points_red"), "Player didn't earn bauble points")
+        self.assertEqual(ship.player.score, 1 + 3 + 5, "Player didn't earn bauble points")
         self.assertGreater(len(self.game.world), 7, "Baubles not respawned")
 
 

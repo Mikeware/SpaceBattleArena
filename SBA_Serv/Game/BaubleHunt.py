@@ -31,7 +31,6 @@ class BaubleHuntGame(BaseBaubleGame):
     VALUE_TABLE = []
     
     def __init__(self, cfgobj):
-        self._mv = cfgobj.getint("BaubleGame", "bauble_points_red")
 
         self._respawn = cfgobj.getboolean("BaubleHunt", "respawn_bauble_on_collect")
         
@@ -39,6 +38,8 @@ class BaubleHuntGame(BaseBaubleGame):
         self.__baubles = ThreadSafeDict()
         
         super(BaubleHuntGame, self).__init__(cfgobj)
+
+        self._mv = BaseBaubleGame.VALUE_TABLE[-1][1]
 
         self.__maxcarry = self.cfg.getint("BaubleHunt", "ship_cargo_size")
 

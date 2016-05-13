@@ -35,23 +35,12 @@ Control Bauble spawning behavior by using the standard [Spawn Manager](../server
 -----------
 
 ##[BaubleGame]
-###bauble_percent_blue = float
-The percentage of baubles which should generate as blue from [0.0-1.0].  The total of **bauble_percent_blue**, **bauble_percent_yellow**, and **bauble_percent_red** should equal 1.0.
 
-###bauble_points_blue = int
-How many points is the standard bauble worth. **Note:** *modifying the point values requires that adequate images be placed in the GUI/Graphics/Games folder to represent that value.*
+###bauble_points = list[int]
+List of points each progressive bauble is worth. **Note:** *modifying the point values requires that adequate images be placed in the GUI/Graphics/Games folder to represent that value.*
 
-###bauble_percent_yellow = float
-The percentage of baubles which should generate as gold from [0.0-1.0].  The total of **bauble_percent_blue**, **bauble_percent_yellow**, and **bauble_percent_red** should equal 1.0.
-
-###bauble_points_yellow = int
-How many points is a golden bauble worth.
-
-###bauble_percent_red = float
-The percentage of baubles which should generate as red from [0.0-1.0].  The total of **bauble_percent_blue**, **bauble_percent_yellow**, and **bauble_percent_red** should equal 1.0.
-
-###bauble_points_red = int
-How many points is a red bauble worth.
+###bauble_percent = list[float]
+The percentage of baubles which should generate as the corresponding value.  Each value should be from [0.0-1.0].  The total of all values provided in this list should equal 1.0.
 
 
 ##[BaubleHunt]
@@ -61,4 +50,3 @@ The maximum number of baubles each ship can carry.
 
 ###respawn_bauble_on_collect = boolean
 Should a new bauble be spawned every time one is collected?
-

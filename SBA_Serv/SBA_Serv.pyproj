@@ -139,9 +139,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="basicgame_asteroid.cfg" />
+    <Content Include="basicgame_hungryhungrybaubles_new.cfg" />
     <Content Include="basicgame_survivor.cfg" />
     <Content Include="empty.cfg" />
-    <Content Include="basicgame_hungryhungrybaubles.cfg" />
+    <Content Include="basicgame_hungryhungrybaubles_original.cfg" />
     <Content Include="game_kingofspace.cfg" />
     <Content Include="game_discoveryquest.cfg" />
     <Content Include="game_kingofthebubble.cfg" />

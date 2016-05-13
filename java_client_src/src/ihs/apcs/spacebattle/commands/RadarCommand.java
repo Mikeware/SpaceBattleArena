@@ -17,6 +17,10 @@ package ihs.apcs.spacebattle.commands;
  * <tr><td>4</td><td>0.15 s</td><td>ID#, position, type</td></tr>
  * <tr><td>5</td><td>0.40 s</td><td>All</td></tr>
  * </table>
+ * 
+ * <p>Performing a RadarCommand will populate the {@link ihs.apcs.spacebattle.Environment#getRadar()} method's results 
+ * on the next call to {@link ihs.apcs.spacebattle.Spaceship#getNextCommand(ihs.apcs.spacebattle.Environment)} and only the next call.
+ * Results need to be saved to be compared to future Radar sweeps.
  *
  * @author Brett Wortzman
  * @since 0.1

@@ -25,6 +25,7 @@ v1.2 : Planned - May 2016 [Season 5]
     * Made **Hungry Hungry Baubles** a Basic Game by creating a *getObjectiveLocation()* method on BasicGameInfo (instead of *getGoldenBaublePosition()*).  This is now also used by **Bauble Hunt** and **Discovery Quest** instead of *getHomeBasePosition()*.
         * Hungry Hungry Baubles has new options for configuration (default is similar to previous incarnation).
         * Hungry Hungry Baubles and Bauble Hunt now share new *[BaubleGame]* point/percentage spawning parameters.
+        * Bauble Games can now spawn any number of different valued Baubles.
     * RotateCommand/Orientation Related Client code now uses **int** vs. **double**.
     * **Removed SelfDestructCommand**
 

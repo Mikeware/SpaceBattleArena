@@ -31,10 +31,16 @@ class BaseBaubleGame(BasicGame):
     VALUE_TABLE = []
 
     def __init__(self, cfgobj):
-        bb = cfgobj.getfloat("BaubleGame", "bauble_percent_blue")
-        yb = cfgobj.getfloat("BaubleGame", "bauble_percent_yellow")
-        rb = cfgobj.getfloat("BaubleGame", "bauble_percent_red")
-        BaseBaubleGame.VALUE_TABLE = [(bb, cfgobj.getint("BaubleGame", "bauble_points_blue")), (bb+yb, cfgobj.getint("BaubleGame", "bauble_points_yellow")), (bb+yb+rb, cfgobj.getint("BaubleGame", "bauble_points_red"))]
+        percents = map(float, cfgobj.get("BaubleGame", "bauble_percent").split(","))
+        points = map(int, cfgobj.get("BaubleGame", "bauble_points").split(","))
+
+        BaseBaubleGame.VALUE_TABLE = []
+        x = 0.0
+        i = 0
+        for percent in percents:
+            x += percent
+            BaseBaubleGame.VALUE_TABLE.append((x, points[i]))
+            i += 1
 
         super(BaseBaubleGame, self).__init__(cfgobj)
 

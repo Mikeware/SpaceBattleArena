@@ -25,8 +25,7 @@ from operator import attrgetter
 class HungryHungryBaublesGame(BaseBaubleGame):
     
     def __init__(self, cfgobj):
-        self.__points_blue = cfgobj.getint("BaubleGame", "bauble_points_blue")
-        self.__points_gold = cfgobj.getint("BaubleGame", "bauble_points_yellow")
+        self.__points_gold = cfgobj.getint("HungryHungryBaubles", "bauble_extra_value")
         self.__points_extra = cfgobj.getint("HungryHungryBaubles", "bauble_points_extra")
         self.__assign_specific_bauble = cfgobj.getboolean("HungryHungryBaubles", "assign_specific_bauble")
 
