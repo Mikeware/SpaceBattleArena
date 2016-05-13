@@ -126,12 +126,21 @@ Can a player join the server again if they had connected previously and disconne
 ###disconnect_on_idle = boolean
 Determines if a player's ship should be disconnected if it doesn't issue a command periodically (within 10 seconds of the last command being executed finishing).  **Note:** this will not prevent a ship from disconnecting if the actual socket is detected to be closed.
 
+###enable_commands = string
+Comma separated list of ship commands to enable on the server. All other commands will be disabled.  E.g.
+
+	enable_commands = ThrustCommand,RotateCommand,IdleCommand
+	
+A list of commands can be found in the [Command JavaDoc](http://mikeware.github.io/SpaceBattleArena/client/java_doc/ihs/apcs/spacebattle/commands/package-frame.html). When a command is invoked that has been disabled, it is simply ignored. A message should return to the client, but they will get a new environment and their ship should continue running.  Its state might just not be what was expected.
+
 ###disable_commands = string
 Comma separated list of ship commands to disable on the server.  E.g.
 
 	disable_commands = WarpCommand,FireTorpedoCommand
 	
 A list of commands can be found in the Command chapter. When a command is invoked that has been disabled, it is simply ignored. A message should return to the client, but they will get a new environment and their ship should continue running.  Its state might just not be what was expected.
+
+You should specify either **enable_commands** or **disable_commands** not both.
 
 
 <a name="spawnmanager"></a>Spawn Manager

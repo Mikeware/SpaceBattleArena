@@ -34,7 +34,12 @@ class WorldServer(object):
         else:
             self.__badcmds = None
         #eif
-        game.server = self        
+        if game.cfg.has_option("Server", "enable_commands"):
+            self.__goodcmds = game.cfg.get("Server", "enable_commands").split(",")
+        else:
+            self.__goodcmds = None
+        #eif
+        game.server = self
         logging.info("Started Server (%s), Waiting for Clients", Server.MWNL2.getIPAddress())    
         
     def sendErrorMessage(self, shipcmd, errmsg, sender):
@@ -156,7 +161,7 @@ class WorldServer(object):
                     self.sendErrorMessage(cmd[1], "Invalid Ship Command: " + repr(scmd), sender)
                     scmd = None
                 # server config hard-disabled this type of message
-                elif self.__badcmds != None and scmd.__class__.__name__ in self.__badcmds:
+                elif (self.__badcmds != None and scmd.__class__.__name__ in self.__badcmds) or (self.__goodcmds != None and scmd.__class__.__name__ not in self.__goodcmds):
                     self.sendErrorMessage(cmd[1], "Ship Command Has Been Disabled: " + repr(scmd), sender)
                     scmd = None
                 else:

@@ -13,9 +13,12 @@ v1.2 : Planned - May 2016 [Season 5]
     * Added **isInEllipse** check method
     * Added **getClosestMappedPoint** for world bounds assistance
 * Added ability for client to get info on ship's running commands **getCommandQueue** in the environment *getShipStatus*.
-	 * Command Queue and Current Energy Properties are now only available to its own ship (can't be seen with radar).
-* Added new *reset_timer* option to Find the Middle Basic Game
+	* Command Queue and Current Energy Properties are now only available to its own ship (can't be seen with radar).
+* Updated Find the Middle Basic Game
+	* Added new *reset_timer* option
+	* Better Generation of Spawn Points and other Bug Fixes
 * Added option for Torpedoes to be effected by gravity
+* Added *enable_commands* [Server] config option.
 * Split 'explodable' from 'gravitable' for Entities, two separate object flags now.
 * Separated option for 'showip' in Application settings to decouple from showing statistics, no longer always show IP in Debug mode.
 * **Breaking Changes:**
