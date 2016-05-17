@@ -50,17 +50,20 @@ def ConvertNetworkMessageToCommand(ship, cmdname, cmddict):
     if isinstance(cmdname, unicode) and isinstance(cmddict, dict):
         if cmdname == SHIP_CMD_THRUST:
             if cmddict.has_key("DIR") and cmddict["DIR"] in [u'L',u'F',u'R',u'B']:
-                if cmddict.has_key("DUR") and isinstance(cmddict["DUR"], float) and cmddict["DUR"] >= 0.05:
+                if cmddict.has_key("DUR") and isinstance(cmddict["DUR"], float) and cmddict["DUR"] >= 0.1:
                     if cmddict.has_key("PER"):
                         if isinstance(cmddict["PER"], float) and 0.1 <= cmddict["PER"] <= 1.0:
-                            return ThrustCommand(ship, cmddict["DIR"], cmddict["DUR"], cmddict["PER"])
+                            if cmddict.has_key("BLOCK") and isinstance(cmddict["BLOCK"], bool):
+                                return ThrustCommand(ship, cmddict["DIR"], cmddict["DUR"], cmddict["PER"], cmddict["BLOCK"])
+                            else:
+                                return ThrustCommand(ship, cmddict["DIR"], cmddict["DUR"], cmddict["PER"])
                         else:
                             return "Percent Missing or Should Be Float 0.1 <= Arg <= 1.0"
                     else:
                         return ThrustCommand(ship, cmddict["DIR"], cmddict["DUR"])
                     #eif
                 else:
-                    return "Duration Missing or Should be Float >= 0.05"
+                    return "Duration Missing or Should be Float >= 0.1"
                 #eif
             else:
                 return "Direction Missing or Should Be L, F, R, or B"
@@ -89,7 +92,7 @@ def ConvertNetworkMessageToCommand(ship, cmdname, cmddict):
         elif cmdname == SHIP_CMD_ALL_STOP:
             return AllStopCommand(ship)
         elif cmdname == SHIP_CMD_WARP:
-            if cmddict.has_key("DIST") and isinstance(cmddict["DIST"], float) and cmddict["DIST"] >= 0 and cmddict["DIST"] <= WarpCommand.MAXWARPDISTANCE:
+            if cmddict.has_key("DIST") and isinstance(cmddict["DIST"], float) and cmddict["DIST"] > 0 and cmddict["DIST"] <= WarpCommand.MAXWARPDISTANCE:
                 return WarpCommand(ship, cmddict["DIST"])
             elif cmddict.has_key("DIST"):
                 return "Distance must be a positive Float less than or equal to " + repr(WarpCommand.MAXWARPDISTANCE)
@@ -113,10 +116,10 @@ def ConvertNetworkMessageToCommand(ship, cmdname, cmddict):
             #eif
         elif cmdname == SHIP_CMD_IDLE:
             if cmddict.has_key("DUR"):
-                if isinstance(cmddict["DUR"], float) and cmddict["DUR"] > 0:
+                if isinstance(cmddict["DUR"], float) and cmddict["DUR"] >= 0.1:
                     return IdleCommand(ship, cmddict["DUR"])
                 else:
-                    return "Idle Duration Should Be a Positive Float"
+                    return "Idle Duration Should Be a Positive Float greater than or equal to 0.1"
             else:
                 return IdleCommand(ship)
             #eif
@@ -131,17 +134,17 @@ def ConvertNetworkMessageToCommand(ship, cmdname, cmddict):
                 return "Firing a torpedo requires a direction 'F'orward or 'B'ackwards"
             #eif
         elif cmdname == SHIP_CMD_SPACEMINE:
-            if cmddict.has_key("MODE") and cmddict.has_key("DELAY") and isinstance(cmddict["DELAY"], float) and cmddict["DELAY"] > 0:
+            if cmddict.has_key("MODE") and cmddict.has_key("DELAY") and isinstance(cmddict["DELAY"], float) and cmddict["DELAY"] > 0 and cmddict["DELAY"] <= 10:
                 if cmddict["MODE"] not in [WorldEntities.SpaceMine.STATIONARY, WorldEntities.SpaceMine.AUTONOMOUS, WorldEntities.SpaceMine.HOMING]:
                     return "Invalid Mine Mode, use 1, 2, or 3"
                 elif cmddict["MODE"] == WorldEntities.SpaceMine.AUTONOMOUS:
                     if cmddict.has_key("SPEED") and cmddict.has_key("DUR") and cmddict.has_key("DIR"):
                         if isinstance(cmddict["SPEED"], int) and isinstance(cmddict["DUR"], float) and isinstance(cmddict["DIR"], int):
                             if cmddict["SPEED"] > 0 and cmddict["SPEED"] <= 5:
-                                if cmddict["DUR"] > 0:
+                                if cmddict["DUR"] > 0 and cmddict["DUR"] <= 10:
                                     return DeploySpaceMineCommand(ship, cmddict["DELAY"], cmddict["MODE"], cmddict["DIR"], cmddict["SPEED"], cmddict["DUR"])
                                 else:
-                                    return "Must have positive mine duration"
+                                    return "Must have positive mine duration less than or equal to 10 seconds."
                             else:
                                 return "Invalid Mine Speed use 1-5"
                         else:
@@ -151,12 +154,12 @@ def ConvertNetworkMessageToCommand(ship, cmdname, cmddict):
                 else:
                     return DeploySpaceMineCommand(ship, cmddict["DELAY"], cmddict["MODE"])
             else:
-                return "Mines need a mode and positive float delay"
+                return "Mines need a mode and positive float delay less than or equal to 10 seconds."
         elif cmdname == SHIP_CMD_REPAIR:
-            if cmddict.has_key("AMT") and isinstance(cmddict["AMT"], int) and cmddict["AMT"] > 0:
+            if cmddict.has_key("AMT") and isinstance(cmddict["AMT"], int) and cmddict["AMT"] > 0 and cmddict["AMT"] < 100:
                 return RepairCommand(ship, cmddict["AMT"])
             else:
-                return "Repair amount must be a positive integer"
+                return "Repair amount must be a positive integer less than 100"
         elif cmdname == SHIP_CMD_SCOOP:
             if cmddict.has_key("SHORT") and isinstance(cmddict["SHORT"], bool):
                 if cmddict["SHORT"]:
@@ -185,8 +188,8 @@ def ConvertNetworkMessageToCommand(ship, cmdname, cmddict):
 class ThrustCommand(Command):
     NAME = SHIP_CMD_THRUST
 
-    def __init__(self, obj, direction, duration, power=1.0):        
-        super(ThrustCommand, self).__init__(obj, ThrustCommand.NAME, duration)
+    def __init__(self, obj, direction, duration, power=1.0, block=False):
+        super(ThrustCommand, self).__init__(obj, ThrustCommand.NAME, duration, block=block)
         #self.__pow = power
         self.direction = direction
         if direction == 'L':
