@@ -12,15 +12,19 @@ v1.2 : Planned - May 2016 [Season 5]
     * Added **getPointAt** for point projections based on angles and distance
     * Added **isInEllipse** check method
     * Added **getClosestMappedPoint** for world bounds assistance
+* **ThrustCommand** now has a parameter to allow it to block.
 * Added ability for client to get info on ship's running commands **getCommandQueue** in the environment *getShipStatus*.
 	* Command Queue and Current Energy Properties are now only available to its own ship (can't be seen with radar).
 * Updated Find the Middle Basic Game
 	* Added new *reset_timer* option
 	* Better Generation of Spawn Points and other Bug Fixes
+* *Optimized Network Code to half required Threads*
 * Added option for Torpedoes to be effected by gravity
 * Added *enable_commands* [Server] config option.
 * Split 'explodable' from 'gravitable' for Entities, two separate object flags now.
+* Can click ships in tracking mode to switch tracking to the clicked ship.
 * Separated option for 'showip' in Application settings to decouple from showing statistics, no longer always show IP in Debug mode.
+* 2 New Ship Graphics
 * **Breaking Changes:**
     * Made **Hungry Hungry Baubles** a Basic Game by creating a *getObjectiveLocation()* method on BasicGameInfo (instead of *getGoldenBaublePosition()*).  This is now also used by **Bauble Hunt** and **Discovery Quest** instead of *getHomeBasePosition()*.
         * Hungry Hungry Baubles has new options for configuration (default is similar to previous incarnation).

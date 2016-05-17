@@ -406,10 +406,18 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, cfg=None, t
                         if event.button != 2:
                             mousemode = None
                         world.causeExplosion((x, y), 256, 1000)
-                    elif mousemode != None and  mousemode.startswith("Add"):
+                    elif mousemode != None and mousemode.startswith("Add"):
                         game.spawnmanager.spawn_entity(mousemode[3:], (x, y), False)
                         if event.button != 2:
                             mousemode = None
+                    elif trackplayer != None:
+                        v = Vec2d(x, y)
+                        for obj in objects:
+                            if isinstance(obj, ShipGUI) and math.sqrt(obj._worldobj.body.position.get_dist_sqrd(v)) <= 32:
+                                logging.info("[GUI] Click Tracking Object #%d", obj._worldobj.id)
+                                trackplayer = obj._worldobj.player
+                                dynamiccamera = False
+                                break
                     elif zoomout and event.button == 1:
                         # zoom in
                         zoomout = False
