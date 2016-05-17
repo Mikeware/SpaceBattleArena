@@ -27,6 +27,13 @@ public class ThrustCommand extends ShipCommand {
 	 * @param power the percentage of thruster power to be used for this thrust
 	 */
 	public ThrustCommand(char dir, double duration, double power) {
+		if (dir != 'L' && dir != 'F' && dir != 'R' && dir != 'B')
+			throw new IllegalArgumentException("Invalid thrust direction; must be one of 'L', 'F', 'R', or 'B'");
+		if (power < 0.1 || power > 1.0)
+			throw new IllegalArgumentException("Invalid thrust power: must be between 0.1 and 1.0");
+		if (duration < 0.1)
+			throw new IllegalArgumentException("Invalid thrust duration: must be at least 0.1");
+		
 		DIR = dir;
 		DUR = duration;
 		PER = power;

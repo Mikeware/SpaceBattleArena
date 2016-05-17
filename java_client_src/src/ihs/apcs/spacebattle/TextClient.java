@@ -202,8 +202,15 @@ public class TextClient implements Client {
 			try {
 				// Need to invoke through reflection as compiler doesn't know what type of Environment is here
 				cmd = (ShipCommand)ship.getClass().getMethod("getNextCommand", Environment.class).invoke(ship, env);
-			} catch (InvocationTargetException | NoSuchMethodException
-					| SecurityException ex) {
+			} catch (InvocationTargetException ex) {
+				// typically means ship has an exception; skip to the actual problem to avoid confusion
+				System.err.println("Exception thrown by getNextCommand: ");
+				Throwable cause = ex.getCause();
+				if (cause != null) {
+					cause.printStackTrace(System.err);
+				}
+				disconnect();
+			} catch (NoSuchMethodException	| SecurityException ex) {
 				System.err.println("Error Invoking getNextCommand:");
 				System.err.println(ex.getMessage());
 				ex.printStackTrace(System.err);

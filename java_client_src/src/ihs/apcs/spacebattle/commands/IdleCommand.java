@@ -22,6 +22,9 @@ public class IdleCommand extends ShipCommand {
 	 * @param duration the number of seconds for which to idle
 	 */
 	public IdleCommand(double duration) {
+		if (duration < 0.1)
+			throw new IllegalArgumentException("Invalid idle duration: must be at least 0.1");
+		
 		DUR = duration;
 	}
 

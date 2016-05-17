@@ -17,6 +17,9 @@ public class FireTorpedoCommand extends ShipCommand {
 	 * @param direction which launcher to fire from ('F' for front, 'B' for back)
 	 */
 	public FireTorpedoCommand(char direction) {
+		if (direction != 'F' && direction != 'B')
+			throw new IllegalArgumentException("Invalid torpedo direction: must be 'F' or 'B'");
+		
 		this.DIR = direction;
 	}
 	

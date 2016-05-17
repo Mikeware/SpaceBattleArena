@@ -39,6 +39,9 @@ public class DeploySpaceMineCommand extends ShipCommand {
 	 * @param homing does this mine home nearby ships.
 	 */
 	public DeploySpaceMineCommand(double delay, boolean homing) {
+		if (delay <= 0 || delay > 10) 
+			throw new IllegalArgumentException("Invalid mine delay: must be greater than 0 and no more than 10");
+		
 		if (homing)
 		{
 			this.MODE = 3;
@@ -59,6 +62,13 @@ public class DeploySpaceMineCommand extends ShipCommand {
 	 */
 	public DeploySpaceMineCommand(double delay, int direction, int speed, double duration)
 	{
+		if (duration <= 0 | duration > 10)
+			throw new IllegalArgumentException("Invalid mine duration: must be greater than 0 and no more than 10");
+		if (speed <= 0 || speed > 5)
+			throw new IllegalArgumentException("Invalid mine speed: must be between 1 and 5 inclusive");
+		if (delay <= 0 || delay > 10) 
+			throw new IllegalArgumentException("Invalid mine delay: must be greater than 0 and no more than 10");
+		
 		this.MODE = 2;
 		this.DELAY = delay;
 		this.DIR = direction;

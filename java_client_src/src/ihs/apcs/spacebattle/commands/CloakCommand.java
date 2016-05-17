@@ -21,6 +21,9 @@ public class CloakCommand extends ShipCommand {
 	 * @param duration the amount of time to remain cloaked (in seconds)
 	 */
 	public CloakCommand(double duration)  {
+		if (duration <= 0)
+			throw new IllegalArgumentException("Invalid cloak duration: must be greater than 0");
+		
 		this.DUR = duration;
 	}
 	

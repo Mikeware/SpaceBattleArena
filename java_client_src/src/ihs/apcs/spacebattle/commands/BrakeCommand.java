@@ -22,6 +22,9 @@ public class BrakeCommand extends ShipCommand {
 	 * @param power the percentage of the ship's current speed to maintain
 	 */
 	public BrakeCommand(double power) {
+		if (power <= 0.0 || power >= 1.0)
+			throw new IllegalArgumentException("Invalid brake power: must be at least 0.0 and less than 1.0");
+		
 		PER = power;
 	}
 
