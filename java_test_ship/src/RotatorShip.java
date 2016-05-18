@@ -12,8 +12,7 @@ import ihs.apcs.spacebattle.commands.*;
 public class RotatorShip extends BasicSpaceship {
 
 	public static void main(String[] args) {
-		// ihs.apcs.spacebattle.TextClient.main(new String[] {"10.40.30.54", "RotatorShip"});
-		TextClient.run("10.40.30.54", new RotatorShip());
+		ihs.apcs.spacebattle.TextClient.main(new String[] {"127.0.0.1", "RotatorShip"});		
 	}
 	
 	/* (non-Javadoc)
@@ -22,7 +21,7 @@ public class RotatorShip extends BasicSpaceship {
 	@Override
 	public RegistrationData registerShip(int numImages, int worldWidth,
 			int worldHeight) {
-		return new RegistrationData("Rotator Ship", Color.WHITE, 0);
+		return new RegistrationData("Rotator Ship", new Color(255, 0, 0), 0);
 	}
 
 	/* (non-Javadoc)
@@ -30,8 +29,6 @@ public class RotatorShip extends BasicSpaceship {
 	 */
 	@Override
 	public ShipCommand getNextCommand(BasicEnvironment env) {
-		String s = null;
-		System.out.println(s.toString());
 		return new RotateCommand(6);
 	}
 
