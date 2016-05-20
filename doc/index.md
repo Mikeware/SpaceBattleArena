@@ -33,6 +33,7 @@ Documentation
     * [jGRASP](client/jGRASP/index.html)
     * [Eclipse](client/Eclipse/index.html)
     * [BlueJ](client/BlueJ/index.html)    
+    * [Command Line](client/CmdLine/index.html)
 * [Guides](client/guides/index.html)
     * [Coordinates](client/guides/space.html)
     * [Maneuvering](client/guides/maneuvering.html)
