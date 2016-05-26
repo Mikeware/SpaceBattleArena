@@ -654,7 +654,8 @@ class SpaceMine(CelestialBody, Influential, Weapon):
             self.target = pymunk.Vec2d(mapped_pos)
                                    
     def getExtraInfo(self, objData, player):
-        objData["OWNERID"] = self.owner.id
+        if self.owner != None:
+            objData["OWNERID"] = self.owner.id
 
     @staticmethod
     def spawn(world, cfg, pos=None):
