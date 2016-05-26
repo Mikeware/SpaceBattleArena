@@ -472,6 +472,7 @@ class Dragon(CelestialBody, Influential, PhysicalRound):
         self.attack_amt = attack_amount
         self._get_next_attack()
         self.target = None
+        self.see = []
         #initial movement
         ang = random.randint(0, 359)
         self.body.velocity = Vec2d(math.cos(math.radians(ang)) * move_speed,
@@ -492,17 +493,21 @@ class Dragon(CelestialBody, Influential, PhysicalRound):
 
     def apply_influence(self, otherobj, mapped_pos, t):
         # get closest ship though cloak protects ship from dragon 'seeing' it
-        if isinstance(otherobj, Ship) and not otherobj.commandQueue.containstype(CloakCommand) and \
-                (self.target == None or self.body.position.get_dist_sqrd(mapped_pos) < self.body.position.get_dist_sqrd(self.target)):
-            if self.target == None:
-                if len(self.in_celestialbody) == 0:
-                    otherobj.player.sound = "RAWR"
-                if self.body.velocity.length == 0:
-                    self.body.velocity = self.lv * self.attack_speed
-                else:
-                    self.body.velocity.length += self.attack_speed
-                self.lv = self.body.velocity.normalized()
-            self.target = pymunk.Vec2d(mapped_pos)
+        if isinstance(otherobj, Ship) and not otherobj.commandQueue.containstype(CloakCommand):
+            if self.target == None or self.body.position.get_dist_sqrd(mapped_pos) < self.body.position.get_dist_sqrd(self.target[1].body.position): # TODO: Get this to be able to wrap
+                if self.target == None:
+                    if len(self.in_celestialbody) == 0:
+                        otherobj.player.sound = "RAWR"
+                    if self.body.velocity.length == 0:
+                        self.body.velocity = self.lv * self.attack_speed
+                    else:
+                        self.body.velocity.length += self.attack_speed
+                    self.lv = self.body.velocity.normalized()
+                self.target = (pymunk.Vec2d(mapped_pos), otherobj)
+            elif self.target[1] == otherobj:
+                # Update our position of our tracked object
+                self.target = (pymunk.Vec2d(mapped_pos), otherobj)
+            self.see.append(otherobj)
 
     def update(self, t):
         # Objects 'in' dragons take damage
@@ -515,15 +520,23 @@ class Dragon(CelestialBody, Influential, PhysicalRound):
                     obj.take_damage(self.natk[1], self)
                     self._get_next_attack()
 
+        if self.target != None and self.target[1] not in self.see:
+            self.target = None
+            if self.body.velocity.length > self.attack_speed:
+                self.body.velocity.length -= self.attack_speed * 0.9 # TODO: make this 'rage retainer' a config value???
+        self.see = []
+
         if self.target != None:
             # turn towards target
-            nang = self.body.velocity.get_angle_degrees_between(self.target - self.body.position)
+            nang = self.body.velocity.get_angle_degrees_between(self.target[0] - self.body.position)
             self.body.velocity.angle_degrees += nang * t
 
             # clear target as we'll reaquire to 'readjust course' for moving object...
-            if self.body.position.get_dist_sqrd(self.target) < 400:
+            dist = self.body.position.get_dist_sqrd(self.target[0])
+            if dist < self.radius * 1.5 and self.target[1].body.velocity.length < self.body.velocity.length or self.target[1].health <= 0:
                 if self.body.velocity.length > self.attack_speed:
                     self.body.velocity.length -= self.attack_speed
+            if dist > self.influence_range * self.influence_range * 1.1 or self.target[1].health <= 0:
                 self.target = None
 
         super(Dragon, self).update(t)

@@ -60,4 +60,11 @@ class DragonGUI(AsteroidGUI):
             # radius
             surface.blit(debugfont().render(repr(self._worldobj.influence_range), False, (255, 255, 192)), intpos((bp[0], bp[1] - self._worldobj.influence_range - 16)))
 
+            # speed
+            surface.blit(debugfont().render(repr(int(self._worldobj.body.velocity.length)), False, (255, 255, 255)), (bp[0]+20, bp[1]))
+
+            if self._worldobj.target != None:
+                # highlight
+                wrapcircle(surface, (64, 64, 192), intpos(self._worldobj.target[1].body.position), 32, self._world.size, 2)
+
             #TODO: Highlight Target
