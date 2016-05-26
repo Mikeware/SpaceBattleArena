@@ -125,24 +125,30 @@ class SpawnManagerTestCaseMore(SBAGUITestCase):
         time.sleep(1)
 
         self.assertEqual(self.game.world.get_count_of_objects(Planet), 0, "Should be no planets")
+        self.assertEqual(self.game.world.get_count_of_objects(Star), 0, "Should be no Stars")
         
         for obj in self.game.world:
             obj.destroyed = True # clear out world
 
+        Star.spawn(self.game.world, self.cfg)
+
         time.sleep(4.5)
 
+        self.assertEqual(self.game.world.get_count_of_objects(Star), 1, "Should be 1 star")
         self.assertEqual(self.game.world.get_count_of_objects(Asteroid), 12, "Should be 12 asteroids")
         self.assertEqual(self.game.world.get_count_of_objects(Planet), 0, "Should be no planets")
         self.assertEqual(self.game.world.get_count_of_objects(Dragon), 6, "Should be 6 Dragons")
+
+        for obj in self.game.world:
+            if isinstance(obj, Star):
+                obj.destroyed = True # clear out world
 
         time.sleep(4.25)
 
+        self.assertEqual(self.game.world.get_count_of_objects(Star), 1, "Should be 1 star")
         self.assertEqual(self.game.world.get_count_of_objects(Asteroid), 12, "Should be 12 asteroids")
         self.assertEqual(self.game.world.get_count_of_objects(Planet), 0, "Should be no planets")
         self.assertEqual(self.game.world.get_count_of_objects(Dragon), 6, "Should be 6 Dragons")
-
-
-    # TODO: Add test cases around min restoring without timer...
 
 if __name__ == '__main__':
     unittest.main()

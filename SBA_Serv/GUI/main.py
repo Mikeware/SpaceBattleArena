@@ -23,7 +23,7 @@ from World.WorldMap import GameWorld
 from ObjWrappers.ShipWrapper import ShipGUI
 from ObjWrappers.NebulaWrapper import NebulaGUI
 from ObjWrappers.PlanetWrapper import PlanetGUI
-from ObjWrappers.AsteroidWrapper import AsteroidGUI
+from ObjWrappers.AsteroidWrapper import AsteroidGUI, DragonGUI
 from ObjWrappers.WormHoleWrapper import WormHoleGUI
 from ObjWrappers.WeaponWrappers import TorpedoGUI, SpaceMineGUI
 from Game.Utils import SpawnManager
@@ -116,6 +116,10 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, cfg=None, t
                         logging.debug("GUI: Adding Asteroid #%d", obj.id)
                         objects[obj.id] = AsteroidGUI(obj, world)
                         logging.debug("GUI: Added Asteroid #%d", obj.id)
+                    elif isinstance(obj, Dragon):
+                        logging.debug("GUI: Adding Dragon #%d", obj.id)
+                        objects[obj.id] = DragonGUI(obj, world)
+                        logging.debug("GUI: Added Dragon #%d", obj.id)
                     elif isinstance(obj, Torpedo):
                         logging.debug("GUI: Adding Torpedo #%d", obj.id)
                         objects[obj.id] = TorpedoGUI(obj, world)

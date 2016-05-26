@@ -23,6 +23,7 @@ from Messaging import MessageQueue
 from Commanding import CommandSystem
 from WorldMath import PlayerStat, getPositionAwayFromOtherObjects, cfg_rand_min_max, istypeinlist
 from Entities import PhysicalRound, PhysicalEllipse
+from pymunk import Vec2d
 
 class Ship(PhysicalRound):
     """
@@ -427,7 +428,7 @@ class Asteroid(PhysicalRound):
     Asteroids are given an initial random direction and speed and will travel in that direction forever until disrupted...
     """
 
-    def __init__(self, pos, mass = None):
+    def __init__(self, pos, move_speed=30, mass = None):
         #TODO: Make Asteroids of different sizes
         if mass == None:
             mass = random.randint(1500, 3500)
@@ -438,27 +439,28 @@ class Asteroid(PhysicalRound):
         self.shape.group = 1
 
         # initial movement
-        v = random.randint(20000, 40000)
-        self.body.apply_impulse((random.randint(-1, 1) * v, random.randint(-1, 1) * v), (0,0))
+        ang = random.randint(0, 359)
+        self.body.velocity = Vec2d(math.cos(math.radians(ang)) * move_speed,
+                                   math.sin(math.radians(ang)) * move_speed)
 
     @staticmethod
     def spawn(world, cfg, pos=None):
         if pos == None:
             pos = getPositionAwayFromOtherObjects(world, cfg.getint("Asteroid", "buffer_object"), cfg.getint("Asteroid", "buffer_edge"))
-        a = Asteroid(pos)
+        a = Asteroid(pos, cfg_rand_min_max(cfg, "Asteroid", "move_speed"))
         world.append(a)
         return a
 
-class Dragon(CelestialBody, Influential, Asteroid):
+class Dragon(CelestialBody, Influential, PhysicalRound):
     """
     Dragons move around the world and may try and track a nearby player.
 
     Ships are munched on a bit when close to its mouth.
     """
-    def __init__(self, pos, attack_range=64, attack_speed=5, health=400, attack_time=(1.0, 2.0), attack_amount=(15, 25), mass = None):
+    def __init__(self, pos, attack_range=64, attack_speed=5, health=400, attack_time=(1.0, 2.0), attack_amount=(15, 25), move_speed=14, mass = None):
         if mass == None:
             mass = random.randint(3000, 5000)
-        super(Dragon, self).__init__(pos, mass)
+        super(Dragon, self).__init__(16, mass, pos)
         self.shape.elasticity = 0.8
         self.health = PlayerStat(health)
 
@@ -471,8 +473,9 @@ class Dragon(CelestialBody, Influential, Asteroid):
         self._get_next_attack()
         self.target = None
         #initial movement
-        v = random.randint(12000, 18000)
-        self.body.apply_impulse((random.randint(-1, 1) * v, random.randint(-1, 1) * v), (0,0))
+        ang = random.randint(0, 359)
+        self.body.velocity = Vec2d(math.cos(math.radians(ang)) * move_speed,
+                                   math.sin(math.radians(ang)) * move_speed)
         self.lv = self.body.velocity.normalized()
 
     def _get_next_attack(self):
@@ -540,6 +543,7 @@ class Dragon(CelestialBody, Influential, Asteroid):
                         cfg_rand_min_max(cfg, "Dragon", "health"),
                         (cfg.getfloat("Dragon", "attack_time_min"), cfg.getfloat("Dragon", "attack_time_max")),
                         (cfg.getfloat("Dragon", "attack_amount_min"), cfg.getfloat("Dragon", "attack_amount_max")),
+                        cfg_rand_min_max(cfg, "Dragon", "move_speed")
                         )
         world.append(d)
         return d

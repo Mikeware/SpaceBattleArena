@@ -140,6 +140,7 @@
   <ItemGroup>
     <Content Include="basicgame_asteroid.cfg" />
     <Content Include="basicgame_hungryhungrybaubles_new.cfg" />
+    <Content Include="basicgame_dragonslair.cfg" />
     <Content Include="basicgame_survivor.cfg" />
     <Content Include="empty.cfg" />
     <Content Include="basicgame_hungryhungrybaubles_original.cfg" />

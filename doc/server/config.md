@@ -193,10 +193,18 @@ Specify which scenarios (first created in round and/or whenever re-added) to add
 ---------------------------------------
 Asteroids are flying debris in space.  They start off with a set amount of momentum and will continue flying in space until impacting ships or destroyed by torpedos.
 
+###move_speed_min = int
+###move_speed_max = int
+Range for the initial speed to start an asteroid's movement.
+
 
 <a name="dragon"></a>[Dragon]
 ---------------------------------------
 Dragons fly around space and will attack (and eat) nearby uncloaked ships.
+
+###move_speed_min = int
+###move_speed_max = int
+Range for the initial speed to start a dragon's movement.
 
 ###range_min = int
 ###range_max = int
@@ -204,7 +212,7 @@ Range for the size of the Dragon's visibility radius.  It will attack ships that
 
 ###attack_speed_min = int
 ###attack_speed_max = int
-Range for the amount of speed a Dragon will increase by when it sees a Ship.
+Range for the amount of speed a Dragon will *increase by* when it sees a Ship.  This is fixed when a Dragon is instantiated.
 
 ###attack_time_min = float
 ###attack_time_max = float
