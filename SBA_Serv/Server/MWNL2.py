@@ -1,6 +1,6 @@
 import socket
 import time
-import thread, threading, atexit, logging, json
+import thread, threading, atexit, logging, json, traceback
 
 # Mikeware Network Lib
 #----------------------
@@ -238,9 +238,11 @@ class MWNL_Init:
             # Kill Listend Thread
             self.__connalive = 0
             
+            i = 5
             # Wait For Thread To Die
-            while self.__threadsalive > 0:
-                pass
+            while self.__threadsalive > 0 and i >= 0:
+                time.sleep(0.1)
+                i -= 1
             #END WHILE
         #END IF
     #END __killThreads__
@@ -310,6 +312,7 @@ class MWNL_Init:
         
         # Queue 3 Connections, Should Be Enough With Our Thread
         self.__socket.listen(3)
+        self.__socket.settimeout(MWNL_TIMEOUT)
 
         while self.__connalive and self.__acceptNewClients:
             if self.__connalive == 0:
@@ -318,9 +321,7 @@ class MWNL_Init:
                 
             # Wait For New Connection
             try:
-                self.__socket.settimeout(MWNL_TIMEOUT)
                 newconn = self.__socket.accept()
-                self.__socket.settimeout(None)
                 if newconn[0] <> None:
                     logging.info("New Connection From: %s", repr(newconn[1]))
                     
@@ -353,11 +354,11 @@ class MWNL_Init:
                     self.send(MWNL_CMD_ASSIGN_ID, newID, newID)
                     self.__callback(newID, [MWNL_CMD_CLIENT_CONNECTED])
                 #END IF
-            except:
-                # will get error here on timeout
+            except socket.timeout:
                 pass
-                #logging.error(traceback.format_exc())
-                #print traceback.format_exc()
+            except:
+                logging.error(traceback.format_exc())
+                print traceback.format_exc()
             #END TRY/EXCEPT
         #END WHILE
 
@@ -575,12 +576,11 @@ class MWNL_Connection:
 
         retval = ""
         __incomingdata = ""
+        self.__socket.settimeout(MWNL_TIMEOUT)
 
         while self.__connalive:
             try:
-                self.__socket.settimeout(MWNL_TIMEOUT)
                 blk = self.__socket.recv(self.__blocksize)
-                self.__socket.settimeout(None)
 
                 if blk <> "":
                     #print repr(self.__address) + "listen start"
@@ -623,6 +623,8 @@ class MWNL_Connection:
 
                             self.__callback(retval)
 
+                            logging.debug("Callback Finished")
+
                             retval = ""
                         #END IF
 
@@ -633,8 +635,12 @@ class MWNL_Connection:
                     
                     #print "icd = " + self.__incomingdata
                 #END IF
-            except:
+            except socket.timeout:
                 pass
+            except:
+                logging.info(traceback.format_exc())
+                logging.error(traceback.format_exc())
+                print traceback.format_exc()
             #END TRY/EXCEPT
         #END WHILE
         
@@ -684,7 +690,11 @@ class MWNL_Connection:
                 #END IF
             except:
                 self.__connalive = False
+                logging.info("Error Sending Data - Remote Host Forced Closure?")
                 logging.error("Error Sending Data - Remote Host Forced Closure?")
+                logging.info(traceback.format_exc())
+                logging.error(traceback.format_exc())
+                print traceback.format_exc()
                 self.__callback([(self.__id, 0), MWNL_CMD_DISCONNECT])
             
             self.__outlock.release()

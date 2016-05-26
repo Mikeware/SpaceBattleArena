@@ -16,6 +16,7 @@ from TestCaseRigging import SBAServerTestCase, SBAGUIWithServerTestCase
 import Server.MWNL2 as MWNL2
 from World.AIShips import AIShip_Network_Harness
 from World.WorldCommands import *
+from Game.HungryHungryBaubles import Bauble
 
 import time
 import threading
@@ -89,15 +90,15 @@ class ServerConnectTestCase(SBAServerTestCase):
         print threading.enumerate()
         self.assertEqual(len(threading.enumerate()), 1, "More than main thread running.")
 
-    def __bad_thrust_ship(self, env):
+    def __bad_thrust_ship(self, ship, env):
         logging.info("Test Case got Callback from Network")
         x = random.randint(1, 10)
         if x > 7:
-            return ThrustCommand(self.ships[0], 'B', 1.0, 0.5)
+            return ThrustCommand(ship, 'B', 1.0, 0.5)
         elif x > 3:
             time.sleep(3)
-            return RotateCommand(self.ships[0], 120)
-        return IdleCommand(self.ships[0], 10)
+            return RotateCommand(ship, 120)
+        return IdleCommand(ship, 10)
 
     def callback(self, sender, cmd):
         pass
@@ -216,12 +217,12 @@ class ServerGUISingleShipRemoteTestCase(SBAGUIWithServerTestCase):
 
         self.assertFalse(self.ship.isconnected(), "Client still connected after failure?")
 
-    def __rotate_ship(self, env):
+    def __rotate_ship(self, ship, env):
         logging.info("Test Case got Callback from Network")
         self.__env = env
-        return RotateCommand(self.ship, 6)
+        return RotateCommand(ship, 6)
 
-    def __error_ship(self, env):
+    def __error_ship(self, ship, env):
         self.__env = env
         time.sleep(1)
         # want client thread to die to test server, seems to not effect test, which is kind of a bad thing, but we'll exploit it for now
@@ -283,15 +284,102 @@ class ServerGUITwoShipRemoteTestCase(SBAGUIWithServerTestCase):
 
         time.sleep(0.5)
 
-    def __target_ship(self, env):
+    def __target_ship(self, ship, env):
         logging.info("Test Case got Callback from Network for Target Ship")
         self.__env_target = env
-        return RotateCommand(self.targetship, 240)
+        return RotateCommand(ship, 240)
 
-    def __radar_ship(self, env):
+    def __radar_ship(self, ship, env):
         logging.info("Test Case got Callback from Network for Radar Ship")
         self.__env_radar = env
-        return RotateCommand(self.radarship, 240)
+        return RotateCommand(ship, 240)
+
+
+class ServerGUITournamentRemoteTestCase(SBAGUIWithServerTestCase):
+
+    def get_config_filename(self):
+        return "test_hungryhungrybaubles2.cfg", "test_tournament.cfg"
+
+    def test_running_network_tournament(self):
+        ships = []
+        numships = 8
+        groups = self.cfg.getint("Tournament", "groups")
+
+        for x in xrange(numships):
+            ships.append(AIShip_Network_Harness("Move", self.__target_ship))
+            self.assertTrue(ships[-1].connect(self.cfg.getint("Server", "port")), "Ship " + repr(x) + " Didn't connect to server.")    
+            time.sleep(0.2)
+            self.assertTrue(ships[-1].isconnected(), "Target Client not connected to server.")
+
+        for x in xrange(groups + 1):
+            self.assertEqual(len(self.game.world), 0, "Objects in World before round")
+            self.assertFalse(self.game.round_get_has_started(), "Game Timer Running")
+
+            self.game.round_start()
+
+            time.sleep(2.0)
+
+            if x == groups:
+                self.assertEqual(len(self.game.world), 26, "Found more than 4 ships + baubles in world")
+
+                for player in self.game._tmanager._finalgroup:
+                    self.assertTrue(player.object in self.game.world, "Player's Ship not in final tournament")
+                    self.assertLess(player.score, 1, "Players shouldn't have score entering final round")
+
+            for i in xrange(x + 2):
+                self.game.world.append(Bauble(intpos(self.game.game_get_current_player_list()[i % 2].object.body.position), 1))
+                time.sleep(0.5)
+
+            self.assertTrue(self.game.round_get_has_started(), "Game Timer NOT Running")
+
+            time.sleep(7.5)
+
+            leader = None
+            for player in self.game.game_get_current_leader_list():
+                print player.name, player.score
+                if leader == None:
+                    leader = player
+                #self.assertGreater(player.score, 10, "Each player should have scored")
+
+            time.sleep(23)
+
+            self.assertFalse(self.game.round_get_has_started(), "Game Timer Running After")
+
+            # Round should end
+            self.assertEqual(len(self.game.world), 0, "Objects in World after round")
+
+            # No player should have died
+            self.assertEqual(self.game.game_get_current_player_list()[0].deaths, 0, "Player died")
+            self.assertEqual(self.game.game_get_current_player_list()[1].deaths, 0, "Player died")
+
+            # the leader should still have points
+            self.assertGreater(leader.score, 0, "Leader should have scored points")
+
+            if x < groups:
+                self.assertEqual(len(self.game._tmanager._finalgroup), x+1, "Ship not added to final group")
+                self.assertIn(leader, self.game._tmanager._finalgroup, "Correct player not added to final group")
+            else:
+                # final round
+                self.assertIsNotNone(self.game._tmanager._finalwinner, "Final Winner not marked")
+                self.assertEqual(self.game._tmanager._finalwinner, leader, "Incorrect leader chosen")
+                pass
+            #eif
+        #next round
+
+        time.sleep(3)
+
+        self._endServer()
+
+    def __target_ship(self, ship, env):
+        logging.info("Test Case got Callback from Network for Target Ship")
+        self.__env_target = env
+        return RotateCommand(ship, 240)
+
+    def __radar_ship(self, ship, env):
+        logging.info("Test Case got Callback from Network for Radar Ship")
+        self.__env_radar = env
+        return RotateCommand(ship, 240)
+
 
 if __name__ == '__main__':
     unittest.main()

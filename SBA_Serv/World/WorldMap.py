@@ -272,6 +272,7 @@ class GameWorld(object):
         except:
             print "EXCEPTION IN GAMELOOP"
             logging.exception("FATAL Error in game loop!!!")
+            logging.info(traceback.format_exc())
             logging.error(traceback.format_exc())
             print traceback.format_exc()
             self.gameerror = True

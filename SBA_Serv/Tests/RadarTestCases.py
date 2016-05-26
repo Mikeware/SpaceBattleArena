@@ -191,24 +191,24 @@ class RadarClientServerTestCase(SBAGUIWithServerTestCase):
 
         time.sleep(0.5)
 
-    def __target_ship(self, env):
+    def __target_ship(self, ship, env):
         logging.info("Test Case got Callback from Network for Target Ship")
         self.__env_target = env
-        return RotateCommand(self.targetship, 6)
+        return RotateCommand(ship, 6)
 
-    def __cloak_ship(self, env):
+    def __cloak_ship(self, ship, env):
         logging.info("Test Case got Callback from Network for Cloak Ship")
         if self.__env_target == None:
             self.__env_target = env
-            return CloakCommand(self.targetship, 8.0)
+            return CloakCommand(ship, 8.0)
 
         self.__env_target = env
-        return IdleCommand(self.targetship, 2.0)
+        return IdleCommand(ship, 2.0)
 
-    def __radar_ship(self, env):
+    def __radar_ship(self, ship, env):
         logging.info("Test Case got Callback from Network for Radar Ship")
         self.__env_radar = env
-        return RadarCommand(self.radarship, 5)
+        return RadarCommand(ship, 5)
 
 if __name__ == '__main__':
     unittest.main()

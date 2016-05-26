@@ -136,6 +136,7 @@ if __name__ == "__main__":
                 logging.info("Running Game: " + rungame)
             except:
                 logging.error("Could not start Game " + rungame)
+                logging.info(traceback.format_exc())
                 logging.error(traceback.format_exc())
                 print traceback.format_exc()        
         #eif

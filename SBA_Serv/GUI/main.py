@@ -148,6 +148,7 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, cfg=None, t
                 #eif
             except:
                 logging.error("GUI ERROR")
+                logging.info(traceback.format_exc())
                 logging.error(traceback.format_exc())
                 print traceback.format_exc()
             #logging.debug("GUI: Add/Remove Done [%d]", thread.get_ident())

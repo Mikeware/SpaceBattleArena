@@ -121,7 +121,7 @@ class AIShip_Network_Harness:
         elif cmd[0] == MWNL_CMD_ENVIRONMENT:
             #TODO: Notify if died by checking object ID? just do it in callback manually like 'old' days?
             logging.info("AI Ship %s Making callback to %s", self._name, repr(self._callback))
-            response = self._callback(cmd[1])
+            response = self._callback(self, cmd[1])
             logging.info("AI Ship %s callback said to %s", self._name, repr(response))
             if response == None or not isinstance(response, Command): 
                 self.__client.close()
