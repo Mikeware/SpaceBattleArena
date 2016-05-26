@@ -18,6 +18,19 @@ public class ThrustCommand extends ShipCommand {
 	private double DUR;
 	@SuppressWarnings("unused")
 	private double PER;
+	@SuppressWarnings("unused")
+	private boolean BLOCK;
+	
+	/**
+	 * Creates a non-blocking command to fire a ship's thrusters.  If the ship does not 
+	 *   have enough thruster power remaining to execute a thrust, it is ignored.
+	 * @param dir which thruster to fire (one of 'B', 'F', 'L', 'R')
+	 * @param duration the number of seconds to thrust
+	 * @param power the percentage of thruster power to be used for this thrust
+	 */
+	public ThrustCommand(char dir, double duration, double power) {
+		this(dir, duration, power, false);
+	}
 	
 	/**
 	 * Creates a command to fire a ship's thrusters.  If the ship does not have
@@ -25,8 +38,9 @@ public class ThrustCommand extends ShipCommand {
 	 * @param dir which thruster to fire (one of 'B', 'F', 'L', 'R')
 	 * @param duration the number of seconds to thrust
 	 * @param power the percentage of thruster power to be used for this thrust
+	 * @param block indicates if the command should block or not
 	 */
-	public ThrustCommand(char dir, double duration, double power) {
+	public ThrustCommand(char dir, double duration, double power, boolean block) {
 		if (dir != 'L' && dir != 'F' && dir != 'R' && dir != 'B')
 			throw new IllegalArgumentException("Invalid thrust direction; must be one of 'L', 'F', 'R', or 'B'");
 		if (power < 0.1 || power > 1.0)
@@ -37,6 +51,7 @@ public class ThrustCommand extends ShipCommand {
 		DIR = dir;
 		DUR = duration;
 		PER = power;
+		BLOCK = block;
 	}
 
 	/* (non-Javadoc)
@@ -54,12 +69,13 @@ public class ThrustCommand extends ShipCommand {
 	public static int getOngoingEnergyCost() { return 3; }
 	
 	/**
-	 * Thrust commands don't prevent you from executing other commands.
+	 * Thrust commands don't prevent you from executing other commands by default.
 	 * 
-	 * If you want to wait for the Thrust to complete, you should issue an Idle command during your next cycle.
+	 * If you want to wait for the Thrust to complete, you should issue an Idle command during your next cycle
+	 *   or pass a boolean to the constructor.
      *
      * @since 1.1
-	 * @return false, thrusting doesn't block.
+	 * @return false, thrusting doesn't block by default.
 	 */
 	public static boolean isBlocking() { return false; }
 }
