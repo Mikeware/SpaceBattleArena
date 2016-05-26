@@ -295,9 +295,10 @@ class GameWorld(object):
         return objList
 
     def get_count_of_objects(self, type):
+        tname = type.__name__
         count = 0
         for obj in self.__objects.values():
-            if isinstance(obj, type):
+            if obj.__class__.__name__ == tname:
                 count += 1
             #eif
         #next

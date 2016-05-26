@@ -19,6 +19,7 @@ v1.2 : Planned - May 2016 [Season 5]
 	* Added new *reset_timer* option
 	* Better Generation of Spawn Points and other Bug Fixes
 * *Optimized Network Code to half required Threads*
+* Spawn Manager fixed to only look at specific Type for evaluating min/max not Subclasses.
 * Added option for Torpedoes to be effected by gravity
 * Added *enable_commands* [Server] config option.
 * Split 'explodable' from 'gravitable' for Entities, two separate object flags now.
@@ -31,6 +32,7 @@ v1.2 : Planned - May 2016 [Season 5]
         * Hungry Hungry Baubles and Bauble Hunt now share new *[BaubleGame]* point/percentage spawning parameters.
         * Bauble Games can now spawn any number of different valued Baubles.
     * RotateCommand/Orientation Related Client code now uses **int** vs. **double**.
+    * Client code now does some validation of command arguments, can **throw IllegalArgumentException**.
     * **Removed SelfDestructCommand**
 
 v1.1.0.1111 : 04/21/2016 [Season 4 Release] - Discovery Quest
