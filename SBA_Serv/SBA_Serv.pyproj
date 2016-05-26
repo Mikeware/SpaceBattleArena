@@ -157,6 +157,8 @@
     <Content Include="Tests\test_destroyed.cfg" />
     <Content Include="Tests\test_hungryhungrybaubles.cfg" />
     <Content Include="Tests\test_hungryhungrybaubles2.cfg" />
+    <Content Include="Tests\test_server_disable.cfg" />
+    <Content Include="Tests\test_server_enable.cfg" />
     <Content Include="Tests\test_spawning.cfg" />
     <Content Include="Tests\test_survivor.cfg" />
     <Content Include="Tests\test_combatexercise.cfg" />

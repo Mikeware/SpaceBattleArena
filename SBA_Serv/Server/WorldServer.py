@@ -18,7 +18,7 @@ from World.WorldCommands import ConvertNetworkMessageToCommand, RadarCommand
 from NetworkCommands import *
 
 class WorldServer(object):
-    """description of class"""
+    """Space Battle Network Server"""
 
     # TODO take configuration for port, max images
     def __init__(self, port, game):
@@ -31,11 +31,13 @@ class WorldServer(object):
         self.__run = True # used to kill command loops while waiting on blocking commands
         if game.cfg.has_option("Server", "disable_commands"):
             self.__badcmds = game.cfg.get("Server", "disable_commands").split(",")
+            logging.info("Server Commands Disabled - Blacklist: %s", repr(self.__badcmds))
         else:
             self.__badcmds = None
         #eif
         if game.cfg.has_option("Server", "enable_commands"):
             self.__goodcmds = game.cfg.get("Server", "enable_commands").split(",")
+            logging.info("Server Commands Enabled - Whitelist: %s", repr(self.__goodcmds))
         else:
             self.__goodcmds = None
         #eif

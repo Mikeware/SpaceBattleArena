@@ -84,6 +84,7 @@ class AIShip_Network_Harness:
         self._image = image
         self._callback = callback
         self.id = name
+        self.errors = 0
 
     def connect(self, port=2012, host="localhost"):
         """
@@ -130,6 +131,7 @@ class AIShip_Network_Harness:
         elif cmd[0] == MWNL_CMD_ERROR:
             #print "ERROR:", cmd[1]
             logging.error("AI Ship %s Command Error: %s", self._name, repr(cmd[1]))
+            self.errors += 1
         elif cmd[0] == MWNL2.MWNL_CMD_DISCONNECT:
             #print "DISCONNECTED"
             logging.info("Disconnected AI Ship %s", self._name)

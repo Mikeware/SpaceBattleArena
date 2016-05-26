@@ -103,6 +103,209 @@ class ServerConnectTestCase(SBAServerTestCase):
     def callback(self, sender, cmd):
         pass
 
+
+class ServerEnableCommandsTestCase(SBAServerTestCase):
+
+    def get_config_filename(self):
+        return "test_server_enable.cfg"
+
+    def test_rotate_ship_command_enabled(self):
+        """
+        Test that a ship using Rotate works with enable_commands Server property
+        """
+        self.__env = None
+
+        self.ship = AIShip_Network_Harness("Rotator", self.__rotate_ship)
+
+        self.assertTrue(self.ship.connect(self.cfg.getint("Server", "port")), "Didn't connect to server.")
+
+        time.sleep(2)
+
+        self.assertIsNotNone(self.__env, "Never received environment.")
+        
+        ang = self.__env["SHIPDATA"]["ROTATION"]
+
+        time.sleep(2)
+
+        self.assertEqual(self.ship.errors, 0, "Ship received error message.")
+
+        self.assertNotEqual(ang, self.__env["SHIPDATA"]["ROTATION"], "Angle didn't change over time.")
+
+        self._endServer() # Note, Ship will still be visible as we're not removing it from world in this test.
+
+        time.sleep(3)
+
+        self.assertFalse(self.ship.isconnected(), "Client still connected to server after disconnect.")
+
+    def test_thrust_ship_command_enabled(self):
+        """
+        Test that a ship using Thrust works with enable_commands Server property
+        """
+        self.__env = None
+
+        self.ship = AIShip_Network_Harness("Thruster", self.__thrust_ship)
+
+        self.assertTrue(self.ship.connect(self.cfg.getint("Server", "port")), "Didn't connect to server.")
+
+        time.sleep(2)
+
+        self.assertIsNotNone(self.__env, "Never received environment.")
+        
+        pos = self.__env["SHIPDATA"]["POSITION"]
+
+        time.sleep(2)
+
+        self.assertEqual(self.ship.errors, 0, "Ship received error message.")
+
+        self.assertNotEqual(pos, self.__env["SHIPDATA"]["POSITION"], "Position didn't change over time.")
+
+        self._endServer() # Note, Ship will still be visible as we're not removing it from world in this test.
+
+        time.sleep(3)
+
+        self.assertFalse(self.ship.isconnected(), "Client still connected to server after disconnect.")
+
+    def test_other_ship_command_enabled_fail(self):
+        """
+        Test that a ship using a different command doesn't work with enable_commands Server property
+        """
+        self.__env = None
+
+        self.ship = AIShip_Network_Harness("Idle", self.__idle_ship)
+
+        self.assertTrue(self.ship.connect(self.cfg.getint("Server", "port")), "Didn't connect to server.")
+
+        time.sleep(2)
+
+        self.assertIsNotNone(self.__env, "Didn't received initial environment.")
+        
+        time.sleep(2)
+
+        self.assertGreater(self.ship.errors, 0, "Ship didn't receive error message.")
+
+        self._endServer() # Note, Ship will still be visible as we're not removing it from world in this test.
+
+        time.sleep(3)
+
+        self.assertFalse(self.ship.isconnected(), "Client still connected to server after disconnect.")
+
+    def __rotate_ship(self, ship, env):
+        logging.info("Test Case got Callback from Network for Rotate Ship")
+        self.__env = env
+        return RotateCommand(ship, 6)
+
+    def __thrust_ship(self, ship, env):
+        logging.info("Test Case got Callback from Network for Thrust Ship")
+        self.__env = env
+        return ThrustCommand(ship, 'B', 4.0, 1.0, True)
+
+    def __idle_ship(self, ship, env):
+        logging.info("Test Case got Callback from Network for Idle Ship")
+        self.__env = env
+        return IdleCommand(ship, 1.0)
+
+
+class ServerDisableCommandsTestCase(SBAServerTestCase):
+
+    def get_config_filename(self):
+        return "test_server_disable.cfg"
+
+    def test_rotate_ship_command_disable_fail(self):
+        """
+        Test that a ship using Rotate doesn't work with disable_commands Server property
+        """
+        self.__env = None
+
+        self.ship = AIShip_Network_Harness("Rotator", self.__rotate_ship)
+
+        self.assertTrue(self.ship.connect(self.cfg.getint("Server", "port")), "Didn't connect to server.")
+
+        time.sleep(2)
+
+        self.assertIsNotNone(self.__env, "Never received environment.")
+        
+        ang = self.__env["SHIPDATA"]["ROTATION"]
+
+        time.sleep(2)
+
+        self.assertGreater(self.ship.errors, 0, "Ship didn't receive error message.")
+
+        self.assertEqual(ang, self.__env["SHIPDATA"]["ROTATION"], "Angle changed over time.")
+
+        self._endServer() # Note, Ship will still be visible as we're not removing it from world in this test.
+
+        time.sleep(3)
+
+        self.assertFalse(self.ship.isconnected(), "Client still connected to server after disconnect.")
+
+    def test_thrust_ship_command_disabled(self):
+        """
+        Test that a ship using Thrust works with disable_commands Server property
+        """
+        self.__env = None
+
+        self.ship = AIShip_Network_Harness("Thruster", self.__thrust_ship)
+
+        self.assertTrue(self.ship.connect(self.cfg.getint("Server", "port")), "Didn't connect to server.")
+
+        time.sleep(2)
+
+        self.assertIsNotNone(self.__env, "Never received environment.")
+        
+        pos = self.__env["SHIPDATA"]["POSITION"]
+
+        time.sleep(2)
+
+        self.assertEqual(self.ship.errors, 0, "Ship received error message.")
+
+        self.assertNotEqual(pos, self.__env["SHIPDATA"]["POSITION"], "Position didn't change over time.")
+
+        self._endServer() # Note, Ship will still be visible as we're not removing it from world in this test.
+
+        time.sleep(3)
+
+        self.assertFalse(self.ship.isconnected(), "Client still connected to server after disconnect.")
+
+    def test_other_ship_command_disable(self):
+        """
+        Test that a ship using a different command works with disable_commands Server property
+        """
+        self.__env = None
+
+        self.ship = AIShip_Network_Harness("Idle", self.__idle_ship)
+
+        self.assertTrue(self.ship.connect(self.cfg.getint("Server", "port")), "Didn't connect to server.")
+
+        time.sleep(2)
+
+        self.assertIsNotNone(self.__env, "Didn't received initial environment.")
+        
+        time.sleep(2)
+
+        self.assertEqual(self.ship.errors, 0, "Ship received error message.")
+
+        self._endServer() # Note, Ship will still be visible as we're not removing it from world in this test.
+
+        time.sleep(3)
+
+        self.assertFalse(self.ship.isconnected(), "Client still connected to server after disconnect.")
+
+    def __rotate_ship(self, ship, env):
+        logging.info("Test Case got Callback from Network for Rotate Ship")
+        self.__env = env
+        return RotateCommand(ship, 6)
+
+    def __thrust_ship(self, ship, env):
+        logging.info("Test Case got Callback from Network for Thrust Ship")
+        self.__env = env
+        return ThrustCommand(ship, 'B', 4.0, 1.0, True)
+
+    def __idle_ship(self, ship, env):
+        logging.info("Test Case got Callback from Network for Idle Ship")
+        self.__env = env
+        return IdleCommand(ship, 1.0)
+
+
 class ServerGUISingleShipRemoteTestCase(SBAGUIWithServerTestCase):
 
     def get_config_filename(self):
