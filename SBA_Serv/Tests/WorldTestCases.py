@@ -386,6 +386,33 @@ class WorldVisualShipRespawnTestCase(SBAGUITestCase):
         print ship2.body.position[0], " vs ", ship.body.position[0]
         self.failIfAlmostEqual(ship2.body.position[0], ship.body.position[0], None, "Ship Didn't get Slowed Down By Nebula", 15)
 
+    def test_energy_scoop(self):
+        """
+        Test two ships, one in Nebula and using Energy Scoop.
+        """
+        neb = Nebula(self.game.world.mid_point(100, -160), (384,256))
+        self.game.world.append(neb)
+
+        ship = AIShip_SetList("Nebula", self.game.world.mid_point(-100, -100), self.game, [
+            "ThrustCommand(self, 'B', 7.0)",
+            "IdleCommand(self, 2.0)",
+            "LowerEnergyScoopCommand(self, 1)",
+        ])        
+
+        ship2 = AIShip_SetList("Free", self.game.world.mid_point(-100, 100), self.game, [
+            "ThrustCommand(self, 'B', 7.0)",
+        ])
+        
+        ship.energy -= 50
+        ship2.energy -= 50
+
+        time.sleep(9.0)
+
+        print ship2.body.position[0], " vs ", ship.body.position[0]
+        self.failIfAlmostEqual(ship2.body.position[0], ship.body.position[0], None, "Ship Didn't get Slowed Down By Nebula", 15)
+        self.assertGreater(ship.energy.value, ship2.energy.value, "Ship didn't get extra energy")
+        self.assertAlmostEqual(ship.energy.value, 100, None, "Ship didn't regain all energy", 5)
+
     def test_ship_shoot_dragon(self):
         """
         Tests that a dragon can take damage from torpedos

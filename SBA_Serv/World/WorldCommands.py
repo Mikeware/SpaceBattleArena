@@ -522,7 +522,7 @@ class LowerEnergyScoopCommand(Command):
     def execute(self, t):
         bpull = 500
         for body in self._obj.in_celestialbody:
-            if isinstance(body, WorldEntities.CelestialBody):
+            if isinstance(body, WorldEntities.Nebula) or isinstance(body, WorldEntities.Planet): # BlackHoles, Stars
                 self._obj.energy += t * 24
                 bpull = body.pull
                 break
