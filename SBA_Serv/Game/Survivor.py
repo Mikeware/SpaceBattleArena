@@ -40,7 +40,7 @@ class SurvivorGame(BasicGame):
         for player in self.game_get_current_player_list():
             # Update a player's score only when they're moving
             if player.object != None and player.object.body.velocity.length > self._min_vel:
-                self.player_update_score(player, t)
+                player.update_score(t)
 
         super(SurvivorGame, self).game_update(t)
 

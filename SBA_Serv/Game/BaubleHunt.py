@@ -125,7 +125,7 @@ class BaubleHuntGame(BaseBaubleGame):
     def depositBaubles(self, ship, home):
         logging.info("Player Depositing Baubles #%d", ship.id)
         for b in ship.player.carrying:
-            self.player_update_score(ship.player, b.value)
+            ship.player.update_score(b.value)
             home.stored += b.value
         ship.player.totalcollected += len(ship.player.carrying)
         

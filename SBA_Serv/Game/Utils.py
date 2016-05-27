@@ -9,6 +9,7 @@ from importlib import import_module
 import World.WorldEntities
 from World.WorldMath import intpos, friendly_type, cfg_rand_min_max, getPositionAwayFromOtherObjects
 from World.Entities import Entity
+from World.WorldEntities import Ship, Torpedo
 
 class CallbackTimer(Thread):
     """
@@ -65,6 +66,7 @@ class SpawnConfig:
         self._max = False
         self._player = False
         self._shortlife = False
+        self._points = False
 
     def add_timed_spawn(self, time_num, time_min, time_max): # int, int, int
         if time_num > 0 and time_min > 0 and time_max >= time_min:
@@ -127,6 +129,20 @@ class SpawnConfig:
     def get_shortlife(self):
         return random.randint(self._life_min, self._life_max)
 
+    def add_points(self, torpedo, ram):
+        self._points = True
+        self._points_torpedo = torpedo
+        self._points_ram = ram
+
+    def is_points(self):
+        return self._points
+
+    def get_points_torpedo(self):
+        return self._points_torpedo
+
+    def get_points_ram(self):
+        return self._points_ram
+
 class SpawnManager:
     ENTITY_TYPES = None
     """
@@ -184,6 +200,10 @@ class SpawnManager:
                 # do we want this object to have a shortened lifespawn?
                 if cfg.has_option(entity, "spawn_alive_time_min"):
                     sc.add_shortlife(cfg.getint(entity, "spawn_alive_time_min"), cfg.getint(entity, "spawn_alive_time_max"))
+
+                # do we want to give points on destruction of this object
+                if cfg.has_option(entity, "points_torpedo"):
+                    sc.add_points(cfg.getint(entity, "points_torpedo"), cfg.getint(entity, "points_ram"))
 
                 self._spawns[entity] = sc
 
@@ -271,10 +291,26 @@ class SpawnManager:
     def check_number(self, wobj):
         """
         Checks the number of objects in the world to see if more need to be added over minimum.
+
+        Called by game when object removed from the world.
         """
         name = friendly_type(wobj)
-        if self._running and self._spawns.has_key(name):            
+        #logging.debug("Checking Number in Spawn Manager for %s - Running: %s Config: %s", name, repr(self._running), repr(self._spawns.has_key(name)))
+        if self._running and self._spawns.has_key(name):
             sc = self._spawns[name]
+
+            #logging.debug("Configured for Points: %s and Has Info %s", repr(sc.is_points()), repr(hasattr(wobj, "killedby")))
+            if sc.is_points() and hasattr(wobj, "killedby") and wobj.killedby != None:
+                obj = wobj.killedby
+                #logging.debug("Killed By: %s", repr(obj))
+                if isinstance(obj, Torpedo) and hasattr(obj, "owner") and obj.owner != None and isinstance(obj.owner, Ship):
+                    obj.owner.player.update_score(sc.get_points_torpedo())
+                    
+                    logging.info("Torpedo Owner (#%d) Destroyed %s for %d Points", obj.owner.id, name, sc.get_points_torpedo())
+                elif isinstance(obj, Ship) and obj.health.value > 0:
+                    obj.player.update_score(sc.get_points_ram())
+                    
+                    logging.info("Ship (#%d) Destroyed %s for %d Points", obj.id, name, sc.get_points_ram())
 
             if sc.is_min():
                 count = self._world.get_count_of_objects(type(wobj))

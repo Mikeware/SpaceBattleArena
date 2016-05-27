@@ -41,7 +41,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Game\HungryHungryBaubles.py" />
-    <Compile Include="Game\AsteroidMiner.py" />
     <Compile Include="Game\CombatExercise.py" />
     <Compile Include="Game\Survivor.py" />
     <Compile Include="Game\Game.py" />

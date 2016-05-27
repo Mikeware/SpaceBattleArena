@@ -89,7 +89,7 @@ class FindTheMiddleGame(BasicGame):
                                 break
                             x += 1
                         ship.body.position = self.player_get_start_position() 
-                        self.player_update_score(ship.player, self.__objective_points[x])
+                        ship.player.update_score(self.__objective_points[x])
                         ship.player.time = 0
                 elif self.__reset_timer:
                     ship.player.time = 0

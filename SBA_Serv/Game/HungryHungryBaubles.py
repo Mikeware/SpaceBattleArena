@@ -62,7 +62,7 @@ class HungryHungryBaublesGame(BaseBaubleGame):
         # collect own Bauble?
         if self.__assign_specific_bauble and bauble == self.__baubles[ship.player.netid]:
             logging.info("Collected Own Bauble #%d", ship.id)
-            self.player_update_score(ship.player, self.__points_extra)
+            ship.player.update_score(self.__points_extra)
             ship.player.sound = "COLLECT"
             # add new bauble
             self.__addBauble(ship.player, True)
@@ -82,7 +82,7 @@ class HungryHungryBaublesGame(BaseBaubleGame):
             ship.player.sound = "BAUBLE"
             Bauble.spawn(self.world, self.cfg)
         #eif
-        self.player_update_score(ship.player, bauble.value)
+        ship.player.update_score(bauble.value)
         bauble.destroyed = True
 
         logging.info("Done Collecting Baubles #%d", ship.id)

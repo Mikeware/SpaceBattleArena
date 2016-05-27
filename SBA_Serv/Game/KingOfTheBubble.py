@@ -48,7 +48,7 @@ class KingOfTheBubbleGame(BasicGame):
         # calculate points to lose
         addyum = player.score * (self.__pointpercent / 100.0) > self.__pointatleast
         stealpoints = max(player.score * (self.__pointpercent / 100.0), self.__pointatleast)
-        self.player_update_score(player, -stealpoints)
+        player.update_score(-stealpoints)
             
         # see if a Bubble is near us
         added = False
@@ -148,8 +148,7 @@ class Bubble(PhysicalRound):
                 ships.append(obj)
         
         for ship in ships:
-            #HACK: Need to refigure out how game objects can get game reference with new spawn paradigm, is it the spawn manager passing game instead of world?
-            self.__world._GameWorld__game.player_update_score(ship.player, t * self.pointspeed)
+            ship.player.update_score(t * self.pointspeed)
             #logging.info("Player %s getting points %d", ship.player.name, ship.player.score)
         
         self.size -= (t * self.pointspeed * len(ships))

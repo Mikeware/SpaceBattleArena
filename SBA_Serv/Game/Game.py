@@ -295,7 +295,7 @@ class BasicGame(object):
             if (self.__started and self.__allowafterstart) or not self.__started:
                 # create new player
                 #
-                p = Player(name, color, imgindex, netid, None)
+                p = Player(name, color, imgindex, netid, self._primary_victory_high)
                 self.player_added(p, BasicGame._ADD_REASON_REGISTER_)
                 self._players[netid] = p
 
@@ -467,21 +467,6 @@ class BasicGame(object):
     #endregion
 
     #region Player Scoring / Leaderboard Functions
-    def player_update_score(self, player, amount):
-        """
-        Should be called to manipulate a player's score, will do extra bookkeeping and sanity for you.
-        """
-        player.score += amount
-
-        # scores can't be negative
-        if player.score < 0:
-            player.score = 0
-
-        # TODO: #118 should probably check if primary highest flag to see if we want to keep track of lowest or highest score here
-        # update if this is a new personal best
-        if player.score > player.bestscore:
-            player.bestscore = player.score
-        
     def player_died(self, player, gone):
         """
         Will be called when a player dies, will adjust score appropriately based on game rules.
@@ -495,7 +480,7 @@ class BasicGame(object):
             logging.info("Player %s Died", player.name)
             player.deaths += 1
             if self._points_lost_on_death > 0:
-                self.player_update_score(player, -self._points_lost_on_death)
+                player.update_score(-self._points_lost_on_death)
 
             if self._reset_score_on_death:
                 self._player_reset_score(player)

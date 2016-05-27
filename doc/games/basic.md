@@ -6,6 +6,7 @@ outline-header: Basic Games
 outline:
  - { url: "findthemiddle.html", title: "Find The Middle" }
  - { url: "survivor.html", title: "Survivor" }
+ - { url: "survivor.html#dl", title: "Dragon's Lair" }
  - { url: "asteroidminer.html", title: "Asteroid Miner" }
  - { url: "combatexercise.html", title: "Combat Exercise" }
  - { url: "hungryhungrybaubles.html", title: "Hungry Hungry Baubles" }

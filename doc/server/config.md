@@ -170,7 +170,7 @@ Minimum number of [Entity] to keep in the world.  If the number falls below this
 Maximum cut-off for spawning new [Entity] types on the timer.  If the number of objects has reached this level, no new entities will be spawned using the spawn timing settings below. Games or other events may still spawn entities of this type however.
 
 ###spawn_time_num = integer
-Number of entities to spawn at a time with the timing settings below.  If specified, you must also specify the spawn_time_min and spawn_time_max options.
+Number of entities to spawn at a time with the timing settings below.  *If specified, you must also specify the spawn_time_min and spawn_time_max options.*
 
 ###spawn_time_min = integer
 Minimum time in seconds before spawning the spawn_time_num of [Entity] unless spawn_keep_max has been reached.
@@ -188,6 +188,13 @@ Number of [Entity] to add to the universe when a player is added to it.
 ###spawn_on_player_start = boolean
 ###spawn_on_player_respawn = boolean
 Specify which scenarios (first created in round and/or whenever re-added) to add the spawn_on_player_num [Entity] to the world.
+
+###points_torpedo = int
+Number of points for destroying the spawned entity with a torpedo (if applicable).  *Must specify both points_torpedo and points_ram.*
+
+###points_ram = int
+Number of points for destroying the spawned entity with a ship via ramming (without destroying your ship).
+
 
 <a name="asteroid"></a>[Asteroid]
 ---------------------------------------

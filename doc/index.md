@@ -57,6 +57,7 @@ Documentation
     * ['Basic' Games](games/basic.html)
         * [Find The Middle](games/findthemiddle.html)
         * [Survivor](games/survivor.html)
+            * [Dragon's Lair (Variant)](games/survivor.html#dl)
         * [Asteroid Miner](games/asteroidminer.html)
         * [Combat Exercise](games/combatexercise.html)
     	* [Hungry Hungry Baubles](games/hungryhungrybaubles.html)

@@ -18,14 +18,21 @@ v1.2 : Planned - May 2016 [Season 5]
 * Updated Find the Middle Basic Game
 	* Added new *reset_timer* option
 	* Better Generation of Spawn Points and other Bug Fixes
-* *Optimized Network Code to half required Threads*
-* Spawn Manager fixed to only look at specific Type for evaluating min/max not Subclasses.
-* Added option for Torpedoes to be effected by gravity
-* Added *enable_commands* [Server] config option.
-* Split 'explodable' from 'gravitable' for Entities, two separate object flags now.
-* Can click ships in tracking mode to switch tracking to the clicked ship.
-* Separated option for 'showip' in Application settings to decouple from showing statistics, no longer always show IP in Debug mode.
-* 2 New Ship Graphics
+* Added **Dragon's Lair** Basic Game (based on Survivor)
+    * Dragons AI has been slightly improved
+    * Asteroids and Dragons Initial Movement Speed can be Configured
+    * Dragons highlight target in Debug mode
+    * Added Ability for Points to be Generally Handled by Spawn Manager for Asteroids and Dragons for Torpedos and Ramming
+* General Fixes/Improvements
+	* *Optimized Network Code to half required Threads*
+	* Spawn Manager fixed to only look at specific Type for evaluating min/max not Subclasses.
+	* Added option for Torpedoes to be effected by gravity **pull_weapon**
+	* Added **enable_commands** [Server] config option.
+	* Split 'explodable' from 'gravitable' for Entities, two separate object flags now.
+	* Can click ships in tracking mode to switch tracking to the clicked ship.
+	* Separated option for 'showip' in Application settings to decouple from showing statistics, no longer always show IP in Debug mode.
+	* 2 New Ship Graphics
+	* Fixed issue with LowerEnergyScoopCommand and Dragons
 * **Breaking Changes:**
     * Made **Hungry Hungry Baubles** a Basic Game by creating a *getObjectiveLocation()* method on BasicGameInfo (instead of *getGoldenBaublePosition()*).  This is now also used by **Bauble Hunt** and **Discovery Quest** instead of *getHomeBasePosition()*.
         * Hungry Hungry Baubles has new options for configuration (default is similar to previous incarnation).
@@ -34,6 +41,8 @@ v1.2 : Planned - May 2016 [Season 5]
     * RotateCommand/Orientation Related Client code now uses **int** vs. **double**.
     * Client code now does some validation of command arguments, can **throw IllegalArgumentException**.
     * **Removed SelfDestructCommand**
+    * Game API: Removed **AsteroidMiner** as an example game, now configurable generally, config file for game still exists.
+    * Game API: Player object now has **update_score** method instead of Game.
 
 v1.1.0.1111 : 04/21/2016 [Season 4 Release] - Discovery Quest
 ----

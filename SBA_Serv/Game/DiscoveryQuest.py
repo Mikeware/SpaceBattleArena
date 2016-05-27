@@ -206,7 +206,7 @@ class DiscoveryQuestGame(BasicGame):
                     # establish as ship's Outpost
                     ship.player.outpost = obj
                     obj.home_for.append(ship.player)
-                    self.player_update_score(ship.player, ship.player.buffervalue + obj.value * 2) # Score initial points + 2*outpost value for establishing base
+                    ship.player.update_score(ship.player.buffervalue + obj.value * 2) # Score initial points + 2*outpost value for establishing base
                     ship.player.buffervalue = 0
                     ship.player.sound = "SUCCESS"
                 
@@ -216,7 +216,7 @@ class DiscoveryQuestGame(BasicGame):
                     for obj in ship.player.scanned:
                         points += obj.value
                     ship.player.sound = "MISSION"
-                    self.player_update_score(ship.player, points * self.cfg.getfloat("DiscoveryQuest", "mission_bonus_multiplier"))
+                    ship.player.update_score(points * self.cfg.getfloat("DiscoveryQuest", "mission_bonus_multiplier"))
 
                 self.player_reset_mission(ship.player)
 
@@ -234,7 +234,7 @@ class DiscoveryQuestGame(BasicGame):
                 obj.scanned_by.append(ship.player)
                 ship.player.sound = "SUCCESS"
                 if ship.player.outpost != None:                    
-                    self.player_update_score(ship.player, obj.value)
+                    ship.player.update_score(obj.value)
                 else: #haven't found outpost, need to buffer points
                     ship.player.buffervalue += obj.value
     #end dq_finished_scan
