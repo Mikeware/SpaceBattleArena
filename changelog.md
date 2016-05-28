@@ -31,8 +31,9 @@ v1.2 : Planned - May 2016 [Season 5]
 	* Split 'explodable' from 'gravitable' for Entities, two separate object flags now.
 	* Can click ships in tracking mode to switch tracking to the clicked ship.
 	* Separated option for 'showip' in Application settings to decouple from showing statistics, no longer always show IP in Debug mode.
-	* 2 New Ship Graphics
+	* 3 New Ship Graphics
 	* Fixed issue with LowerEnergyScoopCommand and Dragons
+	* Add Microsoft Message Analyzer Log Parser Support
 * **Breaking Changes:**
     * Made **Hungry Hungry Baubles** a Basic Game by creating a *getObjectiveLocation()* method on BasicGameInfo (instead of *getGoldenBaublePosition()*).  This is now also used by **Bauble Hunt** and **Discovery Quest** instead of *getHomeBasePosition()*.
         * Hungry Hungry Baubles has new options for configuration (default is similar to previous incarnation).
