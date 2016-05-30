@@ -68,6 +68,10 @@ class Bauble(PhysicalRound):
 
         self.value = value
 
+        # Make sure Baubles aren't effected by gravity or explosions
+        self.explodable = False
+        self.gravitable = False
+
     def collide_start(self, otherobj):
         return False
 

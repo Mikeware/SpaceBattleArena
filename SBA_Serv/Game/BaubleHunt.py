@@ -137,13 +137,13 @@ class BaubleHuntGame(BaseBaubleGame):
     def player_died(self, player, gone):
         # if ship destroyed, put baubles stored back
         for b in player.carrying:
-            b.body.position = (player.object.body.position[0] + random.randint(-10, 10), player.object.body.position[1] + random.randint(-10, 10))
+            b.body.position = (player.object.body.position[0] + random.randint(-36, 36), player.object.body.position[1] + random.randint(-36, 36))
             b.destroyed = False # reset so that it won't get cleaned up
             if b.value == self._mv:
                 self.__baubles[b.id] = b
             self.world.append(b)
 
-        self.world.causeExplosion(player.object.body.position, 32, 1000)
+        #self.world.causeExplosion(player.object.body.position, 32, 1000)
 
         # Remove player's base if they're gone
         if gone and self.__bases.has_key(player.netid):
