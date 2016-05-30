@@ -88,6 +88,12 @@ if __name__ == "__main__":
     if defaults:
         loaded_cfg_files = cfg.read(args)
 
+        if len(loaded_cfg_files) != len(args):
+            for file in loaded_cfg_files:
+                args.remove(file)
+            print "Issue Loading Configuration:", args
+            logging.error("Possible Config Files Not Loaded: %s", repr(args))
+
         logging.info("Loaded Configuration Files: %s", repr(loaded_cfg_files))
 
         if loaded_cfg_files == []:
