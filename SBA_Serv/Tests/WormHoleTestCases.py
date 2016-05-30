@@ -126,7 +126,7 @@ class WormHoleVisualShipOneWayTestCase(SBAGUITestCase):
         ship = AIShip_SetList("Not Doomed", start, self.game, [
                 "RotateCommand(self, 180)",
                 "ThrustCommand(self, 'B', 3.0, 1.0)",
-                "IdleCommand(self, 4.0)",
+                "IdleCommand(self, 3.8)",
                 "ThrustCommand(self, 'F', 3.0, 1.0)",
                 "IdleCommand(self, 3.0)",
                 "RotateCommand(self, -45)",
@@ -230,7 +230,7 @@ class WormHoleVisualShipOneWayTestCase(SBAGUITestCase):
 
         self.assertAlmostEqual(ship.body.position, start, None, "Doomed ship shouldn't have moved", 2)
 
-        time.sleep(6.0)
+        time.sleep(5.9)
 
         self.assertAlmostEqual(ship.body.position[0], self.game.world.mid_point(0,0)[0], None, "Doomed ship should be near center. X", 100)
         self.assertAlmostEqual(ship.body.position[1], self.game.world.mid_point(0,0)[1], None, "Doomed ship should be near center. Y", 4)
@@ -275,7 +275,7 @@ class WormHoleVisualShipTwoWayTestCase(SBAGUITestCase):
 
         self.assertAlmostEqual(ship.body.position, start, None, "Warped ship shouldn't have moved", 2)
 
-        time.sleep(6.0)
+        time.sleep(5.9)
 
         self.assertAlmostEqual(ship.body.position[0], self.game.world.mid_point(0,0)[0], None, "Warped ship should be near center. X", 100)
         self.assertAlmostEqual(ship.body.position[1], self.game.world.mid_point(0,0)[1], None, "Warped ship should be near center. Y", 4)
@@ -295,7 +295,7 @@ class WormHoleVisualShipTwoWayTestCase(SBAGUITestCase):
         self.assertAlmostEqual(ship.body.position[1], wormhole.body.position[1]-300, None, "Warped ship teleported again. Y", 64)
 
         time.sleep(7.0)
-        self.assertGreaterEqual(ship.body.position[0], wormhole.body.position[0]+400, "Warped ship not out of range. X")
+        self.assertGreaterEqual(ship.body.position[0], wormhole.body.position[0]+380, "Warped ship not out of range. X")
 
         time.sleep(12.0)
 

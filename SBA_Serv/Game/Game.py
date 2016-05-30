@@ -236,7 +236,7 @@ class BasicGame(object):
         for player in self._players:
             player.roundover = True
             if player.object != None:
-                #player.object.destroyed = True
+                player.object.destroyed = True
                 self.world.remove(player.object) # here we're forcibly removing them as we're clearing the game
 
         if self.__resetworldround:
