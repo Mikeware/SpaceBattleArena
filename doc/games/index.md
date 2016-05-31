@@ -10,6 +10,7 @@ outline:
  - { url: "combatexercise.html", title: "Combat Exercise" }
  - { url: "hungryhungrybaubles.html", title: "Hungry Hungry Baubles" }
  - { url: "baublehunt.html", title: "Bauble Hunt" }
+ - { url: "thehungerbaubles.html", title: "The Hunger Baubles" }
  - { url: "kingofthebubble.html", title: "King of the Bubble" }
  - { url: "kingofthebubble.html#kos", title: "King of Space" }
  - { url: "discoveryquest.html", title: "Discovery Quest" }

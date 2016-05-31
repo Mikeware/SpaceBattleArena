@@ -36,6 +36,7 @@
     <Compile Include="Game\BaubleGame.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Game\TheHungerBaubles.py" />
     <Compile Include="Game\BaubleHunt.py" />
     <Compile Include="Game\DiscoveryQuest.py">
       <SubType>Code</SubType>
@@ -143,6 +144,7 @@
     <Content Include="basicgame_survivor.cfg" />
     <Content Include="empty.cfg" />
     <Content Include="basicgame_hungryhungrybaubles_original.cfg" />
+    <Content Include="game_thehungerbaubles.cfg" />
     <Content Include="game_kingofspace.cfg" />
     <Content Include="game_discoveryquest.cfg" />
     <Content Include="game_kingofthebubble.cfg" />

@@ -198,7 +198,7 @@ class BasicGame(object):
             self.spawnmanager.player_added(reason)
 
     
-    def player_get_start_position(self, force=False):
+    def player_get_start_position(self):
         """
         Should return a position for a player to start at in the world.
         """
@@ -365,11 +365,11 @@ class BasicGame(object):
             self.__aiships[netid].timealive = 0
             self.__aiships[netid].body.velocity = Vec2d(0, 0)
             if not roundstart: # ai ship will be initialized with a starting position for round entry, but if killed, will randomize
-                self.__aiships[netid].body.position = self.player_get_start_position(True)
+                self.__aiships[netid].body.position = self.player_get_start_position()
 
             self._players[netid].object.ship_added() # tell AI ship to start
         else:
-            self._players[netid].object = Ship(self.player_get_start_position(True), self.world)
+            self._players[netid].object = Ship(self.player_get_start_position(), self.world)
         logging.info("Adding Ship for Player %d id #%d with Name %s", netid, self._players[netid].object.id, self._players[netid].name)
         self._players[netid].object.player = self._players[netid]
         self._players[netid].object.owner = self._players[netid].object # Make ships owners of themselves for easier logic with ownership?

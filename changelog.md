@@ -1,7 +1,10 @@
-v1.2 : Planned - May 2016 [Season 5]
+v1.2 : Planned - May 2016 [Season 5] - The Hunger Baubles
 ----
-* Added Worm Holes (teleports objects across space)
-* Added Deployable Space Mines
+* Added **The Hunger Baubles** Subgame
+	* Bauble Games can now spawn any number of different valued Baubles.
+	* Bauble Games can now spawn different weights of Baubles.
+	* Added Worm Holes (teleports objects across space)
+	* Added Deployable Space Mines
 * Updated Client Angle/Point Methods
     * Orientations are always integers now and should be between 0-360
         * Rotate and Steer Command parameters updated
@@ -38,8 +41,6 @@ v1.2 : Planned - May 2016 [Season 5]
     * Made **Hungry Hungry Baubles** a Basic Game by creating a *getObjectiveLocation()* method on BasicGameInfo (instead of *getGoldenBaublePosition()*).  This is now also used by **Bauble Hunt** and **Discovery Quest** instead of *getHomeBasePosition()*.
         * Hungry Hungry Baubles has new options for configuration (default is similar to previous incarnation).
         * Hungry Hungry Baubles and Bauble Hunt now share new *[BaubleGame]* point/percentage spawning parameters.
-        * Bauble Games can now spawn any number of different valued Baubles.
-        * Bauble Games can now spawn different weights of Baubles.
         * **Bauble Hunt** now respects weight not number carried for *ship_cargo_size*.  Default weights are set to 1 though to behave in same manner as previously.
         * *BaubleHuntGameInfo* has *getBaublesCarriedWeight* method now.
     * RotateCommand/Orientation Related Client code now uses **int** vs. **double**.

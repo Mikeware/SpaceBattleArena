@@ -62,6 +62,7 @@ Documentation
         * [Combat Exercise](games/combatexercise.html)
     	* [Hungry Hungry Baubles](games/hungryhungrybaubles.html)
     * [Bauble Hunt](games/baublehunt.html)
+    * [The Hunger Baubles](games/thehungerbaubles.html)
     * [King of the Bubble](games/kingofthebubble.html)
         * [King of Space (Variant)](games/kingofthebubble.html#kos)
     * [Discovery Quest](games/discoveryquest.html)
