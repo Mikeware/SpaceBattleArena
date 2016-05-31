@@ -15,9 +15,9 @@ Bauble Hunt
 -----------
 **Bauble Hunt** is a more complex version of the [Hungry Hungry Baubles](hungryhungrybaubles.html) game.  
 
-Every player has a **home base** (locatable with *getObjectiveLocation()* and baubles *only count* towards your score once they have been collected and returned to your Home Base.
+Every player has an **Outpost** (locatable with *getObjectiveLocation()*) home base and baubles *only count* towards your score once they have been collected and **returned** to your Outpost.
 
-You may store 5 Baubles on your ship at most.
+You may store Baubles with up to a total weight of 5 on your ship.  (Baubles by default weigh 1.)
  
 Blue Bauble are worth 1 point.
 Golden Baubles are worth 3 points.
@@ -41,6 +41,15 @@ List of points each progressive bauble is worth. **Note:** *modifying the point 
 
 ###bauble_percent = list[float]
 The percentage of baubles which should generate as the corresponding value.  Each value should be from [0.0-1.0].  The total of all values provided in this list should equal 1.0.
+
+###bauble_weights = list[int]
+List of weight values to use for Bauble Generation (defaults to 1).
+
+###bauble_weight_percent = list[float]
+Percentage that each of corresponding weighted baubles in the *bauble_weights* should appear.  Each value should be from [0.0-1.0].  The total of all weights provided in this list should equal 1.0.
+
+###bauble_invert_ratio_percent = list[float]
+Each float in this list corresponds to a value of bauble in the *bauble_points* list (i.e. you should have the same number of floats in this list as values of baubles).  The value [0.0-1.0] for each bauble specifies the percent chance that the weight percentage used from *bauble_weight_percent* is inverted (i.e. 0.8, 0.2 becomes 0.2, 0.8 for that bauble value).  E.g. set to 1.0 if you want the weight percentages to always be opposite for that value of bauble.  If this option is not specified, it will be set to 0.0 for all bauble values.
 
 
 ##[BaubleHunt]

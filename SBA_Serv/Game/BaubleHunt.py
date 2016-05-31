@@ -28,8 +28,6 @@ import thread
 from operator import attrgetter
 
 class BaubleHuntGame(BaseBaubleGame):
-    VALUE_TABLE = []
-    
     def __init__(self, cfgobj):
 
         self._respawn = cfgobj.getboolean("BaubleHunt", "respawn_bauble_on_collect")
@@ -106,9 +104,15 @@ class BaubleHuntGame(BaseBaubleGame):
         
         return super(BaubleHuntGame, self).world_physics_pre_collision(obj1, obj2)
 
+    def get_player_cargo_value(self, player):
+        return sum(b.value for b in player.carrying)
+
+    def get_player_cargo_weight(self, player):
+        return sum(b.weight for b in player.carrying)
+
     def collectBaubles(self, ship, bauble):
         logging.info("Collected Baubles Ship #%d", ship.id)
-        if len(ship.player.carrying) < self.__maxcarry:
+        if self.get_player_cargo_weight(ship.player) + bauble.weight <= self.__maxcarry:
             ship.player.carrying.append(bauble)
             ship.player.sound = "BAUBLE"
 
@@ -119,6 +123,8 @@ class BaubleHuntGame(BaseBaubleGame):
 
             if self._respawn:
                 Bauble.spawn(self.world, self.cfg)
+        else:
+            logging.info("Player #%d Cargo Full", ship.id)
         #eif
         logging.info("Done Collecting Baubles #%d", ship.id)
 
@@ -155,15 +161,18 @@ class BaubleHuntGame(BaseBaubleGame):
     def game_get_extra_environment(self, player):
         if player.netid in self.__bases: # Check if Player still around?
             v = 0
+            w = 0
             for b in player.carrying:
                 v += b.value
+                w += b.weight
             baubles = []
             for b in self.__baubles:
                 baubles.append(intpos(b.body.position))
 
             env = super(BaubleHuntGame, self).game_get_extra_environment(player)
             env.update({"POSITION": intpos(self.__bases[player.netid].body.position), "BAUBLES": baubles,
-                        "STORED": len(player.carrying), "STOREDVALUE": v, "COLLECTED": player.totalcollected})
+                        "STORED": len(player.carrying), "STOREDVALUE": v, "COLLECTED": player.totalcollected,
+                        "WEIGHT": w})
 
             return env
         else:
@@ -176,6 +185,7 @@ class BaubleHuntGame(BaseBaubleGame):
         super(BaubleHuntGame, self).game_get_extra_radar_info(obj, objdata, player)
         if hasattr(obj, "player"):
             objdata["NUMSTORED"] = len(obj.player.carrying)
+            objdata["VALUE"] = self.get_player_cargo_value(obj.player)
 
     def player_get_stat_string(self, player):
         return str(int(player.score)) + " in " + str(player.totalcollected) + " : " + player.name + " c.v. " + str(sum(b.value for b in player.carrying)) + " in " + str(len(player.carrying))

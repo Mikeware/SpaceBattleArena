@@ -150,6 +150,7 @@
     <Content Include="no_collide.cfg" />
     <Content Include="no_gravity_drag.cfg" />
     <Content Include=".coveragerc" />
+    <Content Include="Tests\test_baublehunt_weights.cfg" />
     <Content Include="Tests\test_discovery_quest2.cfg" />
     <Content Include="Tests\test_discovery_quest.cfg" />
     <Content Include="Tests\test_kingofthebubble_spawn.cfg" />

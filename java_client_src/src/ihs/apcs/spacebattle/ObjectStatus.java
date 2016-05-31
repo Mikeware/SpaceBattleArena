@@ -44,18 +44,18 @@ public class ObjectStatus {
 	private int RADARRANGE; // Ship Only
 	private String[] CMDQ; // Ship Only
 	private boolean INBODY; // Ship or Celestial Body Only;
+	private double HITRADIUS; // Round Only
 	
 	// Game Specific
 	private double VALUE; // Bubble, Bauble or Ship Only
 	private int NUMSTORED; // Ship Only - Number of Baubles Carried
-	private double HITRADIUS; // Round Only
     private boolean SUCCESS; // Game boolean for success for this object
 	
 	private int PULL; // Planet/BlackHole/Nebula Only
 	private int MAJOR; // Planet/BlackHole/Nebula Only
 	private int MINOR; // Planet/BlackHole/Nebula Only
 	
-	private int OWNERID; // Torpedo/HomeBase Only
+	private int OWNERID; // Torpedo/Outpost/SpaceMine Only
 	
 	private String NAME; // If Turned on in Server Config
 	

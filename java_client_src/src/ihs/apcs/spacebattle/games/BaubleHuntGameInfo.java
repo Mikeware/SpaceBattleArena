@@ -19,13 +19,14 @@ import java.util.*;
  * @author Brett Wortzman
  *
  * @since 0.9
- * @version 1.0
+ * @version 1.2
  */
 public class BaubleHuntGameInfo extends BasicGameInfo {
 	private double[][] BAUBLES;
 	private int COLLECTED;
 	private int STORED;
 	private int STOREDVALUE;
+	private int WEIGHT;
 	
 	/**
 	 * Gets a list of positions where there are high-value baubles.  Not all
@@ -58,6 +59,12 @@ public class BaubleHuntGameInfo extends BasicGameInfo {
 	 * @return the value of the baubles carried by your ship
 	 */
 	public int getBaublesCarriedValue() { return STOREDVALUE; }
+	
+	/**
+	 * Gets the total weight of the baubles being carried by your ship.
+	 * @return weight of baubles carried
+	 */
+	public int getBaublesCarriedWeight() { return WEIGHT; }
 	
 	@Override
 	public String toString() {

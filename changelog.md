@@ -39,6 +39,9 @@ v1.2 : Planned - May 2016 [Season 5]
         * Hungry Hungry Baubles has new options for configuration (default is similar to previous incarnation).
         * Hungry Hungry Baubles and Bauble Hunt now share new *[BaubleGame]* point/percentage spawning parameters.
         * Bauble Games can now spawn any number of different valued Baubles.
+        * Bauble Games can now spawn different weights of Baubles.
+        * **Bauble Hunt** now respects weight not number carried for *ship_cargo_size*.  Default weights are set to 1 though to behave in same manner as previously.
+        * *BaubleHuntGameInfo* has *getBaublesCarriedWeight* method now.
     * RotateCommand/Orientation Related Client code now uses **int** vs. **double**.
     * Client code now does some validation of command arguments, can **throw IllegalArgumentException**.
     * **Removed SelfDestructCommand**
