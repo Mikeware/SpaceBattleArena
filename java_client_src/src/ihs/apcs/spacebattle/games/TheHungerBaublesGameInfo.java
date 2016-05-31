@@ -21,6 +21,8 @@ import java.util.*;
  * <p>
  * If your ship is destroyed, the Baubles it was carrying will be dropped.
  * 
+ * You are limited to having one Torpedo and one Space Mine in the world at a time.
+ * 
  * @author Michael A. Hawker
  *
  * @since 1.2
@@ -28,6 +30,8 @@ import java.util.*;
  */
 public class TheHungerBaublesGameInfo extends BasicGameInfo {
 	private ArrayList<ObjectStatus> BAUBLES;
+	private boolean TORPEDO;
+	private boolean MINE;
 	
 	/**
 	 * Gets a list of the baubles in your cargo hold.
@@ -68,6 +72,22 @@ public class TheHungerBaublesGameInfo extends BasicGameInfo {
 			weight += obj.getMass();
 		}
 		return weight; 
+	}
+	
+	/**
+	 * Indicates if you already have a torpedo in the world already.
+	 * @return true if your torpedo exists in the world already
+	 */
+	public boolean hasFiredTorpedo() {
+		return TORPEDO;
+	}
+	
+	/**
+	 * Indicated if you already have a Space Mine in the world already.
+	 * @return true if your space mine exists in the world already
+	 */
+	public boolean hasFiredSpaceMine() {
+		return MINE;
 	}
 	
 	@Override

@@ -421,6 +421,7 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, cfg=None, t
                             if isinstance(obj, ShipGUI) and math.sqrt(obj._worldobj.body.position.get_dist_sqrd(v)) <= 32:
                                 logging.info("[GUI] Click Tracking Object #%d", obj._worldobj.id)
                                 trackplayer = obj._worldobj.player
+                                zoomout = False
                                 dynamiccamera = False
                                 break
                     elif zoomout and event.button == 1:

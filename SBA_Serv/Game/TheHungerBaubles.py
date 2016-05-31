@@ -15,18 +15,23 @@ The full text of the license is available online: http://opensource.org/licenses
 from BaubleGame import *
 from Utils import CallbackTimer
 from World.Entities import Entity, PhysicalRound
-from World.WorldEntities import Ship
+from World.WorldEntities import Ship, Weapon, Torpedo, SpaceMine, Dragon, Asteroid
 from GUI.ObjWrappers.GUIEntity import GUIEntity, wrapcircle
 from World.WorldMath import intpos, friendly_type, PlayerStat, aligninstances, getPositionAwayFromOtherObjects
 from GUI.GraphicsCache import Cache
 from GUI.Helpers import debugfont
 from ThreadStuff.ThreadSafe import ThreadSafeDict
+from World.WorldCommands import FireTorpedoCommand, DeploySpaceMineCommand
+from World.Messaging import OneTimeCommand
 import logging
 import pygame
 import random
 import thread
 import math
 from operator import attrgetter
+
+GAME_CMD_COLLECT = "COLCT"
+GAME_CMD_EJECT = "EJECT"
 
 class TheHungerBaublesGame(BaseBaubleGame):
     def __init__(self, cfgobj):
@@ -37,6 +42,9 @@ class TheHungerBaublesGame(BaseBaubleGame):
         self.__cornucopia_radius = cfgobj.getint("TheHungerBaubles", "cornucopia_radius")
         self.__spawned_num = 0
 
+        self.collect_radius = cfgobj.getint("TheHungerBaubles", "collect_radius")
+        self.__limit_weapons = cfgobj.getboolean("TheHungerBaubles", "limit_weapons")
+
         super(TheHungerBaublesGame, self).__init__(cfgobj)
 
     def game_get_info(self):
@@ -46,6 +54,8 @@ class TheHungerBaublesGame(BaseBaubleGame):
         super(TheHungerBaublesGame, self).player_added(player, reason)
         player.carrying = []
         player.collected = 0
+        player.torpedo = False
+        player.mine = False
 
     def player_get_start_position(self):
         if self.cfg.getboolean("Tournament", "tournament"):
@@ -64,19 +74,13 @@ class TheHungerBaublesGame(BaseBaubleGame):
 
         # TODO: If an Asteroid or Dragon is destroyed, deposit bauble
 
+        if isinstance(wobj, Weapon) and wobj.owner != None and wobj.owner.player != None:
+            if isinstance(wobj, Torpedo):
+                wobj.owner.player.torpedo = added
+            elif isinstance(wobj, SpaceMine):
+                wobj.owner.player.mine = added
+
         return super(TheHungerBaublesGame, self).world_add_remove_object(wobj, added)
-
-    def world_physics_pre_collision(self, obj1, obj2):
-        ship, other = aligninstances(obj1, obj2, Ship, Entity)
-
-        if ship != None:
-            #if isinstance(other, Outpost):
-            #    logging.info("Ship #%d hit their base", ship.id)
-            #    return [ False, [self.depositBaubles, ship, other] ]
-            if isinstance(other, Bauble):
-                return [ False, [self.collectBaubles, ship, other] ]
-        
-        return super(TheHungerBaublesGame, self).world_physics_pre_collision(obj1, obj2)
 
     def get_player_cargo_value(self, player):
         return sum(b.value for b in player.carrying)
@@ -85,7 +89,7 @@ class TheHungerBaublesGame(BaseBaubleGame):
         return sum(b.weight for b in player.carrying)
 
     def collectBaubles(self, ship, bauble):
-        logging.info("Collected Baubles Ship #%d", ship.id)
+        logging.info("Collected Baubles Ship #%d bauble #%d", ship.id, bauble.id)
         if self.get_player_cargo_weight(ship.player) + bauble.weight <= self.__maxcarry:
             ship.player.carrying.append(bauble)
             ship.player.collected += 1
@@ -101,15 +105,49 @@ class TheHungerBaublesGame(BaseBaubleGame):
         #eif
         logging.info("Done Collecting Baubles #%d", ship.id)
 
+    def ejectBauble(self, player, bauble, died=False):
+        logging.info("Ejecting Bauble Player %d Bauble #%d", player.netid, bauble.id)
+        bauble.body.position = (player.object.body.position[0] + random.randint(-36, 36), player.object.body.position[1] + random.randint(-36, 36))
+        bauble.destroyed = False # reset so that it won't get cleaned up
+        player.carrying.remove(bauble)
+        if not died:
+            player.collected -= 1
+            player.update_score(-bauble.value)
+
+        self.world.append(bauble)
+        logging.info("Done Ejecting Baubles Player %d", player.netid)
+
     def player_died(self, player, gone):
         # if ship destroyed, put baubles stored back
-        for b in player.carrying:
-            b.body.position = (player.object.body.position[0] + random.randint(-36, 36), player.object.body.position[1] + random.randint(-36, 36))
-            b.destroyed = False # reset so that it won't get cleaned up
-
-            self.world.append(b)
+        for b in player.carrying[:]:
+            self.ejectBauble(player, b, True)
 
         return super(TheHungerBaublesGame, self).player_died(player, gone)
+
+    def server_process_network_message(self, ship, cmdname, cmddict={}):
+        if cmdname == GAME_CMD_COLLECT:
+            if cmddict.has_key("ID") and isinstance(cmddict["ID"], int) and cmddict["ID"] > 0:
+                return CollectCommand(ship, self, cmddict["ID"])
+            else:
+                return "The Hunger Baubles Collect Command requires an id."
+        elif cmdname == GAME_CMD_EJECT:
+            if cmddict.has_key("ID") and isinstance(cmddict["ID"], int) and cmddict["ID"] > 0:
+                return EjectCommand(ship, self, cmddict["ID"])
+            else:
+                return "The Hunger Baubles Eject Command requires an id."
+
+    def server_process_command(self, ship, command):
+        # The Hunger Baubles prevents firing while another torpedo of your exists
+        #logging.info("Checking Command %s %s", repr(command), repr(ship.in_celestialbody))
+        if self.__limit_weapons and hasattr(ship, "player"):
+            if isinstance(command, FireTorpedoCommand) and ship.player.torpedo:
+                logging.info("Preventing Ship #%d From Firing Torpedo", ship.id)
+                return "The Hunger Baubles Rule - Can only fire one torpedo at a time"
+            elif isinstance(command, DeploySpaceMineCommand) and ship.player.mine:
+                logging.info("Preventing Ship #%d From Deploying Space Mine", ship.id)
+                return "The Hunger Baubles Rule - Can only fire one space mine at a time"
+
+        return command
 
     def game_get_extra_environment(self, player):
         v = 0
@@ -122,7 +160,8 @@ class TheHungerBaublesGame(BaseBaubleGame):
             baubles.append({ "MASS": b.weight, "VALUE": b.value, "ID": b.id})
 
         env = super(TheHungerBaublesGame, self).game_get_extra_environment(player)
-        env.update({"POSITION": self.__cornucopia_position, "BAUBLES": baubles})
+        env.update({"POSITION": self.__cornucopia_position, "BAUBLES": baubles,
+                    "TORPEDO": player.torpedo, "MINE": player.mine })
 
         return env
     
@@ -143,16 +182,15 @@ class TheHungerBaublesGame(BaseBaubleGame):
             obj = player.object
             if obj != None:
                 # draw number of objects carried
+                bp = intpos(obj.body.position)
                 text = debugfont().render(repr(len(player.carrying)), False, player.color)
-                surface.blit(text, (obj.body.position[0]-30, obj.body.position[1]-4))
+                surface.blit(text, (bp[0]-36, bp[1]-4))
                 text = debugfont().render(repr(self.get_player_cargo_weight(player)), False, player.color)
-                surface.blit(text, (obj.body.position[0]+30, obj.body.position[1]-4))
-                # draw line between player and HomeBase
-                #if flags["DEBUG"] and self.__bases.has_key(player.netid):
-                #pygame.draw.line(surface, player.color, intpos(obj.body.position), intpos(self.__bases[player.netid].body.position))
-        wrapcircle(surface, (255, 255, 0), self.__cornucopia_position, self.__cornucopia_radius, self.world.size, 3)
+                surface.blit(text, (bp[0]+32, bp[1]-4))
+                wrapcircle(surface, (0, 255, 255), bp, self.collect_radius, self.world.size, 1) # Pick up Range
 
-        # draw number of baubles carried by player
+        # Cornucopia
+        wrapcircle(surface, (255, 255, 0), self.__cornucopia_position, self.__cornucopia_radius, self.world.size, 3)
 
     def round_start(self):
         logging.info("Game Start")
@@ -167,3 +205,47 @@ class TheHungerBaublesGame(BaseBaubleGame):
         self.__cornucopia_position = getPositionAwayFromOtherObjects(self.world, self.cfg.getint("TheHungerBaubles", "cornucopia_buffer_object"), self.cfg.getint("TheHungerBaubles", "cornucopia_buffer_edge"))
 
         #TODO: Remove anything left inside cornucopia?
+
+class CollectCommand(OneTimeCommand):
+    """
+    The CollectCommand lets you pick up baubles in The Hunger Baubles Game.
+
+    The ID of the object to pick up is required and must be within a specific distance from your ship.
+    """
+    NAME = GAME_CMD_COLLECT
+
+    def __init__(self, obj, game, id):
+        super(CollectCommand, self).__init__(obj, CollectCommand.NAME, required=8)
+        self.target = id
+        self.game = game
+
+    def onetime(self):
+        for wobj in self.game.world.getObjectsInArea(self._obj.body.position, self.game.collect_radius):
+            if wobj.id == self.target and isinstance(wobj, Bauble):
+                self.game.collectBaubles(self._obj, wobj)
+
+    def __repr__(self):
+        return super(CollectCommand, self).__repr__() + " ID: #%d" % (self.target)
+
+class EjectCommand(OneTimeCommand):
+    """
+    The EjectCommand lets you eject baubles in The Hunger Baubles Game.
+
+    The ID of the object to pick up is required and must be within a specific distance from your ship.
+    """
+    NAME = GAME_CMD_EJECT
+
+    def __init__(self, obj, game, id):
+        super(EjectCommand, self).__init__(obj, EjectCommand.NAME, required=24)
+        self.target = id
+        self.game = game
+
+    def onetime(self):
+        for wobj in self._obj.player.carrying:
+            if wobj.id == self.target:
+                self._obj.player.sound = "EJECT"
+                self.game.ejectBauble(self._obj.player, wobj)
+                return
+
+    def __repr__(self):
+        return super(EjectCommand, self).__repr__() + " ID: #%d" % (self.target)

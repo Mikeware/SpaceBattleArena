@@ -72,3 +72,9 @@ How far should the cornucopia be from the edge of the world.
 
 ###cornucopia_buffer_object = int
 How far should the cornucopia be from the edge of other objects.
+
+###collect_radius = int
+How far can a bauble be away from the ship for the Collect Command to pick it up.
+
+###limit_weapons = boolean
+Should each player be limited to having one torpedo and one space mine in the world at a time?

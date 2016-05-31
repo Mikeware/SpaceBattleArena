@@ -25,6 +25,11 @@ public enum CommandNames {
 			return "CLOAK";
 		}
 	},
+	Collect {
+		public String toString() {
+			return "COLCT";
+		}
+	},
 	DeployLaserBeacon {
 		public String toString() {
 			return "DLBN";
@@ -38,6 +43,11 @@ public enum CommandNames {
 	DestroyAllLaserBeacons {
 		public String toString() {
 			return "DAYLB";
+		}
+	},
+	Eject {
+		public String toString() {
+			return "EJECT";
 		}
 	},
 	FireTorpedo {

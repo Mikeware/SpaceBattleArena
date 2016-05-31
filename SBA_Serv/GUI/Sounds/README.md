@@ -103,6 +103,12 @@ Played when depositing Baubles in an Outpost for Bauble Hunt.
 
 *3 down 1* by **fins**
 
+[EJECT](https://www.freesound.org/people/BinaryMonkFlint/sounds/333295/)
+-------
+Played when ejecting a Bauble in The Hunger Baubles.
+
+*Remove from socket* by **BinaryMonkFlint**
+
 [MISSION](https://www.freesound.org/people/VASOTELVI/sounds/187917/)
 -------
 Played when a Ship completes a mission successfully in Discovery Quest.
