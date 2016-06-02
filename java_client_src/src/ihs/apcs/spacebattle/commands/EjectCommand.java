@@ -31,13 +31,22 @@ public class EjectCommand extends ShipCommand {
 	}
 	
 	/**
-	 * Gets the one-time energy cost to initiate this command.
-	 * @return the amount of energy consumed by initiating this command (24)
+	 * Gets the energy cost for the constructed command.
+	 * @return (3 * baubleValue)
 	 */
-	public static int getInitialEnergyCost() { return 24; }
+	public int getEnergyCost(int baubleValue)
+	{
+		return 3 * baubleValue;
+	}
 	
 	/**
-	 * Ejecting Baubles executes immediately.
+	 * Gets the average one-time energy cost to initiate this command.
+	 * @return the amount of energy consumed by initiating this command (3 * Bauble Value)
+	 */
+	public static int getInitialEnergyCost() { return 12; }
+	
+	/**
+	 * Ejecting Baubles executes immediately after a cooldown of 0.5 seconds * mass of Bauble to eject.
 	 * 
 	 * @return true
 	 */

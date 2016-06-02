@@ -795,40 +795,40 @@ class WorldVisualShipDestroyedTestCase(SBAGUITestCase):
         self.assertAlmostEqual(ship.health.value, 50, None, "Player Health not Halved", 1)
         self.assertLess(ship.energy.value, 100, "Player Energy didn't decrease")
 
-        time.sleep(5.5)
+        time.sleep(10.5)
 
         print ship.health
         ship.energy.full() # replenish
         self.assertAlmostEqual(ship.health.value, 25, None, "Player Health not Halved 2", 1)
 
-        time.sleep(5.5)
+        time.sleep(10.5)
 
         print ship.health        
         self.assertAlmostEqual(ship.health.value, 13, None, "Player Health not Halved 3", 1)
 
-        time.sleep(5.5)
+        time.sleep(10.5)
 
         print ship.health
         ship.energy.full() # replenish
         self.assertAlmostEqual(ship.health.value, 7, None, "Player Health not Halved 4", 1)
 
-        time.sleep(5.5)
+        time.sleep(10.5)
 
         print ship.health        
         self.assertAlmostEqual(ship.health.value, 4, None, "Player Health not Halved 5", 1)
 
-        time.sleep(5.5)
+        time.sleep(10.5)
 
         print ship.health
         ship.energy.full() # replenish
         self.assertAlmostEqual(ship.health.value, 2, None, "Player Health not Halved 6", 1)
 
-        time.sleep(5.5)
+        time.sleep(10.5)
 
         print ship.health        
         self.assertAlmostEqual(ship.health.value, 1, None, "Player Health not Halved 7", 1)
 
-        time.sleep(6)
+        time.sleep(11)
 
         print ship.health
         self.assertFalse(ship in self.game.world, "Doomed Ship not destroyed")

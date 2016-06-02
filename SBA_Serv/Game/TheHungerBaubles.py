@@ -313,9 +313,10 @@ class CollectCommand(OneTimeCommand):
     NAME = GAME_CMD_COLLECT
 
     def __init__(self, obj, game, id):
-        super(CollectCommand, self).__init__(obj, CollectCommand.NAME, required=8)
         self.target = id
         self.game = game
+
+        super(CollectCommand, self).__init__(obj, CollectCommand.NAME, True, 0.2, required=8)
 
     def onetime(self):
         for wobj in self.game.world.getObjectsInArea(self._obj.body.position, self.game.collect_radius):
@@ -334,9 +335,15 @@ class EjectCommand(OneTimeCommand):
     NAME = GAME_CMD_EJECT
 
     def __init__(self, obj, game, id):
-        super(EjectCommand, self).__init__(obj, EjectCommand.NAME, required=24)
         self.target = id
         self.game = game
+
+        for wobj in obj.player.carrying:
+            if wobj.id == self.target:
+                weight = wobj.weight
+                value = wobj.value
+
+        super(EjectCommand, self).__init__(obj, EjectCommand.NAME, ttl=0.5*weight, required=value*3)
 
     def onetime(self):
         for wobj in self._obj.player.carrying:

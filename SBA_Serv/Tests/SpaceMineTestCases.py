@@ -216,7 +216,7 @@ class SpaceMineAutonomousTestCase(SBAGUITestCase):
         start = self.game.world.mid_point(0, 0)
         ship = AIShip_SetList("Miner", start, self.game, [
                 "IdleCommand(self, 2.0)",
-                "DeploySpaceMineCommand(self, 6.0, 2, 0, 1, 0.0)", #Auto
+                "DeploySpaceMineCommand(self, 8.0, 2, 0, 1, 0.0)", #Auto
                 "ThrustCommand(self, 'B', 2.5, 1.0)",
                 "IdleCommand(self, 3.0)",
                 "ThrustCommand(self, 'F', 2.5, 1.0)"
@@ -227,7 +227,7 @@ class SpaceMineAutonomousTestCase(SBAGUITestCase):
         self.assertIn(ship, self.game.world, "Ship not in world.")
         self.assertEqual(len(self.game.world), 1, "More than just ship in world.")
 
-        time.sleep(4.5)
+        time.sleep(6.5)
 
         self.assertIn(ship, self.game.world, "Ship not in world.")
         self.assertEqual(len(self.game.world), 2, "No extra mine in world.")

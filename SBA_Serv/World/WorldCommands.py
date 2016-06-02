@@ -250,10 +250,9 @@ class AllStopCommand(OneTimeCommand):
 
     def __init__(self, obj):
         if obj.body.velocity.length < 1:
-            super(AllStopCommand, self).__init__(obj, AllStopCommand.NAME, 0)
+            super(AllStopCommand, self).__init__(obj, AllStopCommand.NAME, True, 1)
         else:
-            # TODO: TTL doesn't work here on a OneTimeCommand...
-            super(AllStopCommand, self).__init__(obj, AllStopCommand.NAME, 15, required=40)
+            super(AllStopCommand, self).__init__(obj, AllStopCommand.NAME, True, 5, required=40)
         #eif
 
     def onetime(self):        
@@ -435,7 +434,7 @@ class DeployLaserBeaconCommand(OneTimeCommand):
     def __init__(self, obj):
         obj.lasernodes.append(intpos(obj.body.position))
 
-        super(DeployLaserBeaconCommand, self).__init__(obj, DeployLaserBeaconCommand.NAME)        
+        super(DeployLaserBeaconCommand, self).__init__(obj, DeployLaserBeaconCommand.NAME, True, ttl=0.05)
 
 class DestroyAllLaserBeaconsCommand(OneTimeCommand):
     NAME = SHIP_CMD_DESTROY_ALL_BEACONS
@@ -443,14 +442,14 @@ class DestroyAllLaserBeaconsCommand(OneTimeCommand):
     def __init__(self, obj):
         obj.lasernodes = []
         
-        super(DestroyAllLaserBeaconsCommand, self).__init__(obj, DestroyAllLaserBeaconsCommand.NAME)
+        super(DestroyAllLaserBeaconsCommand, self).__init__(obj, DestroyAllLaserBeaconsCommand.NAME, True, ttl=0.1)
 
 class FireTorpedoCommand(OneTimeCommand):
     NAME = SHIP_CMD_TORPEDO
 
     def __init__(self, ship, direction):        
         self.__direction = direction
-        super(FireTorpedoCommand, self).__init__(ship, FireTorpedoCommand.NAME, required=12)
+        super(FireTorpedoCommand, self).__init__(ship, FireTorpedoCommand.NAME, True, 0.2, required=12)
         
     def onetime(self):        
         self._obj.player.sound = "LASER"        
@@ -469,7 +468,7 @@ class DeploySpaceMineCommand(OneTimeCommand):
         self.__direction = direction
         self.__speed = speed
         self.__duration = duration
-        super(DeploySpaceMineCommand, self).__init__(ship, DeploySpaceMineCommand.NAME, required=(33 + self.__wmode * 11))
+        super(DeploySpaceMineCommand, self).__init__(ship, DeploySpaceMineCommand.NAME, True, 2, required=(22 + self.__wmode * 11))
 
     def onetime(self):
         self._obj.player.sound = "MINE"

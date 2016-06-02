@@ -86,21 +86,21 @@ public class DeploySpaceMineCommand extends ShipCommand {
 	
 	/**
 	 * Gets the energy cost for the constructed command.
-	 * @return (44, 55, 66)
+	 * @return (33, 44, 55)
 	 */
 	public int getEnergyCost()
 	{
-		return 33 + this.MODE * 11;
+		return 22 + this.MODE * 11;
 	}
 	
 	/**
 	 * Gets the one-time energy cost to initiate this command.
-	 * @return the amount of energy consumed by initiating this command (44, 55, or 66)
+	 * @return the amount of energy consumed by initiating this command (33, 44, or 55)
 	 */
-	public static int getInitialEnergyCost() { return 44; }
+	public static int getInitialEnergyCost() { return 33; }
 	
 	/**
-	 * Deploy Space Mine executes immediately.
+	 * Deploy Space Mine executes immediately and has a cooldown of 2 seconds.
 	 * 
 	 * @return true
 	 */

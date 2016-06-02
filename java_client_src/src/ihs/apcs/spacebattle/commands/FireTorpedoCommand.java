@@ -6,7 +6,7 @@ package ihs.apcs.spacebattle.commands;
  * @author Brett Wortzman
  *
  * @since 0.9
- * @version 1.1
+ * @version 1.2
  */
 public class FireTorpedoCommand extends ShipCommand {
 	@SuppressWarnings("unused")
@@ -38,9 +38,10 @@ public class FireTorpedoCommand extends ShipCommand {
 	public static int getInitialEnergyCost() { return 12; }
 	
 	/**
-	 * Fire Torpedo executes immediately.
+	 * Fire Torpedo executes immediately with a cooldown of 0.2 seconds.
 	 * 
 	 * @since 1.1
+	 * @version 1.2
 	 * @return true
 	 */
 	public static boolean executesImmediately() { return true; }

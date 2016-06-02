@@ -37,7 +37,7 @@ public class CollectCommand extends ShipCommand {
 	public static int getInitialEnergyCost() { return 8; }
 	
 	/**
-	 * Collecting Baubles executes immediately.
+	 * Collecting Baubles executes immediately but has a cooldown of 0.2 seconds.
 	 * 
 	 * @return true
 	 */
