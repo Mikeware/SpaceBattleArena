@@ -15,9 +15,9 @@ The full text of the license is available online: http://opensource.org/licenses
 from BaubleGame import *
 from Utils import CallbackTimer
 from World.Entities import Entity, PhysicalRound
-from World.WorldEntities import Ship, Weapon, Torpedo, SpaceMine, Dragon, Asteroid
+from World.WorldEntities import Ship, Weapon, Torpedo, SpaceMine, Dragon, Asteroid, Planet, WormHole
 from GUI.ObjWrappers.GUIEntity import GUIEntity, wrapcircle
-from World.WorldMath import intpos, friendly_type, PlayerStat, aligninstances, getPositionAwayFromOtherObjects
+from World.WorldMath import intpos, friendly_type, PlayerStat, aligninstances, getPositionAwayFromOtherObjects, cfg_rand_min_max
 from GUI.GraphicsCache import Cache
 from GUI.Helpers import debugfont
 from ThreadStuff.ThreadSafe import ThreadSafeDict
@@ -45,6 +45,17 @@ class TheHungerBaublesGame(BaseBaubleGame):
         self.collect_radius = cfgobj.getint("TheHungerBaubles", "collect_radius")
         self.__limit_weapons = cfgobj.getboolean("TheHungerBaubles", "limit_weapons")
 
+        self.__asteroid_bonus = cfgobj.getfloat("TheHungerBaubles", "asteroid_bauble_percent")
+        self.__asteroid_values = map(int, cfgobj.get("TheHungerBaubles", "asteroid_bauble_points").split(","))
+
+        self.__dragon_bonus = cfgobj.getfloat("TheHungerBaubles", "dragon_bauble_percent")
+        self.__dragon_values = map(int, cfgobj.get("TheHungerBaubles", "dragon_bauble_points").split(","))
+
+        self.__bauble_spawner = None
+
+        self.__spawn_success = 0
+        self.__spawn_fail = 0
+
         super(TheHungerBaublesGame, self).__init__(cfgobj)
 
     def game_get_info(self):
@@ -70,9 +81,21 @@ class TheHungerBaublesGame(BaseBaubleGame):
                 min(max(32, self.__cornucopia_position[1] + math.sin(math.radians(ang)) * dist), self.world.height - 32))
 
     def world_add_remove_object(self, wobj, added):
-        # Check if this is a high-value bauble to add to our list of ones to pass to the client
-
-        # TODO: If an Asteroid or Dragon is destroyed, deposit bauble
+        # If an Asteroid or Dragon is destroyed, deposit bauble
+        if (isinstance(wobj, Asteroid) or isinstance(wobj, Dragon)) and hasattr(wobj, "killedby") and wobj.killedby != None:
+            obj = wobj.killedby
+            logging.info("Object #%d Killed By: #%d", wobj.id, obj.id)
+            if isinstance(obj, Torpedo) and hasattr(obj, "owner") and obj.owner != None and isinstance(obj.owner, Ship):
+                logging.info("Was Torpedoed")
+                v = 0
+                if isinstance(wobj, Asteroid) and random.random() < self.__asteroid_bonus:
+                    v = random.choice(self.__asteroid_values)
+                elif isinstance(wobj, Dragon) and random.random() < self.__dragon_bonus:
+                    v = random.choice(self.__dragon_values)
+                
+                if v > 0:
+                    b = Bauble.spawn(self.world, self.cfg, wobj.body.position, v)
+                    logging.info("Spawned Bonus Bauble #%d with value %d and weight %d", b.id, b.value, b.weight)
 
         if isinstance(wobj, Weapon) and wobj.owner != None and wobj.owner.player != None:
             if isinstance(wobj, Torpedo):
@@ -118,9 +141,12 @@ class TheHungerBaublesGame(BaseBaubleGame):
         logging.info("Done Ejecting Baubles Player %d", player.netid)
 
     def player_died(self, player, gone):
-        # if ship destroyed, put baubles stored back
-        for b in player.carrying[:]:
-            self.ejectBauble(player, b, True)
+        # if ship destroyed (not disconnected), put baubles stored back
+        if gone:
+            player.carrying = []
+        else:
+            for b in player.carrying[:]:
+                self.ejectBauble(player, b, True)
 
         return super(TheHungerBaublesGame, self).player_died(player, gone)
 
@@ -189,8 +215,9 @@ class TheHungerBaublesGame(BaseBaubleGame):
                 surface.blit(text, (bp[0]+32, bp[1]-4))
                 wrapcircle(surface, (0, 255, 255), bp, self.collect_radius, self.world.size, 1) # Pick up Range
 
-        # Cornucopia
-        wrapcircle(surface, (255, 255, 0), self.__cornucopia_position, self.__cornucopia_radius, self.world.size, 3)
+        # Cornucopia (draw it smaller as we detect midpoint of ship, but will look like when ships enter)
+        c = (255 - int(self.__spawn_success * 85), 255 - int(self.__spawn_fail * 85), 0)
+        wrapcircle(surface, c, self.__cornucopia_position, self.__cornucopia_radius - 28, self.world.size, 3)
 
     def round_start(self):
         logging.info("Game Start")
@@ -199,12 +226,83 @@ class TheHungerBaublesGame(BaseBaubleGame):
 
         super(TheHungerBaublesGame, self).round_start()
 
+        # spawn a high-value bauble and start our perpetual timer
+        self.__cornucopia_bauble_spawn(True)
+
+        # spawn some dragons
+        for num in xrange(self.cfg.getint("TheHungerBaubles", "cornucopia_spawn_initial_dragons")):
+            pos = (self.__cornucopia_position[0] + random.randint(-64, 64), self.__cornucopia_position[1] + random.randint(-64, 64))
+            Dragon.spawn(self.world, self.cfg, pos)
+
+    def __start_bauble_timer(self):
+        self.__bauble_spawner = CallbackTimer(cfg_rand_min_max(self.cfg, "TheHungerBaubles", "cornucopia_spawn_time"), self.__cornucopia_bauble_spawn)
+        self.__bauble_spawner.start()
+
     def world_create(self):
         super(TheHungerBaublesGame, self).world_create()
 
         self.__cornucopia_position = getPositionAwayFromOtherObjects(self.world, self.cfg.getint("TheHungerBaubles", "cornucopia_buffer_object"), self.cfg.getint("TheHungerBaubles", "cornucopia_buffer_edge"))
 
-        #TODO: Remove anything left inside cornucopia?
+        for obj in self.world.getObjectsInArea(self.__cornucopia_position, self.__cornucopia_radius + 128):
+            # remove planets in Cornucopia
+            if isinstance(obj, Planet):
+                logging.info("Removing Planet from Middle of Cornucopia #%d", obj.id)
+                self.world.remove(obj)
+            # try and move worm holes away from center
+            elif isinstance(obj, WormHole):
+                logging.info("Moving WormHole from Middle of Cornucopia #%d", obj.id)
+                ang = obj.body.position.get_angle_between(self.__cornucopia_position)
+                dist = random.randint(self.__cornucopia_radius + 128, self.__cornucopia_radius + 256)
+                obj.body.position = (min(max(32, self.__cornucopia_position[0] + math.cos(ang) * dist), self.world.width - 32), 
+                                     min(max(32, self.__cornucopia_position[1] + math.sin(ang) * dist), self.world.height - 32))
+
+    def round_over(self):
+        # Stop Spawning Baubles
+        if self.__bauble_spawner != None:
+            self.__bauble_spawner.cancel()
+            self.__bauble_spawner = None
+
+        super(TheHungerBaublesGame, self).round_over()
+
+    def __cornucopia_bauble_spawn(self, init=False):
+        logging.info("Trying to Spawn Bauble in Cornucopia")
+        self.__start_bauble_timer()
+
+        # if we see a ship in the middle don't spawn
+        for obj in self.world.getObjectsInArea(self.__cornucopia_position, self.__cornucopia_radius):
+            if isinstance(obj, Ship):
+                logging.info("Ship Detected in Cornucopia #%d", obj.id)
+                self.__spawn_fail = 3
+                if self.cfg.getboolean("TheHungerBaubles", "cornucopia_spawn_dragon"):
+                    d = Dragon.spawn(self.world, self.cfg, self.__cornucopia_position)
+                    logging.info("Spawned Dragon #%d in Cornucopia", d.id)
+                return
+
+        values = map(int, self.cfg.get("TheHungerBaubles", "cornucopia_spawn_points").split(","))
+        
+        if init:
+            num = self.cfg.getint("TheHungerBaubles", "cornucopia_spawn_initial_num")
+        else:
+            num = self.cfg.getint("TheHungerBaubles", "cornucopia_spawn_time_num")
+
+        for i in xrange(num):
+            ang = random.randint(0, 359)
+            dist = random.randint(0, int(self.__cornucopia_radius / 2))
+            pos = (self.__cornucopia_position[0] + math.cos(math.radians(ang)) * dist,
+                   self.__cornucopia_position[1] + math.sin(math.radians(ang)) * dist)
+            b = Bauble.spawn(self.world, self.cfg, pos, random.choice(values))
+            logging.info("Spawned Bauble in Cornucopia #%d with value %d and weight %d", b.id, b.value, b.weight)
+
+        self.__spawn_success = 3
+
+    def game_update(self, t):
+        super(TheHungerBaublesGame, self).game_update(t)
+        
+        # decrement visual effect counters
+        if self.__spawn_fail > 0:
+            self.__spawn_fail = max(self.__spawn_fail - t, 0)
+        if self.__spawn_success > 0:
+            self.__spawn_success = max(self.__spawn_success - t, 0)
 
 class CollectCommand(OneTimeCommand):
     """

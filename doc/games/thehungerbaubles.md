@@ -21,17 +21,21 @@ Baubles have varying values and weights, and your ship can only carry so many.  
  
 Your cargo hold has a maximum weight capacity of 25.
 
-Blue Baubles are worth 1 point.
-Green Baubles are worth 2 points.
-Golden Baubles are worth 3 points.
-Orange Baubles are worth 4 points.
-Red Baubles are worth 5 points.
-Purple Baubles are worth 6 points.
-Cyan Baubles are worth 7 points.
+ - Blue Baubles are worth 1 point.
+ - Green Baubles are worth 2 points.
+ - Golden Baubles are worth 3 points.
+ - Orange Baubles are worth 4 points.
+ - Red Baubles are worth 5 points.
+ - Purple Baubles are worth 6 points.
+ - Cyan Baubles are worth 7 points.
 
-If your ship is destroyed, the Baubles it was carrying will be dropped.  However, your score is the best score you've achieved.
+If your ship is destroyed, the Baubles it was carrying will be dropped.  However, your score is the best score you've achieved.  In the case of a tie, who ever has the fewest baubles collected will be the winner (i.e. density of points is rewarded in a tie).
 
-In the case of a tie, who ever has the fewest baubles collected will be the winner (i.e. density of points is rewarded in a tie).
+**All ships** start at the edge of the Cornucopia (yellow circle).  The Cornucopia will spawn high-value baubles near its center as long as there are no ships within it.  It can also start with some initial bauble treasure (see config below).
+
+The Cornucopia is protected by Dragons, if a ship is detected when it is trying to spawn a bauble, a Dragon will be spawned instead.
+
+Asteroids and Dragons can be destroyed with Torpedos and may drop a bauble.
 
 Control Bauble spawning behavior by using the standard [Spawn Manager](../server/config.html#spawnmanager) properties.
 
@@ -65,7 +69,7 @@ The maximum number of baubles each ship can carry.
 Should a new bauble be spawned every time one is collected?
 
 ###cornucopia_radius = int
-How big should the cornucopia area be.
+How big should the cornucopia area be.  If your ship's position is within this radius distance from the cornucopia position, the cornucopia won't spawn baubles.
 
 ###cornucopia_buffer_edge = int
 How far should the cornucopia be from the edge of the world.
@@ -78,3 +82,36 @@ How far can a bauble be away from the ship for the Collect Command to pick it up
 
 ###limit_weapons = boolean
 Should each player be limited to having one torpedo and one space mine in the world at a time?
+
+###cornucopia_spawn_initial_num = int
+How many baubles should be spawned in the Cornucopia at the start of each round.
+
+###cornucopia_spawn_time_num = int
+How many baubles should spawn when the timer (see below) expires and there are no ships in the Cornucopia.
+
+###cornucopia_spawn_time_min = int
+What's the minimum random time to elapse before trying to spawn baubles in the Cornucopia.
+
+###cornucopia_spawn_time_max = int
+What's the maximum random time to elapse before trying to spawn baubles in the Cornucopia.
+
+###cornucopia_spawn_points = list[int]
+What value of baubles should spawn in the Cornucopia?  These values must exist in the **bauble_points** list.  The same weight percentages will be used as the general configuration however the bias per value within the Cornucopia will be uniform.
+
+###cornucopia_spawn_dragon = boolean
+Should the Cornucopia spawn a dragon at the Cornucopia position if a ship is detected instead when it tries to spawn a Bauble?
+
+###cornucopia_spawn_initial_dragons = int
+How many Dragons should initial spawn in the Cornucopia?
+
+###asteroid_bauble_percent = float
+Percent Chance [0.0-1.0] that a Bauble is dropped when a player torpedos an Asteroid.
+
+###asteroid_bauble_points = list[int]
+Uniform set of values for baubles to spawn on asteroid destruction.  Value must exist in **bauble_points** list.
+
+###dragon_bauble_percent = float
+Percent Chance [0.0-1.0] that a Bauble is dropped when a player torpedos an Dragon.
+
+###dragon_bauble_points = list[int]
+Uniform set of values for baubles to spawn on dragon destruction.  Value must exist in **bauble_points** list.

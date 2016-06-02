@@ -2,6 +2,7 @@
 import logging
 import time
 import random
+import traceback
 
 from threading import Thread
 from importlib import import_module
@@ -32,7 +33,7 @@ class CallbackTimer(Thread):
         self.__callback = callback
         self.__cancel = False
         self.__done = False
-        Thread.__init__(self)
+        Thread.__init__(self, name=repr(callback) + " p=" + repr(parameter))
 
     def iscomplete(self):
         return self.__done
@@ -46,12 +47,16 @@ class CallbackTimer(Thread):
             self.time_left = sec
             if self.__cancel:
                 return
-        if self.__parameter == None:
-            self.__done = True
-            self.__callback()
-        else:
-            self.__done = True
-            self.__callback(self.__parameter)
+        try:
+            if self.__parameter == None:
+                self.__done = True
+                self.__callback()
+            else:
+                self.__done = True
+                self.__callback(self.__parameter)
+        except:
+            print traceback.format_exc()
+            logging.error(traceback.format_exc())
 
 class SpawnConfig:
     """

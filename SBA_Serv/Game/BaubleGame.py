@@ -113,7 +113,7 @@ class Bauble(PhysicalRound):
         objData["MASS"] = self.weight
 
     @staticmethod
-    def spawn(world, cfg, pos=None):
+    def spawn(world, cfg, pos=None, value=None):
         if pos == None:
             pos = getPositionAwayFromOtherObjects(world, cfg.getint("Bauble", "buffer_object"), cfg.getint("Bauble", "buffer_edge"))
 
@@ -121,11 +121,18 @@ class Bauble(PhysicalRound):
         r = random.random()
         v = 0
         vi = 0
-        for ent in BaseBaubleGame.VALUE_TABLE:
-            if r < ent[0]:
-                v = ent[1]
-                break
-            vi += 1
+        if value == None:
+            for ent in BaseBaubleGame.VALUE_TABLE:
+                if r < ent[0]:
+                    v = ent[1]
+                    break
+                vi += 1
+        else:
+            for ent in BaseBaubleGame.VALUE_TABLE:
+                if ent[1] == value:
+                    v = ent[1]
+                    break
+                vi += 1
 
         if cfg.has_option("BaubleGame", "bauble_invert_ratio_percent"):
             wvr = map(float, cfg.get("BaubleGame", "bauble_invert_ratio_percent").split(","))[vi]
