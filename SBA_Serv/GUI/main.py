@@ -83,6 +83,7 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, cfg=None, t
         game.gui_initialize()
 
         colorBlack = pygame.Color(0, 0, 0)
+        mt = 0
 
         #shipw = ShipGUI(Ship((100, 100)))
         #shipw.ship.velocity.magnitude = 5
@@ -635,9 +636,9 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, cfg=None, t
                 windowSurface.blit(ip, (resolution[0]/2-ip.get_width()/2, resolution[1]/2-ip.get_height()/2))        
 
             if flags["THREADS"]:
+                st = mt+1
+                rt = st
                 mt = 0
-                st = 6
-                rt = 6
                 thrs = threading.enumerate()
                 thrs.sort(key=lambda x: x.name, reverse=True)
                 for thr in thrs:
