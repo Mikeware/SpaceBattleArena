@@ -40,6 +40,8 @@ class TheHungerBaublesGame(BaseBaubleGame):
         self.__maxcarry = cfgobj.getint("TheHungerBaubles", "ship_cargo_size")
         self.__cornucopia_position = (0, 0)
         self.__cornucopia_radius = cfgobj.getint("TheHungerBaubles", "cornucopia_radius")
+        self.__cornucopia_max_baubles = cfgobj.getint("TheHungerBaubles", "cornucopia_spawn_keep_max")
+        self.__cornucopia_spawn_baubles = cfgobj.getint("TheHungerBaubles", "cornucopia_spawn_time_num")
         self.__spawned_num = 0
 
         self.collect_radius = cfgobj.getint("TheHungerBaubles", "collect_radius")
@@ -232,7 +234,7 @@ class TheHungerBaublesGame(BaseBaubleGame):
         # spawn some dragons
         for num in xrange(self.cfg.getint("TheHungerBaubles", "cornucopia_spawn_initial_dragons")):
             pos = (self.__cornucopia_position[0] + random.randint(-64, 64), self.__cornucopia_position[1] + random.randint(-64, 64))
-            Dragon.spawn(self.world, self.cfg, pos)
+            self.spawnmanager.spawn_entity("Dragon", pos)
 
     def __start_bauble_timer(self):
         self.__bauble_spawner = CallbackTimer(cfg_rand_min_max(self.cfg, "TheHungerBaubles", "cornucopia_spawn_time"), self.__cornucopia_bauble_spawn)
@@ -269,21 +271,46 @@ class TheHungerBaublesGame(BaseBaubleGame):
         self.__start_bauble_timer()
 
         # if we see a ship in the middle don't spawn
+        num_baubles = 0
+        baubles = []
+        num_dragons = 0
+        is_ship = False
         for obj in self.world.getObjectsInArea(self.__cornucopia_position, self.__cornucopia_radius):
             if isinstance(obj, Ship):
-                logging.info("Ship Detected in Cornucopia #%d", obj.id)
-                self.__spawn_fail = 3
-                if self.cfg.getboolean("TheHungerBaubles", "cornucopia_spawn_dragon"):
-                    d = Dragon.spawn(self.world, self.cfg, self.__cornucopia_position)
-                    logging.info("Spawned Dragon #%d in Cornucopia", d.id)
-                return
+                is_ship = True
+            elif isinstance(obj, Dragon):
+                num_dragons += 1
+            elif isinstance(obj, Bauble):
+                baubles.append(obj)
+                num_baubles += 1
+
+        if is_ship:
+            logging.info("Ship Detected in Cornucopia #%d", obj.id)
+            self.__spawn_fail = 3
+            if self.cfg.getboolean("TheHungerBaubles", "cornucopia_spawn_dragon") and num_dragons < self.cfg.getint("TheHungerBaubles", "cornucopia_spawn_max_dragons"):
+                d = self.spawnmanager.spawn_entity("Dragon", self.__cornucopia_position)
+                logging.info("Spawned Dragon #%d in Cornucopia", d.id)
+            else:
+                logging.info("Not Spawning Dragon or Full of Dragons")
+            return
+
+        # Only spawn Bauble if we haven't reached the max
+        if num_baubles >= self.__cornucopia_max_baubles:
+            logging.info("More Baubles %d in Cornucopia than configured %d, pruning", num_baubles, self.__cornucopia_max_baubles)
+            # delete oldest baubles
+            baubles.sort(key=lambda obj: obj.timealive, reverse = True)
+            numdel = min(len(baubles), num_baubles - self.__cornucopia_max_baubles + self.__cornucopia_spawn_baubles)
+            logging.info("Deleting %d Oldest Baubles", numdel)
+
+            for obj in baubles[:numdel]:
+                self.world.remove(obj)
 
         values = map(int, self.cfg.get("TheHungerBaubles", "cornucopia_spawn_points").split(","))
         
         if init:
             num = self.cfg.getint("TheHungerBaubles", "cornucopia_spawn_initial_num")
         else:
-            num = self.cfg.getint("TheHungerBaubles", "cornucopia_spawn_time_num")
+            num = self.__cornucopia_spawn_baubles
 
         for i in xrange(num):
             ang = random.randint(0, 359)

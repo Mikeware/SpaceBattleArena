@@ -69,13 +69,13 @@ The maximum number of baubles each ship can carry.
 Should a new bauble be spawned every time one is collected?
 
 ###cornucopia_radius = int
-How big should the cornucopia area be.  If your ship's position is within this radius distance from the cornucopia position, the cornucopia won't spawn baubles.
+How big should the cornucopia area be.  If your ship's position is within this radius distance from the cornucopia position, the cornucopia won't spawn baubles. (Note the visual ring on screen is slightly smaller so it looks like the edge of your ship needs to cross - though it is calculated like everything else by midpoints.)
 
 ###cornucopia_buffer_edge = int
-How far should the cornucopia be from the edge of the world.
+What's the closest the cornucopia should be from the edge of the world.
 
 ###cornucopia_buffer_object = int
-How far should the cornucopia be from the edge of other objects.
+What's the closest the cornucopia should be from the edge of other objects.
 
 ###collect_radius = int
 How far can a bauble be away from the ship for the Collect Command to pick it up.
@@ -86,8 +86,11 @@ Should each player be limited to having one torpedo and one space mine in the wo
 ###cornucopia_spawn_initial_num = int
 How many baubles should be spawned in the Cornucopia at the start of each round.
 
+###cornucopia_spawn_keep_max = int
+How many baubles should remain in the Cornucopia.  Baubles over this number which have remained in the Cornucopia the longest will be removed when the timer goes off (see below).
+
 ###cornucopia_spawn_time_num = int
-How many baubles should spawn when the timer (see below) expires and there are no ships in the Cornucopia.
+How many baubles should spawn when the timer expires and there are no ships in the Cornucopia.
 
 ###cornucopia_spawn_time_min = int
 What's the minimum random time to elapse before trying to spawn baubles in the Cornucopia.
@@ -102,7 +105,10 @@ What value of baubles should spawn in the Cornucopia?  These values must exist i
 Should the Cornucopia spawn a dragon at the Cornucopia position if a ship is detected instead when it tries to spawn a Bauble?
 
 ###cornucopia_spawn_initial_dragons = int
-How many Dragons should initial spawn in the Cornucopia?
+How many Dragons should initially spawn in the Cornucopia?
+
+###cornucopia_spawn_max_dragons = int
+How many Dragons should be allowed in the Cornucopia?  A new Dragon won't be spawned for ships if this number is reached and the Dragons remain within the Cornucopia.
 
 ###asteroid_bauble_percent = float
 Percent Chance [0.0-1.0] that a Bauble is dropped when a player torpedos an Asteroid.

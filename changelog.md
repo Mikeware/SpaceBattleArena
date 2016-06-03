@@ -43,6 +43,7 @@ v1.2 : Planned - May 2016 [Season 5] - The Hunger Baubles
         * Hungry Hungry Baubles and Bauble Hunt now share new *[BaubleGame]* point/percentage spawning parameters.
         * **Bauble Hunt** now respects weight not number carried for *ship_cargo_size*.  Default weights are set to 1 though to behave in same manner as previously.
         * *BaubleHuntGameInfo* has *getBaublesCarriedWeight* method now.
+    * One Time Commands (AllStop, FireTorpedo) have been modified with cooldown times (i.e. **AllStopCommand** now waits for 5 seconds after stopping before returning).
     * RotateCommand/Orientation Related Client code now uses **int** vs. **double**.
     * Client code now does some validation of command arguments, can **throw IllegalArgumentException**.
     * **Removed SelfDestructCommand**
