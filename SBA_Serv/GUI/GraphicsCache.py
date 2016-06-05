@@ -71,7 +71,7 @@ class GraphicsCache(object):
             if image == None:
                 image = main[0]
             if scale == 1.0:
-                main[scale] = main[0]
+                main[scale] = main[0].copy() # don't reference main image when passed back, as we use it for scaling and maybe that's locking for #133
             elif scale == 2.0:
                 main[scale] = pygame.transform.scale2x(image)
             else:
