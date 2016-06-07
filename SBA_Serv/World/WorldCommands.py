@@ -374,7 +374,11 @@ class SteerCommand(Command):
         super(SteerCommand, self).__init__(obj, SteerCommand.NAME, 15, block=block) # 12 should be enough to do a circle
 
         self.__deg = -degrees # Physics rotations is opposite
+        self.orgdeg = -degrees
         self.energycost = 4
+
+    def percent(self):
+        return float(self.__deg) / self.orgdeg
 
     def isComplete(self):
         return -0.01 < self.__deg < 0.01
@@ -382,7 +386,7 @@ class SteerCommand(Command):
     def execute(self, t):
         if self.__deg < 0:
             amt = -self._obj.rotationSpeed * t / 4
-            if amt < self.__deg: amt = self.__deg            
+            if amt < self.__deg: amt = self.__deg
         else:
             amt = self._obj.rotationSpeed * t / 4
             if amt > self.__deg: amt = self.__deg
