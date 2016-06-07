@@ -34,7 +34,7 @@ class ShipGUI(GUIEntity):
 
         yoff = 0
         steer = self._worldobj.commandQueue.containstype(SteerCommand)
-        if steer:
+        if steer and steer.orgdeg != 0:
             if steer.orgdeg > 0:
                 steer = -math.sin(steer.percent() * math.pi)
             else:

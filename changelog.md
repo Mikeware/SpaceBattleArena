@@ -31,10 +31,12 @@ v1.2 : Planned - May 2016 [Season 5] - The Hunger Baubles
 	* Spawn Manager fixed to only look at specific Type for evaluating min/max not Subclasses.
 	* Added option for Torpedoes to be effected by gravity **pull_weapon**
 	* Added **enable_commands** [Server] config option.
+	* *points_lost_on_death* can be used in bestscore games.
 	* Split 'explodable' from 'gravitable' for Entities, two separate object flags now.
 	* Can click ships in tracking mode to switch tracking to the clicked ship.
 	* Separated option for 'showip' in Application settings to decouple from showing statistics, no longer always show IP in Debug mode.
 	* 3 New Ship Graphics
+	* SteerCommand now shown visually with a 'bank'
 	* Fixed issue with LowerEnergyScoopCommand and Dragons
 	* Add Microsoft Message Analyzer Log Parser Support
 * **Breaking Changes:**

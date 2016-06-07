@@ -481,6 +481,17 @@ class BasicGame(object):
             player.deaths += 1
             if self._points_lost_on_death > 0:
                 player.update_score(-self._points_lost_on_death)
+                
+                if self._primary_victory == "bestscore":
+                    # we need to subtract/add to bestscore in stead
+                    if self._primary_victory_high:
+                        player.bestscore -= self._points_lost_on_death
+                        if player.bestscore < 0:
+                            player.bestscore = 0
+                    else:
+                        player.bestscore += self._points_lost_on_death
+                        if player.bestscore > self._points_initial:
+                            player.bestscore = self._points_initial
 
             if self._reset_score_on_death:
                 self._player_reset_score(player)
