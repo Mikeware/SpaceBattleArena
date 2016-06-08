@@ -18,7 +18,6 @@ import logging
 import unittest
 
 from Game.Game import BasicGame
-from Game.AsteroidMiner import AsteroidMinerGame
 from Game.CombatExercise import CombatExerciseGame
 from Game.FindTheMiddle import FindTheMiddleGame
 from Game.Survivor import SurvivorGame
@@ -27,6 +26,7 @@ from Game.HungryHungryBaubles import HungryHungryBaublesGame
 from Game.BaubleHunt import BaubleHuntGame
 from Game.KingOfTheBubble import KingOfTheBubbleGame
 from Game.DiscoveryQuest import DiscoveryQuestGame
+from Game.TheHungerBaubles import TheHungerBaublesGame
 
 from ConfigParser import ConfigParser
 import Server.WorldServer as WorldServer
@@ -60,12 +60,6 @@ class TestFindTheMiddleGame(TestGame, FindTheMiddleGame):
         self._testcase = testcase
 
         super(TestFindTheMiddleGame, self).__init__(cfg)
-
-class TestAsteroidMinerGame(TestGame, AsteroidMinerGame):
-    def __init__(self, cfg, testcase):
-        self._testcase = testcase
-
-        super(TestAsteroidMinerGame, self).__init__(cfg)
 
 class TestCombatExerciseGame(TestGame, CombatExerciseGame):
     def __init__(self, cfg, testcase):
@@ -102,6 +96,12 @@ class TestDiscoveryQuestGame(TestGame, DiscoveryQuestGame):
         self._testcase = testcase
 
         super(TestDiscoveryQuestGame, self).__init__(cfg)
+
+class TestTheHungerBaublesGame(TestGame, TheHungerBaublesGame):
+    def __init__(self, cfg, testcase):
+        self._testcase = testcase
+
+        super(TestTheHungerBaublesGame, self).__init__(cfg)
 
 class SBAWorldTestCase(unittest.TestCase):
     """

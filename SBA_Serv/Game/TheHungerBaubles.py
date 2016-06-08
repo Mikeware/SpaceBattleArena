@@ -46,6 +46,7 @@ class TheHungerBaublesGame(BaseBaubleGame):
 
         self.collect_radius = cfgobj.getint("TheHungerBaubles", "collect_radius")
         self.__limit_weapons = cfgobj.getboolean("TheHungerBaubles", "limit_weapons")
+        self.__only_drop_weapons = cfgobj.getboolean("TheHungerBaubles", "only_eject_baubles_on_weapon_death")
 
         self.__asteroid_bonus = cfgobj.getfloat("TheHungerBaubles", "asteroid_bauble_percent")
         self.__asteroid_values = map(int, cfgobj.get("TheHungerBaubles", "asteroid_bauble_points").split(","))
@@ -144,11 +145,11 @@ class TheHungerBaublesGame(BaseBaubleGame):
 
     def player_died(self, player, gone):
         # if ship destroyed (not disconnected), put baubles stored back
-        if gone:
-            player.carrying = []
-        else:
+        if not gone and (not self.__only_drop_weapons or (self.__only_drop_weapons and hasattr(player.object, "killedby") and isinstance(player.object.killedby, Weapon))):
             for b in player.carrying[:]:
                 self.ejectBauble(player, b, True)
+        else:
+            player.carrying = []
 
         return super(TheHungerBaublesGame, self).player_died(player, gone)
 
