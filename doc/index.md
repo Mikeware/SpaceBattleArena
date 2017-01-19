@@ -43,6 +43,7 @@ Documentation
     * [Ship Image Index](https://github.com/Mikeware/SpaceBattleArena/tree/master/SBA_Serv/GUI/Graphics/Ships)
 * [Server Information](server/index.html)
     * [Server Setup](server/setup.html)
+        * [Mac OS X Server from Source](https://github.com/Mikeware/SpaceBattleArena/blob/master/SBA_Serv/README.md)
     * [Server Config](server/config.html)
     * [Server Usage/Shortcuts](server/usage.html)
     * [Tournaments](server/tournaments.html)

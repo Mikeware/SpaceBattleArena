@@ -18,6 +18,8 @@ Server Environment Setup
 
 As discussed on the [information](index.html) page, the server is a Windows executable.  It can be downloaded in a zip archive from the button in the header on this page.
 
+To run the server from source on Mac OS X, see this [readme](https://github.com/Mikeware/SpaceBattleArena/blob/master/SBA_Serv/README.md).
+
 <a name="install"></a>Installation
 -----------------------------
 
