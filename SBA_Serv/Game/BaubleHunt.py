@@ -1,7 +1,7 @@
 """
 Space Battle Arena is a Programming Game.
 
-Copyright (C) 2012-2015 Michael A. Hawker and Brett Wortzman
+Copyright (C) 2012-2016 Michael A. Hawker and Brett Wortzman
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 
@@ -12,7 +12,7 @@ You should have received a copy of the GNU General Public License along with thi
 The full text of the license is available online: http://opensource.org/licenses/GPL-2.0
 """
 
-from Game import BasicGame
+from BaubleGame import *
 from Utils import CallbackTimer
 from World.Entities import Entity, PhysicalRound
 from World.WorldEntities import Ship
@@ -27,15 +27,8 @@ import random
 import thread
 from operator import attrgetter
 
-class BaubleHuntGame(BasicGame):
-    VALUE_TABLE = []
-    
+class BaubleHuntGame(BaseBaubleGame):
     def __init__(self, cfgobj):
-        bb = cfgobj.getfloat("BaubleHunt", "bauble_percent_blue")
-        yb = cfgobj.getfloat("BaubleHunt", "bauble_percent_yellow")
-        rb = cfgobj.getfloat("BaubleHunt", "bauble_percent_red")
-        self._mv = cfgobj.getint("BaubleHunt", "bauble_points_red")
-        BaubleHuntGame.VALUE_TABLE = [(bb, cfgobj.getint("BaubleHunt", "bauble_points_blue")), (bb+yb, cfgobj.getint("BaubleHunt", "bauble_points_yellow")), (bb+yb+rb, self._mv)]
 
         self._respawn = cfgobj.getboolean("BaubleHunt", "respawn_bauble_on_collect")
         
@@ -43,6 +36,8 @@ class BaubleHuntGame(BasicGame):
         self.__baubles = ThreadSafeDict()
         
         super(BaubleHuntGame, self).__init__(cfgobj)
+
+        self._mv = BaseBaubleGame.VALUE_TABLE[-1][1]
 
         self.__maxcarry = self.cfg.getint("BaubleHunt", "ship_cargo_size")
 
@@ -109,9 +104,15 @@ class BaubleHuntGame(BasicGame):
         
         return super(BaubleHuntGame, self).world_physics_pre_collision(obj1, obj2)
 
+    def get_player_cargo_value(self, player):
+        return sum(b.value for b in player.carrying)
+
+    def get_player_cargo_weight(self, player):
+        return sum(b.weight for b in player.carrying)
+
     def collectBaubles(self, ship, bauble):
         logging.info("Collected Baubles Ship #%d", ship.id)
-        if len(ship.player.carrying) < self.__maxcarry:
+        if self.get_player_cargo_weight(ship.player) + bauble.weight <= self.__maxcarry:
             ship.player.carrying.append(bauble)
             ship.player.sound = "BAUBLE"
 
@@ -122,13 +123,15 @@ class BaubleHuntGame(BasicGame):
 
             if self._respawn:
                 Bauble.spawn(self.world, self.cfg)
+        else:
+            logging.info("Player #%d Cargo Full", ship.id)
         #eif
         logging.info("Done Collecting Baubles #%d", ship.id)
 
     def depositBaubles(self, ship, home):
         logging.info("Player Depositing Baubles #%d", ship.id)
         for b in ship.player.carrying:
-            self.player_update_score(ship.player, b.value)
+            ship.player.update_score(b.value)
             home.stored += b.value
         ship.player.totalcollected += len(ship.player.carrying)
         
@@ -140,13 +143,13 @@ class BaubleHuntGame(BasicGame):
     def player_died(self, player, gone):
         # if ship destroyed, put baubles stored back
         for b in player.carrying:
-            b.body.position = (player.object.body.position[0] + random.randint(-10, 10), player.object.body.position[1] + random.randint(-10, 10))
+            b.body.position = (player.object.body.position[0] + random.randint(-36, 36), player.object.body.position[1] + random.randint(-36, 36))
             b.destroyed = False # reset so that it won't get cleaned up
             if b.value == self._mv:
                 self.__baubles[b.id] = b
             self.world.append(b)
 
-        self.world.causeExplosion(player.object.body.position, 32, 1000)
+        #self.world.causeExplosion(player.object.body.position, 32, 1000)
 
         # Remove player's base if they're gone
         if gone and self.__bases.has_key(player.netid):
@@ -158,15 +161,18 @@ class BaubleHuntGame(BasicGame):
     def game_get_extra_environment(self, player):
         if player.netid in self.__bases: # Check if Player still around?
             v = 0
+            w = 0
             for b in player.carrying:
                 v += b.value
+                w += b.weight
             baubles = []
             for b in self.__baubles:
                 baubles.append(intpos(b.body.position))
 
             env = super(BaubleHuntGame, self).game_get_extra_environment(player)
             env.update({"POSITION": intpos(self.__bases[player.netid].body.position), "BAUBLES": baubles,
-                        "STORED": len(player.carrying), "STOREDVALUE": v, "COLLECTED": player.totalcollected})
+                        "STORED": len(player.carrying), "STOREDVALUE": v, "COLLECTED": player.totalcollected,
+                        "WEIGHT": w})
 
             return env
         else:
@@ -179,6 +185,7 @@ class BaubleHuntGame(BasicGame):
         super(BaubleHuntGame, self).game_get_extra_radar_info(obj, objdata, player)
         if hasattr(obj, "player"):
             objdata["NUMSTORED"] = len(obj.player.carrying)
+            objdata["VALUE"] = self.get_player_cargo_value(obj.player)
 
     def player_get_stat_string(self, player):
         return str(int(player.score)) + " in " + str(player.totalcollected) + " : " + player.name + " c.v. " + str(sum(b.value for b in player.carrying)) + " in " + str(len(player.carrying))
@@ -202,54 +209,6 @@ class BaubleHuntGame(BasicGame):
         self.__baubles = ThreadSafeDict()
 
         super(BaubleHuntGame, self).round_start()
-
-
-class BaubleWrapper(GUIEntity):
-    def __init__(self, obj, world):
-        super(BaubleWrapper, self).__init__(obj, world)
-        self.surface = Cache().getImage("Games/Bauble" + str(obj.value))
-
-    def draw(self, surface, flags):
-        surface.blit(self.surface, intpos((self._worldobj.body.position[0] - 8, self._worldobj.body.position[1] - 8)))
-
-        super(BaubleWrapper, self).draw(surface, flags)
-
-class Bauble(PhysicalRound):
-    WRAPPERCLASS = BaubleWrapper
-    """
-    Baubles are small prizes worth different amounts of points
-    """
-    def __init__(self, pos, value=1):
-        super(Bauble, self).__init__(8, 2000, pos)
-        self.shape.elasticity = 0.8
-        self.health = PlayerStat(0)
-
-        self.shape.group = 1
-
-        self.value = value
-
-    def collide_start(self, otherobj):
-        return False
-
-    def getExtraInfo(self, objData, player):
-        objData["VALUE"] = self.value
-
-    @staticmethod
-    def spawn(world, cfg, pos=None):
-        if pos == None:
-            pos = getPositionAwayFromOtherObjects(world, cfg.getint("Bauble", "buffer_object"), cfg.getint("Bauble", "buffer_edge"))
-
-        # Get value within tolerances
-        r = random.random()
-        v = 0
-        for ent in BaubleHuntGame.VALUE_TABLE:
-            if r < ent[0]:
-                v = ent[1]
-                break
-
-        b = Bauble(pos, v)
-        world.append(b)
-        return b
 
 class OutpostWrapper(GUIEntity):
     def __init__(self, obj, world):

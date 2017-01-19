@@ -1,7 +1,7 @@
 /**
  * Space Battle Arena is a Programming Game.
  *
- * Copyright (C) 2012-2015 Michael A. Hawker and Brett Wortzman
+ * Copyright (C) 2012-2016 Michael A. Hawker and Brett Wortzman
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
  *
@@ -202,8 +202,15 @@ public class TextClient implements Client {
 			try {
 				// Need to invoke through reflection as compiler doesn't know what type of Environment is here
 				cmd = (ShipCommand)ship.getClass().getMethod("getNextCommand", Environment.class).invoke(ship, env);
-			} catch (InvocationTargetException | NoSuchMethodException
-					| SecurityException ex) {
+			} catch (InvocationTargetException ex) {
+				// typically means ship has an exception; skip to the actual problem to avoid confusion
+				System.err.println("Exception thrown by getNextCommand: ");
+				Throwable cause = ex.getCause();
+				if (cause != null) {
+					cause.printStackTrace(System.err);
+				}
+				disconnect();
+			} catch (NoSuchMethodException	| SecurityException ex) {
 				System.err.println("Error Invoking getNextCommand:");
 				System.err.println(ex.getMessage());
 				ex.printStackTrace(System.err);
@@ -211,8 +218,6 @@ public class TextClient implements Client {
 			}
 			if (cmd == null) {
 				cmd = new IdleCommand(0.1);
-			} else if (cmd instanceof SelfDestructCommand) {
-				disconnect();
 			} else {
 				MwnpMessage response = new MwnpMessage(new Integer[]{netId, 0}, cmd);
 				messenger.sendMessage(response);

@@ -1,7 +1,7 @@
 """
 Space Battle Arena is a Programming Game.
 
-Copyright (C) 2012-2015 Michael A. Hawker and Brett Wortzman
+Copyright (C) 2012-2016 Michael A. Hawker and Brett Wortzman
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 
@@ -13,9 +13,9 @@ The full text of the license is available online: http://opensource.org/licenses
 """
 
 __author__ = "Michael A. Hawker"
-__copyright__ = "Copyright 2012-2015 Mikeware"
+__copyright__ = "Copyright 2012-2016 Mikeware"
 __license__ = "GPLv2"
-__version__ = "1.1.0." + open("buildnum").read()
+__version__ = "1.2.0." + open("buildnum").read()
 __email__ = "questions@mikeware.com"
 __status__ = "Production"
 
@@ -88,6 +88,12 @@ if __name__ == "__main__":
     if defaults:
         loaded_cfg_files = cfg.read(args)
 
+        if len(loaded_cfg_files) != len(args):
+            for file in loaded_cfg_files:
+                args.remove(file)
+            print "Issue Loading Configuration:", args
+            logging.error("Possible Config Files Not Loaded: %s", repr(args))
+
         logging.info("Loaded Configuration Files: %s", repr(loaded_cfg_files))
 
         if loaded_cfg_files == []:
@@ -136,6 +142,7 @@ if __name__ == "__main__":
                 logging.info("Running Game: " + rungame)
             except:
                 logging.error("Could not start Game " + rungame)
+                logging.info(traceback.format_exc())
                 logging.error(traceback.format_exc())
                 print traceback.format_exc()        
         #eif
@@ -153,16 +160,12 @@ if __name__ == "__main__":
 
         server = WorldServer.WorldServer(cfg.getint("Server", "port"), game)
 
-        try:
-            #if options.headless:
-                #logging.info("Running Headless without GUI")
-                #TODO: Set World Size Here?
-            #else:
-            #startGame(title, game, fullscreen:bool, (xres, yres), showstats:bool, sound:bool)
-            main.startGame(titlever + title_game, game, cfg.getboolean("Application", "fullscreen"), resolution, cfg.getboolean("Application", "showstats"), cfg.getboolean("Application", "sound"), cfg)
-        except:
-            logging.error(traceback.format_exc())
-            print traceback.format_exc()
+        #if options.headless:
+            #logging.info("Running Headless without GUI")
+            #TODO: Set World Size Here?
+        #else:
+        #startGame(title, game, fullscreen:bool, (xres, yres), showstats:bool, sound:bool)
+        main.startGame(titlever + title_game, game, cfg.getboolean("Application", "fullscreen"), resolution, cfg)
 
         print "Sending Disconnect..."
         logging.info("Server Request Disconnect All")

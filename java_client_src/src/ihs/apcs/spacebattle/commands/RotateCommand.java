@@ -16,13 +16,16 @@ public class RotateCommand extends ShipCommand {
 	 * Creates a command to rotate a ship.  
 	 * @param degrees the number of degrees to rotate
 	 */
-	public RotateCommand(double degrees) {
-		DEG = (int)degrees;
+	public RotateCommand(int degrees) {
+		DEG = degrees;
 	}
 
+	/* (non-Javadoc)
+	 * @see ihs.apcs.spacebattle.commands.ShipCommand#getName()
+	 */
 	@Override
-	protected String getName() {
-		return "ROT";
+	public String getName() {
+		return CommandNames.Rotate.toString();
 	}
 	
 	/**

@@ -1,5 +1,56 @@
-v1.2 : Planned - May 2016 [Season 5]
+v1.2.0.1125 : 01/18/2017 - May 2016 [Season 5 Release] - The Hunger Baubles
 ----
+* Added **The Hunger Baubles** Subgame
+	* Bauble Games can now spawn any number of different valued Baubles.
+	* Bauble Games can now spawn different weights of Baubles.
+	* Added Worm Holes (teleports objects across space)
+	* Added Deployable Space Mines
+* Updated Client Angle/Point Methods
+    * Orientations are always integers now and should be between 0-360
+        * Rotate and Steer Command parameters updated
+    * Movement direction can still be a double
+    * Added Test Cases for Point Class
+       * Fixed **getAngleTo** method to use built-in atan2
+    * Added **isCloseTo** box test method
+    * Added **getPointAt** for point projections based on angles and distance
+    * Added **isInEllipse** check method
+    * Added **getClosestMappedPoint** for world bounds assistance
+* **ThrustCommand** now has a parameter to allow it to block or not, *it now blocks by default*.
+* Added ability for client to get info on ship's running commands **getCommandQueue** in the environment *getShipStatus*.
+	* Command Queue and Current Energy Properties are now only available to its own ship (can't be seen with radar).
+* Updated Find the Middle Basic Game
+	* Added new *reset_timer* option
+	* Better Generation of Spawn Points and other Bug Fixes
+* Added **Dragon's Lair** Basic Game (based on Survivor)
+    * Dragons AI has been slightly improved
+    * Asteroids and Dragons Initial Movement Speed can be Configured
+    * Dragons highlight target in Debug mode
+    * Added Ability for Points to be Generally Handled by Spawn Manager for Asteroids and Dragons for Torpedos and Ramming
+* General Fixes/Improvements
+	* *Optimized Network Code to half required Threads*
+	* Spawn Manager fixed to only look at specific Type for evaluating min/max not Subclasses.
+	* Added option for Torpedoes to be effected by gravity **pull_weapon**
+	* Added **enable_commands** [Server] config option.
+	* *points_lost_on_death* can be used in bestscore games.
+	* Split 'explodable' from 'gravitable' for Entities, two separate object flags now.
+	* Can click ships in tracking mode to switch tracking to the clicked ship.
+	* Separated option for 'showip' in Application settings to decouple from showing statistics, no longer always show IP in Debug mode.
+	* 3 New Ship Graphics
+	* SteerCommand now shown visually with a 'bank'
+	* Fixed issue with LowerEnergyScoopCommand and Dragons
+* **Breaking Changes:**
+    * **ThrustCommand** is now **Blocking** by default, the fourth parameter can be passed as false to exhibit the previous behavior. This is to aid in initial understanding of the system until non-blocking commands can be introduced later.
+    * Made **Hungry Hungry Baubles** a Basic Game by creating a *getObjectiveLocation()* method on BasicGameInfo (instead of *getGoldenBaublePosition()*).  This is now also used by **Bauble Hunt** and **Discovery Quest** instead of *getHomeBasePosition()*.
+        * Hungry Hungry Baubles has new options for configuration (default is similar to previous incarnation).
+        * Hungry Hungry Baubles and Bauble Hunt now share new *[BaubleGame]* point/percentage spawning parameters.
+        * **Bauble Hunt** now respects weight not number carried for *ship_cargo_size*.  Default weights are set to 1 though to behave in same manner as previously.
+        * *BaubleHuntGameInfo* has *getBaublesCarriedWeight* method now.
+    * One Time Commands (AllStop, FireTorpedo) have been modified with cooldown times (i.e. **AllStopCommand** now waits for 5 seconds after stopping before returning).
+    * RotateCommand/Orientation Related Client code now uses **int** vs. **double**.
+    * Client code now does some validation of command arguments, can **throw IllegalArgumentException**.
+    * **Removed SelfDestructCommand**
+    * Game API: Removed **AsteroidMiner** as an example game, now configurable generally, config file for game still exists.
+    * Game API: Player object now has **update_score** method instead of Game.
 
 v1.1.0.1111 : 04/21/2016 [Season 4 Release] - Discovery Quest
 ----

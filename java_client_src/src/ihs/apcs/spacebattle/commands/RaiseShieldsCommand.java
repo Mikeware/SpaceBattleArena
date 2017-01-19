@@ -23,13 +23,18 @@ public class RaiseShieldsCommand extends ShipCommand {
 	 * @param duration the amount of time for which shields should be up (in seconds)
 	 */
 	public RaiseShieldsCommand(double duration) {
+		if (duration <= 0)
+			throw new IllegalArgumentException("Invalid shield duration: must be greater than 0");
+		
 		this.DUR = duration;
 	}
 
+	/* (non-Javadoc)
+	 * @see ihs.apcs.spacebattle.commands.ShipCommand#getName()
+	 */
 	@Override
-	protected String getName() {
-		// TODO Auto-generated method stub
-		return "SHLD";
+	public String getName() {
+		return CommandNames.RaiseShields.toString();
 	}
 
 	/**

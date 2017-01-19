@@ -37,6 +37,12 @@ Played when a Ship fires a torpedo.
 
 *JM_NOIZ_Laser 02* by **Julien Matthey**
 
+[MINE](https://www.freesound.org/people/Blockfighter298/sounds/317827/)
+-----
+Played when a Ship deploys a mine.
+
+*Weapon Pickup* by **Blockfighter298**
+
 [SHIELD](https://www.freesound.org/people/thehorriblejoke/sounds/198969/)
 ------
 Played when a Ship raises its shield.
@@ -76,6 +82,12 @@ Played when Dragon attacks.
 
 *Monster Short Roar* by **ecfike**
 
+[WORMHOLE](http://freesound.org/people/Adam_N/sounds/164594/)
+----
+Played when a Ship uses a Worm Hole.
+
+*Water splash 1* by **Adam_N**
+
 Subgame
 =======
 
@@ -90,6 +102,12 @@ Played when collecting a Bauble.
 Played when depositing Baubles in an Outpost for Bauble Hunt.
 
 *3 down 1* by **fins**
+
+[EJECT](https://www.freesound.org/people/BinaryMonkFlint/sounds/333295/)
+-------
+Played when ejecting a Bauble in The Hunger Baubles.
+
+*Remove from socket* by **BinaryMonkFlint**
 
 [MISSION](https://www.freesound.org/people/VASOTELVI/sounds/187917/)
 -------

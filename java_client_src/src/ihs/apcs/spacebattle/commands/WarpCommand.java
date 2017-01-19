@@ -19,6 +19,8 @@ import ihs.apcs.spacebattle.util.StringMap;
 public class WarpCommand extends ShipCommand {
 	private double DIST;
 	
+	public static final double MAX_WARP_DISTANCE = 400.0; 
+	
 	/**
 	 * Creates a random warp command.
 	 * <p>
@@ -35,12 +37,18 @@ public class WarpCommand extends ShipCommand {
 	 * @param distance the distance to warp (maximum 400)
 	 */
 	public WarpCommand(double distance) {
+		if (distance <= 0 || distance > MAX_WARP_DISTANCE)
+			throw new IllegalArgumentException("Invalid warp distance: must be greater than 0 and less than " + MAX_WARP_DISTANCE);
+		
 		this.DIST = distance;
 	}
 
+	/* (non-Javadoc)
+	 * @see ihs.apcs.spacebattle.commands.ShipCommand#getName()
+	 */
 	@Override
-	protected String getName() {
-		return "WARP";
+	public String getName() {
+		return CommandNames.Warp.toString();
 	}
 	
 	/**

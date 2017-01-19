@@ -90,18 +90,30 @@ class Command(Message):
         return "Command(#" + str(self._obj.id) + ", " + self.message + ", " + repr(self.timeToLive) + ", " + repr(self.blocking) + ", " + repr(self.initialrequiredenergy) + ")"
 
 class OneTimeCommand(Command):
-    def __init__(self, obj, msg, ttl=4, required=0):
+    def __init__(self, obj, msg, executefirst=False, ttl=4, required=0):
         super(OneTimeCommand, self).__init__(obj, msg, ttl, block=True, required=required)
+        self.__pre_execute = executefirst
         self.__executed = False
+        self.__done = False
 
     def isComplete(self):
-        return self.__executed
+        return self.__done and self.__executed
+
+    def isExpired(self):
+        self.__done = super(OneTimeCommand, self).isExpired()
+        # execute when expiring if tail end
+        if self.__done and not self.__executed:
+            self.__executed = True
+            self.onetime()
 
     def execute(self, t):
-        if not self.__executed:
-            self.onetime()
+        # check if execute now if front end
+        if not self.__executed and self.__pre_execute:
             self.__executed = True
+            self.onetime()
 
+        self.isExpired()
+        
     def onetime(self):
         pass
 

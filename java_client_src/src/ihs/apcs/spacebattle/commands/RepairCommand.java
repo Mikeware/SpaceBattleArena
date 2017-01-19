@@ -21,12 +21,18 @@ public class RepairCommand extends ShipCommand {
 	 * @param amount the amount of health to regenerate by repairing
 	 */
 	public RepairCommand(int amount) {
+		if (amount <= 0 || amount > 100) 
+			throw new IllegalArgumentException("Invalid repair amount: must be greater than 0 and no more than 100"); 
+		
 		this.AMT = amount;
 	}
 
+	/* (non-Javadoc)
+	 * @see ihs.apcs.spacebattle.commands.ShipCommand#getName()
+	 */
 	@Override
-	protected String getName() {
-		return "REP";
+	public String getName() {
+		return CommandNames.Repair.toString();
 	}
 
 	/**

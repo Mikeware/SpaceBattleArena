@@ -1,7 +1,7 @@
 """
 Space Battle Arena is a Programming Game.
 
-Copyright (C) 2012-2015 Michael A. Hawker and Brett Wortzman
+Copyright (C) 2012-2016 Michael A. Hawker and Brett Wortzman
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 
@@ -18,7 +18,7 @@ from World.WorldCommands import ConvertNetworkMessageToCommand, RadarCommand
 from NetworkCommands import *
 
 class WorldServer(object):
-    """description of class"""
+    """Space Battle Network Server"""
 
     # TODO take configuration for port, max images
     def __init__(self, port, game):
@@ -31,10 +31,17 @@ class WorldServer(object):
         self.__run = True # used to kill command loops while waiting on blocking commands
         if game.cfg.has_option("Server", "disable_commands"):
             self.__badcmds = game.cfg.get("Server", "disable_commands").split(",")
+            logging.info("Server Commands Disabled - Blacklist: %s", repr(self.__badcmds))
         else:
             self.__badcmds = None
         #eif
-        game.server = self        
+        if game.cfg.has_option("Server", "enable_commands"):
+            self.__goodcmds = game.cfg.get("Server", "enable_commands").split(",")
+            logging.info("Server Commands Enabled - Whitelist: %s", repr(self.__goodcmds))
+        else:
+            self.__goodcmds = None
+        #eif
+        game.server = self
         logging.info("Started Server (%s), Waiting for Clients", Server.MWNL2.getIPAddress())    
         
     def sendErrorMessage(self, shipcmd, errmsg, sender):
@@ -156,7 +163,7 @@ class WorldServer(object):
                     self.sendErrorMessage(cmd[1], "Invalid Ship Command: " + repr(scmd), sender)
                     scmd = None
                 # server config hard-disabled this type of message
-                elif self.__badcmds != None and scmd.__class__.__name__ in self.__badcmds:
+                elif (self.__badcmds != None and scmd.__class__.__name__ in self.__badcmds) or (self.__goodcmds != None and scmd.__class__.__name__ not in self.__goodcmds):
                     self.sendErrorMessage(cmd[1], "Ship Command Has Been Disabled: " + repr(scmd), sender)
                     scmd = None
                 else:

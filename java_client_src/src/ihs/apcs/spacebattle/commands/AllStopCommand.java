@@ -3,11 +3,11 @@ package ihs.apcs.spacebattle.commands;
 /**
  * A command to bring a ship to an immediate full stop.
  * <p>
- * Will deplete energy by 40 and health by 50%.
+ * Will deplete energy by 40 and health by 50% and wait for 5 seconds.
  * @author Brett Wortzman
  *
  * @since 0.9
- * @version 1.1
+ * @version 1.2
  */
 public class AllStopCommand extends ShipCommand {
 	
@@ -16,9 +16,12 @@ public class AllStopCommand extends ShipCommand {
 	 */
 	public AllStopCommand() { }
 
+	/* (non-Javadoc)
+	 * @see ihs.apcs.spacebattle.commands.ShipCommand#getName()
+	 */
 	@Override
-	protected String getName() {
-		return "STOP";
+	public String getName() {
+		return CommandNames.AllStop.toString();
 	}
 
 	/**
@@ -28,9 +31,10 @@ public class AllStopCommand extends ShipCommand {
 	public static int getInitialEnergyCost() { return 40; }
 	
 	/**
-	 * AllStop executes immediately.
+	 * AllStop executes immediately and has a cooldown of 5 seconds.
 	 * 
 	 * @since 1.1
+	 * @version 1.2
 	 * @return true
 	 */
 	public static boolean executesImmediately() { return true; }

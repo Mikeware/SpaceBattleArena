@@ -1,7 +1,7 @@
 """
 Space Battle Arena is a Programming Game.
 
-Copyright (C) 2012-2015 Michael A. Hawker and Brett Wortzman
+Copyright (C) 2012-2016 Michael A. Hawker and Brett Wortzman
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 
@@ -43,7 +43,7 @@ class CombatExerciseGame(BasicGame):
            player.object.killedby != None and \
            player.object.killedby.owner != None and \
            player.object.killedby.owner.player != None:
-            self.player_update_score(player.object.killedby.owner.player, player.object.timealive / self.cfg.getint("CombatExercise", "points_time_alive_divide_by"))
+           player.object.killedby.owner.player.update_score(player.object.timealive / self.cfg.getint("CombatExercise", "points_time_alive_divide_by"))
 
         super(CombatExerciseGame, self).player_died(player, gone)
     """
@@ -53,7 +53,7 @@ class CombatExerciseGame(BasicGame):
         if not added and isinstance(wobj, Asteroid) and hasattr(wobj, "killedby") and wobj.killedby != None:
             obj = wobj.killedby
             if isinstance(obj, Torpedo):
-                self.player_update_score(obj.owner.player, self.cfg.getint("CombatExercise", "points_shoot_asteroid"))
+                obj.owner.player.update_score(self.cfg.getint("CombatExercise", "points_shoot_asteroid"))
                     
                 logging.info("Torpedo Owner (#%d) Destroyed Asteroid", obj.owner.id)
             """
@@ -65,11 +65,11 @@ class CombatExerciseGame(BasicGame):
         elif not added and isinstance(wobj, Ship) and hasattr(wobj, "killedby") and wobj.killedby != None:
             obj = wobj.killedby
             if isinstance(obj, Torpedo):
-                self.player_update_score(obj.owner.player, wobj.timealive / self.cfg.getint("CombatExercise", "points_time_alive_divide_by"))
+                obj.owner.player.update_score(wobj.timealive / self.cfg.getint("CombatExercise", "points_time_alive_divide_by"))
 
                 logging.info("Torpedo Owner (#%d) Destroyed Ship (#%d)", obj.owner.id, wobj.id)
             elif isinstance(obj, Ship) and obj.health.value > 0:
-                self.player_update_score(obj.player, wobj.timealive / self.cfg.getint("CombatExercise", "points_time_alive_divide_by"))
+                obj.player.update_score(wobj.timealive / self.cfg.getint("CombatExercise", "points_time_alive_divide_by"))
                     
                 logging.info("Ship (#%d) Destroyed Ship (#%d)", obj.id, wobj.id)
 

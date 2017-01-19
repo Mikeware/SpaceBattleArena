@@ -54,7 +54,7 @@ class DiscoveryQuestWarpOffTestCases(SBAGUIWithServerTestCase):
 
         time.sleep(2.0)
 
-    def __warp_ship(self, env):
+    def __warp_ship(self, ship, env):
         self.__env = env
         if env["SHIPDATA"]["TIMEALIVE"] < 1:
             logging.info("Test Case got Callback from Network - Idle")
@@ -63,7 +63,7 @@ class DiscoveryQuestWarpOffTestCases(SBAGUIWithServerTestCase):
         logging.info("Test Case got Callback from Network - Warp")
         self.request_warp = True
         self.ship.rotationAngle = env["SHIPDATA"]["ROTATION"]
-        return WarpCommand(self.ship)
+        return WarpCommand(ship)
 
 class DiscoveryQuestWarpOnTestCases(SBAGUIWithServerTestCase):
     """
@@ -109,7 +109,7 @@ class DiscoveryQuestWarpOnTestCases(SBAGUIWithServerTestCase):
 
         time.sleep(2.0)
 
-    def __warp_ship(self, env):
+    def __warp_ship(self, ship, env):
         self.__env = env
         if env["SHIPDATA"]["TIMEALIVE"] < 1:
             logging.info("Test Case got Callback from Network - Idle")
@@ -118,7 +118,7 @@ class DiscoveryQuestWarpOnTestCases(SBAGUIWithServerTestCase):
         logging.info("Test Case got Callback from Network - Warp")
         self.request_warp = True
         self.ship.rotationAngle = env["SHIPDATA"]["ROTATION"]
-        return WarpCommand(self.ship, 200.0)
+        return WarpCommand(ship, 200.0)
 
 if __name__ == "__main__":
     unittest.main()

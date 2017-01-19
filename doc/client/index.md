@@ -5,6 +5,7 @@ outline:
  - { url: "jGRASP/index.html", title: "jGRASP" }
  - { url: "Eclipse/index.html", title: "Eclipse" }
  - { url: "BlueJ/index.html", title: "BlueJ" }
+ - { url: "CmdLine/index.html", title: "Command Line" }
 ---
 
 Client Setup
@@ -23,5 +24,7 @@ implements the Spaceship<?> interface.
     2. name of your Java Ship class
 
 Alternatively, to the third step above, create a main method which calls the *run* method on TextClient with the IP Address and an instance of your Ship class.
+
+If you need to run ships via the Command Line see [these instructions](CmdLine/index.html).
 
 We also have a complete set of <a href="java_doc/" target="_blank">Java Docs</a> available.

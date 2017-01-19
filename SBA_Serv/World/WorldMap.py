@@ -1,7 +1,7 @@
 """
 Space Battle Arena is a Programming Game.
 
-Copyright (C) 2012-2015 Michael A. Hawker and Brett Wortzman
+Copyright (C) 2012-2016 Michael A. Hawker and Brett Wortzman
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 
@@ -220,7 +220,7 @@ class GameWorld(object):
                         obj.body.position[1] -= self.height
 
                     # Apply Gravity for Planets
-                    if obj.explodable:
+                    if obj.gravitable:
                         for influencer in self.__influential:
                             for point in wrappos(obj.body.position, influencer.influence_range, self.size):
                                 if in_circle(influencer.body.position, influencer.influence_range, point):
@@ -272,13 +272,17 @@ class GameWorld(object):
         except:
             print "EXCEPTION IN GAMELOOP"
             logging.exception("FATAL Error in game loop!!!")
+            logging.info(traceback.format_exc())
             logging.error(traceback.format_exc())
             print traceback.format_exc()
             self.gameerror = True
         logging.debug("Gameloop Ended")
 
-    def getObjectsInArea(self, pos, radius, force=False):
-        logging.debug("Get Objects In Area %s %d (%s) [%d]", repr(pos), radius, repr(force), thread.get_ident())
+    def getObjectsInArea(self, pos, radius, radar=False):
+        """
+        Returns objects within the given radius from the position (even wrapping around edge of world), pass radar = True if for environment
+        """
+        logging.debug("Get Objects In Area %s %d [%d]", repr(pos), radius, thread.get_ident())
         objList = []
         for obj in self.__objects.values():
             for point in wrappos(obj.body.position, radius, self.size):
@@ -291,15 +295,17 @@ class GameWorld(object):
         return objList
 
     def get_count_of_objects(self, type):
+        tname = type.__name__
         count = 0
         for obj in self.__objects.values():
-            if isinstance(obj, type):
+            if obj.__class__.__name__ == tname:
                 count += 1
             #eif
         #next
         return count
 
     def getObjectData(self, obj, player):
+        #TODO: Move these properties to the 'getExtraInfo' of the base Entity and have child classes call super...
         objData = {}
         # Convert Type of Object to String
         objData["TYPE"] = friendly_type(obj)
@@ -307,7 +313,7 @@ class GameWorld(object):
         objData["POSITION"] = intpos(obj.body.position)
         objData["SPEED"] = obj.body.velocity.length
         # TODO: deal with -0.0 case OR match physics library coordinates?
-        objData["DIRECTION"] = -obj.body.velocity.angle_degrees # 30 = -120?, -80 = -10
+        objData["DIRECTION"] = -obj.body.velocity.angle_degrees % 360 # 30 = -120?, -80 = -10
         #objData["VELOCITYDIRECTION"] = obj.velocity.direction
         objData["MAXSPEED"] = obj.body.velocity_limit
         objData["CURHEALTH"] = obj.health.value
@@ -330,7 +336,7 @@ class GameWorld(object):
         #TODO: abstract radar to game level?
         radardata = None
         if radarlevel > 0:
-            objs = self.getObjectsInArea(ship.body.position, ship.radarRange)
+            objs = self.getObjectsInArea(ship.body.position, ship.radarRange, True)
             #TODO: Need to wait lock the removing of ships with accessing...???
             if ship in objs: objs.remove(ship) # Get rid of self...
 

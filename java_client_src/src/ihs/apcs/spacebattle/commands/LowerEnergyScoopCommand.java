@@ -30,9 +30,12 @@ public class LowerEnergyScoopCommand extends ShipCommand {
 		this.SHORT = shortlength;
 	}
 
+	/* (non-Javadoc)
+	 * @see ihs.apcs.spacebattle.commands.ShipCommand#getName()
+	 */
 	@Override
-	protected String getName() {
-		return "SCOOP";
+	public String getName() {
+		return CommandNames.LowerEnergyScoop.toString();
 	}
 
 	/**

@@ -7,6 +7,7 @@ outline-header: Outline
 outline:
  - { url: "#overview", title: "Overview" }
  - { url: "#config", title: "Configuration" }
+ - { url: "#dl", title: "Dragon's Lair" }
 ---
 
 Survivor [Basic Game]
@@ -28,3 +29,8 @@ A player's best record is used to determine their ranking, so even if your inter
 
 ###minimum_velocity = int
 The minimum speed a ship must be travelling in order to accumulate points.
+
+
+<a name="dl"></a>Dragon's Lair
+-----------
+**Dragon's Lair** is a variant of Survivor in where the world is populated with Dragons.  Players earn not only points for surviving in the world, but also for hunting dragons.

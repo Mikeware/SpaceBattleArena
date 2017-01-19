@@ -7,6 +7,7 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 
 import ihs.apcs.spacebattle.util.StringMap;
+import ihs.apcs.spacebattle.commands.CommandNames;
 
 /**
  * A class to represent the status of a ship or other object.  This class is used both to
@@ -16,7 +17,7 @@ import ihs.apcs.spacebattle.util.StringMap;
  * @author Brett Wortzman
  *
  * @since 0.1
- * @version 1.1
+ * @version 1.2
  */
 public class ObjectStatus {
 	// Fields
@@ -36,24 +37,25 @@ public class ObjectStatus {
 	private double MAXENERGY;
 	private double ENERGYRECHARGERATE;
 
-	private double ROTATION; // Ship,Nebula Only
-	private double ROTATIONSPEED; // Ship Only
+	private int ROTATION; // Ship,Nebula Only
+	private int ROTATIONSPEED; // Ship Only
 	private double CURSHIELD; // Ship Only
 	private double MAXSHIELD; // Ship Only
 	private int RADARRANGE; // Ship Only
+	private String[] CMDQ; // Ship Only
 	private boolean INBODY; // Ship or Celestial Body Only;
+	private double HITRADIUS; // Round Only
 	
 	// Game Specific
 	private double VALUE; // Bubble, Bauble or Ship Only
 	private int NUMSTORED; // Ship Only - Number of Baubles Carried
-	private double HITRADIUS; // Round Only
     private boolean SUCCESS; // Game boolean for success for this object
 	
 	private int PULL; // Planet/BlackHole/Nebula Only
 	private int MAJOR; // Planet/BlackHole/Nebula Only
 	private int MINOR; // Planet/BlackHole/Nebula Only
 	
-	private int OWNERID; // Torpedo/HomeBase Only
+	private int OWNERID; // Torpedo/Outpost/SpaceMine Only
 	
 	private String NAME; // If Turned on in Server Config
 	
@@ -101,8 +103,10 @@ public class ObjectStatus {
 	/**
 	 * Get the actual direction of travel for this object.  This may not equal its the direction it is facing (orientation) {@link #getOrientation() }
 	 * @return angle in degrees
+	 * 
+	 * @version 1.2
 	 */
-	public double getMovementDirection() { return DIRECTION; }
+	public double getMovementDirection() { return (DIRECTION + 360.0) % 360.0; }
 	/**
 	 * Gets this object's mass.
 	 * @return mass value.
@@ -123,6 +127,8 @@ public class ObjectStatus {
 	public double getMaxHealth() { return MAXHEALTH; }
 	/**
 	 * Gets the current amount of energy this object has.
+	 * This is only provided for your own ship. (i.e. You can't see other ship's energy levels through radar.)
+	 * 
 	 * @return energy remaining.
 	 */
 	public double getEnergy() { return CURENERGY; }
@@ -141,28 +147,45 @@ public class ObjectStatus {
 	/**
 	 * Gets the current Orientation of a Ship or Nebula.
 	 * @return the orientation in degrees.
+	 * 
+	 * @version 1.2
 	 */
-	public double getOrientation() { return ROTATION; }
+	public int getOrientation() { return (ROTATION + 360) % 360; }
+	
 	/**
 	 * Gets the number of degrees this Ship can turn in a second (default is 120).
 	 * @return speed in degrees per second the ship can rotate.
+	 * 
+	 * @version 1.2
 	 */
-	public double getRotationSpeed() { return ROTATIONSPEED; }
+	public int getRotationSpeed() { return ROTATIONSPEED; }
+	
 	/**
 	 * Gets the current Shield strength of a Ship.
 	 * @return shields remaining.
 	 */
 	public double getShieldLevel() { return CURSHIELD; }
+	
 	/**
 	 * Gets the maximum amount of Shields the Ship object could have. (default is 100)
 	 * @return upper-bound of shield value.
 	 */
 	public double getMaxShield() { return MAXSHIELD; }
+	
 	/**
 	 * Gets the radius from a Ship object that its radar can detect objects. 
 	 * @return radar radius.
 	 */
 	public int getRadarRange() { return RADARRANGE; }
+	
+	/**
+	 * Gets the list of {@link CommandNames} your Ship is currently executing.
+	 * This is only provided for your own ship. (i.e. You can't see other ship's queues through radar.)
+	 * If the last command requested was a blocking command, it will have finished before this list is populated.
+	 * 
+	 * @return commands still being executed
+	 */
+	public String[] getCommandQueue() { return CMDQ; }
 	
 	/**
 	 * Is this object in a celestial object's body of effect?

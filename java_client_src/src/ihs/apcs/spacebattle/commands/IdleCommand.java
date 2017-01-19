@@ -22,6 +22,9 @@ public class IdleCommand extends ShipCommand {
 	 * @param duration the number of seconds for which to idle
 	 */
 	public IdleCommand(double duration) {
+		if (duration < 0.1)
+			throw new IllegalArgumentException("Invalid idle duration: must be at least 0.1");
+		
 		DUR = duration;
 	}
 
@@ -29,8 +32,8 @@ public class IdleCommand extends ShipCommand {
 	 * @see ihs.apcs.spacebattle.commands.ShipCommand#getName()
 	 */
 	@Override
-	protected String getName() {
-		return "IDLE";
+	public String getName() {
+		return CommandNames.Idle.toString();
 	}
 
 	/**

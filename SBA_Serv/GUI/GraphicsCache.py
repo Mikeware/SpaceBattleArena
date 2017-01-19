@@ -58,3 +58,22 @@ class GraphicsCache(object):
                 image = main[0]
             main[angle] = pygame.transform.rotate(image, angle).convert_alpha()
         return main[angle]        
+
+    def getScaledImage(self, key, scale):
+        """
+        Get's a scaled version of the image, can't have both scaling and rotating images.
+        """
+        image = None
+        if not self.__cache.has_key(key):
+            image = self.getImage(key)
+        main = self.__cache[key]
+        if not main.has_key(scale):
+            if image == None:
+                image = main[0]
+            if scale == 1.0:
+                main[scale] = main[0].copy() # don't reference main image when passed back, as we use it for scaling and maybe that's locking for #133
+            elif scale == 2.0:
+                main[scale] = pygame.transform.scale2x(image)
+            else:
+                main[scale] = pygame.transform.smoothscale(image, (int(image.get_width() * scale), int(image.get_height() * scale)))
+        return main[scale]

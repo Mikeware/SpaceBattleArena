@@ -1,7 +1,7 @@
 """
 Space Battle Arena is a Programming Game.
 
-Copyright (C) 2012-2015 Michael A. Hawker and Brett Wortzman
+Copyright (C) 2012-2016 Michael A. Hawker and Brett Wortzman
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 
@@ -18,7 +18,6 @@ import logging
 import unittest
 
 from Game.Game import BasicGame
-from Game.AsteroidMiner import AsteroidMinerGame
 from Game.CombatExercise import CombatExerciseGame
 from Game.FindTheMiddle import FindTheMiddleGame
 from Game.Survivor import SurvivorGame
@@ -27,6 +26,7 @@ from Game.HungryHungryBaubles import HungryHungryBaublesGame
 from Game.BaubleHunt import BaubleHuntGame
 from Game.KingOfTheBubble import KingOfTheBubbleGame
 from Game.DiscoveryQuest import DiscoveryQuestGame
+from Game.TheHungerBaubles import TheHungerBaublesGame
 
 from ConfigParser import ConfigParser
 import Server.WorldServer as WorldServer
@@ -60,12 +60,6 @@ class TestFindTheMiddleGame(TestGame, FindTheMiddleGame):
         self._testcase = testcase
 
         super(TestFindTheMiddleGame, self).__init__(cfg)
-
-class TestAsteroidMinerGame(TestGame, AsteroidMinerGame):
-    def __init__(self, cfg, testcase):
-        self._testcase = testcase
-
-        super(TestAsteroidMinerGame, self).__init__(cfg)
 
 class TestCombatExerciseGame(TestGame, CombatExerciseGame):
     def __init__(self, cfg, testcase):
@@ -102,6 +96,12 @@ class TestDiscoveryQuestGame(TestGame, DiscoveryQuestGame):
         self._testcase = testcase
 
         super(TestDiscoveryQuestGame, self).__init__(cfg)
+
+class TestTheHungerBaublesGame(TestGame, TheHungerBaublesGame):
+    def __init__(self, cfg, testcase):
+        self._testcase = testcase
+
+        super(TestTheHungerBaublesGame, self).__init__(cfg)
 
 class SBAWorldTestCase(unittest.TestCase):
     """
@@ -141,10 +141,11 @@ class SBAWorldTestCase(unittest.TestCase):
     def tearDown(self):
         self.assertFalse(self.game.world.gameerror, "Gameloop Exception Occured")
         # finish round
-        self.game._tournament = True # force it to not restart timers again
-        self.game.round_over()
+        if not self.game.world.gameerror:
+            self.game._tournament = True # force it to not restart timers again
+            self.game.round_over()
 
-        self.game.world.endGameLoop()
+            self.game.world.endGameLoop()
         logging.info("Done Running Test: %s", self._testMethodName)
 
     def get_config_filename(self):
@@ -198,10 +199,12 @@ class SBAGUITestCase(SBAWorldTestCase):
         super(SBAGUITestCase, self).setUp()
 
         self.donetest = False
+        self.flashcolor = False # Used to flash a border of color around the GUI, set to triplet
+        #self.resettimer = False # TODO: Used to reset timer in GUI when set to true (need different timing mechanism, should record 'laps'/legs underneath timer each time...)
 
         # TODO: Investigate doing this statically, so it remains open for multiple tests in a suite???
         # Start GUI in separate Thread, so test can run
-        thread.start_new_thread(main.startGame, ("Space Battle Tests - " + self._testMethodName, self.game, False, (self.cfg.getint("Application", "horz_res"), self.cfg.getint("Application", "vert_res")), self.cfg.getboolean("Application", "showstats"), self.cfg.getboolean("Application", "sound"), self.cfg, self))
+        thread.start_new_thread(main.startGame, ("Space Battle Tests - " + self._testMethodName, self.game, False, (self.cfg.getint("Application", "horz_res"), self.cfg.getint("Application", "vert_res")), self.cfg, self))
 
     def tearDown(self):
         self._resultForDoCleanups.printErrors()

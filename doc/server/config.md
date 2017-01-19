@@ -9,13 +9,15 @@ outline:
  - { url: "#application", title: "[Application]" }
  - { url: "#world", title: "[World]" }
  - { url: "#server", title: "[Server]" }
- - { url: "spawnmanager", title: "Spawn Manager" }
+ - { url: "#spawnmanager", title: "Spawn Manager" }
  - { url: "#asteroid", title: "[Asteroid]" }
  - { url: "#dragon", title: "[Dragon]" }
+ - { url: "#spacemine", title: "[SpaceMine]" }
  - { url: "#planet", title: "[Planet]" }
  - { url: "#blackhole", title: "[BlackHole]" }
  - { url: "#star", title: "[Star]" }
  - { url: "#nebula", title: "[Nebula]" }
+ - { url: "#wormhole", title: "[WormHole]" }
  - { url: "#game", title: "[Game]" }
  - { url: "#tournament", title: "[Tournament]" }
 ---
@@ -81,6 +83,9 @@ Specifies the vertical resolution of the SBA window (in pixels).  This should ma
 ###sound = boolean
 Determines if sounds should be played or not.
 
+###showip = boolean
+If this option is enabled, the server will start displaying the computer's IP Address at the top of the screen.  It can still be toggled manually on/off regardless of this setting with the [keyboard shortcut](usage.html).
+
 ###showstats = boolean
 If this option is enabled, the server will start with some basic GUI options already enabled showing statistics about a player’s ship.
 
@@ -121,12 +126,21 @@ Can a player join the server again if they had connected previously and disconne
 ###disconnect_on_idle = boolean
 Determines if a player's ship should be disconnected if it doesn't issue a command periodically (within 10 seconds of the last command being executed finishing).  **Note:** this will not prevent a ship from disconnecting if the actual socket is detected to be closed.
 
+###enable_commands = string
+Comma separated list of ship commands to enable on the server. All other commands will be disabled.  E.g.
+
+	enable_commands = ThrustCommand,RotateCommand,IdleCommand
+	
+A list of commands can be found in the [Command JavaDoc](http://mikeware.github.io/SpaceBattleArena/client/java_doc/ihs/apcs/spacebattle/commands/package-frame.html). When a command is invoked that has been disabled, it is simply ignored. A message should return to the client, but they will get a new environment and their ship should continue running.  Its state might just not be what was expected.
+
 ###disable_commands = string
 Comma separated list of ship commands to disable on the server.  E.g.
 
 	disable_commands = WarpCommand,FireTorpedoCommand
 	
 A list of commands can be found in the Command chapter. When a command is invoked that has been disabled, it is simply ignored. A message should return to the client, but they will get a new environment and their ship should continue running.  Its state might just not be what was expected.
+
+You should specify either **enable_commands** or **disable_commands** not both.
 
 
 <a name="spawnmanager"></a>Spawn Manager
@@ -156,7 +170,7 @@ Minimum number of [Entity] to keep in the world.  If the number falls below this
 Maximum cut-off for spawning new [Entity] types on the timer.  If the number of objects has reached this level, no new entities will be spawned using the spawn timing settings below. Games or other events may still spawn entities of this type however.
 
 ###spawn_time_num = integer
-Number of entities to spawn at a time with the timing settings below.  If specified, you must also specify the spawn_time_min and spawn_time_max options.
+Number of entities to spawn at a time with the timing settings below.  *If specified, you must also specify the spawn_time_min and spawn_time_max options.*
 
 ###spawn_time_min = integer
 Minimum time in seconds before spawning the spawn_time_num of [Entity] unless spawn_keep_max has been reached.
@@ -175,14 +189,29 @@ Number of [Entity] to add to the universe when a player is added to it.
 ###spawn_on_player_respawn = boolean
 Specify which scenarios (first created in round and/or whenever re-added) to add the spawn_on_player_num [Entity] to the world.
 
+###points_torpedo = int
+Number of points for destroying the spawned entity with a torpedo (if applicable).  *Must specify both points_torpedo and points_ram.*
+
+###points_ram = int
+Number of points for destroying the spawned entity with a ship via ramming (without destroying your ship).
+
+
 <a name="asteroid"></a>[Asteroid]
 ---------------------------------------
 Asteroids are flying debris in space.  They start off with a set amount of momentum and will continue flying in space until impacting ships or destroyed by torpedos.
+
+###move_speed_min = int
+###move_speed_max = int
+Range for the initial speed to start an asteroid's movement.
 
 
 <a name="dragon"></a>[Dragon]
 ---------------------------------------
 Dragons fly around space and will attack (and eat) nearby uncloaked ships.
+
+###move_speed_min = int
+###move_speed_max = int
+Range for the initial speed to start a dragon's movement.
 
 ###range_min = int
 ###range_max = int
@@ -190,7 +219,7 @@ Range for the size of the Dragon's visibility radius.  It will attack ships that
 
 ###attack_speed_min = int
 ###attack_speed_max = int
-Range for the amount of speed a Dragon will increase by when it sees a Ship.
+Range for the amount of speed a Dragon will *increase by* when it sees a Ship.  This is fixed when a Dragon is instantiated.
 
 ###attack_time_min = float
 ###attack_time_max = float
@@ -205,12 +234,33 @@ Range for the amount of damage every bite causes a Ship.  This amount is randomi
 Range for the amount of health a Dragon will start with.
 
 
+<a name="spacemine"></a>[SpaceMine]
+---------------------------------------
+Space Mines will stay in place, move and explode, or track ships.  On contact, they will detonate and create an explosion force around them.
+
+###delay_min = float
+###delay_max = float
+Delay in seconds before the space mine becomes active (inactive mines can't be hit and won't explode).
+
+###types = list of int
+Types of mines to spawn (1 for stationary, 2 for autonomous, 3 for homing).
+
+###direction_min = int
+###direction_max = int
+Direction of movement of an autonomous mine.  It starts moving after it's initial delay.
+
+###speed_min = int
+###speed_max = int
+Speed factor of autonomous mine (1-5).
+
+###duration_min = float
+###duration_max = float
+Amount of time an autonomous mine will move after the initial delay before it explodes automatically.
+
+
 <a name="planet"></a>[Planet]
 ---------------------------------------
 Planets have gravity wells which can pull ships towards them.  They are solid and will cause damage to ships that impact them.
-
-###number = integer
-The number of planets to generate in the universe.
 
 ###range_min = integer
 see range_max
@@ -223,6 +273,9 @@ see pull_max
 
 ###pull_max = integer
 These two values correspond to the amount of pull the gravity will have on ships.  Larger values mean ships will get pulled in quicker and will have a harder time escaping.  A random value will be generated between **pull_min** and **pull_max**.  These are typically **8** and **24**.  Setting pull to zero, will turn off gravity.
+
+###pull_weapon = boolean
+If enabled, Planets', BlackHoles', and Stars' gravity wells will effect torpedos and space mines.
 
 
 <a name="blackhole"></a>[BlackHole]
@@ -239,13 +292,7 @@ Amount of time in seconds before a ship will be crushed (destroyed) when in the 
 ---------------------------------------
 Stars can be flown into, but cause progressively more damage the closer a Ship is to its center.
 
-###range_min = int
-###range_max = int
-Range for the star's gravity well radius.  Defaults to **96** and **224**.
-
-###pull_min = int
-###pull_max = int
-Range for the amount of gravity the star will have.  Defaults to **12** and **48**.
+They have the exact same configuration values as [Planets](#planet).  However, the default range values are **96** to **224**.  The default pull values are **12** to **48**.
 
 ###dmg_mod = float
 Additional damage modifier for growth of damage caused by approaching Star's center.  Defaults to **0.0**.  Equation for damage calculation is currently in part *18 - (pull / 6.0) - dmg_mod*.
@@ -254,9 +301,6 @@ Additional damage modifier for growth of damage caused by approaching Star's cen
 <a name="nebula"></a>[Nebula]
 ---------------------------------------
 Nebulas are a celestial body which impart a drag effect on ships causing them to slow down or eventually stop if they are not thrusting.
-
-###number = integer
-The number of Nebulas to generate in the universe.
 
 ###sizes = list of tuples
 This is a list of the available sizes of nebulas.  The tuple pair is the total length of the **major** and **minor** axes of an ellipse.  There also needs to be a corresponding image in the *GUI\Graphics\Nebula* folder with the name **NebulaMAJORxMINOR** where 'MAJOR' and 'MINOR' are replaced with the values of the size of the Nebula.  These values should be placed in a list.  E.g.
@@ -268,6 +312,28 @@ see pull_max
 
 ###pull_max = integer
 These two values correspond to the amount of pull the drag will have on ships.  Larger values mean ships will slow down faster.  It'd best not to make these values higher than the Ship's Thruster force of 3500.  A random value will be generated between **pull_min** and **pull_max**.  These are typically **1750** and **2500**.  Setting pull to zero, will turn off drag.
+
+
+<a name="wormhole"></a>[WormHole]
+---------------------------------------
+Worm Holes transport ships vast distances instantaneously.  Each particular Worm Hole will always behave in the same manner depending on its type.  It could always teleport you to a random location, a fixed location, or another worm hole entrance.  If exiting near an existing Worm Hole, you must leave its vicinity before entering again.
+
+Extra Worm Holes above the number specified may be generated as two-way 'linked' Worm Holes.
+
+###types = list of ints
+This is a list of the types of Worm Hole exits which should be generated.  The following is a list of numbers and their corresponding type:
+
+ 1. Random
+ 2. Other Worm Hole
+ 3. Fixed Point
+
+For instance the following would create Worm Holes which transport ships to random or fixed locations only:
+
+	types=[1,3]
+
+###buffer_exit_object = int
+###buffer_exit_edge = int
+Amount of space between objects/world edge to leave at exit of random/fixed point worm holes.  See [Spawn Manager](#spawnmanager)'s similar properties.
 
 
 <a name="game"></a>[Game]

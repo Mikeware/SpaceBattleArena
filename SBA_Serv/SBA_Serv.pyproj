@@ -33,12 +33,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="compile.py" />
+    <Compile Include="Game\BaubleGame.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Game\TheHungerBaubles.py" />
     <Compile Include="Game\BaubleHunt.py" />
     <Compile Include="Game\DiscoveryQuest.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Game\HungryHungryBaubles.py" />
-    <Compile Include="Game\AsteroidMiner.py" />
     <Compile Include="Game\CombatExercise.py" />
     <Compile Include="Game\Survivor.py" />
     <Compile Include="Game\Game.py" />
@@ -56,6 +59,7 @@
     <Compile Include="GUI\Helpers.py" />
     <Compile Include="GUI\main.py" />
     <Compile Include="GUI\ObjWrappers\AsteroidWrapper.py" />
+    <Compile Include="GUI\ObjWrappers\WormHoleWrapper.py" />
     <Compile Include="GUI\ObjWrappers\NebulaWrapper.py" />
     <Compile Include="GUI\ObjWrappers\PlanetWrapper.py" />
     <Compile Include="GUI\ObjWrappers\ShipWrapper.py" />
@@ -64,10 +68,12 @@
     <Compile Include="GUI\SoundCache.py" />
     <Compile Include="GUI\Star.py" />
     <Compile Include="GUI\__init__.py" />
+    <Compile Include="Tests\TheHungerBaublesTestCases.py" />
     <Compile Include="Tests\DiscoveryQuestTestCases.py" />
     <Compile Include="Tests\KingOfTheBubbleTestCases.py" />
     <Compile Include="Tests\BaubleHuntTestCases.py" />
     <Compile Include="Tests\HungryHungryBaublesTestCases.py" />
+    <Compile Include="Tests\RadarTestCases.py" />
     <Compile Include="Tests\SurvivorTestCases.py" />
     <Compile Include="Tests\CombatExerciseTestCases.py" />
     <Compile Include="Tests\AsteroidMinerTestCases.py" />
@@ -86,6 +92,10 @@
     </Compile>
     <Compile Include="Tests\SpawnManagerTestCases.py" />
     <Compile Include="Tests\WorldTestCases.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tests\SpaceMineTestCases.py" />
+    <Compile Include="Tests\WormHoleTestCases.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Tests\__init__.py">
@@ -130,9 +140,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="basicgame_asteroid.cfg" />
+    <Content Include="basicgame_hungryhungrybaubles_new.cfg" />
+    <Content Include="basicgame_dragonslair.cfg" />
     <Content Include="basicgame_survivor.cfg" />
     <Content Include="empty.cfg" />
-    <Content Include="game_hungryhungrybaubles.cfg" />
+    <Content Include="basicgame_hungryhungrybaubles_original.cfg" />
+    <Content Include="game_thehungerbaubles.cfg" />
     <Content Include="game_kingofspace.cfg" />
     <Content Include="game_discoveryquest.cfg" />
     <Content Include="game_kingofthebubble.cfg" />
@@ -140,6 +153,8 @@
     <Content Include="no_collide.cfg" />
     <Content Include="no_gravity_drag.cfg" />
     <Content Include=".coveragerc" />
+    <Content Include="Tests\test_thehungerbaubles.cfg" />
+    <Content Include="Tests\test_baublehunt_weights.cfg" />
     <Content Include="Tests\test_discovery_quest2.cfg" />
     <Content Include="Tests\test_discovery_quest.cfg" />
     <Content Include="Tests\test_kingofthebubble_spawn.cfg" />
@@ -147,6 +162,9 @@
     <Content Include="Tests\test_destroyed.cfg" />
     <Content Include="Tests\test_hungryhungrybaubles.cfg" />
     <Content Include="Tests\test_hungryhungrybaubles2.cfg" />
+    <Content Include="Tests\test_server_disable.cfg" />
+    <Content Include="Tests\test_server_enable.cfg" />
+    <Content Include="Tests\test_spawning2.cfg" />
     <Content Include="Tests\test_spawning.cfg" />
     <Content Include="Tests\test_survivor.cfg" />
     <Content Include="Tests\test_combatexercise.cfg" />

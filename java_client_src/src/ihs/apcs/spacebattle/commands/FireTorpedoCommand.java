@@ -6,7 +6,7 @@ package ihs.apcs.spacebattle.commands;
  * @author Brett Wortzman
  *
  * @since 0.9
- * @version 1.1
+ * @version 1.2
  */
 public class FireTorpedoCommand extends ShipCommand {
 	@SuppressWarnings("unused")
@@ -17,13 +17,18 @@ public class FireTorpedoCommand extends ShipCommand {
 	 * @param direction which launcher to fire from ('F' for front, 'B' for back)
 	 */
 	public FireTorpedoCommand(char direction) {
+		if (direction != 'F' && direction != 'B')
+			throw new IllegalArgumentException("Invalid torpedo direction: must be 'F' or 'B'");
+		
 		this.DIR = direction;
 	}
 	
+	/* (non-Javadoc)
+	 * @see ihs.apcs.spacebattle.commands.ShipCommand#getName()
+	 */
 	@Override
-	protected String getName() {
-		// TODO Auto-generated method stub
-		return "FIRE";
+	public String getName() {
+		return CommandNames.FireTorpedo.toString();
 	}
 	
 	/**
@@ -33,9 +38,10 @@ public class FireTorpedoCommand extends ShipCommand {
 	public static int getInitialEnergyCost() { return 12; }
 	
 	/**
-	 * Fire Torpedo executes immediately.
+	 * Fire Torpedo executes immediately with a cooldown of 0.2 seconds.
 	 * 
 	 * @since 1.1
+	 * @version 1.2
 	 * @return true
 	 */
 	public static boolean executesImmediately() { return true; }

@@ -8,7 +8,7 @@ Space Battle Arena
 
 Space Battle Arena is a ‘[Programming Game](http://en.wikipedia.org/wiki/Programming_game)‘ where you must write code (in Java) to autonomously control a space ship to accomplish specified objectives.  
 
-<img src="{{ site.baseurl }}/img/SpaceBattleArena.png" alt="Space Battle Arena" class="right"/>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/dfMpFtCXoQM?controls=0&showinfo=0&rel=0&modestbranding=1" frameborder="0" allowfullscreen class="right"></iframe>
 
 This has been a final project used in an Advanced Placement High School Computer Science course since 2012.  Students have been enthusiastic, excited, challenged, and engaged with learning to control a ship in a physical environment and comparing strategies against their fellow students in a fun competition.
 
@@ -33,6 +33,7 @@ Documentation
     * [jGRASP](client/jGRASP/index.html)
     * [Eclipse](client/Eclipse/index.html)
     * [BlueJ](client/BlueJ/index.html)    
+    * [Command Line](client/CmdLine/index.html)
 * [Guides](client/guides/index.html)
     * [Coordinates](client/guides/space.html)
     * [Maneuvering](client/guides/maneuvering.html)
@@ -56,10 +57,12 @@ Documentation
     * ['Basic' Games](games/basic.html)
         * [Find The Middle](games/findthemiddle.html)
         * [Survivor](games/survivor.html)
+            * [Dragon's Lair (Variant)](games/survivor.html#dl)
         * [Asteroid Miner](games/asteroidminer.html)
         * [Combat Exercise](games/combatexercise.html)
-    * [Hungry Hungry Baubles](games/hungryhungrybaubles.html)
+    	* [Hungry Hungry Baubles](games/hungryhungrybaubles.html)
     * [Bauble Hunt](games/baublehunt.html)
+    * [The Hunger Baubles](games/thehungerbaubles.html)
     * [King of the Bubble](games/kingofthebubble.html)
         * [King of Space (Variant)](games/kingofthebubble.html#kos)
     * [Discovery Quest](games/discoveryquest.html)

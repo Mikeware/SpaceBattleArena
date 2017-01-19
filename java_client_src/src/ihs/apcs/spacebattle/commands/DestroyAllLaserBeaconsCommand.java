@@ -13,9 +13,13 @@ public class DestroyAllLaserBeaconsCommand extends ShipCommand {
 	/**
 	 * Creates a command to destroy all your laser beacons. 
 	 */
+	
+	/* (non-Javadoc)
+	 * @see ihs.apcs.spacebattle.commands.ShipCommand#getName()
+	 */
 	@Override
-	protected String getName() {
-		return "DAYLB";
+	public String getName() {
+		return CommandNames.DestroyAllLaserBeacons.toString();
 	}
 	
 	/**

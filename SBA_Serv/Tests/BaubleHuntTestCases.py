@@ -119,8 +119,89 @@ class BaubleHuntTestCases(SBAGUITestCase):
         time.sleep(0.5)
 
         self.assertEqual(len(ship.player.carrying), 0, "Player didn't drop off baubles")
-        self.assertEqual(ship.player.score, self.cfg.getint("BaubleHunt", "bauble_points_blue") + self.cfg.getint("BaubleHunt", "bauble_points_yellow") + self.cfg.getint("BaubleHunt", "bauble_points_red"), "Player didn't earn bauble points")
+        self.assertEqual(ship.player.score, 1 + 3 + 5, "Player didn't earn bauble points")
         self.assertGreater(len(self.game.world), 7, "Baubles not respawned")
+
+
+class BaubleHuntWithWeightTestCases(SBAGUITestCase):
+    """
+    Test cases for Bauble Hunt game with weights enabled.
+
+    No baubles set to spawn automatically.
+    """
+    def get_config_filename(self):
+        return "test_baublehunt_weights.cfg"
+    
+    def test_weight_and_capacity(self):
+        """
+        Test that a ship can not pick-up 3 + 3
+        """
+        ship = AIShip_SetList("Winner", self.game.world.mid_point(-100), self.game, [
+                "IdleCommand(self, 2.0)",
+                "ThrustCommand(self, 'B', 4.0)",
+            ])
+
+        self.game.world.append(Bauble(self.game.world.mid_point(-50), 1, 3))
+
+        self.game.world.append(Bauble(self.game.world.mid_point(50), 5, 3))
+
+        self.game.world.append(Bauble(self.game.world.mid_point(150), 3, 1))
+
+        self.game.world.append(Bauble(self.game.world.mid_point(200), 1, 1))
+
+        self.game.world.append(Bauble(self.game.world.mid_point(250), 5, 1))
+
+        time.sleep(5)
+
+        outpost = None
+        for obj in self.game.world:
+            if isinstance(obj, Outpost):
+                outpost = obj
+
+        self.assertIsNotNone(outpost, "Didn't find outpost.")
+        self.assertEqual(outpost.owner, ship, "Outpost not correct owner.")
+        self.assertEqual(len(ship.player.carrying), 1, "Player didn't pick up bauble.")
+        self.assertEqual(self.game.get_player_cargo_value(ship.player), 1, "Player didn't pick up bauble worth 1 point.")
+        self.assertEqual(self.game.get_player_cargo_weight(ship.player), 3, "Player didn't pick up bauble weighing 3.")
+        self.assertEqual(ship.player.score, 0, "Player doesn't earn points on pick up 1.")
+
+        time.sleep(6)
+
+        self.assertEqual(len(ship.player.carrying), 1, "Player picked up bauble 2.")
+        self.assertEqual(ship.player.score, 0, "Player doesn't earn points on not pick up 2.")
+
+        time.sleep(4)
+
+        self.assertEqual(len(ship.player.carrying), 2, "Player didn't pick up bauble 3.")
+        self.assertEqual(ship.player.carrying[-1].value, 3, "Player didn't pick up bauble worth 3 points.")
+        self.assertEqual(ship.player.carrying[-1].weight, 1, "Player didn't pick up bauble weighing 1.")
+        self.assertEqual(self.game.get_player_cargo_value(ship.player), 4, "Player didn't pick up baubles worth 4 point.")
+        self.assertEqual(self.game.get_player_cargo_weight(ship.player), 4, "Player didn't pick up baubles weighing 4.")
+        self.assertEqual(ship.player.score, 0, "Player doesn't earn points on pick up 3.")
+
+        time.sleep(4)
+
+        self.assertEqual(len(ship.player.carrying), 3, "Player didn't pick up bauble 4.")
+        self.assertEqual(ship.player.carrying[-1].value, 1, "Player didn't pick up bauble worth 1 points.")
+        self.assertEqual(ship.player.carrying[-1].weight, 1, "Player didn't pick up bauble weighing 1.")
+        self.assertEqual(self.game.get_player_cargo_value(ship.player), 5, "Player didn't pick up baubles worth 5 points.")
+        self.assertEqual(self.game.get_player_cargo_weight(ship.player), 5, "Player didn't pick up baubles weighing 5.")
+        self.assertEqual(ship.player.score, 0, "Player doesn't earn points on pick up 4.")
+
+        time.sleep(4)
+
+        self.assertEqual(len(ship.player.carrying), 3, "Player picked up bauble 5.")
+        self.assertEqual(self.game.get_player_cargo_value(ship.player), 5, "Player didn't pick up baubles worth 5 points.")
+        self.assertEqual(self.game.get_player_cargo_weight(ship.player), 5, "Player didn't pick up baubles weighing 5.")
+        self.assertEqual(ship.player.score, 0, "Player doesn't earn points on not pick up 5.")
+
+        ship.body.position = outpost.body.position # move to outpost
+
+        time.sleep(0.5)
+
+        self.assertEqual(len(ship.player.carrying), 0, "Player didn't drop off baubles")
+        self.assertEqual(ship.player.score, 3 + 1 + 1, "Player didn't earn bauble points")
+        self.assertEqual(len(self.game.world), 7, "Baubles not respawned")
 
 
 class BaubleHuntTournamentTestCases(SBAGUITestCase):

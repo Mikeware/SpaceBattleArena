@@ -1,7 +1,7 @@
 """
 Space Battle Arena is a Programming Game.
 
-Copyright (C) 2012-2015 Michael A. Hawker and Brett Wortzman
+Copyright (C) 2012-2016 Michael A. Hawker and Brett Wortzman
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 
@@ -39,7 +39,7 @@ class SpawnManagerTestCase(SBAGUITestCase):
         time.sleep(0.5)
 
         self.assertIn(ship, self.game.world, "Ship not in world.")
-        self.assertEqual(self.game.world.get_count_of_objects(Asteroid), 5, "more asteroids spawned than should have.") #Dragon = Asteroid
+        self.assertEqual(self.game.world.get_count_of_objects(Asteroid), 4, "more asteroids spawned than should have.")
         self.assertEqual(self.game.world.get_count_of_objects(Dragon), 1, "Dragon didn't spawn")
 
         time.sleep(1)
@@ -66,16 +66,89 @@ class SpawnManagerTestCase(SBAGUITestCase):
         self.assertEqual(self.game.world.get_count_of_objects(Asteroid), 2, "Should be 2 asteroids")
         self.assertEqual(self.game.world.get_count_of_objects(Planet), 1, "Should be 1 planet")
 
+        time.sleep(4.5)
+
+        self.assertEqual(self.game.world.get_count_of_objects(Asteroid), 4, "Should be 4 asteroids")
+        self.assertEqual(self.game.world.get_count_of_objects(Planet), 2, "Should be 2 planets")
+        self.assertEqual(self.game.world.get_count_of_objects(BlackHole), 0, "Should be 0 Black Hole")
+
+        time.sleep(4.25)
+
+        self.assertEqual(self.game.world.get_count_of_objects(BlackHole), 1, "Should be 1 Black Hole")
+        self.assertEqual(self.game.world.get_count_of_objects(Planet), 2, "Should still be 2 planet")
+
+    def test_spawn_when_removed(self):
+        time.sleep(1)
+
+        self.assertEqual(self.game.world.get_count_of_objects(Planet), 0, "Should be no planets")
+        
+        for obj in self.game.world:
+            obj.destroyed = True # clear out world
+
+        time.sleep(4.5)
+
+        self.assertEqual(self.game.world.get_count_of_objects(Asteroid), 2, "Should be 2 asteroids")
+        self.assertEqual(self.game.world.get_count_of_objects(Planet), 1, "Should be 1 planet")
+
         time.sleep(4.25)
 
         self.assertEqual(self.game.world.get_count_of_objects(Asteroid), 4, "Should be 4 asteroids")
         self.assertEqual(self.game.world.get_count_of_objects(Planet), 2, "Should be 2 planets")
 
+        time.sleep(0.1)
+
+        ast = []
+
+        for obj in self.game.world:
+            if isinstance(obj, Asteroid):
+                ast.append(obj.id)
+                obj.destroyed = True # clear out asteroids
+
+        time.sleep(0.1)
+
+        self.assertEqual(self.game.world.get_count_of_objects(Asteroid), 2, "Should be 2 new asteroids")
+        for obj in self.game.world:
+            if isinstance(obj, Asteroid):
+                self.assertNotIn(obj.id, ast, "Asteroid should have been destroyed.")
+
         time.sleep(4.25)
 
         self.assertEqual(self.game.world.get_count_of_objects(Planet), 2, "Should still be 2 planet")
 
-    # TODO: Add test cases around min restoring without timer...
+
+class SpawnManagerTestCaseMore(SBAGUITestCase):
+
+    def get_config_filename(self):
+        return "test_spawning2.cfg"
+
+    def test_spawn_min_max_equal(self):
+        time.sleep(1)
+
+        self.assertEqual(self.game.world.get_count_of_objects(Planet), 0, "Should be no planets")
+        self.assertEqual(self.game.world.get_count_of_objects(Star), 0, "Should be no Stars")
+        
+        for obj in self.game.world:
+            obj.destroyed = True # clear out world
+
+        Star.spawn(self.game.world, self.cfg)
+
+        time.sleep(4.5)
+
+        self.assertEqual(self.game.world.get_count_of_objects(Star), 1, "Should be 1 star")
+        self.assertEqual(self.game.world.get_count_of_objects(Asteroid), 12, "Should be 12 asteroids")
+        self.assertEqual(self.game.world.get_count_of_objects(Planet), 0, "Should be no planets")
+        self.assertEqual(self.game.world.get_count_of_objects(Dragon), 6, "Should be 6 Dragons")
+
+        for obj in self.game.world:
+            if isinstance(obj, Star):
+                obj.destroyed = True # clear out world
+
+        time.sleep(4.25)
+
+        self.assertEqual(self.game.world.get_count_of_objects(Star), 1, "Should be 1 star")
+        self.assertEqual(self.game.world.get_count_of_objects(Asteroid), 12, "Should be 12 asteroids")
+        self.assertEqual(self.game.world.get_count_of_objects(Planet), 0, "Should be no planets")
+        self.assertEqual(self.game.world.get_count_of_objects(Dragon), 6, "Should be 6 Dragons")
 
 if __name__ == '__main__':
     unittest.main()

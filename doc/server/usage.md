@@ -52,6 +52,7 @@ The following information will explain keyboard shortcuts as well as various inf
 |-------	|--------------------------------------------	|
 | **D** 	| Debug Mode                                 	|
 | **L** 	| In Debug Mode, Toggles Log Message Display 	|
+| **H** 	| Show Application Threads                     	|
 
 ### View Keys
 
@@ -93,7 +94,9 @@ Using PageUp/PageDown, you can select a specific player to track.  In this mode 
 
 When a player is being tracked, a display will be shown in the bottom-right corner with information about the ship's current status as well as the commands it is currently trying to execute.
 
-The Dynamic camera mode will switch between ships to show whoever happens to have the highest score in the current game.
+The **Dynamic Ship Tracking** mode will switch between ships to show whoever happens to have the highest score in the current game.
+
+When in tracking mode, clicking another ship will switch tracking to that ship instead.  (It will turn off dynamic camera mode as well.)
 
 
 <a name="god"></a>'God' Modes

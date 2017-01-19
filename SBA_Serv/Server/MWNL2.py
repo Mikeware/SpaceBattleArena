@@ -1,6 +1,6 @@
 import socket
 import time
-import thread, threading, atexit, logging, json
+import thread, threading, atexit, logging, json, traceback
 
 # Mikeware Network Lib
 #----------------------
@@ -16,7 +16,7 @@ MWNL_CMD_CLIENT_CONNECTED = "MWNL2_CLIENT_CONNECTED"
 MWNL_CMD_DISCONNECT = "MWNL2_DISCONNECT"
 MWNL_CMD_PING = "MWNL2_PING"
 MWNL_CMD_PONG = "MWNL2_PONG"
-MWNL_BLOCKSIZE = 1450
+MWNL_BLOCKSIZE = 2048
 
 def getIPAddress():
     return socket.gethostbyname(socket.gethostname())
@@ -224,7 +224,8 @@ class MWNL_Init:
 
     # Used To Prevent Blocking On Client
     def __makeCallback(self, sender, cmd):
-        threading.Thread(None, self.__callback, "Client Callback %d %s" % (sender, repr(cmd)), (sender, cmd)).start()
+        #threading.Thread(None, self.__callback, "Client Callback %d %s" % (sender, repr(cmd)), (sender, cmd)).start()
+        self.__callback(sender, cmd)
     #END __makeCallback
 
     # Connection Was Removed (Not Necessarily Closed)
@@ -237,9 +238,11 @@ class MWNL_Init:
             # Kill Listend Thread
             self.__connalive = 0
             
+            i = 5
             # Wait For Thread To Die
-            while self.__threadsalive > 0:
-                pass
+            while self.__threadsalive > 0 and i >= 0:
+                time.sleep(0.1)
+                i -= 1
             #END WHILE
         #END IF
     #END __killThreads__
@@ -276,7 +279,7 @@ class MWNL_Init:
             else:
                 # Broadcast Message
                 for conn in self.__connections.values():
-                    logging.debug("Broadcasting to " + repr(conn))
+                    logging.debug("Broadcasting to " + repr(conn.getAddress()))
                     conn.send(info, command, data)
                 #END FOR
             #END IF
@@ -309,6 +312,7 @@ class MWNL_Init:
         
         # Queue 3 Connections, Should Be Enough With Our Thread
         self.__socket.listen(3)
+        self.__socket.settimeout(MWNL_TIMEOUT)
 
         while self.__connalive and self.__acceptNewClients:
             if self.__connalive == 0:
@@ -317,9 +321,7 @@ class MWNL_Init:
                 
             # Wait For New Connection
             try:
-                self.__socket.settimeout(MWNL_TIMEOUT)
                 newconn = self.__socket.accept()
-                self.__socket.settimeout(None)
                 if newconn[0] <> None:
                     logging.info("New Connection From: %s", repr(newconn[1]))
                     
@@ -352,11 +354,11 @@ class MWNL_Init:
                     self.send(MWNL_CMD_ASSIGN_ID, newID, newID)
                     self.__callback(newID, [MWNL_CMD_CLIENT_CONNECTED])
                 #END IF
-            except:
-                # will get error here on timeout
+            except socket.timeout:
                 pass
-                #logging.error(traceback.format_exc())
-                #print traceback.format_exc()
+            except:
+                logging.error(traceback.format_exc())
+                print traceback.format_exc()
             #END TRY/EXCEPT
         #END WHILE
 
@@ -474,15 +476,13 @@ class MWNL_Connection:
         
         self.__blocksize = MWNL_BLOCKSIZE
         
-        self.__incomingdata = ""
         self.__outgoingdata = ""
         
         # Used To Kill Threads
-        self.__connalive = 1
+        self.__connalive = True
         self.__threadsalive = 0
         
         # Used To Prevent Corruption of Data
-        self.__inlock = threading.Condition()
         self.__outlock = threading.Condition()
 
         self.__callback = callback
@@ -490,7 +490,6 @@ class MWNL_Connection:
         # Start Thread For This Connection
         threading.Thread(None, self.__THREAD__listen, "Client Receiving Thread %d" % id).start()
         threading.Thread(None, self.__THREAD__send, "Client Sending Thread %d" % id).start()
-        threading.Thread(None, self.__THREAD__getNextTag, "Client Processing Thread %d" % id).start()
     #END __init__
     
     # Connection Was Removed (Not Necessarily Closed)
@@ -498,11 +497,13 @@ class MWNL_Connection:
         logging.info(repr(self.__address) + "Killing Threads...")
     
         # Kill Listend Thread
-        self.__connalive = 0
+        self.__connalive = False
         
+        i = 5
         # Wait For Thread To Die
-        while self.__threadsalive > 0:
-            pass
+        while self.__threadsalive > 0 and i >= 0:
+            time.sleep(0.1)
+            i -= 1
         #END WHILE
     #END __killThreads
     
@@ -517,9 +518,11 @@ class MWNL_Connection:
     def close(self):
         logging.info("%s Closing Connection", repr(self.__address))
         
+        i = 5
         # Let it Finish Sending All Data Before Closing Connection
-        while self.__threadsalive > 0 and self.isSendingData():
-            pass
+        while self.__threadsalive > 0 and self.isSendingData() and i >= 0:
+            time.sleep(0.1)
+            i -= 1
         #END WHILE
 
         # Kill Threads
@@ -561,79 +564,6 @@ class MWNL_Connection:
         
         #print repr(self.__address) + "send end"
     #END send
-    
-    # Gets Next Complete Tag or Returns Nothing
-    def __THREAD__getNextTag(self):
-        self.__threadsalive += 1
-        
-        logging.info("%s Started Processing Incoming Data", repr(self.__address))
-    
-        atedata = 0
-        
-        while self.__connalive:
-            retval = ""
-    
-            #print repr(self.__address) + "gnt start"
-            
-            self.__inlock.acquire()
-            
-            while ((len(self.__incomingdata) == 0) or (len(self.__incomingdata) < atedata)) and self.__connalive:
-                self.__inlock.wait(MWNL_TIMEOUT)
-            #END WHILE
-            
-            if self.__connalive:
-                #print repr(self.__address) + "gnt run"
-
-                logging.debug("Processing Incoming Data")
-                
-                i = self.__incomingdata.find("[")
-                if i != -1:
-                    #logging.debug("Found json data at " + repr(i))
-                    #TODO: chop after all data received?
-                    #logging.debug("Message Info Before: " + self.__incomingdata)
-                    lofs = self.__incomingdata[:i]                    
-
-                    # Do we have complete data
-                    tlen = len(lofs) + int(lofs)
-                    if len(self.__incomingdata) >= tlen:
-                        #logging.debug("Processing json data found")
-                        retval = self.__incomingdata[:tlen]
-                        self.__incomingdata = self.__incomingdata[tlen:]
-
-                        retval = json.loads("[" + retval[i:] + "]")
-                    else:
-                        logging.debug("Need more json data, need %d bytes", tlen)
-                        atedata = tlen
-                    #eif
-
-                    #logging.debug("Message Info After: " + self.__incomingdata)
-                else:
-                    logging.error("%s Receive Error: %s", self.__address, self.__incomingdata)
-                    atedata = 0
-                #END IF
-                
-                # If We Have A Complete Tag, Process It
-                if retval <> "":
-                    atedata = 0
-
-                    logging.debug("Making callback for command: %s", retval)
-
-                    self.__callback(retval)
-                #END IF
-            #END IF
-            
-            #print repr(self.__address) + "gnt release"
-            
-            # Release After Completion Of Tag
-            self.__inlock.release()
-        #END WHILE
-        
-        self.__threadsalive -= 1
-        
-        logging.info("%s Stopped Processing Incoming Data", self.__address)
-        
-        thread.exit()
-    #END IF
 
     def isSendingData(self):
         return (len(self.__outgoingdata) > 0)
@@ -644,32 +574,73 @@ class MWNL_Connection:
         self.__threadsalive += 1        
         logging.info(repr(self.__address) + "Listening...")
 
+        retval = ""
+        __incomingdata = ""
+        self.__socket.settimeout(MWNL_TIMEOUT)
+
         while self.__connalive:
             try:
-                self.__socket.settimeout(MWNL_TIMEOUT)
                 blk = self.__socket.recv(self.__blocksize)
-                self.__socket.settimeout(None)
 
                 if blk <> "":
                     #print repr(self.__address) + "listen start"
                     #print "recv = " + blk
-                    self.__inlock.acquire()
 
                     #print repr(self.__address) + "indata+ " + blk
                     
                     logging.debug("Received " + repr(len(blk)) + " bytes")
 
-                    self.__incomingdata += blk
+                    __incomingdata += blk
+                    blk = ""
                     
-                    self.__inlock.notify()
-                    self.__inlock.release()
+                    i = __incomingdata.find("[")
+                    while i != -1:
+                    
+                        #logging.debug("Found json data at " + repr(i))
+                        #TODO: chop after all data received?
+                        #logging.debug("Message Info Before: " + self.__incomingdata)
+                        lofs = __incomingdata[:i]
+
+                        # Do we have complete data
+                        tlen = len(lofs) + int(lofs)
+                        if len(__incomingdata) >= tlen:
+                            #logging.debug("Processing json data found")
+                            retval = __incomingdata[:tlen]
+                            __incomingdata = __incomingdata[tlen:]
+
+                            retval = json.loads("[" + retval[i:] + "]")
+                        else:
+                            logging.debug("Need more json data, need %d bytes", tlen)
+                            #atedata = tlen
+                            break
+                        #eif
+                
+                        # If We Have A Complete Tag, Process It
+                        if retval <> "":
+                            #atedata = 0
+
+                            logging.debug("Making callback for command: %s", retval)
+
+                            self.__callback(retval)
+
+                            logging.debug("Callback Finished")
+
+                            retval = ""
+                        #END IF
+
+                        i = __incomingdata.find("[")
+                    #wend
                     
                     #print repr(self.__address) + "listen end"
                     
                     #print "icd = " + self.__incomingdata
                 #END IF
-            except:
+            except socket.timeout:
                 pass
+            except:
+                logging.info(traceback.format_exc())
+                logging.error(traceback.format_exc())
+                print traceback.format_exc()
             #END TRY/EXCEPT
         #END WHILE
         
@@ -719,7 +690,11 @@ class MWNL_Connection:
                 #END IF
             except:
                 self.__connalive = False
+                logging.info("Error Sending Data - Remote Host Forced Closure?")
                 logging.error("Error Sending Data - Remote Host Forced Closure?")
+                logging.info(traceback.format_exc())
+                logging.error(traceback.format_exc())
+                print traceback.format_exc()
                 self.__callback([(self.__id, 0), MWNL_CMD_DISCONNECT])
             
             self.__outlock.release()

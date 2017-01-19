@@ -9,7 +9,7 @@ package ihs.apcs.spacebattle.commands;
  * @author Brett Wortzman
  *
  * @since 0.1
- * @version 1.1
+ * @version 1.2
  */
 public class ThrustCommand extends ShipCommand {
 	@SuppressWarnings("unused")
@@ -18,6 +18,19 @@ public class ThrustCommand extends ShipCommand {
 	private double DUR;
 	@SuppressWarnings("unused")
 	private double PER;
+	@SuppressWarnings("unused")
+	private boolean BLOCK;
+	
+	/**
+	 * Creates a blocking command to fire a ship's thrusters.
+	 * @param dir which thruster to fire (one of 'B', 'F', 'L', 'R')
+	 * @param duration the number of seconds to thrust
+	 * @param power the percentage of thruster power to be used for this thrust
+     * @version 1.2
+	 */
+	public ThrustCommand(char dir, double duration, double power) {
+		this(dir, duration, power, true);
+	}
 	
 	/**
 	 * Creates a command to fire a ship's thrusters.  If the ship does not have
@@ -25,19 +38,28 @@ public class ThrustCommand extends ShipCommand {
 	 * @param dir which thruster to fire (one of 'B', 'F', 'L', 'R')
 	 * @param duration the number of seconds to thrust
 	 * @param power the percentage of thruster power to be used for this thrust
+	 * @param block indicates if the command should block or not
 	 */
-	public ThrustCommand(char dir, double duration, double power) {
+	public ThrustCommand(char dir, double duration, double power, boolean block) {
+		if (dir != 'L' && dir != 'F' && dir != 'R' && dir != 'B')
+			throw new IllegalArgumentException("Invalid thrust direction; must be one of 'L', 'F', 'R', or 'B'");
+		if (power < 0.1 || power > 1.0)
+			throw new IllegalArgumentException("Invalid thrust power: must be between 0.1 and 1.0");
+		if (duration < 0.1)
+			throw new IllegalArgumentException("Invalid thrust duration: must be at least 0.1");
+		
 		DIR = dir;
 		DUR = duration;
 		PER = power;
+		BLOCK = block;
 	}
 
 	/* (non-Javadoc)
 	 * @see ihs.apcs.spacebattle.commands.ShipCommand#getName()
 	 */
 	@Override
-	protected String getName() {
-		return "THRST";
+	public String getName() {
+		return CommandNames.Thrust.toString();
 	}
 
 	/**
@@ -47,12 +69,11 @@ public class ThrustCommand extends ShipCommand {
 	public static int getOngoingEnergyCost() { return 3; }
 	
 	/**
-	 * Thrust commands don't prevent you from executing other commands.
+	 * Thrust commands will prevent you from executing other commands by default, pass a 'false' block argument to change this behavior.
 	 * 
-	 * If you want to wait for the Thrust to complete, you should issue an Idle command during your next cycle.
-     *
      * @since 1.1
-	 * @return false, thrusting doesn't block.
+     * @version 1.2
+	 * @return true, thrusting blocks by default in version 1.2.
 	 */
-	public static boolean isBlocking() { return false; }
+	public static boolean isBlocking() { return true; }
 }

@@ -1,7 +1,7 @@
 /**
  * Space Battle Arena is a Programming Game.
  *
- * Copyright (C) 2012-2015 Michael A. Hawker and Brett Wortzman
+ * Copyright (C) 2012-2016 Michael A. Hawker and Brett Wortzman
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
  *
@@ -15,7 +15,6 @@
 package ihs.apcs.spacebattle;
 
 import ihs.apcs.spacebattle.commands.IdleCommand;
-import ihs.apcs.spacebattle.commands.SelfDestructCommand;
 import ihs.apcs.spacebattle.commands.ShipCommand;
 import ihs.apcs.spacebattle.networking.*;
 import ihs.apcs.spacebattle.util.StringStringMap;
@@ -137,8 +136,6 @@ public class GraphicalClient implements Runnable, Client {
 			
 			if (cmd == null) {
 				cmd = new IdleCommand(0.1);
-			} else if (cmd instanceof SelfDestructCommand) {
-				disconnect();
 			} else {
 				MwnpMessage response = new MwnpMessage(new Integer[]{netId, 0}, cmd);
 				messenger.sendMessage(response);

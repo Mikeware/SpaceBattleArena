@@ -19,6 +19,8 @@ Combat Exercise [Basic Game]
 
 Players must hunt for other players which are worth more points the longer they are alive.
 
+Control asteroid spawning by using the standard [Spawn Manager](../server/config.html#spawnmanager) properties.
+
 <a name="config"></a>Configuration
 -----------
 

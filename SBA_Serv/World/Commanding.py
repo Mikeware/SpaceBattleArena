@@ -1,7 +1,7 @@
 """
 Space Battle Arena is a Programming Game.
 
-Copyright (C) 2012-2015 Michael A. Hawker and Brett Wortzman
+Copyright (C) 2012-2016 Michael A. Hawker and Brett Wortzman
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 
@@ -125,6 +125,15 @@ class CommandSystem(object):
         x = (len(self.__queue) > 0 and self.__queue[len(self.__queue)-1].blocking)
         self.__queueSemaphore.release()
         return x
+
+    def getRadarRepr(self):
+        # Returns a short form of list with just the command names
+        lst = []
+        self.__queueSemaphore.acquire()
+        for cmd in self.__queue:
+            lst.append(cmd.NAME)
+        self.__queueSemaphore.release()
+        return lst
 
     def __repr__(self):
         return "CommandSystem(" + repr(self.__queue) + ")"

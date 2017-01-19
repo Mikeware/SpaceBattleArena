@@ -1,7 +1,8 @@
 import pygame
+import math
 
 from GUIEntity import GUIEntity
-from World.WorldCommands import ThrustCommand, BrakeCommand, WarpCommand, CloakCommand, RaiseShieldsCommand
+from World.WorldCommands import ThrustCommand, BrakeCommand, WarpCommand, CloakCommand, RaiseShieldsCommand, SteerCommand
 from World.WorldMath import intpos
 from GUI.Helpers import wrapcircle, namefont, debugfont, infofont
 from GUI.GraphicsCache import Cache
@@ -32,6 +33,18 @@ class ShipGUI(GUIEntity):
         # TODO: Notify Ship of Start/End of Commands...?
 
         yoff = 0
+        steer = self._worldobj.commandQueue.containstype(SteerCommand)
+        if steer and steer.orgdeg != 0:
+            if steer.orgdeg > 0:
+                steer = -math.sin(steer.percent() * math.pi)
+            else:
+                steer = math.sin(steer.percent() * math.pi)
+            # TODO: Figure out best way to determine when ship facing opposite direction and should 'bank' other way
+            #if abs(self._worldobj.rotationAngle - self._worldobj.body.velocity.angle_degrees) % 360 > 180:
+            #    steer = -steer
+        else:
+            steer = 0
+
         if self._worldobj.commandQueue.containstype(CloakCommand):
             yoff = 64
 
@@ -48,7 +61,15 @@ class ShipGUI(GUIEntity):
         #eif
 
         # Rotate to Current Direction
-        rotimg = pygame.transform.rotate(self.surface.subsurface(pygame.Rect(64 * state, yoff, 64, 64)), self._worldobj.rotationAngle - 90)
+        scaled = self.surface.subsurface(pygame.Rect(64 * state, yoff, 64, 64))
+        if steer != 0:
+            newimg = pygame.Surface((64, 64), pygame.SRCALPHA)
+            if steer > 0:
+                newimg.blit(pygame.transform.scale(scaled, (64 - int(16 * abs(steer)), 64)), (int(steer * 16), 0))
+            else:
+                newimg.blit(pygame.transform.scale(scaled, (64 - int(16 * abs(steer)), 64)), (0, 0))
+            scaled = newimg
+        rotimg = pygame.transform.rotate(scaled, self._worldobj.rotationAngle - 90)
         w, h = rotimg.get_rect().size
         bp = intpos(sp)
         pos = intpos(sp - (w/2, h/2))

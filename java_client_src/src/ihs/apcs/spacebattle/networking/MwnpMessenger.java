@@ -40,6 +40,9 @@ public class MwnpMessenger extends Thread {
 			
 			if (LOGGING)
 				printMessage(msg);
+		} else {
+			System.err.println("Failed to send message -- output socket closed.");
+			logStream.println("Failed to send message -- output socket closed.");
 		}
 	}
 	

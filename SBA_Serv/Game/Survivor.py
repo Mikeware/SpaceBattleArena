@@ -1,7 +1,7 @@
 """
 Space Battle Arena is a Programming Game.
 
-Copyright (C) 2012-2015 Michael A. Hawker and Brett Wortzman
+Copyright (C) 2012-2016 Michael A. Hawker and Brett Wortzman
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 
@@ -40,7 +40,7 @@ class SurvivorGame(BasicGame):
         for player in self.game_get_current_player_list():
             # Update a player's score only when they're moving
             if player.object != None and player.object.body.velocity.length > self._min_vel:
-                self.player_update_score(player, t)
+                player.update_score(t)
 
         super(SurvivorGame, self).game_update(t)
 

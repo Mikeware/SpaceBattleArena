@@ -1,7 +1,7 @@
 """
 Space Battle Arena is a Programming Game.
 
-Copyright (C) 2012-2015 Michael A. Hawker and Brett Wortzman
+Copyright (C) 2012-2016 Michael A. Hawker and Brett Wortzman
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 
@@ -35,7 +35,7 @@ SHIP_CMD_ALL_STOP = "STOP"
 SHIP_CMD_WARP = "WARP"
 
 SHIP_CMD_TORPEDO = "FIRE"
-SHIP_CMD_MINE = "MINE"
+SHIP_CMD_SPACEMINE = "MINE"
 
 SHIP_CMD_SHIELD = "SHLD"
 SHIP_CMD_CLOAK = "CLOAK"
@@ -50,17 +50,20 @@ def ConvertNetworkMessageToCommand(ship, cmdname, cmddict):
     if isinstance(cmdname, unicode) and isinstance(cmddict, dict):
         if cmdname == SHIP_CMD_THRUST:
             if cmddict.has_key("DIR") and cmddict["DIR"] in [u'L',u'F',u'R',u'B']:
-                if cmddict.has_key("DUR") and isinstance(cmddict["DUR"], float) and cmddict["DUR"] >= 0.05:
+                if cmddict.has_key("DUR") and isinstance(cmddict["DUR"], float) and cmddict["DUR"] >= 0.1:
                     if cmddict.has_key("PER"):
                         if isinstance(cmddict["PER"], float) and 0.1 <= cmddict["PER"] <= 1.0:
-                            return ThrustCommand(ship, cmddict["DIR"], cmddict["DUR"], cmddict["PER"])
+                            if cmddict.has_key("BLOCK") and isinstance(cmddict["BLOCK"], bool):
+                                return ThrustCommand(ship, cmddict["DIR"], cmddict["DUR"], cmddict["PER"], cmddict["BLOCK"])
+                            else:
+                                return ThrustCommand(ship, cmddict["DIR"], cmddict["DUR"], cmddict["PER"])
                         else:
                             return "Percent Missing or Should Be Float 0.1 <= Arg <= 1.0"
                     else:
                         return ThrustCommand(ship, cmddict["DIR"], cmddict["DUR"])
                     #eif
                 else:
-                    return "Duration Missing or Should be Float >= 0.05"
+                    return "Duration Missing or Should be Float >= 0.1"
                 #eif
             else:
                 return "Direction Missing or Should Be L, F, R, or B"
@@ -89,7 +92,7 @@ def ConvertNetworkMessageToCommand(ship, cmdname, cmddict):
         elif cmdname == SHIP_CMD_ALL_STOP:
             return AllStopCommand(ship)
         elif cmdname == SHIP_CMD_WARP:
-            if cmddict.has_key("DIST") and isinstance(cmddict["DIST"], float) and cmddict["DIST"] >= 0 and cmddict["DIST"] <= WarpCommand.MAXWARPDISTANCE:
+            if cmddict.has_key("DIST") and isinstance(cmddict["DIST"], float) and cmddict["DIST"] > 0 and cmddict["DIST"] <= WarpCommand.MAXWARPDISTANCE:
                 return WarpCommand(ship, cmddict["DIST"])
             elif cmddict.has_key("DIST"):
                 return "Distance must be a positive Float less than or equal to " + repr(WarpCommand.MAXWARPDISTANCE)
@@ -113,10 +116,10 @@ def ConvertNetworkMessageToCommand(ship, cmdname, cmddict):
             #eif
         elif cmdname == SHIP_CMD_IDLE:
             if cmddict.has_key("DUR"):
-                if isinstance(cmddict["DUR"], float) and cmddict["DUR"] > 0:
+                if isinstance(cmddict["DUR"], float) and cmddict["DUR"] >= 0.1:
                     return IdleCommand(ship, cmddict["DUR"])
                 else:
-                    return "Idle Duration Should Be a Positive Float"
+                    return "Idle Duration Should Be a Positive Float greater than or equal to 0.1"
             else:
                 return IdleCommand(ship)
             #eif
@@ -130,11 +133,33 @@ def ConvertNetworkMessageToCommand(ship, cmdname, cmddict):
             else:
                 return "Firing a torpedo requires a direction 'F'orward or 'B'ackwards"
             #eif
+        elif cmdname == SHIP_CMD_SPACEMINE:
+            if cmddict.has_key("MODE") and cmddict.has_key("DELAY") and isinstance(cmddict["DELAY"], float) and cmddict["DELAY"] > 0 and cmddict["DELAY"] <= 10:
+                if cmddict["MODE"] not in [WorldEntities.SpaceMine.STATIONARY, WorldEntities.SpaceMine.AUTONOMOUS, WorldEntities.SpaceMine.HOMING]:
+                    return "Invalid Mine Mode, use 1, 2, or 3"
+                elif cmddict["MODE"] == WorldEntities.SpaceMine.AUTONOMOUS:
+                    if cmddict.has_key("SPEED") and cmddict.has_key("DUR") and cmddict.has_key("DIR"):
+                        if isinstance(cmddict["SPEED"], int) and isinstance(cmddict["DUR"], float) and isinstance(cmddict["DIR"], int):
+                            if cmddict["SPEED"] > 0 and cmddict["SPEED"] <= 5:
+                                if cmddict["DUR"] > 0 and cmddict["DUR"] <= 10:
+                                    return DeploySpaceMineCommand(ship, cmddict["DELAY"], cmddict["MODE"], cmddict["DIR"], cmddict["SPEED"], cmddict["DUR"])
+                                else:
+                                    return "Must have positive mine duration less than or equal to 10 seconds."
+                            else:
+                                return "Invalid Mine Speed use 1-5"
+                        else:
+                            return "Mine paramter type incorrect"
+                    else:
+                        return "Missing Parameter for Auto Mine"
+                else:
+                    return DeploySpaceMineCommand(ship, cmddict["DELAY"], cmddict["MODE"])
+            else:
+                return "Mines need a mode and positive float delay less than or equal to 10 seconds."
         elif cmdname == SHIP_CMD_REPAIR:
-            if cmddict.has_key("AMT") and isinstance(cmddict["AMT"], int) and cmddict["AMT"] > 0:
+            if cmddict.has_key("AMT") and isinstance(cmddict["AMT"], int) and cmddict["AMT"] > 0 and cmddict["AMT"] < 100:
                 return RepairCommand(ship, cmddict["AMT"])
             else:
-                return "Repair amount must be a positive integer"
+                return "Repair amount must be a positive integer less than 100"
         elif cmdname == SHIP_CMD_SCOOP:
             if cmddict.has_key("SHORT") and isinstance(cmddict["SHORT"], bool):
                 if cmddict["SHORT"]:
@@ -163,8 +188,8 @@ def ConvertNetworkMessageToCommand(ship, cmdname, cmddict):
 class ThrustCommand(Command):
     NAME = SHIP_CMD_THRUST
 
-    def __init__(self, obj, direction, duration, power=1.0):        
-        super(ThrustCommand, self).__init__(obj, ThrustCommand.NAME, duration)
+    def __init__(self, obj, direction, duration, power=1.0, block=False):
+        super(ThrustCommand, self).__init__(obj, ThrustCommand.NAME, duration, block=block)
         #self.__pow = power
         self.direction = direction
         if direction == 'L':
@@ -225,10 +250,9 @@ class AllStopCommand(OneTimeCommand):
 
     def __init__(self, obj):
         if obj.body.velocity.length < 1:
-            super(AllStopCommand, self).__init__(obj, AllStopCommand.NAME, 0)
+            super(AllStopCommand, self).__init__(obj, AllStopCommand.NAME, True, 1)
         else:
-            # TODO: TTL doesn't work here on a OneTimeCommand...
-            super(AllStopCommand, self).__init__(obj, AllStopCommand.NAME, 15, required=40)
+            super(AllStopCommand, self).__init__(obj, AllStopCommand.NAME, True, 5, required=40)
         #eif
 
     def onetime(self):        
@@ -350,7 +374,11 @@ class SteerCommand(Command):
         super(SteerCommand, self).__init__(obj, SteerCommand.NAME, 15, block=block) # 12 should be enough to do a circle
 
         self.__deg = -degrees # Physics rotations is opposite
+        self.orgdeg = -degrees
         self.energycost = 4
+
+    def percent(self):
+        return float(self.__deg) / self.orgdeg
 
     def isComplete(self):
         return -0.01 < self.__deg < 0.01
@@ -358,7 +386,7 @@ class SteerCommand(Command):
     def execute(self, t):
         if self.__deg < 0:
             amt = -self._obj.rotationSpeed * t / 4
-            if amt < self.__deg: amt = self.__deg            
+            if amt < self.__deg: amt = self.__deg
         else:
             amt = self._obj.rotationSpeed * t / 4
             if amt > self.__deg: amt = self.__deg
@@ -401,13 +429,16 @@ class RadarCommand(Command):
     def __repr__(self):
         return super(RadarCommand, self).__repr__() + " LVL: " + repr(self.level) + " TAR: " + repr(self.target)
 
+    def net_repr(self):
+        return (RadarCommand.NAME, {"LVL": self.level, "TAR":self.target})
+
 class DeployLaserBeaconCommand(OneTimeCommand):
     NAME = SHIP_CMD_DEPLOY_LASER_BEACON
 
     def __init__(self, obj):
         obj.lasernodes.append(intpos(obj.body.position))
 
-        super(DeployLaserBeaconCommand, self).__init__(obj, DeployLaserBeaconCommand.NAME)        
+        super(DeployLaserBeaconCommand, self).__init__(obj, DeployLaserBeaconCommand.NAME, True, ttl=0.05)
 
 class DestroyAllLaserBeaconsCommand(OneTimeCommand):
     NAME = SHIP_CMD_DESTROY_ALL_BEACONS
@@ -415,14 +446,14 @@ class DestroyAllLaserBeaconsCommand(OneTimeCommand):
     def __init__(self, obj):
         obj.lasernodes = []
         
-        super(DestroyAllLaserBeaconsCommand, self).__init__(obj, DestroyAllLaserBeaconsCommand.NAME)
+        super(DestroyAllLaserBeaconsCommand, self).__init__(obj, DestroyAllLaserBeaconsCommand.NAME, True, ttl=0.1)
 
 class FireTorpedoCommand(OneTimeCommand):
     NAME = SHIP_CMD_TORPEDO
 
     def __init__(self, ship, direction):        
         self.__direction = direction
-        super(FireTorpedoCommand, self).__init__(ship, FireTorpedoCommand.NAME, required=12)
+        super(FireTorpedoCommand, self).__init__(ship, FireTorpedoCommand.NAME, True, 0.2, required=12)
         
     def onetime(self):        
         self._obj.player.sound = "LASER"        
@@ -431,6 +462,26 @@ class FireTorpedoCommand(OneTimeCommand):
         elif self.__direction == 'B':
             self._obj._world.append(WorldEntities.Torpedo(self._obj.body.position, self._obj.rotationAngle - 180, self._obj))
         #eif
+
+class DeploySpaceMineCommand(OneTimeCommand):
+    NAME = SHIP_CMD_SPACEMINE
+
+    def __init__(self, ship, delay, wmode, direction=None, speed=None, duration=None):
+        self.__delay = delay
+        self.__wmode = wmode
+        self.__direction = direction
+        self.__speed = speed
+        self.__duration = duration
+        super(DeploySpaceMineCommand, self).__init__(ship, DeploySpaceMineCommand.NAME, True, 2, required=(22 + self.__wmode * 11))
+
+    def onetime(self):
+        self._obj.player.sound = "MINE"
+        if self.__wmode == WorldEntities.SpaceMine.STATIONARY:
+            self._obj._world.append(WorldEntities.SpaceMine(self._obj.body.position, self.__delay, WorldEntities.SpaceMine.STATIONARY, owner=self._obj))
+        elif self.__wmode == WorldEntities.SpaceMine.HOMING:
+            self._obj._world.append(WorldEntities.SpaceMine(self._obj.body.position, self.__delay, WorldEntities.SpaceMine.HOMING, owner=self._obj))
+        elif self.__wmode == WorldEntities.SpaceMine.AUTONOMOUS:
+            self._obj._world.append(WorldEntities.SpaceMine(self._obj.body.position, self.__delay, WorldEntities.SpaceMine.AUTONOMOUS, self.__direction, self.__speed, self.__duration, owner=self._obj))
 
 class RepairCommand(Command):
     NAME = SHIP_CMD_REPAIR
@@ -474,7 +525,7 @@ class LowerEnergyScoopCommand(Command):
     def execute(self, t):
         bpull = 500
         for body in self._obj.in_celestialbody:
-            if isinstance(body, WorldEntities.CelestialBody):
+            if isinstance(body, WorldEntities.Nebula) or isinstance(body, WorldEntities.Planet): # BlackHoles, Stars
                 self._obj.energy += t * 24
                 bpull = body.pull
                 break
@@ -487,7 +538,8 @@ class CloakCommand(Command):
     def __init__(self, obj, duration):
         super(CloakCommand, self).__init__(obj, CloakCommand.NAME, duration, block=False, required=15)
         self.energycost = 2
-        self._obj.player.sound = "CLOAK"
+        if hasattr(self._obj, "player") and self._obj.player != None:
+            self._obj.player.sound = "CLOAK"
         self._done = False
         
     def isComplete(self):
@@ -498,6 +550,9 @@ class CloakCommand(Command):
     def execute(self, t):
         if self._obj.commandQueue.containstype(FireTorpedoCommand, True) or self._obj.commandQueue.containstype(RaiseShieldsCommand, True):
             self._done = True
+
+    def net_repr(self):
+        return (CloakCommand.NAME, {"DUR": self.timeToLive})
 
 class RaiseShieldsCommand(Command):
     NAME = SHIP_CMD_SHIELD
