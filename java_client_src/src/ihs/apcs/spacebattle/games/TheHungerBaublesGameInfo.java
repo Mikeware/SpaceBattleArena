@@ -7,7 +7,7 @@ import ihs.apcs.spacebattle.Point;
 import java.util.*;
 
 /**
- * The Hunger Baubles are a game where you must hunt for the best collection of baubles.
+ * The Hunger Baubles is a game where you must hunt for the best collection of baubles.
  * 
  * Baubles have varying values and weights, and your ship can only carry so many.  You must use the Collect and Eject commands effectively in order
  * to pick and choose your baubles.

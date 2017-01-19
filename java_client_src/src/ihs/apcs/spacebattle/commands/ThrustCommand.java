@@ -9,7 +9,7 @@ package ihs.apcs.spacebattle.commands;
  * @author Brett Wortzman
  *
  * @since 0.1
- * @version 1.1
+ * @version 1.2
  */
 public class ThrustCommand extends ShipCommand {
 	@SuppressWarnings("unused")
@@ -22,14 +22,14 @@ public class ThrustCommand extends ShipCommand {
 	private boolean BLOCK;
 	
 	/**
-	 * Creates a non-blocking command to fire a ship's thrusters.  If the ship does not 
-	 *   have enough thruster power remaining to execute a thrust, it is ignored.
+	 * Creates a blocking command to fire a ship's thrusters.
 	 * @param dir which thruster to fire (one of 'B', 'F', 'L', 'R')
 	 * @param duration the number of seconds to thrust
 	 * @param power the percentage of thruster power to be used for this thrust
+     * @version 1.2
 	 */
 	public ThrustCommand(char dir, double duration, double power) {
-		this(dir, duration, power, false);
+		this(dir, duration, power, true);
 	}
 	
 	/**
@@ -69,13 +69,11 @@ public class ThrustCommand extends ShipCommand {
 	public static int getOngoingEnergyCost() { return 3; }
 	
 	/**
-	 * Thrust commands don't prevent you from executing other commands by default.
+	 * Thrust commands will prevent you from executing other commands by default, pass a 'false' block argument to change this behavior.
 	 * 
-	 * If you want to wait for the Thrust to complete, you should issue an Idle command during your next cycle
-	 *   or pass a boolean to the constructor.
-     *
      * @since 1.1
-	 * @return false, thrusting doesn't block by default.
+     * @version 1.2
+	 * @return true, thrusting blocks by default in version 1.2.
 	 */
-	public static boolean isBlocking() { return false; }
+	public static boolean isBlocking() { return true; }
 }

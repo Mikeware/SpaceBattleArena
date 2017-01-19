@@ -1,4 +1,4 @@
-v1.2 : Planned - May 2016 [Season 5] - The Hunger Baubles
+v1.2.0.1125 : 01/18/2017 - May 2016 [Season 5 Release] - The Hunger Baubles
 ----
 * Added **The Hunger Baubles** Subgame
 	* Bauble Games can now spawn any number of different valued Baubles.
@@ -15,7 +15,7 @@ v1.2 : Planned - May 2016 [Season 5] - The Hunger Baubles
     * Added **getPointAt** for point projections based on angles and distance
     * Added **isInEllipse** check method
     * Added **getClosestMappedPoint** for world bounds assistance
-* **ThrustCommand** now has a parameter to allow it to block.
+* **ThrustCommand** now has a parameter to allow it to block or not, *it now blocks by default*.
 * Added ability for client to get info on ship's running commands **getCommandQueue** in the environment *getShipStatus*.
 	* Command Queue and Current Energy Properties are now only available to its own ship (can't be seen with radar).
 * Updated Find the Middle Basic Game
@@ -38,8 +38,8 @@ v1.2 : Planned - May 2016 [Season 5] - The Hunger Baubles
 	* 3 New Ship Graphics
 	* SteerCommand now shown visually with a 'bank'
 	* Fixed issue with LowerEnergyScoopCommand and Dragons
-	* Add Microsoft Message Analyzer Log Parser Support
 * **Breaking Changes:**
+    * **ThrustCommand** is now **Blocking** by default, the fourth parameter can be passed as false to exhibit the previous behavior. This is to aid in initial understanding of the system until non-blocking commands can be introduced later.
     * Made **Hungry Hungry Baubles** a Basic Game by creating a *getObjectiveLocation()* method on BasicGameInfo (instead of *getGoldenBaublePosition()*).  This is now also used by **Bauble Hunt** and **Discovery Quest** instead of *getHomeBasePosition()*.
         * Hungry Hungry Baubles has new options for configuration (default is similar to previous incarnation).
         * Hungry Hungry Baubles and Bauble Hunt now share new *[BaubleGame]* point/percentage spawning parameters.

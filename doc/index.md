@@ -8,7 +8,7 @@ Space Battle Arena
 
 Space Battle Arena is a ‘[Programming Game](http://en.wikipedia.org/wiki/Programming_game)‘ where you must write code (in Java) to autonomously control a space ship to accomplish specified objectives.  
 
-<img src="{{ site.baseurl }}/img/SpaceBattleArena.png" alt="Space Battle Arena" class="right"/>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/dfMpFtCXoQM?controls=0&showinfo=0&rel=0&modestbranding=1" frameborder="0" allowfullscreen class="right"></iframe>
 
 This has been a final project used in an Advanced Placement High School Computer Science course since 2012.  Students have been enthusiastic, excited, challenged, and engaged with learning to control a ship in a physical environment and comparing strategies against their fellow students in a fun competition.
 
