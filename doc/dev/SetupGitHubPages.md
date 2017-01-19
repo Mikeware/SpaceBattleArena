@@ -13,7 +13,7 @@ Installing [Jekyll](http://jekyllrb.com/) Builder
 4. ruby dk.rb init (ensure says found installed in C:\Ruby21)
 5. ruby dk.rb review (ensure says C:\Ruby21 as directory)
 6. ruby dk.rb install
-7. gem install bundler
+7. gem install bundler [SSL Issue Resolution](http://guides.rubygems.org/ssl-certificate-update/#installing-using-update-packages)
 8. create **Gemfile** in repository root, with contents
 	<pre><code>source 'https://rubygems.org'
 gem 'github-pages'</code></pre>
