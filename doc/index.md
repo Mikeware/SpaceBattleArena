@@ -18,7 +18,7 @@ In addition, it means the challenge is fixed and always the same.  For an educat
 
 Finally, allowing the system to be extensible and configurable, means that challenges and difficulty can be directly geared to a specific group of students abilities which can fluctuate from class to class.  Space Battle was our test bed and has proved successful with the multiple different challenges we have run over the past few years.
 
-Space Battle Arena is [licensed](LICENSE) under the GPLv2.  [Gson](https://github.com/google/gson) is licensed under the Apache license and provided for convenience in the [bin](http://github.com/Mikeware/SpaceBattleArena/tree/master/bin/) directory.
+Space Battle Arena is [licensed](https://github.com/Mikeware/SpaceBattleArena/blob/master/LICENSE) under the GPLv2.  [Gson](https://github.com/google/gson) is licensed under the Apache license and provided for convenience alongside the release.
 
 Student Environment
 -------------------------
