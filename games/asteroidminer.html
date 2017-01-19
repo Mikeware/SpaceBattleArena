@@ -22,9 +22,9 @@
         <h2>A Programming Game in Java for AP CS Students.</h2>
 
         <section id="downloads">
-          <a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.1.0.1111/SpaceBattle.jar" class="btn">Download Client Jar</a>
+          <a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.2.0.1125/SpaceBattle.jar" class="btn">Download Client Jar</a>
           <a href="/SpaceBattleArena/client/java_doc/" class="btn">Java Docs</a>
-          <a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.1.0.1111/SBAserver.zip" class="btn">Download Server (Windows)</a>
+          <a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.2.0.1125/SBAserver.zip" class="btn">Download Server (Windows)</a>
           <a href="https://www.github.com/Mikeware/SpaceBattleArena" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
         </section>
       </div>
@@ -68,27 +68,11 @@
 
 <h2 id="overview"><a name="overview"></a>Overview</h2>
 
-<p><strong>Asteroid Miner</strong> is a basic game which is a great way to introduce locating objects.</p>
+<p><strong>Asteroid Miner</strong> is a basic game which is a great way to introduce locating and avoiding objects.</p>
 
-<p>Players must destroy asteroids using torpedoes or by ramming into them with their ships.  Each asteroid is worth 2 points if destroyed with a torpedo or 1 point if rammed.</p>
+<p>Players must destroy asteroids using torpedoes or by ramming into them with their ships (ouch).  Each asteroid is worth 2 points if destroyed with a torpedo or 1 point if rammed (by default).  These point values can be configured via the Spawn Manager.</p>
 
-<h2 id="configuration"><a name="config"></a>Configuration</h2>
-
-<h3 id="points_torpedo-=-int">points_torpedo = int</h3>
-
-<p>Number of points for destroying an asteroid with a torpedo.</p>
-
-<h3 id="points_ship-=-int">points_ship = int</h3>
-
-<p>Number of points for destroying an asteroid with a ship (without destroying your ship).</p>
-
-<h3 id="spawn_time-=-int">spawn_time = int</h3>
-
-<p>How long between asteroid spawns.</p>
-
-<h3 id="spawn_number-=-int">spawn_number = int</h3>
-
-<p>How many asteroids to spawn at the interval above.</p>
+<p>Control asteroid spawning and point values by using the standard <a href="../server/config.html#spawnmanager">Spawn Manager</a> properties.</p>
 
       </section>
     </div>

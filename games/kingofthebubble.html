@@ -22,9 +22,9 @@
         <h2>A Programming Game in Java for AP CS Students.</h2>
 
         <section id="downloads">
-          <a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.1.0.1111/SpaceBattle.jar" class="btn">Download Client Jar</a>
+          <a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.2.0.1125/SpaceBattle.jar" class="btn">Download Client Jar</a>
           <a href="/SpaceBattleArena/client/java_doc/" class="btn">Java Docs</a>
-          <a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.1.0.1111/SBAserver.zip" class="btn">Download Server (Windows)</a>
+          <a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.2.0.1125/SBAserver.zip" class="btn">Download Server (Windows)</a>
           <a href="https://www.github.com/Mikeware/SpaceBattleArena" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
         </section>
       </div>
@@ -80,35 +80,29 @@
 
 <p>Players will be given the location of some bubbles in the world.</p>
 
+<h2 id="[bubble]-configuration"><a name="server"></a>[Bubble] Configuration</h2>
+
+<p>Control Bubble spawning behavior by using the standard <a href="../server/config.html#spawnmanager">Spawn Manager</a> properties.</p>
+
+<p>(<strong>spawn_keep_max</strong> does not effect a player dropping a bubble unless it didn&#39;t meet the threshold for points.)</p>
+
+<h3 id="points_min-=-int">points_min = int</h3>
+
+<p>The minimum number of points a generated bubble can be worth.</p>
+
+<h3 id="points_max-=-int">points_max = int</h3>
+
+<p>The maximum number of points a generated bubble can be worth.</p>
+
 <h2 id="configuration"><a name="config"></a>Configuration</h2>
 
 <h3 id="bubble_radius_min-=-int">bubble_radius_min = int</h3>
 
 <p>The radius of the bubble when it worth 0 points.  The bubble point value is added to this base radius to determine its size.  See bubble_points_min and max.</p>
 
-<h3 id="bubble_points_min-=-int">bubble_points_min = int</h3>
-
-<p>The minimum number of points a generated bubble can be worth.</p>
-
-<h3 id="bubble_points_max-=-int">bubble_points_max = int</h3>
-
-<p>The maximum number of points a generated bubble can be worth.</p>
-
 <h3 id="bubble_points_drain_speed-=-int">bubble_points_drain_speed = int</h3>
 
 <p>How many points per second a single ship can drain from a bubble (ship&#39;s absorption rate).  If multiple ships are in a bubble, they can each drain points from it at this same rate.</p>
-
-<h3 id="bubble_number_max-=-int">bubble_number_max = int</h3>
-
-<p>Maximum number of generated bubbles to exist in the world at a time.  (Does not effect a player dropping a bubble unless it didn&#39;t meet the threshold for points.)  If this value is reached, a new bubble will not try to spawn until another one disappears.</p>
-
-<h3 id="bubble_time_alive_min-=-int">bubble_time_alive_min = int</h3>
-
-<p>Minimum time for a bubble to live before it starts to shrink.  If this is zero, a bubble will stay around indefinitely on its own without player interaction.</p>
-
-<h3 id="bubble_time_alive_variance-=-int">bubble_time_alive_variance = int</h3>
-
-<p>A random value between 0 and this number will be added to the minimum <strong>bubble_time_alive_min</strong> value to determine the total time for each bubble to remain before shrinking.  This value is ignored if bubble_time_alive_min is zero.</p>
 
 <h3 id="steal_points_min-=-int">steal_points_min = int</h3>
 

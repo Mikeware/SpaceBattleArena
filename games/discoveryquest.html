@@ -22,9 +22,9 @@
         <h2>A Programming Game in Java for AP CS Students.</h2>
 
         <section id="downloads">
-          <a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.1.0.1111/SpaceBattle.jar" class="btn">Download Client Jar</a>
+          <a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.2.0.1125/SpaceBattle.jar" class="btn">Download Client Jar</a>
           <a href="/SpaceBattleArena/client/java_doc/" class="btn">Java Docs</a>
-          <a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.1.0.1111/SBAserver.zip" class="btn">Download Server (Windows)</a>
+          <a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.2.0.1125/SBAserver.zip" class="btn">Download Server (Windows)</a>
           <a href="https://www.github.com/Mikeware/SpaceBattleArena" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
         </section>
       </div>
@@ -68,7 +68,7 @@
 
 <p><strong>Discovery Quest</strong> is an exploration game where players must navigate space in order to &#39;scan&#39; objects and accumulate points.  They establish a research <strong>Outpost</strong> which can also provide them with specific missions for additional points.</p>
 
-<p>Players must establish an <strong>Outpost</strong> by scanning it before any points will count towards their placement within the game.  Any points earned prior to establishing an Outpost will be banked and awarded when an Outpost is first established. (Multiple players may establish and share the same Outpost.)</p>
+<p>Players must establish an <strong>Outpost</strong> by scanning it before any points will count towards their placement within the game.  Any points earned prior to establishing an Outpost will be banked and awarded when an Outpost is first established. (Multiple players may establish and share the same Outpost.)  An established Outpost&#39;s location can be later retrieved with the <em>getObjectiveLocation()</em> method of the environment&#39;s getGameInfo().</p>
 
 <p><em>Scanning</em> is a specific command that must be used within 150 pixels of an object and must be directed towards a specific object by using its ID number.  Scanning is <strong>not</strong> the same as Radar.  The object being scanned must remain in range for the entire duration of the scan.</p>
 
@@ -139,6 +139,10 @@
 <h3 id="points_dragon-=-int">points_dragon = int</h3>
 
 <p>Number of points a Dragon is worth when successfully scanned. (6 default)</p>
+
+<h3 id="points_wormhole-=-int">points_wormhole = int</h3>
+
+<p>Number of points a Worm Hole is worth when successfully scanned. (2 default)</p>
 
 <h3 id="points_ship-=-int">points_ship = int</h3>
 

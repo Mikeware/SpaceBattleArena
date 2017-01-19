@@ -22,9 +22,9 @@
         <h2>A Programming Game in Java for AP CS Students.</h2>
 
         <section id="downloads">
-          <a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.1.0.1111/SpaceBattle.jar" class="btn">Download Client Jar</a>
+          <a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.2.0.1125/SpaceBattle.jar" class="btn">Download Client Jar</a>
           <a href="/SpaceBattleArena/client/java_doc/" class="btn">Java Docs</a>
-          <a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.1.0.1111/SBAserver.zip" class="btn">Download Server (Windows)</a>
+          <a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.2.0.1125/SBAserver.zip" class="btn">Download Server (Windows)</a>
           <a href="https://www.github.com/Mikeware/SpaceBattleArena" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
         </section>
       </div>
@@ -61,11 +61,13 @@
     
         <li><a href="#server">[Server]</a></li>
     
-        <li><a href="spawnmanager">Spawn Manager</a></li>
+        <li><a href="#spawnmanager">Spawn Manager</a></li>
     
         <li><a href="#asteroid">[Asteroid]</a></li>
     
         <li><a href="#dragon">[Dragon]</a></li>
+    
+        <li><a href="#spacemine">[SpaceMine]</a></li>
     
         <li><a href="#planet">[Planet]</a></li>
     
@@ -74,6 +76,8 @@
         <li><a href="#star">[Star]</a></li>
     
         <li><a href="#nebula">[Nebula]</a></li>
+    
+        <li><a href="#wormhole">[WormHole]</a></li>
     
         <li><a href="#game">[Game]</a></li>
     
@@ -146,6 +150,10 @@ etc...
 
 <p>Determines if sounds should be played or not.</p>
 
+<h3 id="showip-=-boolean">showip = boolean</h3>
+
+<p>If this option is enabled, the server will start displaying the computer&#39;s IP Address at the top of the screen.  It can still be toggled manually on/off regardless of this setting with the <a href="usage.html">keyboard shortcut</a>.</p>
+
 <h3 id="showstats-=-boolean">showstats = boolean</h3>
 
 <p>If this option is enabled, the server will start with some basic GUI options already enabled showing statistics about a player’s ship.</p>
@@ -194,12 +202,21 @@ etc...
 
 <p>Determines if a player&#39;s ship should be disconnected if it doesn&#39;t issue a command periodically (within 10 seconds of the last command being executed finishing).  <strong>Note:</strong> this will not prevent a ship from disconnecting if the actual socket is detected to be closed.</p>
 
+<h3 id="enable_commands-=-string">enable_commands = string</h3>
+
+<p>Comma separated list of ship commands to enable on the server. All other commands will be disabled.  E.g.</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">enable_commands = ThrustCommand,RotateCommand,IdleCommand
+</code></pre></div>
+<p>A list of commands can be found in the <a href="http://mikeware.github.io/SpaceBattleArena/client/java_doc/ihs/apcs/spacebattle/commands/package-frame.html">Command JavaDoc</a>. When a command is invoked that has been disabled, it is simply ignored. A message should return to the client, but they will get a new environment and their ship should continue running.  Its state might just not be what was expected.</p>
+
 <h3 id="disable_commands-=-string">disable_commands = string</h3>
 
 <p>Comma separated list of ship commands to disable on the server.  E.g.</p>
 <div class="highlight"><pre><code class="language-text" data-lang="text">disable_commands = WarpCommand,FireTorpedoCommand
 </code></pre></div>
 <p>A list of commands can be found in the Command chapter. When a command is invoked that has been disabled, it is simply ignored. A message should return to the client, but they will get a new environment and their ship should continue running.  Its state might just not be what was expected.</p>
+
+<p>You should specify either <strong>enable_commands</strong> or <strong>disable_commands</strong> not both.</p>
 
 <h2 id="spawn-manager"><a name="spawnmanager"></a>Spawn Manager</h2>
 
@@ -233,7 +250,7 @@ spawn_keep_min = 1
 
 <h3 id="spawn_time_num-=-integer">spawn_time_num = integer</h3>
 
-<p>Number of entities to spawn at a time with the timing settings below.  If specified, you must also specify the spawn_time_min and spawn_time_max options.</p>
+<p>Number of entities to spawn at a time with the timing settings below.  <em>If specified, you must also specify the spawn_time_min and spawn_time_max options.</em></p>
 
 <h3 id="spawn_time_min-=-integer">spawn_time_min = integer</h3>
 
@@ -259,13 +276,33 @@ spawn_keep_min = 1
 
 <p>Specify which scenarios (first created in round and/or whenever re-added) to add the spawn_on_player_num [Entity] to the world.</p>
 
+<h3 id="points_torpedo-=-int">points_torpedo = int</h3>
+
+<p>Number of points for destroying the spawned entity with a torpedo (if applicable).  <em>Must specify both points_torpedo and points_ram.</em></p>
+
+<h3 id="points_ram-=-int">points_ram = int</h3>
+
+<p>Number of points for destroying the spawned entity with a ship via ramming (without destroying your ship).</p>
+
 <h2 id="[asteroid]"><a name="asteroid"></a>[Asteroid]</h2>
 
 <p>Asteroids are flying debris in space.  They start off with a set amount of momentum and will continue flying in space until impacting ships or destroyed by torpedos.</p>
 
+<h3 id="move_speed_min-=-int">move_speed_min = int</h3>
+
+<h3 id="move_speed_max-=-int">move_speed_max = int</h3>
+
+<p>Range for the initial speed to start an asteroid&#39;s movement.</p>
+
 <h2 id="[dragon]"><a name="dragon"></a>[Dragon]</h2>
 
 <p>Dragons fly around space and will attack (and eat) nearby uncloaked ships.</p>
+
+<h3 id="move_speed_min-=-int">move_speed_min = int</h3>
+
+<h3 id="move_speed_max-=-int">move_speed_max = int</h3>
+
+<p>Range for the initial speed to start a dragon&#39;s movement.</p>
 
 <h3 id="range_min-=-int">range_min = int</h3>
 
@@ -277,7 +314,7 @@ spawn_keep_min = 1
 
 <h3 id="attack_speed_max-=-int">attack_speed_max = int</h3>
 
-<p>Range for the amount of speed a Dragon will increase by when it sees a Ship.</p>
+<p>Range for the amount of speed a Dragon will <em>increase by</em> when it sees a Ship.  This is fixed when a Dragon is instantiated.</p>
 
 <h3 id="attack_time_min-=-float">attack_time_min = float</h3>
 
@@ -297,13 +334,41 @@ spawn_keep_min = 1
 
 <p>Range for the amount of health a Dragon will start with.</p>
 
+<h2 id="[spacemine]"><a name="spacemine"></a>[SpaceMine]</h2>
+
+<p>Space Mines will stay in place, move and explode, or track ships.  On contact, they will detonate and create an explosion force around them.</p>
+
+<h3 id="delay_min-=-float">delay_min = float</h3>
+
+<h3 id="delay_max-=-float">delay_max = float</h3>
+
+<p>Delay in seconds before the space mine becomes active (inactive mines can&#39;t be hit and won&#39;t explode).</p>
+
+<h3 id="types-=-list-of-int">types = list of int</h3>
+
+<p>Types of mines to spawn (1 for stationary, 2 for autonomous, 3 for homing).</p>
+
+<h3 id="direction_min-=-int">direction_min = int</h3>
+
+<h3 id="direction_max-=-int">direction_max = int</h3>
+
+<p>Direction of movement of an autonomous mine.  It starts moving after it&#39;s initial delay.</p>
+
+<h3 id="speed_min-=-int">speed_min = int</h3>
+
+<h3 id="speed_max-=-int">speed_max = int</h3>
+
+<p>Speed factor of autonomous mine (1-5).</p>
+
+<h3 id="duration_min-=-float">duration_min = float</h3>
+
+<h3 id="duration_max-=-float">duration_max = float</h3>
+
+<p>Amount of time an autonomous mine will move after the initial delay before it explodes automatically.</p>
+
 <h2 id="[planet]"><a name="planet"></a>[Planet]</h2>
 
 <p>Planets have gravity wells which can pull ships towards them.  They are solid and will cause damage to ships that impact them.</p>
-
-<h3 id="number-=-integer">number = integer</h3>
-
-<p>The number of planets to generate in the universe.</p>
 
 <h3 id="range_min-=-integer">range_min = integer</h3>
 
@@ -321,6 +386,10 @@ spawn_keep_min = 1
 
 <p>These two values correspond to the amount of pull the gravity will have on ships.  Larger values mean ships will get pulled in quicker and will have a harder time escaping.  A random value will be generated between <strong>pull_min</strong> and <strong>pull_max</strong>.  These are typically <strong>8</strong> and <strong>24</strong>.  Setting pull to zero, will turn off gravity.</p>
 
+<h3 id="pull_weapon-=-boolean">pull_weapon = boolean</h3>
+
+<p>If enabled, Planets&#39;, BlackHoles&#39;, and Stars&#39; gravity wells will effect torpedos and space mines.</p>
+
 <h2 id="[blackhole]"><a name="blackhole"></a>[BlackHole]</h2>
 
 <p>Black Holes have stronger gravity wells than planets, but can be passed through their center.  They are harder to escape from.</p>
@@ -335,17 +404,7 @@ spawn_keep_min = 1
 
 <p>Stars can be flown into, but cause progressively more damage the closer a Ship is to its center.</p>
 
-<h3 id="range_min-=-int">range_min = int</h3>
-
-<h3 id="range_max-=-int">range_max = int</h3>
-
-<p>Range for the star&#39;s gravity well radius.  Defaults to <strong>96</strong> and <strong>224</strong>.</p>
-
-<h3 id="pull_min-=-int">pull_min = int</h3>
-
-<h3 id="pull_max-=-int">pull_max = int</h3>
-
-<p>Range for the amount of gravity the star will have.  Defaults to <strong>12</strong> and <strong>48</strong>.</p>
+<p>They have the exact same configuration values as <a href="#planet">Planets</a>.  However, the default range values are <strong>96</strong> to <strong>224</strong>.  The default pull values are <strong>12</strong> to <strong>48</strong>.</p>
 
 <h3 id="dmg_mod-=-float">dmg_mod = float</h3>
 
@@ -354,10 +413,6 @@ spawn_keep_min = 1
 <h2 id="[nebula]"><a name="nebula"></a>[Nebula]</h2>
 
 <p>Nebulas are a celestial body which impart a drag effect on ships causing them to slow down or eventually stop if they are not thrusting.</p>
-
-<h3 id="number-=-integer">number = integer</h3>
-
-<p>The number of Nebulas to generate in the universe.</p>
 
 <h3 id="sizes-=-list-of-tuples">sizes = list of tuples</h3>
 
@@ -371,6 +426,31 @@ spawn_keep_min = 1
 <h3 id="pull_max-=-integer">pull_max = integer</h3>
 
 <p>These two values correspond to the amount of pull the drag will have on ships.  Larger values mean ships will slow down faster.  It&#39;d best not to make these values higher than the Ship&#39;s Thruster force of 3500.  A random value will be generated between <strong>pull_min</strong> and <strong>pull_max</strong>.  These are typically <strong>1750</strong> and <strong>2500</strong>.  Setting pull to zero, will turn off drag.</p>
+
+<h2 id="[wormhole]"><a name="wormhole"></a>[WormHole]</h2>
+
+<p>Worm Holes transport ships vast distances instantaneously.  Each particular Worm Hole will always behave in the same manner depending on its type.  It could always teleport you to a random location, a fixed location, or another worm hole entrance.  If exiting near an existing Worm Hole, you must leave its vicinity before entering again.</p>
+
+<p>Extra Worm Holes above the number specified may be generated as two-way &#39;linked&#39; Worm Holes.</p>
+
+<h3 id="types-=-list-of-ints">types = list of ints</h3>
+
+<p>This is a list of the types of Worm Hole exits which should be generated.  The following is a list of numbers and their corresponding type:</p>
+
+<ol>
+<li>Random</li>
+<li>Other Worm Hole</li>
+<li>Fixed Point</li>
+</ol>
+
+<p>For instance the following would create Worm Holes which transport ships to random or fixed locations only:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">types=[1,3]
+</code></pre></div>
+<h3 id="buffer_exit_object-=-int">buffer_exit_object = int</h3>
+
+<h3 id="buffer_exit_edge-=-int">buffer_exit_edge = int</h3>
+
+<p>Amount of space between objects/world edge to leave at exit of random/fixed point worm holes.  See <a href="#spawnmanager">Spawn Manager</a>&#39;s similar properties.</p>
 
 <h2 id="[game]"><a name="game"></a>[Game]</h2>
 
