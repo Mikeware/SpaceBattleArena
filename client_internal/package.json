@@ -1,0 +1,22 @@
+{
+  "name": "node_midtier",
+  "version": "1.0.0",
+  "description": "SBA Midtier Client",
+  "main": "out/src/node_midtier.js",
+  "scripts": {
+    "start": "node out/src/node_midtier.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Michael A. Hawker",
+  "license": "MIT",
+  "dependencies": {
+    "http": "0.0.0",
+    "http-server": "^0.9.0",
+    "net": "^1.0.2",
+    "socket.io": "^1.7.3"
+  },
+  "devDependencies": {
+    "@types/node": "^7.0.5",
+    "typescript": "^2.2.1"
+  }
+}

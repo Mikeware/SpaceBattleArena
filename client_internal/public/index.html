@@ -1,0 +1,19 @@
+<html>
+    <head>
+        <title>Test Page</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
+        <script>
+            var socket = io.connect('http://localhost:2017')
+            //socket.on('connection', function(socket) {
+                //socket.emit('request', /* */); // emit an event to the socket
+                //io.emit('broadcast', /* */); // emit an event to all connected sockets
+                socket.on('log', function(data) { 
+                    console.log(data);
+                    document.getElementById('console').innerHTML += "<p>" + data + "</p>";
+                }); // listen to the event
+            //});
+        </script>        
+    </head>
+    <body id="console">
+    </body>
+</html>
