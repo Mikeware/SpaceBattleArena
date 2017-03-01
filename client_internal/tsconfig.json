@@ -2,10 +2,13 @@
     "compilerOptions": {
         "target": "es6",
         "module": "commonjs",
+        "moduleResolution": "node",
         "sourceMap": true,
         "rootDir": ".",
         "experimentalDecorators": true,
-        "emitDecoratorMetadata": true
+        "emitDecoratorMetadata": true,
+        //"noImplicitAny": true,
+        "suppressImplicitAnyIndexErrors": true
         //"watch": true
     },
     "exclude": [

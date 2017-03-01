@@ -26,6 +26,10 @@ declare var System: any;
       '@angular/forms': 'npm:@angular/forms/bundles/forms.umd.js',
 
       // other libraries
+      'three':                     'npm:three/build/three.js',
+      'three-trackballcontrols':   'npm:three-trackballcontrols/index.js',
+      //'stats.js':                  'npm:stats.js',
+      'tween.js':                  'npm:tween.js/src/tween.js',
       'rxjs':                      'npm:rxjs',
       'angular-in-memory-web-api': 'npm:angular-in-memory-web-api/bundles/in-memory-web-api.umd.js'
     },
