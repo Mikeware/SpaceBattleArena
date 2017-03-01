@@ -7,11 +7,19 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
-            "program": "${workspaceRoot}/out/src/node_midtier.js",
+            "name": "Launch Client Host",
+            "program": "${workspaceRoot}/src/node_midtier.js",
             "cwd": "${workspaceRoot}",
-            "outFiles": ["${workspaceRoot}/out/src/**/*.js"],
+            "outFiles": ["${workspaceRoot}/src/**/*.js"],
             "preLaunchTask": "tsc"
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch Chrome",
+            "url": "http://localhost/",
+            "webRoot": "${workspaceRoot}/public",
+            "userDataDir": "${workspaceRoot}/.vscode/chrome"
         }
     ]
 }
