@@ -16,7 +16,7 @@
         {
             "type": "chrome",
             "request": "launch",
-            "name": "Launch Chrome",
+            "name": "Open Chrome",
             "url": "http://localhost/",
             "webRoot": "${workspaceRoot}/public",
             "userDataDir": "${workspaceRoot}/.vscode/chrome"

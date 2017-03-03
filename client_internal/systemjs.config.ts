@@ -28,6 +28,7 @@ declare var System: any;
       // other libraries
       'three':                     'npm:three/build/three.js',
       'three-trackballcontrols':   'npm:three-trackballcontrols/index.js',
+      'socket.io-client':          'npm:socket.io-client/dist/socket.io.js',
       //'stats.js':                  'npm:stats.js',
       'tween.js':                  'npm:tween.js/src/tween.js',
       'rxjs':                      'npm:rxjs',

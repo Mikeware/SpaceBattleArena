@@ -11,7 +11,7 @@ httpserver.createServer().listen(80, '127.0.0.1', () => {
 
 // Server Socket Channel to Web Browser
 var sioserver = http.createServer();
-var io: http.Server = socketio(sioserver);
+var io: SocketIO.Server = socketio(sioserver);
 io.on('connection', function(client){
   client.on('event', function(data){});
   client.on('disconnect', function(){});
@@ -33,22 +33,26 @@ var server = net.createServer(function(socket) {
     });
 
     client.on('data', function(data) {
-        console.log('Client Received: ' + data);
-        io.emit('log', 'Client: ' + data);
+        //console.log('Client Received: ' + data);
+        io.emit('env', data); // TODO: Grab last bit of string with just object
         socket.write(data);
     });
 
     //socket.write('Echo server\r\n');
     //socket.pipe(socket);
     socket.on('data', function(data) {
-        console.log('Server Receieved: ' + data);        
-        io.emit('log', 'Server: ' + data);
-        client.write(data); // forward
+        console.log('Sending to Server: ' + data);
+        io.emit('cmd', data); // TODO: Send just array
+        client.write(data); // forward to server
     })
 
     socket.on('close', function() {
         console.log('Server Connection closed');
-    });    
+    });
+
+    socket.on('error', function(err) {
+        io.emit('log', "Error: " + err);
+    });
 
     client.on('close', function() {
         console.log('Client Connection closed');
