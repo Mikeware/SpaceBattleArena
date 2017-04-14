@@ -51,7 +51,9 @@
 
     <div class="container">
       <section id="main_content">
-        <p>Your Spaceship is your livelihood Cadet!  Never give-up, never surrender!</p>
+        <h1 id="never-give-up,-never-surrender!">Never give-up, never surrender!</h1>
+
+<p>Your Spaceship is your livelihood Cadet!  </p>
 
 <p>Now that you have oriented yourself within the Universe, it&#39;s time to learn about telling your ship how to do perform commands.</p>
 
@@ -74,20 +76,22 @@
 <p>Shields will help protect your ship&#39;s health, but must be engaged pre-emptively before taking damage.</p>
 
 <blockquote>
-<p>You ship can be damaged by colliding with other objects in the universe or when hit by enemy fire.</p>
+<p>You ship can be damaged by colliding with other objects in the universe, when hit by enemy fire, or when eaten by a dragon...</p>
 </blockquote>
 
 <p>Finally, your ship has an energy reserve.  </p>
 
 <blockquote>
-<p><strong>Any action you wish your ship to perform takes energy.</strong>  </p>
+<p><strong>Any action you wish your ship to perform requires energy.</strong>  </p>
 </blockquote>
 
-<p>Your ship&#39;s energy will automatically recharge over time.</p>
+<p>Your ship&#39;s energy will slowly and automatically recharge over time.</p>
+
+<h1 id="ship-control">Ship Control</h1>
 
 <p>In order to control your ship, you must issue commands.  Your ship must decide what to do based on the information it is given and whatever you&#39;ve told it to &#39;remember&#39;.  Each command may require an initial amount of energy to perform as well as have an ongoing energy cost if the action requires a period of time to perform.  </p>
 
-<p>Some commands must wait for the action to be completed before you can issue the next command; these are called blocking commands.  Other commands may start and continue the action while you can issue a new command (non-blocking commands).  It will be important for you to understand the differences in these two behaviors when programming your spaceship.</p>
+<p>Some commands must wait for the action to be completed before you can issue the next command; these are called <strong>blocking</strong> commands.  Other commands may start and continue the action while you can issue a new command (<em>non-blocking</em> commands).  It will be important for you to understand the differences in these two behaviors when programming your spaceship.</p>
 
 <blockquote>
 <p>Every time your ship has &#39;completed&#39; processing a command (and waiting for it to finish if it was blocking), it will ask you to tell it what to do next.</p>
@@ -95,7 +99,13 @@
 <p>This process repeats indefinitely until the mission has ended.</p>
 </blockquote>
 
-<p>An important thing to note is that your ship&#39;s computer can only be concurrently processing so many commands at once.  If you exceed that limit, the oldest command will be &#39;forgotten&#39;.  This is important when trying to execute multiple non-blocking commands together.</p>
+<p>An important thing to note is that your ship&#39;s computer can only be concurrently processing up to <strong>four</strong> commands at once.  If you exceed that limit, the oldest command will be &#39;forgotten&#39;.  This is important when trying to execute multiple non-blocking commands together.</p>
+
+<blockquote>
+<p>If your ship does not have the required energy to continue executing a command, your <strong>energy will be depleted</strong> and the command will abort.  If you try to reissue the same command, it is possible to get stuck in a loop where you are constantly draining your ships resources but not doing anything.</p>
+</blockquote>
+
+<p>Be prudent about tracking energy usage and making sure that you give yourself time to recharge or collect energy after performing large complex maneuvers.</p>
 
       </section>
     </div>
