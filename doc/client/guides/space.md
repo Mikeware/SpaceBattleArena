@@ -20,7 +20,7 @@ Your **position** determines your location from the top-left of the universe.  T
 
 The **direction** of your spaceship doesn't have to match the **orientation** of it (i.e. you can be moving in one direction and facing to fire or thrust in another direction).  This allows for complex maneuvers and combat.  The angle for these two values will always be in degrees.  
 
-<img src="{{ site.baseurl }}/img/directionorientation.png" alt="Direction vs. Orientation" class="left indent"/> 
+<img src="{{ site.baseurl }}/img/DirectionOrientation.png" alt="Direction vs. Orientation" class="left indent"/> 
 
 > 0 degrees faces right.  
 
