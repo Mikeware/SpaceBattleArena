@@ -55,7 +55,7 @@ Each float in this list corresponds to a value of bauble in the *bauble_points* 
 ##[BaubleHunt]
 
 ###ship_cargo_size = int
-The maximum number of baubles each ship can carry.
+The maximum weight of baubles each ship can carry.
 
 ###respawn_bauble_on_collect = boolean
 Should a new bauble be spawned every time one is collected?

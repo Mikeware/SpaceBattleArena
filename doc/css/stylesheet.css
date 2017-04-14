@@ -58,6 +58,7 @@ section {
 
 h1, h2, h3, h4, h5, h6 {
   margin: 0 0 20px;
+  clear: left;
 }
 
 li {
@@ -189,6 +190,18 @@ section img {
     padding-bottom: 8px;
 }
 
+#main_content .clear {
+    clear: both;
+}
+
+#main_content p {
+    clear: left;
+}
+
+#main_content .indent {
+    margin-left: 32px;
+}
+
 #main_content thead th:first-child { width: 25%; }
 
 h1, h2, h3, h4, h5, h6 {
@@ -228,6 +241,14 @@ h1, h2, h3, h4, h5, h6 {
   text-transform: uppercase;
   color: #999;
   margin: 0 0 5px 0;
+}
+
+strong {
+  font-size: large;
+}
+
+em {
+  font-size: large;
 }
 
 dt {
