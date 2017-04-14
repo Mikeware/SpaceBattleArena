@@ -6,16 +6,18 @@ nav:
 
 Your spaceship is very advanced.  It can accept many different commands.  However, you may not need them all during your travels.
 
-This reference guide describes the functions and uses of the different commands available.  See the complete manual for their usage and technical specifications [here](http://mikeware.github.io/SpaceBattleArena/client/java_doc/index.html?ihs/apcs/spacebattle/commands/package-summary.html).
+This reference guide describes the functions and uses of the different commands available.  See the complete manual for their usage and technical specifications [here](../java_doc/index.html?ihs/apcs/spacebattle/commands/package-summary.html).
 
-**Thrust** will fire the specified engine for the given duration with a percentage of the available thrust power.
+The commands below will be essential to your ability to navigate space and control your ship:
 
-**Idle** will cause your ship to wait for the given period before updating the environment information and requesting a new command.
+> **Thrust** will fire the specified engine for the given duration with a percentage of the available thrust power.
 
-**Brake** will slow your ship to a percentage of its current speed.
+> **Idle** will cause your ship to wait for the given period before updating the environment information and requesting a new command.
 
-**Rotate** your ship's orientation by a number of degrees. Positive rotations are counter-clockwise.
+> **Brake** will slow your ship to a percentage of its current speed.
 
-**Steer** will adjust your ships movement direction (but not orientation) by the given amount.
+> **Rotate** your ship's orientation by a number of degrees. Positive rotations are counter-clockwise.
 
-**Radar** is used to retrieve information about what's around your ship in the next callback.
+> **Steer** will adjust your ships movement direction (but not orientation) by the given amount.
+
+> **Radar** is used to retrieve information about what's around your ship in the next callback.
