@@ -4,9 +4,14 @@ import * as http from 'http';
 import * as socketio from 'socket.io';
 import * as process from 'process';
 
-// Server Pages to make connection from Browser Easier
+// This module serves three purposes
+// 1) Create a web-server to host browser portal
+// 2) Act as man-in-middle between client & server to intercept communications
+// 3) Pass communications up to the browser layer
+
+// Serve Pages to make connection from Browser Easier
 httpserver.createServer().listen(80, '127.0.0.1', () => {
-    console.log("Server Running");
+    console.log("Web Server Running");
 });
 
 // Server Socket Channel to Web Browser
@@ -34,7 +39,10 @@ var server = net.createServer(function(socket) {
 
     client.on('data', function(data) {
         //console.log('Client Received: ' + data);
-        io.emit('env', data); // TODO: Grab last bit of string with just object
+        let s: string = String.fromCharCode.apply(null, data);
+        s = s.substr(s.indexOf('{'));
+        io.emit('env', s); 
+
         socket.write(data);
     });
 
@@ -42,7 +50,9 @@ var server = net.createServer(function(socket) {
     //socket.pipe(socket);
     socket.on('data', function(data) {
         console.log('Sending to Server: ' + data);
-        io.emit('cmd', data); // TODO: Send just array
+        let s: string = String.fromCharCode.apply(null, data);
+        s = s.substr(s.indexOf('[', 10));
+        io.emit('cmd', s);
         client.write(data); // forward to server
     })
 
