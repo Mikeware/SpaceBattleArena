@@ -10,17 +10,30 @@ interface IGameData {
 }
 
 interface IObjectData {
-    MASS: number;
+    TYPE: string;
     ID: number;
     POSITION: number[];
     SPEED: number;
-    TIMEALIVE: number;
+    DIRECTION: number;
+    MAXSPEED: number;
+    CURHEALTH: number;
+    MAXHEALTH: number;
+    CURENERGY: number; // On Ships, Only Yours
+    MAXENERGY: number;
+    ENERGYRECHARGERATE: number;
+    MASS: number;
     HITRADIUS: number;
-    TYPE: string;
+    TIMEALIVE: number;
+    INBODY: boolean;
 }
 
 interface IShipData extends IObjectData {
-    CMDQ: string[];
+    RADARRANGE: number;
+    ROTATION: number;
+    ROTATIONSPEED: number;
+    CURSHIELD: number;
+    MAXSHIELD: number;
+    CMDQ: string[]; // Only Your Ship
 }
 
 interface IEnvironment {
@@ -29,4 +42,11 @@ interface IEnvironment {
     RADARDATA: IObjectData[];
     RADARLEVEL: number;
     SHIPDATA: IShipData;
+}
+
+interface IRequest {
+    WORLDWIDTH: number;
+    WORLDHEIGHT: number;
+    GAMENAME: string;
+    IMAGELENGTH: number;
 }

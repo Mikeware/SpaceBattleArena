@@ -5,7 +5,7 @@
             "name": "Java",
             "type": "java",
             "request": "launch",
-            "stopOnEntry": true,
+            "stopOnEntry": false,
             "cwd": "${fileDirname}",
             "startupClass": "${fileBasename}",
             "options": [
@@ -17,7 +17,7 @@
             "name": "Java Console App",
             "type": "java",
             "request": "launch",
-            "stopOnEntry": true,
+            "stopOnEntry": false,
             "cwd": "${fileDirname}",
             "startupClass": "${fileBasename}",
             "options": [

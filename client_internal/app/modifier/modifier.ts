@@ -14,8 +14,8 @@ export class ModifierComponent {
 
     @Input()
     public set container(value: HTMLElement) {
-        if (value)
-            this._renderService.init(value);
+        //if (value)
+            //this._renderService.init(value);
     }
 
     public addStars(stars: number) {

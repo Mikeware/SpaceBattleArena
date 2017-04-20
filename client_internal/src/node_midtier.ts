@@ -26,9 +26,14 @@ sioserver.listen(2017);
 // Look for Local Client Connection from Program
 var server = net.createServer(function(socket) {
     // Create a Connection to Actual SBA Server
-    var msg = "Client Connected from " + socket.localAddress + ":" + socket.localPort;
+    let msg = "Client Connected from " + socket.localAddress + ":" + socket.localPort;
     console.log(msg);
     io.emit('log', msg);
+
+    let firstrecv = true;
+    let firstsend = true;
+    let width = 0;
+    let height = 0;
 
     var client = new net.Socket();
     client.connect(2016, '127.0.0.1', () => {
@@ -41,7 +46,14 @@ var server = net.createServer(function(socket) {
         //console.log('Client Received: ' + data);
         let s: string = String.fromCharCode.apply(null, data);
         s = s.substr(s.indexOf('{'));
-        io.emit('env', s); 
+        
+        if (firstrecv) {
+            // Intercept first message from server which contains details of world. TODO: Have easier way to distinguish messages.
+            io.emit('request', s);
+            firstrecv = false;
+        } else {
+            io.emit('env', s); 
+        }
 
         socket.write(data);
     });
@@ -49,10 +61,16 @@ var server = net.createServer(function(socket) {
     //socket.write('Echo server\r\n');
     //socket.pipe(socket);
     socket.on('data', function(data) {
-        console.log('Sending to Server: ' + data);
+        //console.log('Sending to Server: ' + data);
         let s: string = String.fromCharCode.apply(null, data);
-        s = s.substr(s.indexOf('[', 10));
-        io.emit('cmd', s);
+        if (firstsend) {
+            // TODO: Emit as own event.
+            io.emit('log', s);
+            firstsend = false;
+        } else {
+            s = s.substr(s.indexOf('[', 10));
+            io.emit('cmd', s);
+        }
         client.write(data); // forward to server
     })
 
