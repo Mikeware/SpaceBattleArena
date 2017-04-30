@@ -10,18 +10,36 @@ export class SocketIOService {
 
     public haveData: (() => void);
 
+    private logDiv: HTMLElement;
+
+    private log(text: string) {
+        this.logDiv.innerHTML = "<p class='green'>" + this.date() + text + "</p>" + this.logDiv.innerHTML;
+    }
+
+    private cmd(text: string) {
+        this.logDiv.innerHTML = "<p>" + this.date() + text + "</p>" + this.logDiv.innerHTML;
+    }
+
+    private date(): string {
+        let t = new Date();
+        let s = t.toLocaleTimeString();
+        let m = ("000" + t.getMilliseconds()).slice(-3);
+        return "<span class='time'>" + s.substr(0, s.length-3) + "." + m + "</span> - ";
+    }
+
     public init(log: HTMLElement) {
+        this.logDiv = log;
         this.socket = io.connect('http://localhost:2017');
         
-        this.socket.on('log', function(data) { 
+        this.socket.on('log', (data) => { 
             console.log(data);
-            log.innerHTML += "<p>" + data + "</p>";
+            this.log(data);
         }); // listen to the event
 
-        this.socket.on('cmd', function(data) { 
+        this.socket.on('cmd', (data) => { 
             let obj = JSON.parse(data);
             //console.log(obj);
-            log.innerHTML += "<p>" + data + "</p>";
+            this.cmd(data);
         }); // listen to the event
 
         this.socket.on('request', (data) => {

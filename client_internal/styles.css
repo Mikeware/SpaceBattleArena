@@ -1,3 +1,31 @@
 body {
     margin: 0;
+    color: white;
+}
+
+#console {
+    width: 50%;
+    min-height: 25%;
+    height: 25%;
+    max-height: 25%;
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
+    border: 2px solid #b5e853;
+    overflow-x: auto;
+    overflow-y: scroll;
+}
+
+#console p {
+    margin: 0;
+    padding: 0;
+}
+
+.green {
+    color: #b5e853;
+    font-weight: bold;
+}
+
+.time {
+    font-style: italic;
 }
