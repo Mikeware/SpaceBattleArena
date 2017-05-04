@@ -24,7 +24,7 @@ Each student can write a ship which finds the center of the universe, navigates 
 --------------------------------
 A find the middle game configuration is provided in the server package:
 
-    SBA_Serv machine_fullscreen.cfg basicgame_findthemiddle.cfg
+    SBA_Serv machine_fullscreen.cfg basicgame_findthemiddle.cfg no_gravity_drag.cfg
  
 The provided configuration changes the game on the server:
 
@@ -40,6 +40,8 @@ And disables a couple of commands:
 
 	[Server]
 	disable_commands = WarpCommand,FireTorpedoCommand,AllStopCommand
+
+The extra *no_gravity_drag.cfg* file turns off celestial body gravity by changing the *pull_min* and *pull_max* values.
 	
 Extra specifics on the game configuration can be found on the game resource page.
  
@@ -54,9 +56,9 @@ Now that students are able to connect, the day should be spent going over comman
 
 Normally, when a command is given to the server, it *blocks* and waits for the command to finish before returning to ask for another command.  For instance, if you say IdleCommand(5.0), the command will execute for 5 seconds and then return.
 
-However, when Thrust is given as a command, the server immediately returns and asks for a new command while your ship continues to thrust. This is the non-blocking paradigm.
+However, (prior to 1.2) when Thrust is given as a command, the server immediately returns and asks for a new command while your ship continues to thrust. This is the non-blocking paradigm.  In release 1.2.0.1125, Thrust was made to block be default, but can still be configured to not block with an additional parameter (this can now be a later topic to describe this difference).
 
-Another notes about Thrust to go over are how the directions for thrust will move you in the opposite direction, as the parameter is the thruster's location to fire.  Also, thrust is a limited resource, so issuing multiple thrust commands at full power in succession will not result in anything outside a waste of energy.
+Another discussion about Thrust is to go over are how the directions for thrust will move you in the opposite direction, as the parameter is the thruster location to fire.  Also, thrust is a limited resource, so issuing multiple thrust commands at full power in succession will not result in anything outside a waste of energy.
 
 The students objective is to get their ship from their spawning point to somewhere near the middle of the world.  They can use the parameters given to the registerShip method to calculate the mid-point of the universe.  Aim for students to have accomplished this by the end of the next day. 
 
