@@ -640,7 +640,7 @@ class MWNL_Connection:
                 pass
             except socket.error as error:
                 # If the 10054 error, we assume connection is closed and ok to terminate
-                if error.errno == errno.WSAECONNRESET:
+                if error.errno == errno.WSAECONNRESET or error.errno == errno.WSAECONNABORTED:
                     self.close()
                     break
                 else:
@@ -705,7 +705,7 @@ class MWNL_Connection:
                 self.__connalive = False
                 self.__callback([(self.__id, 0), MWNL_CMD_DISCONNECT])
 
-                if error.errno != errno.WSAECONNRESET:
+                if error.errno not in [errno.WSAECONNRESET, errno.WSAECONNABORTED]:
                     logging.info("Error Sending Data")
                     logging.error("Error Sending Data")
                     logging.info(traceback.format_exc())
