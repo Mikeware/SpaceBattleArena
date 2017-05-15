@@ -39,7 +39,9 @@ public class MwnpListener extends Thread {
 				client.parseMessage(msg);
 	
 				if (LOGGING)
-					printMessage(msg);				
+					printMessage(msg);
+				
+				Thread.sleep(1);
 			} catch (IOException ex) {
 				System.err.println("Server read error...");
 				System.err.println(ex.getMessage());
@@ -48,6 +50,9 @@ public class MwnpListener extends Thread {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

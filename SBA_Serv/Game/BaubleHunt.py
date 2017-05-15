@@ -34,10 +34,18 @@ class BaubleHuntGame(BaseBaubleGame):
         
         self.__bases = ThreadSafeDict()
         self.__baubles = ThreadSafeDict()
+
+        self.__initialized = False
         
         super(BaubleHuntGame, self).__init__(cfgobj)
 
-        self._mv = BaseBaubleGame.VALUE_TABLE[-1][1]
+        # Find all High-Value Baubles once we've loaded that info from the BaseBaubleGame
+        self._maxvalue = BaseBaubleGame.VALUE_TABLE[-1][1]
+        for wobj in self.world:
+            if isinstance(wobj, Bauble) and wobj.value == self._maxvalue:
+                self.__baubles[wobj.id] = wobj
+
+        self.__initialized = True
 
         self.__maxcarry = self.cfg.getint("BaubleHunt", "ship_cargo_size")
 
@@ -86,9 +94,8 @@ class BaubleHuntGame(BaseBaubleGame):
 
     def world_add_remove_object(self, wobj, added):
         # Check if this is a high-value bauble to add to our list of ones to pass to the client
-        if isinstance(wobj, Bauble):
-            if wobj.value == self._mv:
-                self.__baubles[wobj.id] = wobj
+        if isinstance(wobj, Bauble) and self.__initialized and wobj.value == self._maxvalue:
+            self.__baubles[wobj.id] = wobj
 
         return super(BaubleHuntGame, self).world_add_remove_object(wobj, added)
 
@@ -145,7 +152,7 @@ class BaubleHuntGame(BaseBaubleGame):
         for b in player.carrying:
             b.body.position = (player.object.body.position[0] + random.randint(-36, 36), player.object.body.position[1] + random.randint(-36, 36))
             b.destroyed = False # reset so that it won't get cleaned up
-            if b.value == self._mv:
+            if b.value == self._maxvalue:
                 self.__baubles[b.id] = b
             self.world.append(b)
 

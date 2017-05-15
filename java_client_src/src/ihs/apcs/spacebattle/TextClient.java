@@ -137,6 +137,7 @@ public class TextClient implements Client {
 						break;
 					}
 				}
+				Thread.sleep(100);
 			}
 			kb.close();
 		} catch (IOException ex) {

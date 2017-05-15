@@ -1,3 +1,10 @@
+v1.2.0.1126 : 05/14/2017 - May 2017 [Season 6 Kickoff Hotfix Release] - The Return of Bauble Hunt
+----
+* Fixed Issue with **Bauble Hunt** automatically starting.
+* Added new config for **Discovery Quest** to turn off home base registration and/or missions to make it easier to use as a non-final mission.
+* ***Improved Client Package Performance*** (should no longer peg CPU).
+* Cleaned-up server socket disconnects.
+
 v1.2.0.1125 : 01/18/2017 - May 2016 [Season 5 Release] - The Hunger Baubles
 ----
 * Added **The Hunger Baubles** Subgame

@@ -1,6 +1,7 @@
 import socket
 import time
 import thread, threading, atexit, logging, json, traceback
+import errno
 
 # Mikeware Network Lib
 #----------------------
@@ -637,6 +638,16 @@ class MWNL_Connection:
                 #END IF
             except socket.timeout:
                 pass
+            except socket.error as error:
+                # If the 10054 error, we assume connection is closed and ok to terminate
+                if error.errno == errno.WSAECONNRESET or error.errno == errno.WSAECONNABORTED:
+                    self.close()
+                    break
+                else:
+                    logging.info(traceback.format_exc())
+                    logging.error(traceback.format_exc())
+                    print traceback.format_exc()
+                #END IF
             except:
                 logging.info(traceback.format_exc())
                 logging.error(traceback.format_exc())
@@ -688,10 +699,23 @@ class MWNL_Connection:
                 
                     #print repr(self.__address) + "outnow = " + self.__outgoingdata    
                 #END IF
+            except socket.error as error:
+                # If the 10054 error, we assume connection is closed and ok to terminate                
+                logging.info("Remote Client Closed Connection?")
+                self.__connalive = False
+                self.__callback([(self.__id, 0), MWNL_CMD_DISCONNECT])
+
+                if error.errno not in [errno.WSAECONNRESET, errno.WSAECONNABORTED]:
+                    logging.info("Error Sending Data")
+                    logging.error("Error Sending Data")
+                    logging.info(traceback.format_exc())
+                    logging.error(traceback.format_exc())
+                    print traceback.format_exc()
+                #END IF
             except:
                 self.__connalive = False
-                logging.info("Error Sending Data - Remote Host Forced Closure?")
-                logging.error("Error Sending Data - Remote Host Forced Closure?")
+                logging.info("Error Sending Data")
+                logging.error("Error Sending Data")
                 logging.info(traceback.format_exc())
                 logging.error(traceback.format_exc())
                 print traceback.format_exc()
