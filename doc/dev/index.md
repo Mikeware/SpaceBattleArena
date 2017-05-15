@@ -17,7 +17,7 @@ In some cases you can just make modifications to the server without making chang
 
 Development Tools
 ----------------------
-* Visual Studio 2013 w/ [Python Tools](http://pytools.codeplex.com/)
+* Visual Studio 2017 Community
 * [Eclipse](https://eclipse.org/) or [jGRASP](http://www.jgrasp.org/)
 
 Dependencies
@@ -33,4 +33,3 @@ Space Battle was built against the following versions of libraries:
     * [Py2Exe 0.6.9](http://sourceforge.net/projects/py2exe/files/py2exe/0.6.9/) (for server executable build)
 * Webpage
     * [See Setup GitHub Pages](SetupGitHubPages.html)
-
