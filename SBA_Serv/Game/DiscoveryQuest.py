@@ -48,6 +48,8 @@ class DiscoveryQuestGame(BasicGame):
 
         super(DiscoveryQuestGame, self).__init__(cfgobj)
 
+        self.mustbase = cfgobj.getboolean("DiscoveryQuest", "establish_homebase")
+        self.usemissions = cfgobj.getboolean("DiscoveryQuest", "missions")
         self._missions = cfgobj.get("DiscoveryQuest", "mission_objectives").split(",")
         self.scantime = cfgobj.getfloat("DiscoveryQuest", "scan_time")
         self.scanrange = cfgobj.getint("DiscoveryQuest", "scan_range")
@@ -58,22 +60,23 @@ class DiscoveryQuestGame(BasicGame):
         return {"GAMENAME": "DiscoveryQuest"}
 
     def player_reset_mission(self, player):
-        # get a number of missions for each thing
-        player.mission = []
-        player.scanned = []
-        player.failed = False
-        for i in xrange(cfg_rand_min_max(self.cfg, "DiscoveryQuest", "mission_num")):
-            player.mission.append(random.choice(self._missions)) # TODO: validate that this player can still scan those types of objects
+        if self.usemissions:
+            # get a number of missions for each thing
+            player.mission = []
+            player.scanned = []
+            player.failed = False
+            for i in xrange(cfg_rand_min_max(self.cfg, "DiscoveryQuest", "mission_num")):
+                player.mission.append(random.choice(self._missions)) # TODO: validate that this player can still scan those types of objects
 
     def player_added(self, player, reason):
         if reason == BasicGame._ADD_REASON_REGISTER_:
-            player.buffervalue = 0
-            player.outpost = None
-            player.lastids = []
+            player.buffervalue = 0 # stored points before scanning first output, if outpost is required.
+            player.outpost = None # home base obj
+            player.lastids = [] # last ids scanned
             
-        player.mission = []
-        player.scanned = []
-        player.failed = True
+        player.mission = [] # List of strings of items to scan
+        player.scanned = [] # ids scanned by player
+        player.failed = True # whether current mission has failed, starts as true as no mission to start
 
         return super(DiscoveryQuestGame, self).player_added(player, reason)
 
@@ -129,6 +132,9 @@ class DiscoveryQuestGame(BasicGame):
             opt = "points_" + friendly_type(wobj).lower()
             if self.cfg.has_option("DiscoveryQuest", opt):
                 wobj.value = self.cfg.getint("DiscoveryQuest", opt)
+            else:
+                #guard
+                wobj.value = 0
 
         return super(DiscoveryQuestGame, self).world_add_remove_object(wobj, added)
 
@@ -210,7 +216,7 @@ class DiscoveryQuestGame(BasicGame):
                     ship.player.buffervalue = 0
                     ship.player.sound = "SUCCESS"
                 
-                if not ship.player.failed and len(ship.player.mission) == 0: # completed mission exactly
+                if self.usemissions and not ship.player.failed and len(ship.player.mission) == 0: # completed mission exactly
                     points = 0
                     # tally points of scanned objects
                     for obj in ship.player.scanned:
@@ -233,7 +239,7 @@ class DiscoveryQuestGame(BasicGame):
                 # update scores
                 obj.scanned_by.append(ship.player)
                 ship.player.sound = "SUCCESS"
-                if ship.player.outpost != None:                    
+                if ship.player.outpost != None or not self.mustbase: # or we don't require bases for points
                     ship.player.update_score(obj.value)
                 else: #haven't found outpost, need to buffer points
                     ship.player.buffervalue += obj.value
@@ -245,8 +251,9 @@ class DiscoveryQuestGame(BasicGame):
             if obj != None:
                 bp = intpos(obj.body.position)
                 wrapcircle(surface, (0, 255, 255), bp, self.scanrange, self.world.size, 1) # Scan Range
-                text = debugfont().render("%s [%s]" % (repr(player.mission), player.failed), False, (0, 255, 255))
-                surface.blit(text, (bp[0]-text.get_width()/2, bp[1] - 6))
+                if self.usemissions:
+                    text = debugfont().render("%s [%s]" % (repr(player.mission), player.failed), False, (0, 255, 255))
+                    surface.blit(text, (bp[0]-text.get_width()/2, bp[1] - 6))
 
         if trackplayer != None:
             curs = []
