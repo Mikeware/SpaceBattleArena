@@ -13,6 +13,7 @@ The full text of the license is available online: http://opensource.org/licenses
 """
 
 import pygame, sys, random, logging, math, datetime
+import os, ctypes
 from collections import deque
 from pygame.locals import *
 from operator import attrgetter
@@ -71,6 +72,11 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, cfg=None, t
             SCache(False)
     
         ipaddress = getIPAddress()
+
+        # Disable DPI Scaling in Windows!
+        if os.name == "nt" and sys.getwindowsversion()[0] >= 6:
+            user32 = ctypes.windll.user32
+            user32.SetProcessDPIAware()
 
         if resolution == None:
             resolution = pygame.display.list_modes()[0]
