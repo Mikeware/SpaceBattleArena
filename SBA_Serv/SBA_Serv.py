@@ -165,7 +165,7 @@ if __name__ == "__main__":
             #TODO: Set World Size Here?
         #else:
         #startGame(title, game, fullscreen:bool, (xres, yres), showstats:bool, sound:bool)
-        main.startGame(titlever + title_game, game, cfg.getboolean("Application", "fullscreen"), resolution, cfg)
+        main.startGame(titlever + title_game, game, cfg.get("Application", "fullscreen"), resolution, cfg)
 
         print "Sending Disconnect..."
         logging.info("Server Request Disconnect All")

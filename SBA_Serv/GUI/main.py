@@ -39,6 +39,14 @@ from SoundCache import SCache
 
 STAR_DENSITY = 75 # Higher = Less Stars
 
+def str2bool(value):
+    value = value.lower().strip()
+    if value in ["true", "on", "yes", "1"]:
+        return True
+    elif value in ["false", "off", "no", "0"]:
+        return False
+    return value
+
 class MessageLogHandler(logging.Handler):
     def __init__(self, maxmessages=20):
         super(MessageLogHandler, self).__init__()
@@ -81,7 +89,16 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, cfg=None, t
         if resolution == None:
             resolution = pygame.display.list_modes()[0]
 
-        windowSurface = pygame.display.set_mode(resolution, (pygame.FULLSCREEN * fullscreen) | pygame.HWSURFACE | pygame.DOUBLEBUF)
+        fullscreen = str2bool(fullscreen)
+        if fullscreen in [True, False]:
+            windowSurface = pygame.display.set_mode(resolution, (pygame.FULLSCREEN * fullscreen) | pygame.HWSURFACE | pygame.DOUBLEBUF)
+        elif fullscreen == "window":
+            os.environ['SDL_VIDEO_WINDOW_POS'] = '0,0'
+            windowSurface = pygame.display.set_mode(resolution, pygame.NOFRAME | pygame.HWSURFACE | pygame.DOUBLEBUF)
+            os.environ['SDL_VIDEO_WINDOW_POS'] = '' # Reset back
+        else:
+            raise ValueError("Invalid Fullscreen Windowing Mode")
+
         pygame.display.set_caption(windowcaption)
 
         logging.debug("Game GUI CFG...")
