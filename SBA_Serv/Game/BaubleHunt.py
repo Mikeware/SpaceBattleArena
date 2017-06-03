@@ -195,7 +195,7 @@ class BaubleHuntGame(BaseBaubleGame):
             objdata["VALUE"] = self.get_player_cargo_value(obj.player)
 
     def player_get_stat_string(self, player):
-        return str(int(player.score)) + " in " + str(player.totalcollected) + " : " + player.name + " c.v. " + str(sum(b.value for b in player.carrying)) + " in " + str(len(player.carrying))
+        return str(int(player.score)) + " w/ " + str(player.totalcollected) + " : " + player.name + " c.v. " + str(self.get_player_cargo_value(player)) + " in " + str(self.get_player_cargo_weight(player))
 
     def gui_draw_game_world_info(self, surface, flags, trackplayer):
         for player in self.game_get_current_player_list():
