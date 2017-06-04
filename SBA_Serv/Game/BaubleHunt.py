@@ -103,7 +103,8 @@ class BaubleHuntGame(BaseBaubleGame):
         ship, other = aligninstances(obj1, obj2, Ship, Entity)
 
         if ship != None:
-            if isinstance(other, Outpost):
+            # Make sure player's can only deposit in their own base!
+            if isinstance(other, Outpost) and other.owner.id == ship.id:
                 logging.info("Ship #%d hit their base", ship.id)
                 return [ False, [self.depositBaubles, ship, other] ]
             elif isinstance(other, Bauble):
