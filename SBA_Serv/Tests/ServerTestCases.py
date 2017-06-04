@@ -438,7 +438,6 @@ class ServerGUITwoShipRemoteTestCase(SBAGUIWithServerTestCase):
     def get_config_filename(self):
         return "test_server.cfg"
 
-    # TODO: Expected Failure - Issue #112
     def test_add_two_ships_and_disconnect(self):
         """
         Tests adding two networked clients to a server and that they can disconnect
