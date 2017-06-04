@@ -323,7 +323,7 @@ class WorldVisualShipRespawnTestCase(SBAGUITestCase):
     
     def test_planet_torpedo_gravity(self):
         """
-        Tests torpedos aren't effected by planet's gravity.
+        Tests torpedos are effected by planet's gravity.
         """
         planet = Planet(self.game.world.mid_point(0,0), 256, 100, torpedo = True)
         self.game.world.append(planet)

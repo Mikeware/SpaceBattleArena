@@ -17,13 +17,13 @@ class TheHungerBaublesBaubleTestCases(SBAGUITestCase):
         return "test_thehungerbaubles.cfg"
    
     def test_baubles_spawn_in_cornucopia(self):
-        pass
+        self.fail("Not Implemented")
 
     def test_pickup_baubles(self):
-        pass
+        self.fail("Not Implemented")
 
     def test_baubles_dropped_on_destroyed(self):
-        pass
+        self.fail("Not Implemented")
 
 if __name__ == "__main__":
     unittest.main()

@@ -478,7 +478,7 @@ class ServerGUITwoShipRemoteTestCase(SBAGUIWithServerTestCase):
 
         self._endServer() # Note, Ship will still be visible as we're not removing it from world in this test.
 
-        time.sleep(0.5)
+        time.sleep(2)
 
         self.assertFalse(self.targetship.isconnected(), "Target Client still connected to server after disconnect.")
         self.assertFalse(self.radarship.isconnected(), "Radar Client still connected to server after disconnect.")

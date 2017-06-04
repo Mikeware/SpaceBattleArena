@@ -40,6 +40,9 @@ from SoundCache import SCache
 STAR_DENSITY = 75 # Higher = Less Stars
 
 def str2bool(value):
+    if isinstance(value, bool):
+        return value
+
     value = value.lower().strip()
     if value in ["true", "on", "yes", "1"]:
         return True

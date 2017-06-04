@@ -146,6 +146,8 @@ class SBAWorldTestCase(unittest.TestCase):
             self.game.round_over()
 
             self.game.world.endGameLoop()
+
+        self.game = None
         logging.info("Done Running Test: %s", self._testMethodName)
 
     def get_config_filename(self):
@@ -177,11 +179,13 @@ class SBAServerTestCase(SBAWorldTestCase):
 
     def _startServer(self):
         if not self.started:
+            logging.info("Starting Server")
             self.server = WorldServer.WorldServer(self.cfg.getint("Server", "port"), self.game)
             self.started = True
 
     def _endServer(self):
         if self.server != None:
+            logging.info("Ending Server")
             self.server.disconnectAll()
             self.server = None
             self.started = False
