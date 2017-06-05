@@ -183,6 +183,7 @@
     <Content Include="basicgame_combatexercise.cfg" />
     <Content Include="Tests\test_server.cfg" />
     <Content Include="Tests\test_singlegroup.cfg" />
+    <Content Include="Tests\test_tournament_short.cfg" />
     <Content Include="Tests\test_tournament_wild_ties.cfg" />
     <Content Include="Tests\test_tournament_wild.cfg" />
     <Content Include="Tests\test_tournament.cfg" />

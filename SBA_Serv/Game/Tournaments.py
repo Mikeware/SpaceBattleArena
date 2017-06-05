@@ -12,8 +12,10 @@ class BasicTournament(object):
         self._currentgroup = 0
         self._finalgroup = []
         self._finalround = False
-        self._finalwinner = None
+        self._finalwinners = None
         self._leaderfunc = leaderfunc
+        self._primary_victory = cfg.get("Game", "primary_victory_attr")
+        self._secondary_victory = cfg.get("Game", "secondary_victory_attr")
 
     def is_initialized(self):
         return self._initialized
@@ -39,6 +41,12 @@ class BasicTournament(object):
         #next
         self._initialized = True
 
+    def check_score_equal(self, player1, player2):
+        """
+        Checks to see if two player scores are equal according to the current game rules.
+        """
+        return getattr(player1, self._primary_victory) == getattr(player2, self._primary_victory) and getattr(player1, self._secondary_victory) == getattr(player2, self._secondary_victory)
+
     def check_results(self, players, stats):
         """
         Get the end results, pre-sorted (top players first in list)
@@ -51,7 +59,12 @@ class BasicTournament(object):
             #next
         else:
             logging.info("Final Round Winner %s stats: %s", players[0].name, stats[0])
-            self._finalwinner = players[0]
+            self._finalwinners = [players[0]]
+            i = 1
+            # Check for ties
+            while i < len(players) and self.check_score_equal(players[0], players[i]):
+                self._finalwinners.append(players[i])
+                i += 1
 
     def next_round(self):
         """
@@ -115,8 +128,10 @@ class BasicTournament(object):
         pygame.draw.line(screen, (192, 192, 192), (810, py), (810, y))
         pygame.draw.line(screen, (192, 192, 192), (800, y), (810, y))
 
-        if self._finalwinner:
-            screen.blit(self._tfont.render(self._finalwinner.name, False, (128, 255, 255)), (835, py + (y - py) / 2))
+        if self._finalwinners:
+            for player in self._finalwinners:
+                screen.blit(self._tfont.render(player.name, False, (128, 255, 255)), (835, py + (y - py) / 2))
+                y += 36
 
         return y
 
@@ -129,8 +144,6 @@ class WildTournament(BasicTournament):
         self._toplay = cfg.getint("Wildcard", "number")
         self._andties = cfg.getboolean("Wildcard", "take_ties")
         self._wildround = False
-        self._primary_victory = cfg.get("Game", "primary_victory_attr")
-        self._secondary_victory = cfg.get("Game", "secondary_victory_attr")
 
     def check_results(self, players, stats):
         """
@@ -149,16 +162,10 @@ class WildTournament(BasicTournament):
                 # do check before, so we have 'next' player after appending last to check ties
                 if x >= self._toplay and \
                     (not self._andties or 
-                     (len(self._wildgroup) >= 1 and not self.__check_score_equal(player, self._wildgroup[-1]))):
+                     (len(self._wildgroup) >= 1 and not self.check_score_equal(player, self._wildgroup[-1]))):
                     break
                 x += 1
                 self._wildgroup.append(player)
-
-    def __check_score_equal(self, player1, player2):
-        """
-        Checks to see if two player scores are equal according to the current game rules.
-        """
-        return getattr(player1, self._primary_victory) == getattr(player2, self._primary_victory) and getattr(player1, self._secondary_victory) == getattr(player2, self._secondary_victory)
 
     def next_round(self):
         """
