@@ -1,3 +1,12 @@
+v1.2.0.1127 : 06/04/2017 - May 2017 Season 6 - Hotfix #2
+----
+* Fixed Issue with **Bauble Hunt** allowing depositing baubles into ANY base!
+* Tweaked BaubleHunt stat display to show weight of baubles carried at end.
+* Tournament will show all tied winners at the very end now.
+* Added fixes for behaving properly with non-100% DPI settings.
+* Added support for borderless fullscreen windows.
+* Fixed some test cases.
+
 v1.2.0.1126 : 05/14/2017 - May 2017 [Season 6 Kickoff Hotfix Release] - The Return of Bauble Hunt
 ----
 * Fixed Issue with **Bauble Hunt** automatically starting.

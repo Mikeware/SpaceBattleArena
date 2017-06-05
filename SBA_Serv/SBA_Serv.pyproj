@@ -150,6 +150,7 @@
     <Content Include="game_kingofspace.cfg" />
     <Content Include="game_discoveryquest.cfg" />
     <Content Include="game_kingofthebubble.cfg" />
+    <Content Include="machine_fullscreen_borderless.cfg" />
     <Content Include="no_advanced_commands.cfg" />
     <Content Include="no_collide.cfg" />
     <Content Include="no_gravity_drag.cfg" />
