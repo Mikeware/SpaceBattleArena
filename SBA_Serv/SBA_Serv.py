@@ -40,6 +40,7 @@ if __name__ == "__main__":
     from ConfigParser import ConfigParser
 
     from GUI.GraphicsCache import Cache
+    from GUI.Helpers import detect_resolution
 
     parser = OptionParser(usage="Usage: %prog [options] [config_file] [more_config_files...]\n\nYou should pass at least one config file to the server. Additional config files will override/add to the options in the base file.")
     parser.add_option("-n", "--nolog", action="store_true", dest="nolog", default=False,
@@ -114,10 +115,7 @@ if __name__ == "__main__":
         if width.find("x") != -1 or height.find("x") != -1:
             if resolution == None:
                 logging.info("Detecting Resolution...")
-                import pygame
-                pygame.display.init()
-                resolution = pygame.display.list_modes()[0]
-                logging.info("Using Resolution %s", repr(resolution))
+                resolution = detect_resolution(cfg)
 
             if width.find("x") != -1:
                 cfg.set("World", "width", str(int(resolution[0] * float(width.replace("x",""))))) # as per doc, need to cast back to store as string, will unbox as int again later

@@ -32,7 +32,7 @@ from GraphicsCache import Cache
 from World.WorldEntities import Ship, Planet, Asteroid, Torpedo, SpaceMine, BlackHole, Nebula, Star, Dragon, WormHole
 from Server.MWNL2 import getIPAddress
 from pymunk import Vec2d
-from Helpers import infofont
+from Helpers import infofont, detect_resolution
 from ThreadStuff.ThreadSafe import ThreadSafeDict
 import threading, thread, traceback
 from SoundCache import SCache
@@ -84,13 +84,8 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, cfg=None, t
     
         ipaddress = getIPAddress()
 
-        # Disable DPI Scaling in Windows!
-        if os.name == "nt" and sys.getwindowsversion()[0] >= 6:
-            user32 = ctypes.windll.user32
-            user32.SetProcessDPIAware()
-
         if resolution == None:
-            resolution = pygame.display.list_modes()[0]
+            resolution = detect_resolution(cfg)
 
         fullscreen = str2bool(fullscreen)
         if fullscreen in [True, False]:

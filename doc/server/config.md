@@ -74,6 +74,9 @@ This section contains options pertaining to the graphical window created to run 
 ###fullscreen = boolean | string
 Specifies whether or not SBA should run fullscreen or in a normal window.  The value '**window**' can also be used to run in a special borderless fullscreen window mode.  **Note**: you should make sure that the horizontal and vertical resolutions match your displays resolution values OR you can set *both* **horz_res** and **vert_res** to **0** for your display resolution to be *automatically* detected.
 
+###dpi_aware = boolean
+Specifies whether or not SBA is scaled based on the DPI settings of the monitor it first runs on.  By default this is turned off so that pixels in the configuration files match the pixels on the screen.
+
 ###horz_res = integer
 Specifies the horizontal resolution of the SBA window (in pixels).  This should match your monitor resolution if you plan to run the game in fullscreen.
 
