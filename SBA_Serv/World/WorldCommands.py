@@ -509,7 +509,7 @@ class LowerEnergyScoopCommand(Command):
     """
     The LowerEnergyScoopCommand deploys an energy collector under your ship.
 
-    If flying through a celestial body (like a Sun or Nebula), this scoop will collect a massive amount of energy.
+    If flying through a celestial body (like a Sun, Constellation, or Nebula), this scoop will collect a massive amount of energy.
     It will additionally cause some drag.
 
     If not in an energy source, this command will drain energy quickly.
@@ -525,7 +525,7 @@ class LowerEnergyScoopCommand(Command):
     def execute(self, t):
         bpull = 500
         for body in self._obj.in_celestialbody:
-            if isinstance(body, WorldEntities.Nebula) or isinstance(body, WorldEntities.Planet): # BlackHoles, Stars
+            if isinstance(body, WorldEntities.CelestialBody): # Nebula, BlackHoles, Stars, Constellation
                 self._obj.energy += t * 24
                 bpull = body.pull
                 break
