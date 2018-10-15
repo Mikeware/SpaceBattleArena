@@ -53,6 +53,7 @@ class DiscoveryQuestGame(BasicGame):
         self._missions = cfgobj.get("DiscoveryQuest", "mission_objectives").split(",")
         self.scantime = cfgobj.getfloat("DiscoveryQuest", "scan_time")
         self.scanrange = cfgobj.getint("DiscoveryQuest", "scan_range")
+        self.scanduration = cfgobj.getint("DiscoveryQuest", "scan_duration")
         self.outpostdist = cfgobj.getint("DiscoveryQuest", "ship_spawn_dist")
         self.limitwarp = cfgobj.getboolean("DiscoveryQuest", "disable_warp_in_nebula")
 
@@ -73,6 +74,7 @@ class DiscoveryQuestGame(BasicGame):
             player.buffervalue = 0 # stored points before scanning first output, if outpost is required.
             player.outpost = None # home base obj
             player.lastids = [] # last ids scanned
+            player.scantimes = {} # timers for scans, id: timestamp
             
         player.mission = [] # List of strings of items to scan
         player.scanned = [] # ids scanned by player
@@ -135,6 +137,11 @@ class DiscoveryQuestGame(BasicGame):
             else:
                 #guard
                 wobj.value = 0
+        else:
+            # clean-up reference to scantime on obj death
+            for player in self.game_get_current_player_list():
+                if player in wobj.scanned_by:
+                    del player.scantimes[wobj.id]
 
         return super(DiscoveryQuestGame, self).world_add_remove_object(wobj, added)
 
@@ -188,7 +195,6 @@ class DiscoveryQuestGame(BasicGame):
 
     def server_process_command(self, ship, command):
         # Discovery Quest prevents warp in a nebula
-        #logging.info("Checking Command %s %s", repr(command), repr(ship.in_celestialbody))
         if self.limitwarp and isinstance(command, WarpCommand):
             for body in ship.in_celestialbody:
                 if isinstance(body, Nebula):
@@ -236,14 +242,31 @@ class DiscoveryQuestGame(BasicGame):
                     ship.player.failed = True
                 ship.player.scanned.append(obj)
 
-                # update scores
+                # track obj scan
+                ship.player.scantimes[obj.id] = 0
                 obj.scanned_by.append(ship.player)
+
+                # update scores
                 ship.player.sound = "SUCCESS"
                 if ship.player.outpost != None or not self.mustbase: # or we don't require bases for points
                     ship.player.update_score(obj.value)
                 else: #haven't found outpost, need to buffer points
                     ship.player.buffervalue += obj.value
     #end dq_finished_scan
+
+    def game_update(self, t):
+        super(DiscoveryQuestGame, self).game_update(t)
+
+        # check timeout of scan duration (if enabled)
+        if self.scanduration > 0:
+            for player in self.game_get_current_player_list():
+                for id in player.scantimes.keys():
+                    player.scantimes[id] += t                    
+                    if player.scantimes[id] >= self.scanduration:
+                        obj = self.world[id]
+                        obj.scanned_by.remove(player)
+                        del player.scantimes[id]
+    #end game_update
 
     def gui_draw_game_world_info(self, surface, flags, trackplayer):
         for player in self.game_get_current_player_list():
@@ -260,20 +283,25 @@ class DiscoveryQuestGame(BasicGame):
             curf = []
             obj = trackplayer.object
             if obj != None:
+                # Draw Success/Failure Circles around Current Scan Targets
                 for cmd in obj.commandQueue:
                     if isinstance(cmd, ScanCommand):
                         if cmd.success:
-                            curs.append(cmd.target)
+                            obj = self.world[cmd.target]
+                            wrapcircle(surface, (255, 255, 0), intpos(obj.body.position), obj.radius + 6, self.world.size, 2)
                         else:
-                            curf.append(cmd.target)
+                            obj = self.world[cmd.target]
+                            wrapcircle(surface, (255, 0, 0), intpos(obj.body.position), obj.radius + 6, self.world.size, 2)
 
-            for obj in self.world:
-                if trackplayer in obj.scanned_by:
-                    wrapcircle(surface, (0, 255, 255), intpos(obj.body.position), obj.radius + 4, self.world.size, 4)
-                if obj.id in curs:
-                    wrapcircle(surface, (255, 255, 0), intpos(obj.body.position), obj.radius + 5, self.world.size, 2)
-                elif obj.id in curf:
-                    wrapcircle(surface, (255, 0, 0), intpos(obj.body.position), obj.radius + 5, self.world.size, 2)
+            # Draw Circles around scanned entities
+            for id, scantime in trackplayer.scantimes.iteritems():
+                obj = self.world[id]
+                #if trackplayer in obj.scanned_by:
+                if self.scanduration > 0:
+                    c = 160 * (scantime / self.scanduration)
+                else:
+                    c = 0
+                wrapcircle(surface, (0, 255 - c, 255 - c), intpos(obj.body.position), obj.radius + 4, self.world.size, 4)                    
 
 class ScanCommand(Command):
     """

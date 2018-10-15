@@ -17,7 +17,7 @@ Discovery Quest
  
 Players must establish an **Outpost** by scanning it before any points will count towards their placement within the game.  Any points earned prior to establishing an Outpost will be banked and awarded when an Outpost is first established. (Multiple players may establish and share the same Outpost.)  An established Outpost's location can be later retrieved with the *getObjectiveLocation()* method of the environment's getGameInfo().  *This can be turned off with configuration such that any objects scanned will receive points.*
 
-*Scanning* is a specific command that must be used within 150 pixels of an object and must be directed towards a specific object by using its ID number.  Scanning is **not** the same as Radar.  The object being scanned must remain in range for the entire duration of the scan.
+*Scanning* is a specific command that must be used within 150 pixels of an object and must be directed towards a specific object by using its ID number.  Scanning is **not** the same as Radar.  The object being scanned must remain in range for the entire duration of the scan.  An object that was successfully scanned cannot be scanned again to receive points unless a certain period of time has elapsed since the last scan.
 
 A **Mission** dictates which objects a ship should go scan.  If a ship goes and scans ***ONLY*** those things, bonus points will be awarded when they return to their outpost and Scan it again.  Scanning your Outpost will always give you a new mission.  **Note:** the first Outpost you scan becomes your base and is the only Outpost you can receive and complete missions from.  (Other Outposts may still be scanned for points or mission objectives.)
 
@@ -36,6 +36,9 @@ Amount of time required to complete a successful scan in seconds. (3.5 default)
 
 ###scan_range = int
 Distance required to be in range for a scan in pixels. (150 default)
+
+###scan_duration = int
+Time that a scan is good for before an object can be rescanned.  If this value is greater than 0, then scanned entities will reset their scan status for a player after the given time and be able to be rescanned.  (45 default)
 
 ###ship_spawn_dist = int
 Maximum distance a ship will spawn away from an Outpost.
