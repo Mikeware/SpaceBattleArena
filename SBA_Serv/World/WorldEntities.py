@@ -216,6 +216,31 @@ class Nebula(CelestialBody, PhysicalEllipse):
         world.append(n)
         return n
 
+class Quasar(Nebula):
+    """
+    Quasars are an odd shape and act like a Nebula.
+
+    They also reduce energy regen, drain shields, and prevent shields from working.
+    """
+    def __init__(self, pos, size=(384, 256), pull=1000, mass=-1):
+        super(Quasar, self).__init__(pos, size, pull, mass)
+
+    def update(self, t):
+        # Objects in Quasars lose energy and shields
+        for obj in self.in_celestialbody:
+            if isinstance(obj, Ship):
+                obj.energy -= (obj.energyRechargeRate * 0.75) * t
+                obj.shield -= (obj.shieldConversionRate * 0.75) * t
+
+        super(Quasar, self).update(t)
+
+    @staticmethod
+    def spawn(world, cfg, pos=None):
+        if pos == None:
+            pos = getPositionAwayFromOtherObjects(world, cfg.getint("Quasar", "buffer_object"), cfg.getint("Quasar", "buffer_edge"))
+        n = Quasar(pos, random.choice(eval(cfg.get("Quasar", "sizes"))), cfg_rand_min_max(cfg, "Quasar", "pull"))
+        world.append(n)
+        return n
 
 class Planet(Influential, PhysicalRound):
     """

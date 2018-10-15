@@ -12,17 +12,20 @@ There are many different types of objects you may encounter during your travels.
 <img src="{{ site.baseurl }}/img/obj/BlackHole.png" alt="Black Hole" class="left"/> 
 **Black Holes** are stationary and you cannot collide with them.  They have massive gravity wells which can be hard to escape from with thrusters alone.  Staying too long in the center of a black hole can crush your ship.
 
-<img src="{{ site.baseurl }}/img/obj/Constellation.png" alt="Constellation" class="left"/>
-**Constellations** are stationary decorations.  They may be useful for research in Discovery Quest though.
+<img src="{{ site.baseurl }}/img/obj/Constellation.png" alt="Constellation" class="left"/> 
+**Constellations** are stationary decorations.  They may be useful for research in Discovery Quest though or collecting Energy.
 
 <img src="{{ site.baseurl }}/img/obj/Dragon.png" alt="Dragon" class="left"/> 
 **Dragons** are hungry for ships.  If you are in their site, they will prey upon you.
 
 <img src="{{ site.baseurl }}/img/obj/Nebula.png" alt="Nebula" class="left"/> 
-**Nebulas** are stationary and you cannot collide with them.  They will apply a drag to your ship and slow it down.  You can Lower your Energy Scoop to collect energy from them.
+**Nebulas** are stationary and you cannot collide with them.  They will apply a drag to your ship and slow it down.  You can Lower your Energy Scoop to collect energy from them.  Other ships cannot detect you within a Nebula.
 
 <img src="{{ site.baseurl }}/img/obj/Planet.png" alt="Planet" class="left"/> 
 **Planets** are stationary and have a gravity well.  Colliding with them will cause damage.
+
+<img src="{{ site.baseurl }}/img/obj/Quasar.png" alt="Quasar" class="left"/> 
+**Quasars** are dangerous and prevent Shielding, drain your shields, and slow down energy regeneration on your ship.  In addition to the same properties as Nebulas above; however, they can't be mined for Energy.
 
 <img src="{{ site.baseurl }}/img/obj/Mine.png" alt="Space Mine" class="left"/> 
 **Space Mines** are dropped by enemy ships and cause explosions which can damage you and send you off course.  Some may track and follow your ship.

@@ -4,15 +4,19 @@ import math
 from GUIEntity import GUIEntity
 from World.WorldMath import intpos
 from GUI.Helpers import wrapcircle, debugfont
-from World.WorldEntities import BlackHole
+from World.WorldEntities import Quasar
 from GUI.GraphicsCache import Cache
 
 class NebulaGUI(GUIEntity):
     """description of class"""
     def __init__(self, nebula, world):
         super(NebulaGUI, self).__init__(nebula, world)
-        self._imageName = "Nebula/Nebula" + repr(int(nebula.major) * 2) + "x" + repr(int(nebula.minor) * 2) + "-"
-        self._imageName = self._imageName + str(random.randint(1, Cache().getMaxImages(self._imageName)))
+        if isinstance(nebula, Quasar):
+            self._imageName = "Nebula/Quasar"
+        else:
+            self._imageName = "Nebula/Nebula"
+        self._imageName += repr(int(nebula.major) * 2) + "x" + repr(int(nebula.minor) * 2) + "-"
+        self._imageName += str(random.randint(1, Cache().getMaxImages(self._imageName)))
         self._dist = nebula.minor
         self.zorder = -5
 
