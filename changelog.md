@@ -1,3 +1,11 @@
+v1.3.0.???? : ??/??/2018 - Oct 2018 [Give Tournament] - The Return of Discovery Quest
+----
+* Allowed **Discovery Quest** scans to reset over time.
+* Added **Constellations** (mostly decorations, though can be mined for Energy)
+* Added **Quasars** (dangerous celestial body which will prevent energy recovery, drain shield, and prevent shield usage)
+* Ships can no longer be detected in **Nebulas** with Radar.
+* Improved hi-resolution Display Support
+
 v1.2.0.1127 : 06/04/2017 - May 2017 Season 6 - Hotfix #2
 ----
 * Fixed Issue with **Bauble Hunt** allowing depositing baubles into ANY base!
