@@ -12,6 +12,9 @@ There are many different types of objects you may encounter during your travels.
 <img src="{{ site.baseurl }}/img/obj/BlackHole.png" alt="Black Hole" class="left"/> 
 **Black Holes** are stationary and you cannot collide with them.  They have massive gravity wells which can be hard to escape from with thrusters alone.  Staying too long in the center of a black hole can crush your ship.
 
+<img src="{{ site.baseurl }}/img/obj/Constellation.png" alt="Constellation" class="left"/>
+**Constellations** are stationary decorations.  They may be useful for research in Discovery Quest though.
+
 <img src="{{ site.baseurl }}/img/obj/Dragon.png" alt="Dragon" class="left"/> 
 **Dragons** are hungry for ships.  If you are in their site, they will prey upon you.
 
@@ -28,7 +31,7 @@ There are many different types of objects you may encounter during your travels.
 **Stars** are stationary and you cannot collide with them.  They are hot and will cause more damage to your ship the closer you are to their center.  You can Lower your Energy Scoop to collect energy from them.
 
 <img src="{{ site.baseurl }}/img/obj/Torpedo.png" alt="Torpedo" class="left"/> 
-**Torpedos** are fired by enemy ships and cause damage when hit.
+**Torpedoes** are fired by enemy ships and cause damage when hit.
 
 <img src="{{ site.baseurl }}/img/obj/WormHole.png" alt="Worm Hole" class="left"/> 
 **Worm Holes** are stationary and can transport your ship across space.  Worm Holes may connect to other worm holes, fixed locations in space, or random locations.

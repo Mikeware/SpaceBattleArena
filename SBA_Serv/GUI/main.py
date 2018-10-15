@@ -29,7 +29,7 @@ from ObjWrappers.WormHoleWrapper import WormHoleGUI
 from ObjWrappers.WeaponWrappers import TorpedoGUI, SpaceMineGUI
 from Game.Utils import SpawnManager
 from GraphicsCache import Cache
-from World.WorldEntities import Ship, Planet, Asteroid, Torpedo, SpaceMine, BlackHole, Nebula, Star, Dragon, WormHole
+from World.WorldEntities import Ship, Planet, Asteroid, Torpedo, SpaceMine, BlackHole, Nebula, Star, Dragon, WormHole, Constellation
 from Server.MWNL2 import getIPAddress
 from pymunk import Vec2d
 from Helpers import infofont, detect_resolution
@@ -126,7 +126,7 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, cfg=None, t
                         logging.debug("GUI: Adding Nebula #%d", obj.id)
                         bgobjects[obj.id] = NebulaGUI(obj, world)
                         logging.debug("GUI: Added Nebula #%d", obj.id)
-                    elif isinstance(obj, Planet):
+                    elif isinstance(obj, Planet) or isinstance(obj, Constellation):
                         logging.debug("GUI: Adding Planet #%d", obj.id)
                         bgobjects[obj.id] = PlanetGUI(obj, world)
                         logging.debug("GUI: Added Planet #%d", obj.id)
