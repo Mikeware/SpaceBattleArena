@@ -17,7 +17,7 @@ import thread, threading, time, math
 import pymunk
 import traceback
 from WorldMath import in_circle, wrappos, intpos, friendly_type
-from World.WorldEntities import Influential, Ship
+from World.WorldEntities import Influential, Ship, Nebula
 from WorldCommands import CloakCommand
 from ThreadStuff.ThreadSafe import ThreadSafeDict
 
@@ -340,9 +340,11 @@ class GameWorld(object):
             #TODO: Need to wait lock the removing of ships with accessing...???
             if ship in objs: objs.remove(ship) # Get rid of self...
 
-            # remove ships with cloak
+            # remove ships with cloak or in Nebula
+            # TODO: Should there be an 'invisible' flag?  Would need more testing.  Would a degradation/range be useful?
             for x in xrange(len(objs) - 1, -1, -1):
-                if isinstance(objs[x], Ship) and objs[x].commandQueue.containstype(CloakCommand):
+                if isinstance(objs[x], Ship) and (objs[x].commandQueue.containstype(CloakCommand) \
+                                             or any(isinstance(y, Nebula) for y in objs[x].in_celestialbody)):
                     del objs[x]
                 #eif
             #next
