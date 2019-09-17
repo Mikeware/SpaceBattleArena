@@ -10,3 +10,4 @@ gson-2.2.jar
 *.lock
 *.class
 *.pyc
+config.wyam.*

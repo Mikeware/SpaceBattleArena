@@ -1,0 +1,30 @@
+#n Wyam.Yaml
+
+#recipe Blog
+#t SolidState
+
+Yaml("FrontMatter");
+
+FileSystem.InputPaths.Add("doc");
+FileSystem.OutputPath = @"..\gh-pages";
+
+// Customize your settings and add new ones here
+Settings[Keys.Host] = "mikeware.github.io";
+Settings[Keys.LinkRoot] = "/SpaceBattleArena";
+Settings[BlogKeys.Title] = "Space Battle Arena by Mikeware";
+Settings[BlogKeys.Description] = "Space Battle Arena is a ‘Programming Game‘ where you must write code (in Java) to autonomously control a space ship to accomplish specified objectives.";
+
+Settings[BlogKeys.PostsPath] = "_posts";
+Settings[BlogKeys.IncludeDateInPostPath] = true;
+
+// Add any pipeline customizations here
+Pipelines["BlogPosts"].Append(
+  Meta(Keys.RelativeFilePath, (doc, ctx) =>
+  {
+    DateTime? publishedDate = doc.Get<DateTime?>(BlogKeys.Published, DateTime.Now);
+    
+    var fileName = doc.FilePath(Keys.SourceFileName).ChangeExtension("html").FullPath.Substring(11);
+
+    var newPostsPath = ctx.DirectoryPath(BlogKeys.PostsPath).GetRelativePath((DirectoryPath)"../");
+    return $"{newPostsPath.FullPath}/{publishedDate:yyyy}/{publishedDate:MM}/{publishedDate:dd}/{fileName}";
+  }));

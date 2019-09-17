@@ -7,7 +7,7 @@
         <h1>News</h1>
         <ul>
         {% for post in site.posts %}
-            <li><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a> - {{ post.date | date_to_long_string }}</br>
+            <li><a href="@(Context.Settings[Keys.LinkRoot]){{ post.url }}">{{ post.title }}</a> - {{ post.date | date_to_long_string }}</br>
             {{ post.excerpt }}
             </br>
             </li>

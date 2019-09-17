@@ -1,0 +1,36 @@
+    <header>
+      <div class="headercontainer">
+        <h1>Space Battle Arena</h1>
+        <h2>A Programming Game in Java for AP CS Students.</h2>
+
+        <section id="downloads">
+          <a href="{{ site.releasepath }}/SpaceBattle.jar" class="btn">Download Client Jar</a>
+          <a href="@(Context.Settings[Keys.LinkRoot])/client/java_doc/" class="btn">Java Docs</a>
+          <a href="{{ site.releasepath }}/SBAserver.zip" class="btn">Download Server (Windows)</a>
+          <a href="{{ site.githuburl }}" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            @if (Metadata.String("title") != "Home")
+            {
+            <span><a href="@(Context.Settings[Keys.LinkRoot])/index.html">Home</a></span>
+            }
+            @if (Metadata.String("layout") == "post")
+            {
+            <span><a href="@(Context.Settings[Keys.LinkRoot])/news.html">News</a></span>
+            }
+            @if (Metadata.TryGetValue("nav", out IDocument[] docs))
+            {
+              @foreach (var doc in docs)
+              {
+                var url = doc.Metadata.String("url"); var title = doc.Metadata.String("title");
+                @:&nbsp;<span><a href="@url">@title</a></span>
+              }
+            }
+            <span>@Metadata.String("title")</span>
+        </div>
+    </nav>
+    

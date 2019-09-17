@@ -10,7 +10,7 @@ outline:
 
 Server Information
 ============
-<img src="{{ site.baseurl }}/img/SpaceBattleArena.png" alt="Space Battle Arena" class="right"/>
+<img src="@(Context.Settings[Keys.LinkRoot])/img/SpaceBattleArena.png" alt="Space Battle Arena" class="right"/>
 The Server is the heart of Space Battle Arena.  It is a graphical client and portal to the universe.  It handles all data from clients (student's ships) and displays their locations in the world.
 
 Currently, it is available as a Windows executable (or via Python source on GitHub), see the links above.  It should run on *Windows 7 or above*.  See [Mac OS X Server from Source](https://github.com/Mikeware/SpaceBattleArena/blob/master/SBA_Serv/README.md) for info on compiling on Mac.
