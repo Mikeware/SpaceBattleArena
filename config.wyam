@@ -10,14 +10,17 @@ FileSystem.OutputPath = @"..\gh-pages";
 
 // Customize your settings and add new ones here
 Settings[Keys.Host] = "mikeware.github.io";
-Settings[Keys.LinkRoot] = "/SpaceBattleArena";
+Settings[Keys.LinkRoot] = "";
+//Settings[Keys.LinkRoot] = "/SpaceBattleArena"; // For Release to GitHub Pages
+Settings[Keys.LinksUseHttps] = true;
+
 Settings[BlogKeys.Title] = "Space Battle Arena by Mikeware";
 Settings[BlogKeys.Description] = "Space Battle Arena is a ‘Programming Game‘ where you must write code (in Java) to autonomously control a space ship to accomplish specified objectives.";
 
-Settings[BlogKeys.PostsPath] = "_posts";
+Settings[BlogKeys.PostsPath] = "news";
 Settings[BlogKeys.IncludeDateInPostPath] = true;
 
-// Add any pipeline customizations here
+// Modify Output Path of Posts to look like directories based on dates.
 Pipelines["BlogPosts"].Append(
   Meta(Keys.RelativeFilePath, (doc, ctx) =>
   {

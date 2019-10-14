@@ -12,5 +12,5 @@
     }
     </ul>
     
-    <a href="@(Context.Settings[Keys.LinkRoot])/news.html" class="small">Archive</a>
+    <a href="@Context.GetLink(Context.String(BlogKeys.PostsPath))" class="small">Archive</a>
 </aside>

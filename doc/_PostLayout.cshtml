@@ -21,20 +21,14 @@
     }
     else
     {
-      @Html.Partial("_includes/header", new ViewDataDictionary(ViewData) { { "type", "Main" } })
-    }
-
-    @if (Metadata.TryGetValue("outline", out IDocument[] docs))
-    {
-      @Html.Partial("_includes/outline")
-    }
-    else
-    {
-      @Html.Partial("_includes/topnews")
+      @Html.Partial("_includes/header", new ViewDataDictionary(ViewData) { { "type", "News" } })
     }
 
     <div class="container">
       <section id="main_content">
+        <h1>@Metadata.String("title")</h1>
+        <p>- @(Metadata.Get<DateTime>(BlogKeys.Published).ToString("dd MMMM yyyy"))</p>
+
         @RenderBody()
       </section>
     </div>

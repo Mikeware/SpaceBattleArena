@@ -18,9 +18,9 @@
             {
             <span><a href="@(Context.Settings[Keys.LinkRoot])/index.html">Home</a></span>
             }
-            @if (Metadata.String("layout") == "post")
+            @if (ViewData["type"] == "News")
             {
-            <span><a href="@(Context.Settings[Keys.LinkRoot])/news.html">News</a></span>
+            <span><a href="@Context.GetLink(Context.String(BlogKeys.PostsPath))">News</a></span>
             }
             @if (Metadata.TryGetValue("nav", out IDocument[] docs))
             {
@@ -30,7 +30,14 @@
                 @:&nbsp;<span><a href="@url">@title</a></span>
               }
             }
-            <span>@Metadata.String("title")</span>
+            @if(@Metadata.String("title") != "Archive")
+            {
+              <span>@Metadata.String("title")</span>
+            }
+            else
+            {
+              <span>News</span>
+            }
         </div>
     </nav>
     

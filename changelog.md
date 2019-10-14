@@ -1,4 +1,4 @@
-v1.3.0.???? : ??/??/2018 - Oct 2018 [Give Tournament] - The Return of Discovery Quest
+v1.3.0.1128 [Pre-release] : 10/15/2018 - Oct 2018 [Give Tournament] - The Return of Discovery Quest
 ----
 * Allowed **Discovery Quest** scans to reset over time.
 * Added **Constellations** (mostly decorations, though can be mined for Energy)
