@@ -11,3 +11,4 @@ gson-2.2.jar
 *.class
 *.pyc
 config.wyam.*
+/doc/client/java_doc/

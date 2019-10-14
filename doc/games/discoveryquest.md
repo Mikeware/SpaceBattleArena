@@ -28,65 +28,65 @@ Your Ship being destroyed clears/fails your mission, so you must return to your 
 
 <a name="config"></a>Configuration
 -----------
-###establish_homebase = boolean
+### establish_homebase = boolean
 Whether or not the player must scan an Outpost first in order to start banking points. When off, all points scanned will count, Outposts can still be scanned for points and bonus missions if missions are enabled (see below).
 
-###scan_time = float
+### scan_time = float
 Amount of time required to complete a successful scan in seconds. (3.5 default)
 
-###scan_range = int
+### scan_range = int
 Distance required to be in range for a scan in pixels. (150 default)
 
-###scan_duration = int
+### scan_duration = int
 Time that a scan is good for before an object can be rescanned.  If this value is greater than 0, then scanned entities will reset their scan status for a player after the given time and be able to be rescanned.  (45 default)
 
-###ship_spawn_dist = int
+### ship_spawn_dist = int
 Maximum distance a ship will spawn away from an Outpost.
 
-###disable_warp_in_nebula = boolean
+### disable_warp_in_nebula = boolean
 Set to prevent players from Warping out of Nebulas. (true default)
 
-###missions = boolean
+### missions = boolean
 Whether or not missions can be obtained from scanning outposts.
 
-###mission_objectives = string
+### mission_objectives = string
 Comma separated list of object types which can appear within Missions.
 
-###mission_num_min = int
+### mission_num_min = int
 Minimum number of objectives for a Mission to contain. (1 default)
 
-###mission_num_max = int
+### mission_num_max = int
 Maximum number of objects for a Mission to contain. (3 default)
 
-###mission_bonus_multiplier = float
+### mission_bonus_multiplier = float
 Multiplier to apply to set of mission objectives and add to the player's score when the mission is completed. (3.0 default)
 
-###points_asteroid = int
+### points_asteroid = int
 Number of points an Asteroid is worth when successfully scanned. (2 default)
 
-###points_planet = int
+### points_planet = int
 Number of points a Planet is worth when successfully scanned. (2 default)
 
-###points_blackhole = int
+### points_blackhole = int
 Number of points a Black Hole is worth when successfully scanned. (3 default)
 
-###points_nebula = int
+### points_nebula = int
 Number of points a Nebula is worth when successfully scanned. (1 default)
 
-###points_star = int
+### points_star = int
 Number of points a Star is worth when successfully scanned. (3 default)
 
-###points_outpost = int
+### points_outpost = int
 Number of points an Outpost is worth when successfully scanned. (2 default)  Establishing your own Outpost is worth double points.
 
-###points_dragon = int
+### points_dragon = int
 Number of points a Dragon is worth when successfully scanned. (6 default)
 
-###points_wormhole = int
+### points_wormhole = int
 Number of points a Worm Hole is worth when successfully scanned. (2 default)
 
-###points_ship = int
+### points_ship = int
 Number of points another Ship is worth when successfully scanned. (4 default)
 
-###points_spacemine = int
+### points_spacemine = int
 Number of points a Space Mine is worth when successfully scanned. (8 default)

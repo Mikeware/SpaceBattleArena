@@ -52,13 +52,13 @@ The **WildTournament** manager is the same as the Basic Tournament; however, the
 	play_round = boolean
 	
 	
-###number = integer
+### number = integer
 Number of wildcard slots to provide.  A wildcard is the top scoring players across all players which did **not** advance.  This can be across groups.  Scoring is still defined by the subgame which is being played.
 
-###play_round = boolean
+### play_round = boolean
 If set to true, after the preliminary rounds, but before the final, another 'Wildcard' round will be played with the number of wildcard players specified taken from the pool of non-seeded players.  The top players from this group will advance to the final group.
 
 If set to false, the number of wildcard players will automatically be added to the final round after the preliminaries finish, but before the final round begins.
 
-###take_ties = boolean
+### take_ties = boolean
 If set to true, any number of players tied for scoring will advance into the bonus round or final round.

@@ -27,7 +27,7 @@ A player's best record is used to determine their ranking, so even if your inter
 <a name="config"></a>Configuration
 -----------
 
-###minimum_velocity = int
+### minimum_velocity = int
 The minimum speed a ship must be travelling in order to accumulate points.
 
 

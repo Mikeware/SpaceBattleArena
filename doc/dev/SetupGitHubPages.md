@@ -15,4 +15,4 @@ Installing [Wyam](https://wyam.io/) Doc Builder
 
 2. Restart command line (or VS Code)
 3. Type `wyam` to build.
-4. Use `wyam -p -w` to preview the site and watch for changes.
+4. Use `wyam -p -w --virtual-dir "/SpaceBattleArena"` to preview the site and watch for changes.

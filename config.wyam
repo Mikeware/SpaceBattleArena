@@ -7,11 +7,11 @@ Yaml("FrontMatter");
 
 FileSystem.InputPaths.Add("doc");
 FileSystem.OutputPath = @"..\gh-pages";
+Settings[Keys.CleanOutputPath] = false;
 
 // Customize your settings and add new ones here
 Settings[Keys.Host] = "mikeware.github.io";
-Settings[Keys.LinkRoot] = "";
-//Settings[Keys.LinkRoot] = "/SpaceBattleArena"; // For Release to GitHub Pages
+Settings[Keys.LinkRoot] = "/SpaceBattleArena";
 Settings[Keys.LinksUseHttps] = true;
 
 Settings[BlogKeys.Title] = "Space Battle Arena by Mikeware";
