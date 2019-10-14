@@ -20,6 +20,10 @@ Settings[BlogKeys.Description] = "Space Battle Arena is a ‘Programming Game‘
 Settings[BlogKeys.PostsPath] = "news";
 Settings[BlogKeys.IncludeDateInPostPath] = true;
 
+// Custom Settings
+Settings["SBA.GitHub"] = "https://www.github.com/Mikeware/SpaceBattleArena";
+Settings["SBA.ReleasePath"] = "https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.2.0.1127";
+
 // Modify Output Path of Posts to look like directories based on dates.
 Pipelines["BlogPosts"].Append(
   Meta(Keys.RelativeFilePath, (doc, ctx) =>

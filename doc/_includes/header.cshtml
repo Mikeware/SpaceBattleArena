@@ -4,10 +4,10 @@
         <h2>A Programming Game in Java for AP CS Students.</h2>
 
         <section id="downloads">
-          <a href="{{ site.releasepath }}/SpaceBattle.jar" class="btn">Download Client Jar</a>
+          <a href="@(Context.Settings["SBA.ReleasePath"])/SpaceBattle.jar" class="btn">Download Client Jar</a>
           <a href="@(Context.Settings[Keys.LinkRoot])/client/java_doc/" class="btn">Java Docs</a>
-          <a href="{{ site.releasepath }}/SBAserver.zip" class="btn">Download Server (Windows)</a>
-          <a href="{{ site.githuburl }}" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+          <a href="@(Context.Settings["SBA.ReleasePath"])/SBAserver.zip" class="btn">Download Server (Windows)</a>
+          <a href="@(Context.Settings["SBA.GitHub"])" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
         </section>
       </div>
     </header>
