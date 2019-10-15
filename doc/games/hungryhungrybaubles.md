@@ -34,20 +34,20 @@ Control Bauble spawning behavior by using the standard [Spawn Manager](../server
 
 ##[BaubleGame]
 
-###bauble_points = list[int]
+### bauble_points = list[int]
 List of points each progressive bauble is worth. **Note:** *modifying the point values requires that adequate images be placed in the GUI/Graphics/Games folder to represent that value.*
 
-###bauble_percent = list[float]
+### bauble_percent = list[float]
 The percentage of baubles which should generate as the corresponding value.  Each value should be from [0.0-1.0].  The total of all values provided in this list should equal 1.0.
 
 
 ## [HungryHungryBaubles]
 
-###assign_specific_bauble = boolean
+### assign_specific_bauble = boolean
 Assign each player a golden bauble to retrieve given through *getObjectiveLocation()* in the environment's *getGameInfo()*.  Defaults to true.
 
-###bauble_extra_value = int
+### bauble_extra_value = int
 How many points the 'golden' bauble is worth if you collect someone else's.  Only used if **assign_specific_bauble** is turned on.
 
-###bauble_points_extra = int
+### bauble_points_extra = int
 How many extra points is your specific golden bauble worth to you (doesn't require special image).  Only used if **assign_specific_bauble** is turned on.

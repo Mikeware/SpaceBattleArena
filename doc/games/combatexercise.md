@@ -24,8 +24,8 @@ Control asteroid spawning by using the standard [Spawn Manager](../server/config
 <a name="config"></a>Configuration
 -----------
 
-###points_time_alive_divide_by = int
+### points_time_alive_divide_by = int
 Number to divide a player's time alive (in seconds) by to determine it's worth.  E.g. if this value was set to 1 and a player was alive for a minute, they'd be worth 60 points.  If it was set to 10 (default), then they'd be worth 6 points.
 
-###points_shoot_asteroid = int
+### points_shoot_asteroid = int
 Number of points shooting an Asteroid with a torpedo is worth.

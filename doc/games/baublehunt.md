@@ -36,26 +36,26 @@ Control Bauble spawning behavior by using the standard [Spawn Manager](../server
 
 ##[BaubleGame]
 
-###bauble_points = list[int]
+### bauble_points = list[int]
 List of points each progressive bauble is worth. **Note:** *modifying the point values requires that adequate images be placed in the GUI/Graphics/Games folder to represent that value.*
 
-###bauble_percent = list[float]
+### bauble_percent = list[float]
 The percentage of baubles which should generate as the corresponding value.  Each value should be from [0.0-1.0].  The total of all values provided in this list should equal 1.0.
 
-###bauble_weights = list[int]
+### bauble_weights = list[int]
 List of weight values to use for Bauble Generation (defaults to 1).
 
-###bauble_weight_percent = list[float]
+### bauble_weight_percent = list[float]
 Percentage that each of corresponding weighted baubles in the *bauble_weights* should appear.  Each value should be from [0.0-1.0].  The total of all weights provided in this list should equal 1.0.
 
-###bauble_invert_ratio_percent = list[float]
+### bauble_invert_ratio_percent = list[float]
 Each float in this list corresponds to a value of bauble in the *bauble_points* list (i.e. you should have the same number of floats in this list as values of baubles).  The value [0.0-1.0] for each bauble specifies the percent chance that the weight percentage used from *bauble_weight_percent* is inverted (i.e. 0.8, 0.2 becomes 0.2, 0.8 for that bauble value).  E.g. set to 1.0 if you want the weight percentages to always be opposite for that value of bauble.  If this option is not specified, it will be set to 0.0 for all bauble values.
 
 
 ##[BaubleHunt]
 
-###ship_cargo_size = int
+### ship_cargo_size = int
 The maximum weight of baubles each ship can carry.
 
-###respawn_bauble_on_collect = boolean
+### respawn_bauble_on_collect = boolean
 Should a new bauble be spawned every time one is collected?

@@ -32,24 +32,24 @@ Control Bubble spawning behavior by using the standard [Spawn Manager](../server
 
 (**spawn_keep_max** does not effect a player dropping a bubble unless it didn't meet the threshold for points.)
 
-###points_min = int
+### points_min = int
 The minimum number of points a generated bubble can be worth.
 
-###points_max = int
+### points_max = int
 The maximum number of points a generated bubble can be worth.
 
 <a name="config"></a>Configuration
 -----------
-###bubble_radius_min = int
+### bubble_radius_min = int
 The radius of the bubble when it worth 0 points.  The bubble point value is added to this base radius to determine its size.  See bubble_points_min and max.
 
-###bubble_points_drain_speed = int
+### bubble_points_drain_speed = int
 How many points per second a single ship can drain from a bubble (ship's absorption rate).  If multiple ships are in a bubble, they can each drain points from it at this same rate.
 
-###steal_points_min = int
+### steal_points_min = int
 The minimum number of points for a player to lose when destroyed.  This is also the minimum threshold for a new bubble to be created from a player, though points will always be added to an existing nearby bubble if that is the case.
 
-###steal_points_percent = int
+### steal_points_percent = int
 Value between 0 and 100 to represent the percentage of points a player loses when their ship is destroyed.
 
 <a name="kos"></a>King of Space

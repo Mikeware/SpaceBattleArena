@@ -68,6 +68,7 @@ Documentation
         * [King of Space (Variant)](games/kingofthebubble.html#kos)
     * [Discovery Quest](games/discoveryquest.html)
 * External Resources
+    * [Twitch Archive](https://www.twitch.tv/collections/a1gxFZRvzRXe_w) - Recent Tournament Archives
     * [YouTube Playlist](https://www.youtube.com/playlist?list=PL1DMX9HzuNPTiYpd1KslkAAsSY1yMrEgh) - Past Competitions
     * [Beat Senioritis with a Real-Time Networked Space Sim - CSTA 2016](https://www.youtube.com/watch?v=ZUBB8pRRgHI)
     * [You Have Died of Dysentery: Games in Education Are Still Alive - PAXDev 2014](http://www.mikeware.com/2014/08/you-have-died-of-dysentery-games-in-education-are-still-alive/)

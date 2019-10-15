@@ -4,17 +4,22 @@ nav:
  - { url: "index.html", title: "Development" }
 ---
 
-Installing [Jekyll](http://jekyllrb.com/) Builder
+Installing [Wyam](https://wyam.io/) Doc Builder
 -------------------------
 
-1. Install [Ruby 2.1.X](http://rubyinstaller.org/downloads/)
-2. Install DevKet for Ruby 2.1.X under C:\Ruby21\DevKit (assuming C:\Ruby21 was Ruby Install Directory)
-3. Open Command Prompt in C:\Ruby21\DevKit directory
-4. ruby dk.rb init (ensure says found installed in C:\Ruby21)
-5. ruby dk.rb review (ensure says C:\Ruby21 as directory)
-6. ruby dk.rb install
-7. gem install bundler [SSL Issue Resolution](http://guides.rubygems.org/ssl-certificate-update/#installing-using-update-packages)
-8. create **Gemfile** in repository root, with contents
-	<pre><code>source 'https://rubygems.org'
-gem 'github-pages'</code></pre>
-9. type 'bundle install' in repository root
+1. Install Wyam on the command line with `dotnet` (requires [.NET Core](https://dotnet.microsoft.com/download)):
+
+	```
+	dotnet tool install -g Wyam.Tool
+	```
+
+2. Restart command line (or VS Code)
+3. Doc system assumes another copy of repo to `gh-pages` branches has been checked out alongside the repo in a `gh-pages` directory.
+4. Type `wyam` to build, **clear all non-.git folders in gh-pages folder before-hand if making significant structure changes.**
+5. To preview the site and watch for changes use:
+
+	```
+	wyam -p -w --virtual-dir "/SpaceBattleArena"
+	```
+
+6. Make 2 branches one off `master` and one off `gh-pages` in order to submit two PRs for updates to source docs and generated output.

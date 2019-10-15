@@ -1,0 +1,15 @@
+
+<div class="container">
+  <section id="main_content">
+    <h1>News</h1>
+    <ul>
+    @foreach (var post in Model.DocumentList(Keys.PageDocuments))
+    {
+      <li><a href="@Context.GetLink(post)">@post.Metadata.String("title")</a> - @(post.Get<DateTime>(BlogKeys.Published).ToString("dd MMMM yyyy"))<br/>
+          <span class="small">@Html.Raw(@post.Metadata.String(BlogKeys.Excerpt))</span>
+          <br/>
+      </li>
+    }
+    </ul>
+  </section>
+</div>

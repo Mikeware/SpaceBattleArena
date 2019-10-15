@@ -16,11 +16,11 @@ In order to navigate your spaceship, you must be familiar with how to navigate w
 
 Your **position** determines your location from the top-left of the universe.  That is your x coordinate increases to the right and your y coordinate increases down.
 
-<img src="{{ site.baseurl }}/img/coordinates.png" alt="Coordinate System" class="left indent"/> 
+<img src="img/coordinates.png" alt="Coordinate System" class="left indent"/> 
 
 The **direction** of your spaceship doesn't have to match the **orientation** of it (i.e. you can be moving in one direction and facing to fire or thrust in another direction).  This allows for complex maneuvers and combat.  The angle for these two values will always be in degrees.  
 
-<img src="{{ site.baseurl }}/img/DirectionOrientation.png" alt="Direction vs. Orientation" class="left indent"/> 
+<img src="img/DirectionOrientation.png" alt="Direction vs. Orientation" class="left indent"/> 
 
 > 0 degrees faces right.  
 

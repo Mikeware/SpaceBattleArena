@@ -1,0 +1,14 @@
+
+@if(Metadata.TryGetValue("outline", out IDocument[] entries))
+{
+    <aside>
+        <h1>@Metadata.String("outline-header")</h1>
+        <ul>
+        @foreach (var entry in entries)
+        {
+            var url = entry.Metadata.String("url"); var title = entry.Metadata.String("title");
+            @:<li><a href="@url">@title</a></span>
+        }
+        </ul>
+    </aside>
+}

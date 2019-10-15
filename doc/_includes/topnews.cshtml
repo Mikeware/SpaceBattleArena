@@ -1,0 +1,16 @@
+
+<aside>
+    <h1>News</h1>
+    <ul>
+    @foreach (var post in Documents["BlogPosts"].Take(3))
+    {
+        <li><a href="@Context.GetLink(post)">@post.Metadata.String("title")</a>
+            <br/>
+            <span class="small">@post.Metadata.String("abstract")                
+            <br/>- @(post.Get<DateTime>(BlogKeys.Published).ToString("dd MMMM yyyy"))</span><br/><br/>
+        </li>
+    }
+    </ul>
+    
+    <a href="@Context.GetLink(Context.String(BlogKeys.PostsPath))" class="small">Archive</a>
+</aside>
