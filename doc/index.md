@@ -29,11 +29,11 @@ We use [jGRASP](http://www.jgrasp.org/) as our IDE of choice when working with H
 Documentation
 ------------------
 * [Client Setup](client/index.html)
-    * <a href="client/java_doc/" target="_blank">Java Docs</a>
-    * [jGRASP](client/jGRASP/index.html)
-    * [Eclipse](client/Eclipse/index.html)
-    * [BlueJ](client/BlueJ/index.html)    
+    * [BlueJ](client/BlueJ/index.html)
     * [Command Line](client/CmdLine/index.html)
+    * [Eclipse](client/Eclipse/index.html)
+    * [jGRASP](client/jGRASP/index.html)
+* <a href="client/java_doc/" target="_blank">Java Docs</a>
 * [Guides](client/guides/index.html)
     * [Coordinates](client/guides/space.html)
     * [Maneuvering](client/guides/maneuvering.html)

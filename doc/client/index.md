@@ -2,10 +2,10 @@
 title: Client Setup
 outline-header: IDE Tutorials
 outline:
- - { url: "jGRASP/index.html", title: "jGRASP" }
- - { url: "Eclipse/index.html", title: "Eclipse" }
  - { url: "BlueJ/index.html", title: "BlueJ" }
  - { url: "CmdLine/index.html", title: "Command Line" }
+ - { url: "Eclipse/index.html", title: "Eclipse" }
+ - { url: "jGRASP/index.html", title: "jGRASP" }
 ---
 
 Client Setup
@@ -19,11 +19,18 @@ The general process involves:
 1. Adding both the Gson and SpaceBattle .jar files to your classpath.
 2. Creating a Ship class which either extends the BasicSpaceship abstract class OR  
 implements the Spaceship<?> interface.
-3. Execute the TextClient's main method from the SpaceBattle.jar file with the following arguments:
+3. Execute the TextClient's run method with the following arguments:
     1. IP address of the server
-    2. name of your Java Ship class
+    2. An instance of your Java Ship class
 
-Alternatively, to the third step above, create a main method which calls the *run* method on TextClient with the IP Address and an instance of your Ship class.
+    ```
+    public static void main(String[] args)
+    {
+        TextClient.run("127.0.0.1", new ExampleShip());
+    }
+    ```
+
+Alternatively, to the third step above, execute the TextClient's main method from within SpaceBattle.jar passing the IP Address and a string with the name of your Ship class.
 
 If you need to run ships via the Command Line see [these instructions](CmdLine/index.html).
 

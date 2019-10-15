@@ -32,12 +32,12 @@ If your game is *non-basic* (requires players have more information than Score, 
 
 2. In the *MwnpMessage.java* class, add to the switch statement in the *RegisterGameType* static method with the game name returned by the server as the string key and construct the appropriate *TypeToken* similar to the existing entries, but using your GameInfo class instead.
 
-3.  It is recommended you reuse the existing game specific values on the **ObjectStatus**, such as *VALUE*, *NUMSTORED*, *HITRADIUS*, *OWNERID*, *NAME*.  If you require an additional property, add it here.  
+3. It is recommended you reuse the existing game specific values on the **ObjectStatus**, such as *VALUE*, *NUMSTORED*, *HITRADIUS*, *OWNERID*, *NAME*.  If you require an additional property, add it here.  
   
 	Note: The *NAME* property usually stores the NAME of a player, but this can be turned off in the Config file if you wish to not have a conflict/overlap and reuse it for some other purpose
 	
 	Remember that if you create a custom object, you have the full set of standard properties available as well, and the 'Type' property will be automatically populated with the Class name of your object from the Server.
 
-4.  Add any new commands required for your game to the Commands package.
+4. Add any new commands required for your game to the Commands package.
 
 5. Recompile the SpaceBattle.jar.

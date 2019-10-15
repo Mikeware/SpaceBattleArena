@@ -43,9 +43,12 @@ This helps create a greater visual impact when first introducing students to Spa
 <a name="resources"></a>Resources
 ------------------------------
 
- * [Client Setup](../client/index.html)
-  * [jGRASP](../client/jGRASP/index.html)
-  * [Eclipse](../client/Eclipse/index.html)
+ * [Client Setup](../client/index.html)    
+    * [BlueJ](client/BlueJ/index.html)
+    * [Command Line](client/CmdLine/index.html)
+    * [Eclipse](client/Eclipse/index.html)
+    * [jGRASP](client/jGRASP/index.html)
+ * <a href="client/java_doc/" target="_blank">Java Docs</a>
  * [Server Setup](../server/setup.html)
  * [Server Configuration](../server/config.html)
  

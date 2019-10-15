@@ -29,7 +29,7 @@ Follow the link in the table below for a more complete lesson plan for that acti
 |------------|---------------------------|
 |  1 - 2     | [Intro & Connections](intro.html)|
 |  3 - 4     | [Find the Middle](findthemiddle.html)|
-|  5 -  8    | [Shapes in Space](shapes.html)|
+|  5 -  8    | [(Optional) Shapes in Space](shapes.html)|
 |  9 - 12    | [Intro to Radar + Minigame](radar.html) |
 | 13 +       | Competitions              |
 
@@ -53,13 +53,15 @@ Now that students are able to connect, the 3rd day should be spent going over co
 
 Then give the students the objective to get their ship from their spawning point to somewhere near the middle of the world.  They can use the parameters given to the register ship method to calculate the mid-point of the universe.  Aim for students to have accomplished this by the end of the next day. 
 
-<a name="shapesinspace"></a>Shapes in Space [Days 5 - 8]
+<a name="shapesinspace"></a>(Optional) Shapes in Space [Days 5 - 8]
 ------------------
 [Full Plan](shapes.html)
 
 It turns out drawing turtle graphics in space is a lot harder than you would think.  The next exercise teaches students a familiar concept in a whole new way.  Space Battle provides a way to draw shapes on the screen.
 
 This lesson works towards students getting more comfortable with maneuvering their ship by incrementally learning to draw different shapes such as rectangles, stars, spirals, and an octagon circumscribed around a square.
+
+_This is a great callback lesson if you started off with turtle graphics at the start of the year.  However, we recommend skipping it if you did not do turtle graphics previously, unless you're short on time or want to end with the next lesson instead of moving towards a larger more complex competition.  We suggest this as we've found giving students more time to learn Radar earlier sets them up for greater success later._
 
 <a name="radar"></a>Intro to Radar [Days 9 - 12]
 -----------------------
@@ -71,7 +73,7 @@ Once players are comfortable maneuvering their ships, they need to understand ho
 
 The first day of this lesson should be about explaining how radar works, what information it provides, and how the programming paradigm changes slightly with having to react in the next getNextCommand call.
 
-To aid in this activity most of the [Basic Games](../games/basic.html) can be configured to provide a challenge and motivation via scoring.
+To aid in this activity most of the [Basic Games](../games/basic.html) can be configured to provide a challenge and motivation via scoring.  We suggest [Survivor](../games/survivor.html) or [Hungry Hungry Baubles](../games/hungryhungrybaubles.html).
 
 <a name="competitions"></a>Competitions [Days 13+]
 -----------------------

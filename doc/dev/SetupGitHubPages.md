@@ -21,5 +21,5 @@ Installing [Wyam](https://wyam.io/) Doc Builder
 	```
 	wyam -p -w --virtual-dir "/SpaceBattleArena"
 	```
-
-6. Make 2 branches one off `master` and one off `gh-pages` in order to submit two PRs for updates to source docs and generated output.
+6. Open your browser to [http://localhost:5080/SpaceBattleArena/](http://localhost:5080/SpaceBattleArena/) (notice the ending slash).
+7. Make 2 branches one off `master` and one off `gh-pages` in order to submit two PRs for updates to source docs and generated output.

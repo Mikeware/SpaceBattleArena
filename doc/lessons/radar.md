@@ -16,9 +16,15 @@ Intro to Radar
 ===============
 Once players are comfortable maneuvering their ships, they need to understand how to *see* the world around them and react to it.
 
-There are two subgames which can help with introducing radar. [Asteroid Miner](../games/asteroidminer.html) encourages a more combative stance vs. [Survivor](../games/survivor.html) which encourages more avoidance.
+There are three subgames which can help with introducing radar:
+
+- [Asteroid Miner](../games/asteroidminer.html) encourages a more combative stance
+- [Hungry Hungry Baubles](../games/hungryhungrybaubles.html) encourages exploration
+- [Survivor](../games/survivor.html) which encourages more avoidance.
 
 Though most of the [Basic Games](../games/basic.html) can be configured to provide a challenge and motivation via scoring.
+
+**Be sure to populate the world with enough obstacles to prevent students from just flying straight and hoping they don't hit anything.**
 
 <a name="objective"></a>Objectives
 ---------------------------------
@@ -40,6 +46,7 @@ Extra specifics on the configuration for each game can be found on their page.
 ------------------------------
 
  * [Asteroid Miner](../games/asteroidminer.html) 
+ * [Hungry Hungry Baubles](../games/hungryhungrybaubles.html)
  * [Survivor](../games/survivor.html)
  
 <a name="classroom"></a>Classroom Notes
@@ -54,11 +61,13 @@ The **RadarResults** acts as an ArrayList of ObjectStatus.  It will contain info
 
 A Radar Command has 5 different modes.  Each mode returns a varying level of information about the types of objects around the ship, but more details require more time to complete.
 
-**It is important** to note that the *RadarResults* object is not cached, therefore the second call to getNextCommand after a RadarCommand will have a null getRadar() value, unless another RadarCommand was requested.  It is up to the student to decide to cache any information they wish to maintain about the objects in the world longer than a single callback.
+**It is important** to note that the *RadarResults* object is not cached, therefore the second call to getNextCommand after a RadarCommand will have a **null** getRadar() value, unless another RadarCommand was requested.  It is up to the student to decide to cache any information they wish to maintain about the objects in the world longer than a single callback.
+
+    This is the #1 reason we see student's code fail due to a NullPointerException!
 
 Radar is agnostic to the edges of the world; however, the client Point commands return information based on the absolute bounds of the world.  Therefore, an object detected in radar range, may be on the 'other' side of the world.  It is up to the ship to determine if it should head over the boundary of the world to wrap around as the quickest path.
 
-At this point, starting to learn about advanced commands for maneuvering is important as well as energy management.  Warp and All Stop can be expensive, but critical to passing or avoiding dangerous objects.  Similarly Raise Shields and Torpedoes can be used to protect against collisions or engage other ships.
+At this time, starting to learn about advanced commands for maneuvering is important as well as energy management.  Warp and All Stop can be expensive, but critical to passing or avoiding dangerous objects.  Similarly Raise Shields and Torpedoes can be used to protect against collisions or engage other ships.
 
 <a name="commands"></a>Commands Used
 --------------------------------

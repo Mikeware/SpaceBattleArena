@@ -18,6 +18,10 @@ After students can move and stop their ship, it is time to introduce more comple
 
 It turns out drawing turtle graphics in space is a lot harder than you would think.  Space Battle provides *'laser nodes'* which allow for the drawing of shapes in space.
 
+This lesson works towards students getting more comfortable with maneuvering their ship by incrementally learning to draw different shapes such as rectangles, stars, spirals, and an octagon circumscribed around a square.
+
+_This is a great callback lesson if you started off with turtle graphics at the start of the year.  However, we recommend skipping it if you did not do turtle graphics previously, unless you're short on time or want to end with the next lesson instead of moving towards a larger more complex competition.  We suggest this as we've found giving students more time to learn Radar earlier sets them up for greater success later._
+
 <a name="objective"></a>Objectives
 ---------------------------------
 Each student can write multiple ships which draw incrementally more complex shapes:
