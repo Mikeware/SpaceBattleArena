@@ -37,7 +37,7 @@ These instructions were prepared for [Eclipse](http://www.eclipse.org/) Luna Ser
 
 5. Click on **Add External JARs**.
 
-6. Select both the **[gson-2.2.jar]({{ site.releasepath }}/gson-2.2.jar)** and **[SpaceBattle.jar]({{ site.releasepath }}/SpaceBattle.jar)** which you should have downloaded:
+6. Select both the <?# ReleasePathLink "gson-2.2.jar" /?> and <?# ReleasePathLink "SpaceBattle.jar" /?> which you should have downloaded:
 
 	![Libraries Tab](NewJavaProjectDialog2.png)
 	

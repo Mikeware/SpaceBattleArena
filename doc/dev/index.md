@@ -3,7 +3,8 @@ title: Development
 outline-header: Common Development Task Guides
 outline:
  - { url: "Build.html", title: "Build Packages" }
- - { url: "AddSubgame.html", title: "Adding a Subgame" }
+ - { url: "SetupGitHubPages.html", title: "Build Documentation" }
+ - { url: "AddSubgame.html", title: "Add a Subgame" }
 ---
 
 Development

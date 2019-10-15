@@ -13,7 +13,7 @@ Dependencies
 ------------
 Make sure you have downloaded and installed all the Python Server dependencies listed on the [Development Guide Home](index.html).
 
-Download the [gson-2.2.jar]({{ site.releasepath }}/gson-2.2.jar) and place it in the root of your downloaded copy of Space Battle Arena [repository](https://github.com/Mikeware/SpaceBattleArena.git).
+Download the <?# ReleasePathLink "gson-2.2.jar" /?> and place it in the root of your downloaded copy of Space Battle Arena [repository](https://github.com/Mikeware/SpaceBattleArena.git).
 
 Building
 --------

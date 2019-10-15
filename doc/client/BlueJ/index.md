@@ -31,7 +31,7 @@ These instructions were prepared for [BlueJ](http://www.bluej.org/) (3.1.5) and 
 
 3. Click on **Add**.
 
-4. Select both the **[gson-2.2.jar]({{ site.releasepath }}/gson-2.2.jar)** and **[SpaceBattle.jar]({{ site.releasepath }}/SpaceBattle.jar)** which you should have downloaded:
+4. Select both the <?# ReleasePathLink "gson-2.2.jar" /?> and <?# ReleasePathLink "SpaceBattle.jar" /?> which you should have downloaded:
 
 	![Libraries Tab](LibrariesTab.png)
 	

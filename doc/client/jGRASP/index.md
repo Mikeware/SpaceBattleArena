@@ -53,7 +53,7 @@ public class ExampleShip extends BasicSpaceship {
 
 	![Classpath Settings](Classpath.png)
 	
-2. Add the **[gson-2.2.jar]({{ site.releasepath }}/gson-2.2.jar)** and **[SpaceBattle.jar]({{ site.releasepath }}/SpaceBattle.jar)** under the PATH -> CLASSPATHS tab using the New button:
+2. Add the <?# ReleasePathLink "gson-2.2.jar" /?> and <?# ReleasePathLink "SpaceBattle.jar" /?> under the PATH -> CLASSPATHS tab using the New button:
 
 	![Jars in Classpath](AddJars.png)
 	

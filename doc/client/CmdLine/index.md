@@ -49,7 +49,7 @@ public class ExampleShip extends BasicSpaceship {
 }
 </code></pre>
 
-1. Be sure to have the **[gson-2.2.jar]({{ site.releasepath }}/gson-2.2.jar)** and **[SpaceBattle.jar]({{ site.releasepath }}/SpaceBattle.jar)** in a known location (e.g. a 'lib' subdirectory).
+1. Be sure to have the <?# ReleasePathLink "gson-2.2.jar" /?> and <?# ReleasePathLink "SpaceBattle.jar" /?> in a known location (e.g. a 'lib' subdirectory).
 	
 2. Open a Command Prompt.
 

@@ -24,6 +24,9 @@ Settings[BlogKeys.IncludeDateInPostPath] = true;
 Settings["SBA.GitHub"] = "https://www.github.com/Mikeware/SpaceBattleArena";
 Settings["SBA.ReleasePath"] = "https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.2.0.1127";
 
+// Insert Site Release Path to md file Content's before Generation
+ShortcodeCollection.Add("ReleasePathLink", (KeyValuePair<string, string>[] args) => "<a href=\"" + Settings["SBA.ReleasePath"] + "/" + args.First().Value + "\">" + args.First().Value + "</a>");
+
 // Modify Output Path of Posts to look like directories based on dates.
 Pipelines["BlogPosts"].Append(
   Meta(Keys.RelativeFilePath, (doc, ctx) =>
@@ -34,4 +37,5 @@ Pipelines["BlogPosts"].Append(
 
     var newPostsPath = ctx.DirectoryPath(BlogKeys.PostsPath).GetRelativePath((DirectoryPath)"../");
     return $"{newPostsPath.FullPath}/{publishedDate:yyyy}/{publishedDate:MM}/{publishedDate:dd}/{fileName}";
-  }));
+  })
+);
