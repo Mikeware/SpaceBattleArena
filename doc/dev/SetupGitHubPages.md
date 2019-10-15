@@ -14,5 +14,12 @@ Installing [Wyam](https://wyam.io/) Doc Builder
 	```
 
 2. Restart command line (or VS Code)
-3. Type `wyam` to build.
-4. Use `wyam -p -w --virtual-dir "/SpaceBattleArena"` to preview the site and watch for changes.
+3. Doc system assumes another copy of repo to `gh-pages` branches has been checked out alongside the repo in a `gh-pages` directory.
+4. Type `wyam` to build, **clear all non-.git folders in gh-pages folder before-hand if making significant structure changes.**
+5. To preview the site and watch for changes use:
+
+	```
+	wyam -p -w --virtual-dir "/SpaceBattleArena"
+	```
+
+6. Make 2 branches one off `master` and one off `gh-pages` in order to submit two PRs for updates to source docs and generated output.
