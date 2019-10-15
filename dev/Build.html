@@ -1,12 +1,13 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
   <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
 
+    <link rel="shortcut icon" href="/SpaceBattleArena/favicon.ico">
+
     <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/pygment_trac.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/print.css" media="print">
 
     <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="/SpaceBattleArena/js/main.js"></script>
@@ -32,49 +33,54 @@
 
     <nav>
         <div class="container">
-            
             <span><a href="/SpaceBattleArena/index.html">Home</a></span>
-            
-            
-            
-                
-                    &nbsp<span><a href="index.html">Development</a></span>
-                
-            
-            <span>Building Space Battle Arena</span>
+                                        &nbsp;<span><a href="index.html">Development</a></span>
+                          <span>Building Space Battle Arena</span>
         </div>
     </nav>
     
 
+<aside>
+    <h1>News</h1>
+    <ul>
+        <li><a href="/SpaceBattleArena/2018/04/28/Season-7-Kickoff">TEALS Season 7 Kickoff</a>
+            <br/>
+            <span class="small">Season 7 TEALS Tournament Kickoff.                
+            <br/>- 28 April 2018</span><br/><br/>
+        </li>
+        <li><a href="/SpaceBattleArena/2017/06/04/v1.2.0.1127-Release">v1.2.0.1127 Release</a>
+            <br/>
+            <span class="small">Season 6 HotFix 2 Release.                
+            <br/>- 04 June 2017</span><br/><br/>
+        </li>
+        <li><a href="/SpaceBattleArena/2017/05/14/v1.2.0.1126-Release">v1.2.0.1126 Release</a>
+            <br/>
+            <span class="small">Season 6&#x27;s Bauble Hunt Release.                
+            <br/>- 14 May 2017</span><br/><br/>
+        </li>
+    </ul>
     
-
+    <a href="/SpaceBattleArena/news" class="small">Archive</a>
+</aside>
 
     <div class="container">
       <section id="main_content">
         <h1 id="building-space-battle-arena">Building Space Battle Arena</h1>
-
 <p>This document will explain how to build the client and server Space Battle Arena packages.</p>
-
 <h2 id="dependencies">Dependencies</h2>
-
 <p>Make sure you have downloaded and installed all the Python Server dependencies listed on the <a href="index.html">Development Guide Home</a>.</p>
-
-<p>Download the <a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.2.0.1127/gson-2.2.jar">gson-2.2.jar</a> and place it in the root of your downloaded copy of Space Battle Arena <a href="https://github.com/Mikeware/SpaceBattleArena.git">repository</a>.</p>
-
+<p>Download the [gson-2.2.jar]({{ site.releasepath }}/gson-2.2.jar) and place it in the root of your downloaded copy of Space Battle Arena <a href="https://github.com/Mikeware/SpaceBattleArena.git">repository</a>.</p>
 <h2 id="building">Building</h2>
-
-<p>Make sure <strong>javac</strong>, <strong>javadoc</strong>, and <strong>python</strong> are part of your environment path.  Open up a command window at the root of the repository and type &#39;compile&#39;.</p>
-
-<p>If all is successful, a &#39;bin&#39; directory should appear and contain a SpaceBattle.jar file and a SBAServer.zip file.</p>
-
+<p>Make sure <strong>javac</strong>, <strong>javadoc</strong>, and <strong>python</strong> are part of your environment path.  Open up a command window at the root of the repository and type 'compile'.</p>
+<p>If all is successful, a 'bin' directory should appear and contain a SpaceBattle.jar file and a SBAServer.zip file.</p>
 <p>Updated java docs will be copied to doc/client/java_doc.</p>
-
 <p>For info on building the website see <a href="SetupGitHubPages.html">Setup GitHub Pages</a>.</p>
 
       </section>
     </div>
 
 
+    
 		<footer>
 		  <div class="container">
 		    <div class="owner">
@@ -95,7 +101,7 @@
               var pageTracker = _gat._getTracker("UA-39650553-3");
             pageTracker._trackPageview();
             } catch(err) {}
-          </script>
+      </script>
 
   </body>
 </html>

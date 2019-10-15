@@ -1,12 +1,13 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
   <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
 
+    <link rel="shortcut icon" href="/SpaceBattleArena/favicon.ico">
+
     <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/pygment_trac.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/print.css" media="print">
 
     <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="/SpaceBattleArena/js/main.js"></script>
@@ -32,71 +33,76 @@
 
     <nav>
         <div class="container">
-            
             <span><a href="/SpaceBattleArena/index.html">Home</a></span>
-            
-            
-            
-                
-                    &nbsp<span><a href="index.html">Space Battle Academy</a></span>
-                
-            
-            <span>Celestial Objects</span>
+                                        &nbsp;<span><a href="index.html">Space Battle Academy</a></span>
+                          <span>Celestial Objects</span>
         </div>
     </nav>
     
 
+<aside>
+    <h1>News</h1>
+    <ul>
+        <li><a href="/SpaceBattleArena/2018/04/28/Season-7-Kickoff">TEALS Season 7 Kickoff</a>
+            <br/>
+            <span class="small">Season 7 TEALS Tournament Kickoff.                
+            <br/>- 28 April 2018</span><br/><br/>
+        </li>
+        <li><a href="/SpaceBattleArena/2017/06/04/v1.2.0.1127-Release">v1.2.0.1127 Release</a>
+            <br/>
+            <span class="small">Season 6 HotFix 2 Release.                
+            <br/>- 04 June 2017</span><br/><br/>
+        </li>
+        <li><a href="/SpaceBattleArena/2017/05/14/v1.2.0.1126-Release">v1.2.0.1126 Release</a>
+            <br/>
+            <span class="small">Season 6&#x27;s Bauble Hunt Release.                
+            <br/>- 14 May 2017</span><br/><br/>
+        </li>
+    </ul>
     
-
+    <a href="/SpaceBattleArena/news" class="small">Archive</a>
+</aside>
 
     <div class="container">
       <section id="main_content">
-        <p>There are many different types of objects you may encounter during your travels.  Be sure that your ship knows how to react to them.</p>
-
-<p><img src="/SpaceBattleArena/img/obj/Asteroid.png" alt="Asteroid" class="left"/> 
+        <h1 id="celestial-objects">Celestial Objects</h1>
+<p>There are many different types of objects you may encounter during your travels.  Be sure that your ship knows how to react to them.</p>
+<p><img src="img/obj/Asteroid.png" class="left img-fluid" alt="Asteroid" />
 <strong>Asteroids</strong> float through space at a slow speed.  They may be caught in the gravity of other celestial objects.  They can be destroyed with torpedoes.  Colliding with them will cause damage.</p>
-
-<p><img src="/SpaceBattleArena/img/obj/BlackHole.png" alt="Black Hole" class="left"/> 
+<p><img src="img/obj/BlackHole.png" class="left img-fluid" alt="Black Hole" />
 <strong>Black Holes</strong> are stationary and you cannot collide with them.  They have massive gravity wells which can be hard to escape from with thrusters alone.  Staying too long in the center of a black hole can crush your ship.</p>
-
-<p><img src="/SpaceBattleArena/img/obj/Dragon.png" alt="Dragon" class="left"/> 
+<p><img src="img/obj/Constellation.png" class="left img-fluid" alt="Constellation" />
+[Pre-release] <strong>Constellations</strong> are stationary decorations.  They may be useful for research in Discovery Quest though or collecting Energy.</p>
+<p><img src="img/obj/Dragon.png" class="left img-fluid" alt="Dragon" />
 <strong>Dragons</strong> are hungry for ships.  If you are in their site, they will prey upon you.</p>
-
-<p><img src="/SpaceBattleArena/img/obj/Nebula.png" alt="Nebula" class="left"/> 
-<strong>Nebulas</strong> are stationary and you cannot collide with them.  They will apply a drag to your ship and slow it down.  You can Lower your Energy Scoop to collect energy from them.</p>
-
-<p><img src="/SpaceBattleArena/img/obj/Planet.png" alt="Planet" class="left"/> 
+<p><img src="img/obj/Nebula.png" class="left img-fluid" alt="Nebula" />
+<strong>Nebulas</strong> are stationary and you cannot collide with them.  They will apply a drag to your ship and slow it down.  You can Lower your Energy Scoop to collect energy from them.  Other ships cannot detect you within a Nebula.</p>
+<p><img src="img/obj/Planet.png" class="left img-fluid" alt="Planet" />
 <strong>Planets</strong> are stationary and have a gravity well.  Colliding with them will cause damage.</p>
-
-<p><img src="/SpaceBattleArena/img/obj/Mine.png" alt="Space Mine" class="left"/> 
+<p><img src="img/obj/Quasar.png" class="left img-fluid" alt="Quasar" />
+[Pre-release] <strong>Quasars</strong> are dangerous and prevent Shielding, drain your shields, and slow down energy regeneration on your ship.  In addition to the same properties as Nebulas above; however, they can't be mined for Energy.</p>
+<p><img src="img/obj/Mine.png" class="left img-fluid" alt="Space Mine" />
 <strong>Space Mines</strong> are dropped by enemy ships and cause explosions which can damage you and send you off course.  Some may track and follow your ship.</p>
-
-<p><img src="/SpaceBattleArena/img/obj/Star.png" alt="Star" class="left"/> 
+<p><img src="img/obj/Star.png" class="left img-fluid" alt="Star" />
 <strong>Stars</strong> are stationary and you cannot collide with them.  They are hot and will cause more damage to your ship the closer you are to their center.  You can Lower your Energy Scoop to collect energy from them.</p>
-
-<p><img src="/SpaceBattleArena/img/obj/Torpedo.png" alt="Torpedo" class="left"/> 
-<strong>Torpedos</strong> are fired by enemy ships and cause damage when hit.</p>
-
-<p><img src="/SpaceBattleArena/img/obj/WormHole.png" alt="Worm Hole" class="left"/> 
+<p><img src="img/obj/Torpedo.png" class="left img-fluid" alt="Torpedo" />
+<strong>Torpedoes</strong> are fired by enemy ships and cause damage when hit.</p>
+<p><img src="img/obj/WormHole.png" class="left img-fluid" alt="WormHole" />
 <strong>Worm Holes</strong> are stationary and can transport your ship across space.  Worm Holes may connect to other worm holes, fixed locations in space, or random locations.</p>
-
 <h2 id="game-specific">Game Specific</h2>
-
-<p><img src="/SpaceBattleArena/img/obj/Bauble.png" alt="Bauble" class="left"/> 
+<p><img src="img/obj/Bauble.png" class="left img-fluid" alt="Bauble" />
 <strong>Baubles</strong> are trinkets of great value to space traders.  They come in various weights and values.</p>
-
-<p><img src="/SpaceBattleArena/img/obj/Bubble.png" alt="Bubble" class="left"/> 
+<p><img src="img/obj/Bubble.png" class="left img-fluid" alt="Bubble" />
 <strong>Bubbles</strong> are scoring rings.</p>
-
-<p><img src="/SpaceBattleArena/img/obj/Outpost.png" alt="Outpost" class="left"/> 
+<p><img src="img/obj/Outpost.png" class="left img-fluid" alt="Outpost" />
 <strong>Outposts</strong> are used as a central point for you to scout your missions from, they are usually critical to your task at hand.</p>
-
 <p>Other custom games may add their own objects not listed here.</p>
 
       </section>
     </div>
 
 
+    
 		<footer>
 		  <div class="container">
 		    <div class="owner">
@@ -117,7 +123,7 @@
               var pageTracker = _gat._getTracker("UA-39650553-3");
             pageTracker._trackPageview();
             } catch(err) {}
-          </script>
+      </script>
 
   </body>
 </html>

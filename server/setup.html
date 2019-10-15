@@ -1,12 +1,13 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
   <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
 
+    <link rel="shortcut icon" href="/SpaceBattleArena/favicon.ico">
+
     <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/pygment_trac.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/print.css" media="print">
 
     <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="/SpaceBattleArena/js/main.js"></script>
@@ -32,87 +33,51 @@
 
     <nav>
         <div class="container">
-            
             <span><a href="/SpaceBattleArena/index.html">Home</a></span>
-            
-            
-            
-                
-                    &nbsp<span><a href="index.html">Server Information</a></span>
-                
-            
-            <span>Server Environment Setup</span>
+                                        &nbsp;<span><a href="index.html">Server Information</a></span>
+                          <span>Server Environment Setup</span>
         </div>
     </nav>
     
 
-    
-<aside>
-    <h1>Outline</h1>
-    <ul>
-    
-        <li><a href="#overview">Overview</a></li>
-    
-        <li><a href="#install">Installation</a></li>
-    
-        <li><a href="#run">Running the Server</a></li>
-    
-        <li><a href="#parameters">Command-line Parameters (Advanced)</a></li>
-    
-    </ul>
-</aside>
-
-
+    <aside>
+        <h1>Outline</h1>
+        <ul>
+            <li><a href="#overview">Overview</a></span>
+            <li><a href="#install">Installation</a></span>
+            <li><a href="#run">Running the Server</a></span>
+            <li><a href="#parameters">Command-line Parameters (Advanced)</a></span>
+        </ul>
+    </aside>
 
     <div class="container">
       <section id="main_content">
         <h1 id="server-environment-setup">Server Environment Setup</h1>
-
 <h2 id="overview"><a name="overview"></a>Overview</h2>
-
 <p>As discussed on the <a href="index.html">information</a> page, the server is a Windows executable.  It can be downloaded in a zip archive from the button in the header on this page.</p>
-
 <p>To run the server from source on Mac OS X, see this <a href="https://github.com/Mikeware/SpaceBattleArena/blob/master/SBA_Serv/README.md">readme</a>.</p>
-
 <h2 id="installation"><a name="install"></a>Installation</h2>
-
 <p>Once downloading the zip archive.  Extract it to its own folder.</p>
-
 <p>This should be the default behavior when right-clicking on the archive file and selecting <strong>Extract All...</strong> and clicking <strong>Extract</strong> in the following dialog box.</p>
-
 <h2 id="running-the-server"><a name="run"></a>Running the Server</h2>
-
 <p><em>The server is best run from the command-line in order to pass in the required configuration file parameters.</em></p>
-
 <p>However, for an initial test, just double-clicking the executable should bring it up.</p>
-
 <p>Navigate to the directory where the server was extracted.  And open the command prompt.</p>
-
 <p>This can be done from Windows Explorer’s left folder tree pane, by right-clicking on the directory while holding the Shift key on the keyboard.  Then select the <strong>Open Command Window Here</strong> option.</p>
-
 <p>Then type:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">SBA_Serv [configfile]
-</code></pre></div>
-<p>E.g. &#39;SBA_Serv machine_test.cfg&#39;</p>
-
+<pre><code>SBA_Serv [configfile]
+</code></pre>
+<p>E.g. 'SBA_Serv machine_test.cfg'</p>
 <p>This should spit out some text and then load a new window and start the server:</p>
-
-<p><img src="RunCommandPrompt.png" alt="Command Prompt"></p>
-
+<p><img src="RunCommandPrompt.png" class="img-fluid" alt="Command Prompt" /></p>
 <p>This window will most likely be all black except for an <strong>IP Address</strong> in white and a message saying there are <strong>0 Players Connected</strong>.</p>
-
 <p>You can follow the <a href="../client/index.html">Client Setup</a> instructions in order to connect a ship to this server.  Once connected, you should see your ship appear on the screen.</p>
-
-<p>In the <a href="config.html">next chapter</a>, we&#39;ll explore the configuration file itself and explain how to change the default behaviors of the server.</p>
-
+<p>In the <a href="config.html">next chapter</a>, we'll explore the configuration file itself and explain how to change the default behaviors of the server.</p>
 <p><strong>Note:</strong> By default, the server creates a .log file which contains information about what has occurred during the session.  This can be turned off using the additional parameters described in the next section.  Otherwise, you may want to delete it occasionally or before each run.  It is useful to provide this file when requesting any support.</p>
-
-<h2 id="command-line-parameters-(advanced)"><a name="run"></a>Command-line Parameters (Advanced)</h2>
-
+<h2 id="command-line-parameters-advanced"><a name="run"></a>Command-line Parameters (Advanced)</h2>
 <p>There are some extra options available for the server as well. It is also possible to pass in any number of configuration files to the server.</p>
-
 <p>Each extra configuration file passed in will override or add to the configuration file before it. Therefore files passed in last (on the right) have the highest precedence.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">Usage: SBA_Serv.exe [options] [config_file] [more_config_files...]
+<pre><code>Usage: SBA_Serv.exe [options] [config_file] [more_config_files...]
 
 You should pass at least one config file to the server. Additional config files
 will override/add to the options in the base file.
@@ -123,11 +88,13 @@ Options:
   -v, --verbose         turns logging to DEBUG (from INFO)
   -l LOGFILENAME, --logfile=LOGFILENAME
                         specifies the file to log info to
-</code></pre></div>
+</code></pre>
+
       </section>
     </div>
 
 
+    
 		<footer>
 		  <div class="container">
 		    <div class="owner">
@@ -148,7 +115,7 @@ Options:
               var pageTracker = _gat._getTracker("UA-39650553-3");
             pageTracker._trackPageview();
             } catch(err) {}
-          </script>
+      </script>
 
   </body>
 </html>

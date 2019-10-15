@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<rss xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0">
+	<channel>
+		<title>Space Battle Arena by Mikeware</title>
+		<link>https://mikeware.github.io/SpaceBattleArena</link>
+		<description>Space Battle Arena is a ‘Programming Game‘ where you must write code (in Java) to autonomously control a space ship to accomplish specified objectives.</description>
+		<copyright>2019</copyright>
+		<pubDate>Tue, 15 Oct 2019 01:48:42 GMT</pubDate>
+		<lastBuildDate>Tue, 15 Oct 2019 01:48:42 GMT</lastBuildDate>
+		<item>
+			<title>TEALS Season 7 Kickoff</title>
+			<link>https://mikeware.github.io/SpaceBattleArena/2018/04/28/Season-7-Kickoff</link>
+			<description>&lt;p&gt;Today we kickoff TEALS Season 7 cross-school tournament challenge.  The final mission will consist of a challenge using &lt;a href="http://mikeware.github.io/SpaceBattleArena/games/kingofthebubble.html"&gt;King of the Bubble&lt;/a&gt;.  More information will be released in the coming week.&lt;/p&gt;</description>
+			<guid>https://mikeware.github.io/SpaceBattleArena/2018/04/28/Season-7-Kickoff</guid>
+			<pubDate>Sat, 28 Apr 2018 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;Today we kickoff TEALS Season 7 cross-school tournament challenge.  The final mission will consist of a challenge using &lt;a href="http://mikeware.github.io/SpaceBattleArena/games/kingofthebubble.html"&gt;King of the Bubble&lt;/a&gt;.  More information will be released in the coming week.&lt;/p&gt;
+&lt;p&gt;If your school is using Space Battle this year, please have your instructor use &lt;a href="https://goo.gl/forms/7T7oYjq9iY0RjaBo2"&gt;this form&lt;/a&gt; to let us know and receive further information about the tournament.&lt;/p&gt;
+&lt;p&gt;Please search and report to us on &lt;a href="http://github.com/mikeware/SpaceBattleArena/issues"&gt;GitHub&lt;/a&gt; if you see any issues or have questions. Thanks!&lt;/p&gt;
+</content:encoded>
+		</item>
+		<item>
+			<title>v1.2.0.1127 Release</title>
+			<link>https://mikeware.github.io/SpaceBattleArena/2017/06/04/v1.2.0.1127-Release</link>
+			<description>&lt;p&gt;We've released a HotFix release for BaubleHunt to address an issue where ships could deposit in any base instead of just their own.  Please update your server if you are participating in the cross-school tournament.  &lt;em&gt;No client changes were made.&lt;/em&gt;&lt;/p&gt;</description>
+			<guid>https://mikeware.github.io/SpaceBattleArena/2017/06/04/v1.2.0.1127-Release</guid>
+			<pubDate>Sun, 04 Jun 2017 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;We've released a HotFix release for BaubleHunt to address an issue where ships could deposit in any base instead of just their own.  Please update your server if you are participating in the cross-school tournament.  &lt;em&gt;No client changes were made.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Please search and report to us on &lt;a href="http://github.com/mikeware/SpaceBattleArena/issues"&gt;GitHub&lt;/a&gt; if you see any issues. Thanks!&lt;/p&gt;
+</content:encoded>
+		</item>
+		<item>
+			<title>v1.2.0.1126 Release</title>
+			<link>https://mikeware.github.io/SpaceBattleArena/2017/05/14/v1.2.0.1126-Release</link>
+			<description>&lt;p&gt;Season 6 will be a return to &lt;a href="http://mikeware.github.io/SpaceBattleArena/games/baublehunt.html"&gt;Bauble Hunt&lt;/a&gt;.  Players must collect baubles and return them to their home base in order to collect their points.  Compared to the original Season 2, baubles will now have varying values and weights, but your ship can only carry so many.&lt;/p&gt;</description>
+			<guid>https://mikeware.github.io/SpaceBattleArena/2017/05/14/v1.2.0.1126-Release</guid>
+			<pubDate>Sun, 14 May 2017 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;Season 6 will be a return to &lt;a href="http://mikeware.github.io/SpaceBattleArena/games/baublehunt.html"&gt;Bauble Hunt&lt;/a&gt;.  Players must collect baubles and return them to their home base in order to collect their points.  Compared to the original Season 2, baubles will now have varying values and weights, but your ship can only carry so many.&lt;/p&gt;
+&lt;p&gt;Please search and report to us on &lt;a href="http://github.com/mikeware/SpaceBattleArena/issues"&gt;GitHub&lt;/a&gt; if you see any issues. Thanks!&lt;/p&gt;
+</content:encoded>
+		</item>
+		<item>
+			<title>TEALS Season 6 Kickoff</title>
+			<link>https://mikeware.github.io/SpaceBattleArena/2017/04/22/Season-6-Kickoff</link>
+			<description>&lt;p&gt;Today we kickoff TEALS Season 6 cross-school tournament challenge.  The final mission will consist of a challenge using Bauble Hunt and weighted baubles.  More information will be released in the coming weeks, if there is enough interest.&lt;/p&gt;</description>
+			<guid>https://mikeware.github.io/SpaceBattleArena/2017/04/22/Season-6-Kickoff</guid>
+			<pubDate>Sat, 22 Apr 2017 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;Today we kickoff TEALS Season 6 cross-school tournament challenge.  The final mission will consist of a challenge using Bauble Hunt and weighted baubles.  More information will be released in the coming weeks, if there is enough interest.&lt;/p&gt;
+&lt;p&gt;If your TEALS affiliated school is using Space Battle this year, please have your instructor use &lt;a href="https://goo.gl/forms/tO05CaEBgZKjBLJS2"&gt;this form&lt;/a&gt; to let us know and receive further information about the tournament.&lt;/p&gt;
+&lt;p&gt;Work is also progressing on some client debugging tools in a separate &lt;a href="https://github.com/Mikeware/SpaceBattleArena/tree/feat/nodeclient"&gt;branch&lt;/a&gt;.  More information will be provided when simple instructions for setup are available.&lt;/p&gt;
+&lt;p&gt;Please search and report to us on &lt;a href="http://github.com/mikeware/SpaceBattleArena/issues"&gt;GitHub&lt;/a&gt; if you see any issues or have questions. Thanks!&lt;/p&gt;
+</content:encoded>
+		</item>
+		<item>
+			<title>v1.2.0.1125 Release</title>
+			<link>https://mikeware.github.io/SpaceBattleArena/2017/01/18/v1.2.0.1125-Release</link>
+			<description>&lt;p&gt;Season 5 cleaned up all of the 'Bauble' games and introduced the king of them all with 'The Hunger Baubles'.  The Hunger Baubles are a game where you must hunt for the best collection of baubles.  Baubles have varying values and weights, but your ship can only carry so many.&lt;/p&gt;</description>
+			<guid>https://mikeware.github.io/SpaceBattleArena/2017/01/18/v1.2.0.1125-Release</guid>
+			<pubDate>Wed, 18 Jan 2017 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;Season 5 cleaned up all of the 'Bauble' games and introduced the king of them all with 'The Hunger Baubles'.  The Hunger Baubles are a game where you must hunt for the best collection of baubles.  Baubles have varying values and weights, but your ship can only carry so many.&lt;/p&gt;
+&lt;p&gt;This past year we also visited the Computer Science Teachers Association Conference in San Diego.&lt;/p&gt;
+&lt;p&gt;Work on V2 will commence soon with possible improvements to the current version.&lt;/p&gt;
+&lt;p&gt;Please search and report to us on &lt;a href="http://github.com/mikeware/SpaceBattleArena/issues"&gt;GitHub&lt;/a&gt; if you see any issues. Thanks!&lt;/p&gt;
+</content:encoded>
+		</item>
+		<item>
+			<title>v1.1.0.1111 Release</title>
+			<link>https://mikeware.github.io/SpaceBattleArena/2016/04/21/v1.1.0.1111-Release</link>
+			<description>&lt;p&gt;Last year we kicked off our Open Source project with an improved version of Season 3's 'King of the Bubble' challenge.&lt;/p&gt;</description>
+			<guid>https://mikeware.github.io/SpaceBattleArena/2016/04/21/v1.1.0.1111-Release</guid>
+			<pubDate>Thu, 21 Apr 2016 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;Last year we kicked off our Open Source project with an improved version of Season 3's 'King of the Bubble' challenge.&lt;/p&gt;
+&lt;p&gt;We delayed the official build, but last year's Season 4 Challenge of 'Discovery Quest' is now available.&lt;/p&gt;
+&lt;p&gt;We'll be kicking off the 5th Season of Space Battle in a few weeks, so stay tuned!&lt;/p&gt;
+&lt;p&gt;Please search and report to us on &lt;a href="http://github.com/mikeware/SpaceBattleArena/issues"&gt;GitHub&lt;/a&gt; if you see any issues. Thanks!&lt;/p&gt;
+</content:encoded>
+		</item>
+		<item>
+			<title>v1.0.1 Release</title>
+			<link>https://mikeware.github.io/SpaceBattleArena/2015/05/26/v1.0.1-Release</link>
+			<description>&lt;p&gt;Just over 3 years ago Space Battle Arena was born. It has come a long way, and we are proud to be in a state where we can publish stable builds.&lt;/p&gt;</description>
+			<guid>https://mikeware.github.io/SpaceBattleArena/2015/05/26/v1.0.1-Release</guid>
+			<pubDate>Tue, 26 May 2015 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;Just over 3 years ago Space Battle Arena was born. It has come a long way, and we are proud to be in a state where we can publish stable builds.&lt;/p&gt;
+&lt;p&gt;Please search or report to us on &lt;a href="http://github.com/mikeware/SpaceBattleArena/issues"&gt;GitHub&lt;/a&gt; if you see any issues. Thanks!&lt;/p&gt;
+</content:encoded>
+		</item>
+		<item>
+			<title>Space Battle Arena V1 Release</title>
+			<link>https://mikeware.github.io/SpaceBattleArena/2015/05/11/Space-Battle-Arena-V1-Release</link>
+			<description>&lt;p&gt;At the start of our 4th season of Space Battle, we are releasing it to the open source world.  Look for more info on the website to come in the next few days. You can download it through the links above.&lt;/p&gt;</description>
+			<guid>https://mikeware.github.io/SpaceBattleArena/2015/05/11/Space-Battle-Arena-V1-Release</guid>
+			<pubDate>Mon, 11 May 2015 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;At the start of our 4th season of Space Battle, we are releasing it to the open source world.  Look for more info on the website to come in the next few days. You can download it through the links above.&lt;/p&gt;
+&lt;p&gt;We may also refresh the package with some lesson configuration files.  But this package has been fairly well tested with our new unit test framework for the basics.&lt;/p&gt;
+&lt;p&gt;Please search or report to us on &lt;a href="http://github.com/mikeware/SpaceBattleArena/issues"&gt;GitHub&lt;/a&gt; if you see any issues. Thanks!&lt;/p&gt;
+</content:encoded>
+		</item>
+		<item>
+			<title>Nebulas</title>
+			<link>https://mikeware.github.io/SpaceBattleArena/2015/05/05/Nebulas</link>
+			<description>&lt;p&gt;&lt;img src="/SpaceBattleArena/client/guides/img/obj/Nebula.png" alt="" class="left"&gt; &lt;strong&gt;Nebulas&lt;/strong&gt; will add a bit more beauty and depth to our barren space.&lt;/p&gt;</description>
+			<guid>https://mikeware.github.io/SpaceBattleArena/2015/05/05/Nebulas</guid>
+			<pubDate>Tue, 05 May 2015 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;&lt;img src="/SpaceBattleArena/client/guides/img/obj/Nebula.png" alt="" class="left"/&gt; &lt;strong&gt;Nebulas&lt;/strong&gt; will add a bit more beauty and depth to our barren space.&lt;/p&gt;
+&lt;p&gt;Nebulas are larger objects within the game world, but do not cause collisions.  If ships enter a Nebula, they will be slowed down by some drag on the celestial dust.  This drag is less than the ship's thrust capacity though, so it'll not be a trap like some &lt;strong&gt;Black Holes&lt;/strong&gt; can be.&lt;/p&gt;
+&lt;p&gt;Nebulas actually represent an upgrade to some of the internal workings of Space Battle Arena.  Before there was a bit of a mismatch between what constituted an &lt;em&gt;Entity&lt;/em&gt; and a piece of the Physical Model.  That and everything was assumed to be round.  Now, everything is an Entity from the start, and the Physical Model builds on top of the Entity.&lt;/p&gt;
+&lt;p&gt;It will be possible to add &lt;em&gt;Polygonal&lt;/em&gt; shaped objects to the world which could be barriers or goals for other objectives in the future; however, remember that detecting these shapes on the client isn't as straight-forward if they're not roundish.&lt;/p&gt;
+</content:encoded>
+		</item>
+		<item>
+			<title>Website</title>
+			<link>https://mikeware.github.io/SpaceBattleArena/2015/05/02/Website</link>
+			<description>&lt;p&gt;Today, we worked on creating the outline for our website here at &lt;a href="http://mikeware.github.io/SpaceBattleArena/"&gt;http://mikeware.github.io/SpaceBattleArena/&lt;/a&gt;.  More content will be coming over the next few weeks.&lt;/p&gt;</description>
+			<guid>https://mikeware.github.io/SpaceBattleArena/2015/05/02/Website</guid>
+			<pubDate>Sat, 02 May 2015 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;Today, we worked on creating the outline for our website here at &lt;a href="http://mikeware.github.io/SpaceBattleArena/"&gt;http://mikeware.github.io/SpaceBattleArena/&lt;/a&gt;.  More content will be coming over the next few weeks.&lt;/p&gt;
+</content:encoded>
+		</item>
+		<item>
+			<title>Initial GitHub Commit</title>
+			<link>https://mikeware.github.io/SpaceBattleArena/2015/04/28/Initial-GitHub-Upload</link>
+			<description>&lt;p&gt;Today, we uploaded the initial public version of Space Battle Arena to GitHub.  Bear with us as we continue to make some initial tweaks before the &lt;em&gt;official&lt;/em&gt; V1 release and update documentation.&lt;/p&gt;</description>
+			<guid>https://mikeware.github.io/SpaceBattleArena/2015/04/28/Initial-GitHub-Upload</guid>
+			<pubDate>Tue, 28 Apr 2015 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;Today, we uploaded the initial public version of Space Battle Arena to GitHub.  Bear with us as we continue to make some initial tweaks before the &lt;em&gt;official&lt;/em&gt; V1 release and update documentation.&lt;/p&gt;
+</content:encoded>
+		</item>
+	</channel>
+</rss>

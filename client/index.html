@@ -1,12 +1,13 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
   <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
 
+    <link rel="shortcut icon" href="/SpaceBattleArena/favicon.ico">
+
     <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/pygment_trac.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/print.css" media="print">
 
     <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="/SpaceBattleArena/js/main.js"></script>
@@ -32,66 +33,48 @@
 
     <nav>
         <div class="container">
-            
             <span><a href="/SpaceBattleArena/index.html">Home</a></span>
-            
-            
-            
-            <span>Client Setup</span>
+                                                  <span>Client Setup</span>
         </div>
     </nav>
     
 
-    
-<aside>
-    <h1>IDE Tutorials</h1>
-    <ul>
-    
-        <li><a href="jGRASP/index.html">jGRASP</a></li>
-    
-        <li><a href="Eclipse/index.html">Eclipse</a></li>
-    
-        <li><a href="BlueJ/index.html">BlueJ</a></li>
-    
-        <li><a href="CmdLine/index.html">Command Line</a></li>
-    
-    </ul>
-</aside>
-
-
+    <aside>
+        <h1>IDE Tutorials</h1>
+        <ul>
+            <li><a href="jGRASP/index.html">jGRASP</a></span>
+            <li><a href="Eclipse/index.html">Eclipse</a></span>
+            <li><a href="BlueJ/index.html">BlueJ</a></span>
+            <li><a href="CmdLine/index.html">Command Line</a></span>
+        </ul>
+    </aside>
 
     <div class="container">
       <section id="main_content">
         <h1 id="client-setup">Client Setup</h1>
-
 <p>Any Java IDE should be able to be used for Space Battle Arena.</p>
-
 <p>We typically use <a href="http://www.jgrasp.org/">jGRASP</a> or <a href="https://eclipse.org/">Eclipse</a>.  Look to the <strong>right</strong> for some walk-throughs on setting up Space Battle using different IDEs.</p>
-
 <p>The general process involves:</p>
-
 <ol>
 <li>Adding both the Gson and SpaceBattle .jar files to your classpath.</li>
-<li>Creating a Ship class which either extends the BasicSpaceship abstract class OR<br>
+<li>Creating a Ship class which either extends the BasicSpaceship abstract class OR<br />
 implements the Spaceship&lt;?&gt; interface.</li>
-<li>Execute the TextClient&#39;s main method from the SpaceBattle.jar file with the following arguments:
-
+<li>Execute the TextClient's main method from the SpaceBattle.jar file with the following arguments:
 <ol>
 <li>IP address of the server</li>
 <li>name of your Java Ship class</li>
-</ol></li>
 </ol>
-
+</li>
+</ol>
 <p>Alternatively, to the third step above, create a main method which calls the <em>run</em> method on TextClient with the IP Address and an instance of your Ship class.</p>
-
 <p>If you need to run ships via the Command Line see <a href="CmdLine/index.html">these instructions</a>.</p>
-
 <p>We also have a complete set of <a href="java_doc/" target="_blank">Java Docs</a> available.</p>
 
       </section>
     </div>
 
 
+    
 		<footer>
 		  <div class="container">
 		    <div class="owner">
@@ -112,7 +95,7 @@ implements the Spaceship&lt;?&gt; interface.</li>
               var pageTracker = _gat._getTracker("UA-39650553-3");
             pageTracker._trackPageview();
             } catch(err) {}
-          </script>
+      </script>
 
   </body>
 </html>
