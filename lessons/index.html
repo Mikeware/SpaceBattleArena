@@ -1,12 +1,13 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
   <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
 
+    <link rel="shortcut icon" href="/SpaceBattleArena/favicon.ico">
+
     <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/pygment_trac.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/print.css" media="print">
 
     <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="/SpaceBattleArena/js/main.js"></script>
@@ -32,60 +33,41 @@
 
     <nav>
         <div class="container">
-            
             <span><a href="/SpaceBattleArena/index.html">Home</a></span>
-            
-            
-            
-            <span>Lessons</span>
+                                                  <span>Lessons</span>
         </div>
     </nav>
     
 
-    
-<aside>
-    <h1>Lessons</h1>
-    <ul>
-    
-        <li><a href="#intro">Intro & Connections</a></li>
-    
-        <li><a href="#findthemiddle">Find The Middle</a></li>
-    
-        <li><a href="#shapesinspace">Shapes in Space</a></li>
-    
-        <li><a href="#radar">Intro to Radar</a></li>
-    
-        <li><a href="#competitions">Competitions</a></li>
-    
-    </ul>
-</aside>
-
-
+    <aside>
+        <h1>Lessons</h1>
+        <ul>
+            <li><a href="#intro">Intro &amp; Connections</a></span>
+            <li><a href="#findthemiddle">Find The Middle</a></span>
+            <li><a href="#shapesinspace">Shapes in Space</a></span>
+            <li><a href="#radar">Intro to Radar</a></span>
+            <li><a href="#competitions">Competitions</a></span>
+        </ul>
+    </aside>
 
     <div class="container">
       <section id="main_content">
         <h1 id="lessons">Lessons</h1>
-
-<p>Space Battle Arena is a great environment to educate students about a variety of different topics.  Its main purpose is to help AP Computer Science students utilize the skills they&#39;ve learned about all year in an interesting and engaging way.</p>
-
-<p>The following lessons are provided as guidance towards a <strong><em>4 week curriculum</em></strong> involving Space Battle Arena.</p>
-
-<h2 id="classroom-setup-&amp;-equipment">Classroom Setup &amp; Equipment</h2>
-
+<p>Space Battle Arena is a great environment to educate students about a variety of different topics.  Its main purpose is to help AP Computer Science students utilize the skills they've learned about all year in an interesting and engaging way.</p>
+<p>The following lessons are provided as guidance towards a <em><strong>4 week curriculum</strong></em> involving Space Battle Arena.</p>
+<h2 id="classroom-setup-equipment">Classroom Setup &amp; Equipment</h2>
 <p>It is assumed that Space Battle will be run in a lab based setting with <em>each student having access to their own machine</em> running a Java 8 version of the <a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">JDK</a>. See <a href="../client/index.html">Client Setup</a> for more information about the client configuration required - though <strong>it is suggested</strong> to have students link to the jar on a shared network resource, so pushing updates to students when updating the server is automatic just by refreshing the jar.</p>
-
-<p>A teacher machine should be able to present and <em>project</em> to the front of the classroom so that all students can see the <a href="../server/index.html">server</a>&#39;s simulation of space.  This machine needs to be a Windows machine to run the server executable right now, unless you run from the Python source.</p>
-
+<p>A teacher machine should be able to present and <em>project</em> to the front of the classroom so that all students can see the <a href="../server/index.html">server</a>'s simulation of space.  This machine needs to be a Windows machine to run the server executable right now, unless you run from the Python source.</p>
 <h2 id="lesson-plans">Lesson Plans</h2>
-
 <p>Follow the link in the table below for a more complete lesson plan for that activity.</p>
-
-<table><thead>
+<table class="table">
+<thead>
 <tr>
 <th>Day Number</th>
 <th>Lesson</th>
 </tr>
-</thead><tbody>
+</thead>
+<tbody>
 <tr>
 <td>1 - 2</td>
 <td><a href="intro.html">Intro &amp; Connections</a></td>
@@ -106,62 +88,39 @@
 <td>13 +</td>
 <td>Competitions</td>
 </tr>
-</tbody></table>
-
-<h2 id="intro-&amp;-connections-[days-1---2]"><a name="intro"></a>Intro &amp; Connections [Days 1 - 2]</h2>
-
+</tbody>
+</table>
+<h2 id="intro-connections-days-1-2"><a name="intro"></a>Intro &amp; Connections [Days 1 - 2]</h2>
 <p><a href="intro.html">Full Plan</a></p>
-
 <p><a href="../client/index.html">Client Setup</a></p>
-
 <p>The first day of class should be an introduction to the project.  Discuss the notion of controlling a ship, not having direct access to code, and how the main client loop will work.  If there is time, you can start setting up the students environment.</p>
-
-<p>By the second day you should be distributing the client package to students and walk them through creating a ship with a registration method which can connect to the server and rotate continuously.  By the end of class, all students should be able to connect to the server. </p>
-
-<h2 id="find-the-middle-[days-3---4]"><a name="findthemiddle"></a>Find The Middle [Days 3 - 4]</h2>
-
+<p>By the second day you should be distributing the client package to students and walk them through creating a ship with a registration method which can connect to the server and rotate continuously.  By the end of class, all students should be able to connect to the server.</p>
+<h2 id="find-the-middle-days-3-4"><a name="findthemiddle"></a>Find The Middle [Days 3 - 4]</h2>
 <p><a href="findthemiddle.html">Full Plan</a></p>
-
 <p><a href="../games/findthemiddle.html">See Find The Middle Game</a></p>
-
-<p>Now that students are able to connect, the 3rd day should be spent going over commands (Rotate, Thrust, and Brake) and controlling a ship in space.  This is also a good point to talk about blocking vs. non-blocking commands. </p>
-
-<p>Then give the students the objective to get their ship from their spawning point to somewhere near the middle of the world.  They can use the parameters given to the register ship method to calculate the mid-point of the universe.  Aim for students to have accomplished this by the end of the next day. </p>
-
-<h2 id="shapes-in-space-[days-5---8]"><a name="shapesinspace"></a>Shapes in Space [Days 5 - 8]</h2>
-
+<p>Now that students are able to connect, the 3rd day should be spent going over commands (Rotate, Thrust, and Brake) and controlling a ship in space.  This is also a good point to talk about blocking vs. non-blocking commands.</p>
+<p>Then give the students the objective to get their ship from their spawning point to somewhere near the middle of the world.  They can use the parameters given to the register ship method to calculate the mid-point of the universe.  Aim for students to have accomplished this by the end of the next day.</p>
+<h2 id="shapes-in-space-days-5-8"><a name="shapesinspace"></a>Shapes in Space [Days 5 - 8]</h2>
 <p><a href="shapes.html">Full Plan</a></p>
-
 <p>It turns out drawing turtle graphics in space is a lot harder than you would think.  The next exercise teaches students a familiar concept in a whole new way.  Space Battle provides a way to draw shapes on the screen.</p>
-
 <p>This lesson works towards students getting more comfortable with maneuvering their ship by incrementally learning to draw different shapes such as rectangles, stars, spirals, and an octagon circumscribed around a square.</p>
-
-<h2 id="intro-to-radar-[days-9---12]"><a name="radar"></a>Intro to Radar [Days 9 - 12]</h2>
-
+<h2 id="intro-to-radar-days-9-12"><a name="radar"></a>Intro to Radar [Days 9 - 12]</h2>
 <p><a href="radar.html">Full Plan</a></p>
-
 <p>Once players are comfortable maneuvering their ships, they need to understand how to <em>see</em> the world around them and react to it.</p>
-
 <p><strong>Radar</strong> is the way that enables students to get extra information about the world around their ship.</p>
-
 <p>The first day of this lesson should be about explaining how radar works, what information it provides, and how the programming paradigm changes slightly with having to react in the next getNextCommand call.</p>
-
 <p>To aid in this activity most of the <a href="../games/basic.html">Basic Games</a> can be configured to provide a challenge and motivation via scoring.</p>
-
-<h2 id="competitions-[days-13+]"><a name="competitions"></a>Competitions [Days 13+]</h2>
-
+<h2 id="competitions-days-13"><a name="competitions"></a>Competitions [Days 13+]</h2>
 <p><a href="../games/index.html">Competitions Index</a></p>
-
-<p>After the lessons preceding this one, students should be comfortable with the system and be able to work on a ship to complete more complex sets of tasks.  This time can be used to introduce a final project where students must complete an objective and compete against their fellow students. </p>
-
-<p>At the end (for instance as a ‘final’) a tiered tournament can be run with the entire class where ships are broken into groups of 4-5 at random and face each other.  The winner from each round moves to a final round where a victor is determined.   </p>
-
-<p>See the <a href="../server/config.html">Server Configuration</a> Instructions for more info on running tournaments through the configuration file.  Sample configuration files for all competitions are provided. </p>
+<p>After the lessons preceding this one, students should be comfortable with the system and be able to work on a ship to complete more complex sets of tasks.  This time can be used to introduce a final project where students must complete an objective and compete against their fellow students.</p>
+<p>At the end (for instance as a ‘final’) a tiered tournament can be run with the entire class where ships are broken into groups of 4-5 at random and face each other.  The winner from each round moves to a final round where a victor is determined.</p>
+<p>See the <a href="../server/config.html">Server Configuration</a> Instructions for more info on running tournaments through the configuration file.  Sample configuration files for all competitions are provided.</p>
 
       </section>
     </div>
 
 
+    
 		<footer>
 		  <div class="container">
 		    <div class="owner">
@@ -182,7 +141,7 @@
               var pageTracker = _gat._getTracker("UA-39650553-3");
             pageTracker._trackPageview();
             } catch(err) {}
-          </script>
+      </script>
 
   </body>
 </html>

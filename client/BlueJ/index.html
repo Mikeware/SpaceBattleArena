@@ -1,12 +1,13 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
   <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
 
+    <link rel="shortcut icon" href="/SpaceBattleArena/favicon.ico">
+
     <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/pygment_trac.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/print.css" media="print">
 
     <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="/SpaceBattleArena/js/main.js"></script>
@@ -32,75 +33,57 @@
 
     <nav>
         <div class="container">
-            
             <span><a href="/SpaceBattleArena/index.html">Home</a></span>
-            
-            
-            
-                
-                    &nbsp<span><a href="../index.html">Client Setup</a></span>
-                
-            
-            <span>BlueJ Client Environment Setup</span>
+                                        &nbsp;<span><a href="../index.html">Client Setup</a></span>
+                          <span>BlueJ Client Environment Setup</span>
         </div>
     </nav>
     
 
-    
-<aside>
-    <h1>Outline</h1>
-    <ul>
-    
-        <li><a href="#overview">Overview</a></li>
-    
-        <li><a href="#environment">Initial Environment Setup</a></li>
-    
-        <li><a href="#classsetup">Class Setup</a></li>
-    
-        <li><a href="#execution">Execution Instructions</a></li>
-    
-    </ul>
-</aside>
-
-
+    <aside>
+        <h1>Outline</h1>
+        <ul>
+            <li><a href="#overview">Overview</a></span>
+            <li><a href="#environment">Initial Environment Setup</a></span>
+            <li><a href="#classsetup">Class Setup</a></span>
+            <li><a href="#execution">Execution Instructions</a></span>
+        </ul>
+    </aside>
 
     <div class="container">
       <section id="main_content">
         <h1 id="bluej-client-environment-setup">BlueJ Client Environment Setup</h1>
-
 <h2 id="overview"><a name="overview"></a>Overview</h2>
-
 <p>This document provides instructions for setting up the Java environment for developing code which controls a ship in the <a href="http://battlearena.mikeware.com/">Space Battle Arena</a> (SBA) programming game.</p>
-
 <p>These instructions were prepared for <a href="http://www.bluej.org/">BlueJ</a> (3.1.5) and above.</p>
-
 <h2 id="initial-environment-setup"><a name="environment"></a>Initial Environment Setup</h2>
-
 <ol>
 <li><p>From the <strong>Tools</strong> menu select <strong>Preferences</strong> in the main window:</p>
-
-<p><img src="PreferencesMenu.png" alt="Tools Preferences"></p></li>
-<li><p>Click on the <strong>Libraries</strong> tab.  </p></li>
-<li><p>Click on <strong>Add</strong>.</p></li>
-<li><p>Select both the <strong><a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.2.0.1127/gson-2.2.jar">gson-2.2.jar</a></strong> and <strong><a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.2.0.1127/SpaceBattle.jar">SpaceBattle.jar</a></strong> which you should have downloaded:</p>
-
-<p><img src="LibrariesTab.png" alt="Libraries Tab"></p></li>
-<li><p>Click <strong>OK</strong></p></li>
+<p><img src="PreferencesMenu.png" class="img-fluid" alt="Tools Preferences" /></p>
+</li>
+<li><p>Click on the <strong>Libraries</strong> tab.</p>
+</li>
+<li><p>Click on <strong>Add</strong>.</p>
+</li>
+<li><p>Select both the <strong>[gson-2.2.jar]({{ site.releasepath }}/gson-2.2.jar)</strong> and <strong>[SpaceBattle.jar]({{ site.releasepath }}/SpaceBattle.jar)</strong> which you should have downloaded:</p>
+<p><img src="LibrariesTab.png" class="img-fluid" alt="Libraries Tab" /></p>
+</li>
+<li><p>Click <strong>OK</strong></p>
+</li>
 <li><p>Click <strong>OK</strong> on the warning that pops up:</p>
-
-<p><img src="Warning.png" alt="Warning"></p></li>
-<li><p><strong>Close and re-open BlueJ</strong>.</p></li>
+<p><img src="Warning.png" class="img-fluid" alt="Warning" /></p>
+</li>
+<li><p><strong>Close and re-open BlueJ</strong>.</p>
+</li>
 </ol>
-
 <h2 id="class-setup"><a name="classsetup"></a>Class Setup</h2>
-
 <ol>
 <li><p>Click the <strong>New Class...</strong> button to add one to your project:</p>
-
-<p><img src="AddClass.png" alt="Add Class"></p></li>
-<li><p>Double-click the new class to bring up the editor and extend BasicSpaceship, like the example below:</p></li>
+<p><img src="AddClass.png" class="img-fluid" alt="Add Class" /></p>
+</li>
+<li><p>Double-click the new class to bring up the editor and extend BasicSpaceship, like the example below:</p>
+</li>
 </ol>
-
 <pre><code>import java.awt.Color;
 
 import ihs.apcs.spacebattle.*;
@@ -112,13 +95,13 @@ public class ExampleShip extends BasicSpaceship {
         TextClient.run("127.0.0.1", new ExampleShip());
     }
     
-    @Override
+    &#64;Override
     public RegistrationData registerShip(int numImages, int worldWidth, int worldHeight)
     {
         return new RegistrationData("Example Ship", new Color(255, 255, 255), 0);
     }
     
-    @Override
+    &#64;Override
     public ShipCommand getNextCommand(BasicEnvironment env)
     {
         return new IdleCommand(0.1);
@@ -126,28 +109,27 @@ public class ExampleShip extends BasicSpaceship {
     
 }
 </code></pre>
-
 <p>You should be able to go to Tools -&gt; Compile (Ctrl-K) and have no errors.</p>
-
 <h2 id="execution-instructions"><a name="execution"></a>Execution Instructions</h2>
-
-<p><strong>Note: Do not terminate the program through the BlueJ UI; instead, click in the console window and type &#39;QUIT&#39; to gracefully close the connection.</strong></p>
-
+<p><strong>Note: Do not terminate the program through the BlueJ UI; instead, click in the console window and type 'QUIT' to gracefully close the connection.</strong></p>
 <ol>
-<li><p>Go to your main window and right-click on your class.</p></li>
+<li><p>Go to your main window and right-click on your class.</p>
+</li>
 <li><p>Select the main method:</p>
-
-<p><img src="RunMain.png" alt="Run main"></p></li>
-<li><p>Click OK in the Method Call dialog which appears.</p></li>
-<li><p>When done, type &#39;QUIT&#39; in the <strong>Console</strong> window to disconnect your ship:</p>
-
-<p><img src="Disconnect.png" alt="Output Window"></p></li>
+<p><img src="RunMain.png" class="img-fluid" alt="Run main" /></p>
+</li>
+<li><p>Click OK in the Method Call dialog which appears.</p>
+</li>
+<li><p>When done, type 'QUIT' in the <strong>Console</strong> window to disconnect your ship:</p>
+<p><img src="Disconnect.png" class="img-fluid" alt="Output Window" /></p>
+</li>
 </ol>
 
       </section>
     </div>
 
 
+    
 		<footer>
 		  <div class="container">
 		    <div class="owner">
@@ -168,7 +150,7 @@ public class ExampleShip extends BasicSpaceship {
               var pageTracker = _gat._getTracker("UA-39650553-3");
             pageTracker._trackPageview();
             } catch(err) {}
-          </script>
+      </script>
 
   </body>
 </html>

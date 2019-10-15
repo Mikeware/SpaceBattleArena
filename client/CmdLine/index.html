@@ -1,12 +1,13 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
   <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
 
+    <link rel="shortcut icon" href="/SpaceBattleArena/favicon.ico">
+
     <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/pygment_trac.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/print.css" media="print">
 
     <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="/SpaceBattleArena/js/main.js"></script>
@@ -32,50 +33,30 @@
 
     <nav>
         <div class="container">
-            
             <span><a href="/SpaceBattleArena/index.html">Home</a></span>
-            
-            
-            
-                
-                    &nbsp<span><a href="../index.html">Client Setup</a></span>
-                
-            
-            <span>Command Line Client Environment</span>
+                                        &nbsp;<span><a href="../index.html">Client Setup</a></span>
+                          <span>Command Line Client Environment</span>
         </div>
     </nav>
     
 
-    
-<aside>
-    <h1>Outline</h1>
-    <ul>
-    
-        <li><a href="#overview">Overview</a></li>
-    
-        <li><a href="#environment">Initial Setup</a></li>
-    
-        <li><a href="#execution">Execution Instructions</a></li>
-    
-    </ul>
-</aside>
-
-
+    <aside>
+        <h1>Outline</h1>
+        <ul>
+            <li><a href="#overview">Overview</a></span>
+            <li><a href="#environment">Initial Setup</a></span>
+            <li><a href="#execution">Execution Instructions</a></span>
+        </ul>
+    </aside>
 
     <div class="container">
       <section id="main_content">
         <h1 id="command-line-client-environment-setup">Command Line Client Environment Setup</h1>
-
 <h2 id="overview"><a name="overview"></a>Overview</h2>
-
 <p>This document provides instructions for running ships on the command line using <strong>javac</strong> and <strong>java</strong>.</p>
-
 <p>These instructions were prepared for Java 1.7 and above.</p>
-
 <h2 id="initial-setup"><a name="environment"></a>Initial Setup</h2>
-
 <p>Create a Spaceship class:</p>
-
 <pre><code>import java.awt.Color;
 
 import ihs.apcs.spacebattle.*;
@@ -87,47 +68,46 @@ public class ExampleShip extends BasicSpaceship {
         TextClient.run("127.0.0.1", new ExampleShip());
     }
 
-    @Override
+    &#64;Override
     public RegistrationData registerShip(int numImages, int worldWidth, int worldHeight)
     {
         return new RegistrationData("Example Ship", new Color(255, 255, 255), 0);
     }
     
-    @Override
+    &#64;Override
     public ShipCommand getNextCommand(BasicEnvironment env)
     {
         return new IdleCommand(0.1);
     }
 }
 </code></pre>
-
 <ol>
-<li><p>Be sure to have the <strong><a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.2.0.1127/gson-2.2.jar">gson-2.2.jar</a></strong> and <strong><a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.2.0.1127/SpaceBattle.jar">SpaceBattle.jar</a></strong> in a known location (e.g. a &#39;lib&#39; subdirectory).</p></li>
-<li><p>Open a Command Prompt.</p></li>
+<li><p>Be sure to have the <strong>[gson-2.2.jar]({{ site.releasepath }}/gson-2.2.jar)</strong> and <strong>[SpaceBattle.jar]({{ site.releasepath }}/SpaceBattle.jar)</strong> in a known location (e.g. a 'lib' subdirectory).</p>
+</li>
+<li><p>Open a Command Prompt.</p>
+</li>
 </ol>
-
 <h2 id="execution-instructions"><a name="execution"></a>Execution Instructions</h2>
-
-<p><strong>Note: Do not terminate the program with Ctrl+C; instead, type &#39;QUIT&#39; to gracefully close the connection.</strong></p>
-
+<p><strong>Note: Do not terminate the program with Ctrl+C; instead, type 'QUIT' to gracefully close the connection.</strong></p>
 <ol>
 <li><p>Compile your code with the following command:</p>
-
-<pre><code>javac -cp lib\SpaceBattle.jar;lib\gson-2.2.jar ExampleShip.java
-</code></pre></li>
+ <pre><code>javac -cp lib\SpaceBattle.jar;lib\gson-2.2.jar ExampleShip.java
+ </code></pre>
+</li>
 <li><p>Run your code with the following command:</p>
-
-<pre><code>java -cp lib\SpaceBattle.jar;lib\gson-2.2.jar;. ExampleShip
-</code></pre>
-
-<p>Note: the addition of the &#39;;.&#39; this is to represent the location of your compiled class file.</p></li>
-<li><p>Type &#39;QUIT&#39; in the console window to disconnect your ship.</p></li>
+ <pre><code>java -cp lib\SpaceBattle.jar;lib\gson-2.2.jar;. ExampleShip
+ </code></pre>
+<p>Note: the addition of the ';.' this is to represent the location of your compiled class file.</p>
+</li>
+<li><p>Type 'QUIT' in the console window to disconnect your ship.</p>
+</li>
 </ol>
 
       </section>
     </div>
 
 
+    
 		<footer>
 		  <div class="container">
 		    <div class="owner">
@@ -148,7 +128,7 @@ public class ExampleShip extends BasicSpaceship {
               var pageTracker = _gat._getTracker("UA-39650553-3");
             pageTracker._trackPageview();
             } catch(err) {}
-          </script>
+      </script>
 
   </body>
 </html>

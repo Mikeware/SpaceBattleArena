@@ -1,12 +1,13 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
   <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
 
+    <link rel="shortcut icon" href="/SpaceBattleArena/favicon.ico">
+
     <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/pygment_trac.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/print.css" media="print">
 
     <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="/SpaceBattleArena/js/main.js"></script>
@@ -32,81 +33,48 @@
 
     <nav>
         <div class="container">
-            
             <span><a href="/SpaceBattleArena/index.html">Home</a></span>
-            
-            
-            
-                
-                    &nbsp<span><a href="index.html">Server Information</a></span>
-                
-            
-            <span>Server Configuration</span>
+                                        &nbsp;<span><a href="index.html">Server Information</a></span>
+                          <span>Server Configuration</span>
         </div>
     </nav>
     
 
-    
-<aside>
-    <h1>Outline</h1>
-    <ul>
-    
-        <li><a href="#overview">Overview</a></li>
-    
-        <li><a href="#format">Format</a></li>
-    
-        <li><a href="#application">[Application]</a></li>
-    
-        <li><a href="#world">[World]</a></li>
-    
-        <li><a href="#server">[Server]</a></li>
-    
-        <li><a href="#spawnmanager">Spawn Manager</a></li>
-    
-        <li><a href="#asteroid">[Asteroid]</a></li>
-    
-        <li><a href="#dragon">[Dragon]</a></li>
-    
-        <li><a href="#spacemine">[SpaceMine]</a></li>
-    
-        <li><a href="#planet">[Planet]</a></li>
-    
-        <li><a href="#blackhole">[BlackHole]</a></li>
-    
-        <li><a href="#star">[Star]</a></li>
-    
-        <li><a href="#nebula">[Nebula]</a></li>
-    
-        <li><a href="#wormhole">[WormHole]</a></li>
-    
-        <li><a href="#game">[Game]</a></li>
-    
-        <li><a href="#tournament">[Tournament]</a></li>
-    
-    </ul>
-</aside>
-
-
+    <aside>
+        <h1>Outline</h1>
+        <ul>
+            <li><a href="#overview">Overview</a></span>
+            <li><a href="#format">Format</a></span>
+            <li><a href="#application">[Application]</a></span>
+            <li><a href="#world">[World]</a></span>
+            <li><a href="#server">[Server]</a></span>
+            <li><a href="#spawnmanager">Spawn Manager</a></span>
+            <li><a href="#asteroid">[Asteroid]</a></span>
+            <li><a href="#dragon">[Dragon]</a></span>
+            <li><a href="#spacemine">[SpaceMine]</a></span>
+            <li><a href="#planet">[Planet]</a></span>
+            <li><a href="#blackhole">[BlackHole]</a></span>
+            <li><a href="#star">[Star]</a></span>
+            <li><a href="#nebula">[Nebula]</a></span>
+            <li><a href="#wormhole">[WormHole]</a></span>
+            <li><a href="#game">[Game]</a></span>
+            <li><a href="#tournament">[Tournament]</a></span>
+        </ul>
+    </aside>
 
     <div class="container">
       <section id="main_content">
         <h1 id="server-configuration">Server Configuration</h1>
-
 <h2 id="overview"><a name="overview"></a>Overview</h2>
-
-<p>Space Battle Arena is highly configurable.  SBA uses a standard type of configuration file format to set options for how the server should run and behave.  </p>
-
-<p>SBA comes with a set of configuration files for different purposes.  However, you&#39;ll probably want to create your own configuration file to represent the settings of your machine and its display (see the <a href="#application">[Application]</a> section below).</p>
-
+<p>Space Battle Arena is highly configurable.  SBA uses a standard type of configuration file format to set options for how the server should run and behave.</p>
+<p>SBA comes with a set of configuration files for different purposes.  However, you'll probably want to create your own configuration file to represent the settings of your machine and its display (see the <a href="#application">[Application]</a> section below).</p>
 <p>As mentioned in the server <a href="setup.html">setup</a> page, the server can optionally take any number of additional config files.  This can be handy to use one config to keep your standard options and a second one to use for any game or activity of the day.</p>
-
-<p>In fact the configuration examples provided with the server do just that and setup a &#39;machine&#39; file to specify the size of the window and then a &#39;lesson&#39; file to use for the activity of the day in class.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">SBA_Serv machine_test.cfg lesson_findthemiddle.cfg
-</code></pre></div>
+<p>In fact the configuration examples provided with the server do just that and setup a 'machine' file to specify the size of the window and then a 'lesson' file to use for the activity of the day in class.</p>
+<pre><code>SBA_Serv machine_test.cfg lesson_findthemiddle.cfg
+</code></pre>
 <h2 id="format"><a name="format"></a>Format</h2>
-
 <p>The configuration file is composed of a number of sections with each section containing one or more options.  It follows the format:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">[Section Name]
+<pre><code>[Section Name]
 option1name = value
 option2name = value
 
@@ -114,428 +82,237 @@ option2name = value
 optionname = value
 
 etc...
-</code></pre></div>
+</code></pre>
 <p>The rest of this chapter will be comprised of headers for each of the <em>section</em> names and then sub-headers for each <em>option</em> (and its type) and then a paragraph listing its purpose and possible values.</p>
-
 <p>Possible value types include integer, boolean, string, and percent:</p>
-
 <ul>
 <li>Integers will be zero or positive only.</li>
 <li>Booleans will either be <strong>true</strong> or <strong>false</strong>.</li>
 <li>String values will be provided without quotation marks and possible values will be specified in the specific option listing.</li>
 <li>Percent values are decimal values between 0.0 and 1.0.  These may be part of a set which is expected to total 1.0.</li>
 </ul>
-
-<p>You may also see advanced constructs such as Tuples in parenthesis () or Lists in [], but if you are familiar with <a href="http://json.org/">JSON</a> formatting, then it shouldn&#39;t be hard to follow.</p>
-
+<p>You may also see advanced constructs such as Tuples in parenthesis () or Lists in [], but if you are familiar with <a href="http://json.org/">JSON</a> formatting, then it shouldn't be hard to follow.</p>
 <p><em>See the default.cfg file for the list of default configuration values.</em></p>
-
-<h2 id="[application]"><a name="application"></a>[Application]</h2>
-
+<h2 id="application"><a name="application"></a>[Application]</h2>
 <p>This section contains options pertaining to the graphical window created to run the SBA server.  It will affect how SBA is presented to you.</p>
-
-<h3 id="fullscreen-=-boolean-|-string">fullscreen = boolean | string</h3>
-
-<p>Specifies whether or not SBA should run fullscreen or in a normal window.  The value &#39;<strong>window</strong>&#39; can also be used to run in a special borderless fullscreen window mode.  <strong>Note</strong>: you should make sure that the horizontal and vertical resolutions match your displays resolution values OR you can set <em>both</em> <strong>horz_res</strong> and <strong>vert_res</strong> to <strong>0</strong> for your display resolution to be <em>automatically</em> detected.</p>
-
-<h3 id="horz_res-=-integer">horz_res = integer</h3>
-
+<h3 id="fullscreen-boolean-string">fullscreen = boolean | string</h3>
+<p>Specifies whether or not SBA should run fullscreen or in a normal window.  The value '<strong>window</strong>' can also be used to run in a special borderless fullscreen window mode.  <strong>Note</strong>: you should make sure that the horizontal and vertical resolutions match your displays resolution values OR you can set <em>both</em> <strong>horz_res</strong> and <strong>vert_res</strong> to <strong>0</strong> for your display resolution to be <em>automatically</em> detected.</p>
+<h3 id="dpi_aware-boolean">dpi_aware = boolean</h3>
+<p>Specifies whether or not SBA is scaled based on the DPI settings of the monitor it first runs on.  By default this is turned off so that pixels in the configuration files match the pixels on the screen.</p>
+<h3 id="horz_res-integer">horz_res = integer</h3>
 <p>Specifies the horizontal resolution of the SBA window (in pixels).  This should match your monitor resolution if you plan to run the game in fullscreen.</p>
-
-<h3 id="vert_res-=-integer">vert_res = integer</h3>
-
+<h3 id="vert_res-integer">vert_res = integer</h3>
 <p>Specifies the vertical resolution of the SBA window (in pixels).  This should match your monitor resolution if you plan to run the game in fullscreen.</p>
-
-<h3 id="sound-=-boolean">sound = boolean</h3>
-
+<h3 id="sound-boolean">sound = boolean</h3>
 <p>Determines if sounds should be played or not.</p>
-
-<h3 id="showip-=-boolean">showip = boolean</h3>
-
-<p>If this option is enabled, the server will start displaying the computer&#39;s IP Address at the top of the screen.  It can still be toggled manually on/off regardless of this setting with the <a href="usage.html">keyboard shortcut</a>.</p>
-
-<h3 id="showstats-=-boolean">showstats = boolean</h3>
-
+<h3 id="showip-boolean">showip = boolean</h3>
+<p>If this option is enabled, the server will start displaying the computer's IP Address at the top of the screen.  It can still be toggled manually on/off regardless of this setting with the <a href="usage.html">keyboard shortcut</a>.</p>
+<h3 id="showstats-boolean">showstats = boolean</h3>
 <p>If this option is enabled, the server will start with some basic GUI options already enabled showing statistics about a player’s ship.</p>
-
-<h3 id="ship_images-=-integer">ship_images = integer</h3>
-
+<h3 id="ship_images-integer">ship_images = integer</h3>
 <p>This specifies the number of images that can be used for ships in the <em>GUI\Graphics\Ships</em> directory.  Use an existing ship image as a template to create more ship images.  Each frame of a ship should be contained in a 64x64 pixel square within the image.  The top row of images show a normal ship, the bottom a cloaked ship.  The first image is neutral, then left thruster firing, front thrusters, right thruster, back thruster, all thrusters (braking), and warping.</p>
-
-<h2 id="[world]"><a name="world"></a>[World]</h2>
-
+<h2 id="world"><a name="world"></a>[World]</h2>
 <p>This section contains options for how large the universe is.  These options should be set to be <em>at least</em> as large as the Screen options, but can be larger.  <em>It is generally recommended that they are each 1.5 or 2 times the value of their corresponding Screen values.</em></p>
-
-<h3 id="collisions-=-boolean">collisions = boolean</h3>
-
-<p>Turn collision detection on/off in the physics engine.  Useful for introductions to the world without worrying about actual interference.  <strong>Note:</strong> Most non-basic games won&#39;t work without this option on.</p>
-
-<h3 id="width-=-integer">width = integer</h3>
-
+<h3 id="collisions-boolean">collisions = boolean</h3>
+<p>Turn collision detection on/off in the physics engine.  Useful for introductions to the world without worrying about actual interference.  <strong>Note:</strong> Most non-basic games won't work without this option on.</p>
+<h3 id="width-integer">width = integer</h3>
 <p>Horizontal length of the universe in pixels. <em>Alternately, you can specify &quot;x&quot; and a number to multiply the horizontal resolution value by your number for the world width.</em></p>
-
-<h3 id="height-=-integer">height = integer</h3>
-
+<h3 id="height-integer">height = integer</h3>
 <p>Vertical length of the universe in pixels. <em>Alternately, you can specify &quot;x&quot; and a number to multiply the vertical resolution value by your number for the world height.</em></p>
-
-<h3 id="radar_include_name-=-boolean">radar_include_name = boolean</h3>
-
+<h3 id="radar_include_name-boolean">radar_include_name = boolean</h3>
 <p>Determines if the name of the ship can be obtained through a Radar Command or not.</p>
-
-<h2 id="[server]"><a name="server"></a>[Server]</h2>
-
+<h2 id="server"><a name="server"></a>[Server]</h2>
 <p>This section of options controls how the server should behave and accept connections from clients.</p>
-
-<h3 id="port-=-integer">port = integer</h3>
-
+<h3 id="port-integer">port = integer</h3>
 <p>The TCP/IP port that the server should run on.  If this is changed from the default (<strong>2012</strong>), then a third parameter of a port number must be passed in when running the TextClient class from a Java client.</p>
-
-<h3 id="multiple_connections-=-boolean">multiple_connections = boolean</h3>
-
+<h3 id="multiple_connections-boolean">multiple_connections = boolean</h3>
 <p>This option when enabled allows the same client machine to be connected to the server more than once.  Otherwise, each IP address is only allowed to connect a single time to a server instance.  This can cause issues if a client’s connection unexpectedly terminates.</p>
-
-<h3 id="allow_re-entry-=-boolean">allow_re-entry = boolean</h3>
-
+<h3 id="allow_re-entry-boolean">allow_re-entry = boolean</h3>
 <p>Can a player join the server again if they had connected previously and disconnected?</p>
-
-<h3 id="disconnect_on_idle-=-boolean">disconnect_on_idle = boolean</h3>
-
-<p>Determines if a player&#39;s ship should be disconnected if it doesn&#39;t issue a command periodically (within 10 seconds of the last command being executed finishing).  <strong>Note:</strong> this will not prevent a ship from disconnecting if the actual socket is detected to be closed.</p>
-
-<h3 id="enable_commands-=-string">enable_commands = string</h3>
-
+<h3 id="disconnect_on_idle-boolean">disconnect_on_idle = boolean</h3>
+<p>Determines if a player's ship should be disconnected if it doesn't issue a command periodically (within 10 seconds of the last command being executed finishing).  <strong>Note:</strong> this will not prevent a ship from disconnecting if the actual socket is detected to be closed.</p>
+<h3 id="enable_commands-string">enable_commands = string</h3>
 <p>Comma separated list of ship commands to enable on the server. All other commands will be disabled.  E.g.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">enable_commands = ThrustCommand,RotateCommand,IdleCommand
-</code></pre></div>
+<pre><code>enable_commands = ThrustCommand,RotateCommand,IdleCommand
+</code></pre>
 <p>A list of commands can be found in the <a href="http://mikeware.github.io/SpaceBattleArena/client/java_doc/ihs/apcs/spacebattle/commands/package-frame.html">Command JavaDoc</a>. When a command is invoked that has been disabled, it is simply ignored. A message should return to the client, but they will get a new environment and their ship should continue running.  Its state might just not be what was expected.</p>
-
-<h3 id="disable_commands-=-string">disable_commands = string</h3>
-
+<h3 id="disable_commands-string">disable_commands = string</h3>
 <p>Comma separated list of ship commands to disable on the server.  E.g.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">disable_commands = WarpCommand,FireTorpedoCommand
-</code></pre></div>
+<pre><code>disable_commands = WarpCommand,FireTorpedoCommand
+</code></pre>
 <p>A list of commands can be found in the Command chapter. When a command is invoked that has been disabled, it is simply ignored. A message should return to the client, but they will get a new environment and their ship should continue running.  Its state might just not be what was expected.</p>
-
 <p>You should specify either <strong>enable_commands</strong> or <strong>disable_commands</strong> not both.</p>
-
 <h2 id="spawn-manager"><a name="spawnmanager"></a>Spawn Manager</h2>
-
 <p>Spawn Manager itself is not a specific configuration section.  It manages the life cycle for all the entities below.  Each entity has a set of common properties (listed here) which can be applied to them.  Place these properties within the specific [Entity] section for it to apply to that particular one.</p>
-
 <p>E.g.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"># Spawns two Asteroids into the Universe, ensures there&#39;s always one
+<pre><code># Spawns two Asteroids into the Universe, ensures there's always one
 [Asteroid]
 number = 2
 spawn_keep_min = 1
-</code></pre></div>
-<h3 id="number-=-integer">number = integer</h3>
-
+</code></pre>
+<h3 id="number-integer">number = integer</h3>
 <p>The number of [Entity] to generate in the universe.</p>
-
-<h3 id="buffer_object-=-integer">buffer_object = integer</h3>
-
+<h3 id="buffer_object-integer">buffer_object = integer</h3>
 <p>Amount of space (in pixels) to leave between this object and all others when spawning it.</p>
-
-<h3 id="buffer_edge-=-integer">buffer_edge = integer</h3>
-
+<h3 id="buffer_edge-integer">buffer_edge = integer</h3>
 <p>Amount of space (in pixels) to leave between this object and the edge of space when spawning it.</p>
-
-<h3 id="spawn_keep_min-=-integer">spawn_keep_min = integer</h3>
-
+<h3 id="spawn_keep_min-integer">spawn_keep_min = integer</h3>
 <p>Minimum number of [Entity] to keep in the world.  If the number falls below this value, more entities will automatically be added instantly to meet this threshold.</p>
-
-<h3 id="spawn_keep_max-=-integer">spawn_keep_max = integer</h3>
-
+<h3 id="spawn_keep_max-integer">spawn_keep_max = integer</h3>
 <p>Maximum cut-off for spawning new [Entity] types on the timer.  If the number of objects has reached this level, no new entities will be spawned using the spawn timing settings below. Games or other events may still spawn entities of this type however.</p>
-
-<h3 id="spawn_time_num-=-integer">spawn_time_num = integer</h3>
-
+<h3 id="spawn_time_num-integer">spawn_time_num = integer</h3>
 <p>Number of entities to spawn at a time with the timing settings below.  <em>If specified, you must also specify the spawn_time_min and spawn_time_max options.</em></p>
-
-<h3 id="spawn_time_min-=-integer">spawn_time_min = integer</h3>
-
+<h3 id="spawn_time_min-integer">spawn_time_min = integer</h3>
 <p>Minimum time in seconds before spawning the spawn_time_num of [Entity] unless spawn_keep_max has been reached.</p>
-
-<h3 id="spawn_time_max-=-integer">spawn_time_max = integer</h3>
-
+<h3 id="spawn_time_max-integer">spawn_time_max = integer</h3>
 <p>Maximum time in seconds before spawning an [Entity] on a timer.</p>
-
-<h3 id="spawn_alive_time_min-=-integer">spawn_alive_time_min = integer</h3>
-
-<h3 id="spawn_alive_time_max-=-integer">spawn_alive_time_max = integer</h3>
-
+<h3 id="spawn_alive_time_min-integer">spawn_alive_time_min = integer</h3>
+<h3 id="spawn_alive_time_max-integer">spawn_alive_time_max = integer</h3>
 <p>Specified together in order to cut-short the life span of an [Entity].  The [Entity] will live for a time between the range specified by these two values and then be automatically destroyed.</p>
-
-<h3 id="spawn_on_player_num-=-integer">spawn_on_player_num = integer</h3>
-
+<h3 id="spawn_on_player_num-integer">spawn_on_player_num = integer</h3>
 <p>Number of [Entity] to add to the universe when a player is added to it.</p>
-
-<h3 id="spawn_on_player_start-=-boolean">spawn_on_player_start = boolean</h3>
-
-<h3 id="spawn_on_player_respawn-=-boolean">spawn_on_player_respawn = boolean</h3>
-
+<h3 id="spawn_on_player_start-boolean">spawn_on_player_start = boolean</h3>
+<h3 id="spawn_on_player_respawn-boolean">spawn_on_player_respawn = boolean</h3>
 <p>Specify which scenarios (first created in round and/or whenever re-added) to add the spawn_on_player_num [Entity] to the world.</p>
-
-<h3 id="points_torpedo-=-int">points_torpedo = int</h3>
-
+<h3 id="points_torpedo-int">points_torpedo = int</h3>
 <p>Number of points for destroying the spawned entity with a torpedo (if applicable).  <em>Must specify both points_torpedo and points_ram.</em></p>
-
-<h3 id="points_ram-=-int">points_ram = int</h3>
-
+<h3 id="points_ram-int">points_ram = int</h3>
 <p>Number of points for destroying the spawned entity with a ship via ramming (without destroying your ship).</p>
-
-<h2 id="[asteroid]"><a name="asteroid"></a>[Asteroid]</h2>
-
+<h2 id="asteroid"><a name="asteroid"></a>[Asteroid]</h2>
 <p>Asteroids are flying debris in space.  They start off with a set amount of momentum and will continue flying in space until impacting ships or destroyed by torpedos.</p>
-
-<h3 id="move_speed_min-=-int">move_speed_min = int</h3>
-
-<h3 id="move_speed_max-=-int">move_speed_max = int</h3>
-
-<p>Range for the initial speed to start an asteroid&#39;s movement.</p>
-
-<h2 id="[dragon]"><a name="dragon"></a>[Dragon]</h2>
-
+<h3 id="move_speed_min-int">move_speed_min = int</h3>
+<h3 id="move_speed_max-int">move_speed_max = int</h3>
+<p>Range for the initial speed to start an asteroid's movement.</p>
+<h2 id="dragon"><a name="dragon"></a>[Dragon]</h2>
 <p>Dragons fly around space and will attack (and eat) nearby uncloaked ships.</p>
-
-<h3 id="move_speed_min-=-int">move_speed_min = int</h3>
-
-<h3 id="move_speed_max-=-int">move_speed_max = int</h3>
-
-<p>Range for the initial speed to start a dragon&#39;s movement.</p>
-
-<h3 id="range_min-=-int">range_min = int</h3>
-
-<h3 id="range_max-=-int">range_max = int</h3>
-
-<p>Range for the size of the Dragon&#39;s visibility radius.  It will attack ships that enter this range centered on its head.</p>
-
-<h3 id="attack_speed_min-=-int">attack_speed_min = int</h3>
-
-<h3 id="attack_speed_max-=-int">attack_speed_max = int</h3>
-
+<h3 id="move_speed_min-int-1">move_speed_min = int</h3>
+<h3 id="move_speed_max-int-1">move_speed_max = int</h3>
+<p>Range for the initial speed to start a dragon's movement.</p>
+<h3 id="range_min-int">range_min = int</h3>
+<h3 id="range_max-int">range_max = int</h3>
+<p>Range for the size of the Dragon's visibility radius.  It will attack ships that enter this range centered on its head.</p>
+<h3 id="attack_speed_min-int">attack_speed_min = int</h3>
+<h3 id="attack_speed_max-int">attack_speed_max = int</h3>
 <p>Range for the amount of speed a Dragon will <em>increase by</em> when it sees a Ship.  This is fixed when a Dragon is instantiated.</p>
-
-<h3 id="attack_time_min-=-float">attack_time_min = float</h3>
-
-<h3 id="attack_time_max-=-float">attack_time_max = float</h3>
-
+<h3 id="attack_time_min-float">attack_time_min = float</h3>
+<h3 id="attack_time_max-float">attack_time_max = float</h3>
 <p>Range for the interval between times that the Dragon bites a Ship in its jaws.  This range is randomized for each attack.</p>
-
-<h3 id="attack_amount_min-=-float">attack_amount_min = float</h3>
-
-<h3 id="attack_amount_max-=-float">attack_amount_max = float</h3>
-
+<h3 id="attack_amount_min-float">attack_amount_min = float</h3>
+<h3 id="attack_amount_max-float">attack_amount_max = float</h3>
 <p>Range for the amount of damage every bite causes a Ship.  This amount is randomized for each attack.</p>
-
-<h3 id="health_min-=-int">health_min = int</h3>
-
-<h3 id="health_max-=-int">health_max = int</h3>
-
+<h3 id="health_min-int">health_min = int</h3>
+<h3 id="health_max-int">health_max = int</h3>
 <p>Range for the amount of health a Dragon will start with.</p>
-
-<h2 id="[spacemine]"><a name="spacemine"></a>[SpaceMine]</h2>
-
+<h2 id="spacemine"><a name="spacemine"></a>[SpaceMine]</h2>
 <p>Space Mines will stay in place, move and explode, or track ships.  On contact, they will detonate and create an explosion force around them.</p>
-
-<h3 id="delay_min-=-float">delay_min = float</h3>
-
-<h3 id="delay_max-=-float">delay_max = float</h3>
-
-<p>Delay in seconds before the space mine becomes active (inactive mines can&#39;t be hit and won&#39;t explode).</p>
-
-<h3 id="types-=-list-of-int">types = list of int</h3>
-
+<h3 id="delay_min-float">delay_min = float</h3>
+<h3 id="delay_max-float">delay_max = float</h3>
+<p>Delay in seconds before the space mine becomes active (inactive mines can't be hit and won't explode).</p>
+<h3 id="types-list-of-int">types = list of int</h3>
 <p>Types of mines to spawn (1 for stationary, 2 for autonomous, 3 for homing).</p>
-
-<h3 id="direction_min-=-int">direction_min = int</h3>
-
-<h3 id="direction_max-=-int">direction_max = int</h3>
-
-<p>Direction of movement of an autonomous mine.  It starts moving after it&#39;s initial delay.</p>
-
-<h3 id="speed_min-=-int">speed_min = int</h3>
-
-<h3 id="speed_max-=-int">speed_max = int</h3>
-
+<h3 id="direction_min-int">direction_min = int</h3>
+<h3 id="direction_max-int">direction_max = int</h3>
+<p>Direction of movement of an autonomous mine.  It starts moving after it's initial delay.</p>
+<h3 id="speed_min-int">speed_min = int</h3>
+<h3 id="speed_max-int">speed_max = int</h3>
 <p>Speed factor of autonomous mine (1-5).</p>
-
-<h3 id="duration_min-=-float">duration_min = float</h3>
-
-<h3 id="duration_max-=-float">duration_max = float</h3>
-
+<h3 id="duration_min-float">duration_min = float</h3>
+<h3 id="duration_max-float">duration_max = float</h3>
 <p>Amount of time an autonomous mine will move after the initial delay before it explodes automatically.</p>
-
-<h2 id="[planet]"><a name="planet"></a>[Planet]</h2>
-
+<h2 id="planet"><a name="planet"></a>[Planet]</h2>
 <p>Planets have gravity wells which can pull ships towards them.  They are solid and will cause damage to ships that impact them.</p>
-
-<h3 id="range_min-=-integer">range_min = integer</h3>
-
+<h3 id="range_min-integer">range_min = integer</h3>
 <p>see range_max</p>
-
-<h3 id="range_max-=-integer">range_max = integer</h3>
-
-<p>These two range values correspond to the distance away from a planet&#39;s center that its gravity field should pull ships in.  A random value will be generated between the <strong>range_min</strong> and <strong>range_max</strong> values.  These are typically <strong>112</strong> and <strong>192</strong>.</p>
-
-<h3 id="pull_min-=-integer">pull_min = integer</h3>
-
+<h3 id="range_max-integer">range_max = integer</h3>
+<p>These two range values correspond to the distance away from a planet's center that its gravity field should pull ships in.  A random value will be generated between the <strong>range_min</strong> and <strong>range_max</strong> values.  These are typically <strong>112</strong> and <strong>192</strong>.</p>
+<h3 id="pull_min-integer">pull_min = integer</h3>
 <p>see pull_max</p>
-
-<h3 id="pull_max-=-integer">pull_max = integer</h3>
-
+<h3 id="pull_max-integer">pull_max = integer</h3>
 <p>These two values correspond to the amount of pull the gravity will have on ships.  Larger values mean ships will get pulled in quicker and will have a harder time escaping.  A random value will be generated between <strong>pull_min</strong> and <strong>pull_max</strong>.  These are typically <strong>8</strong> and <strong>24</strong>.  Setting pull to zero, will turn off gravity.</p>
-
-<h3 id="pull_weapon-=-boolean">pull_weapon = boolean</h3>
-
-<p>If enabled, Planets&#39;, BlackHoles&#39;, and Stars&#39; gravity wells will effect torpedos and space mines.</p>
-
-<h2 id="[blackhole]"><a name="blackhole"></a>[BlackHole]</h2>
-
+<h3 id="pull_weapon-boolean">pull_weapon = boolean</h3>
+<p>If enabled, Planets', BlackHoles', and Stars' gravity wells will effect torpedos and space mines.</p>
+<h2 id="blackhole"><a name="blackhole"></a>[BlackHole]</h2>
 <p>Black Holes have stronger gravity wells than planets, but can be passed through their center.  They are harder to escape from.</p>
-
 <p>They have the exact same configuration values as <a href="#planet">Planets</a>.  However, the default range values are <strong>64</strong> and <strong>208</strong>.  The default pull values are <strong>52</strong> and <strong>72</strong>.</p>
-
-<h3 id="crush_time-=-float">crush_time = float</h3>
-
+<h3 id="crush_time-float">crush_time = float</h3>
 <p>Amount of time in seconds before a ship will be crushed (destroyed) when in the center of a black hole.  The Ship must be in the center for the whole duration to be crushed.  Shields will protect the ship from crushing as long as they are up.  Set to 0.0 to turn off crushing.  Defaults to <strong>5.0</strong>.</p>
-
-<h2 id="[star]"><a name="star"></a>[Star]</h2>
-
+<h2 id="star"><a name="star"></a>[Star]</h2>
 <p>Stars can be flown into, but cause progressively more damage the closer a Ship is to its center.</p>
-
 <p>They have the exact same configuration values as <a href="#planet">Planets</a>.  However, the default range values are <strong>96</strong> to <strong>224</strong>.  The default pull values are <strong>12</strong> to <strong>48</strong>.</p>
-
-<h3 id="dmg_mod-=-float">dmg_mod = float</h3>
-
-<p>Additional damage modifier for growth of damage caused by approaching Star&#39;s center.  Defaults to <strong>0.0</strong>.  Equation for damage calculation is currently in part <em>18 - (pull / 6.0) - dmg_mod</em>.</p>
-
-<h2 id="[nebula]"><a name="nebula"></a>[Nebula]</h2>
-
+<h3 id="dmg_mod-float">dmg_mod = float</h3>
+<p>Additional damage modifier for growth of damage caused by approaching Star's center.  Defaults to <strong>0.0</strong>.  Equation for damage calculation is currently in part <em>18 - (pull / 6.0) - dmg_mod</em>.</p>
+<h2 id="nebula"><a name="nebula"></a>[Nebula]</h2>
 <p>Nebulas are a celestial body which impart a drag effect on ships causing them to slow down or eventually stop if they are not thrusting.</p>
-
-<h3 id="sizes-=-list-of-tuples">sizes = list of tuples</h3>
-
-<p>This is a list of the available sizes of nebulas.  The tuple pair is the total length of the <strong>major</strong> and <strong>minor</strong> axes of an ellipse.  There also needs to be a corresponding image in the <em>GUI\Graphics\Nebula</em> folder with the name <strong>NebulaMAJORxMINOR</strong> where &#39;MAJOR&#39; and &#39;MINOR&#39; are replaced with the values of the size of the Nebula.  These values should be placed in a list.  E.g.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">sizes=[(512,128),(384,256)]
-</code></pre></div>
-<h3 id="pull_min-=-integer">pull_min = integer</h3>
-
+<h3 id="sizes-list-of-tuples">sizes = list of tuples</h3>
+<p>This is a list of the available sizes of nebulas.  The tuple pair is the total length of the <strong>major</strong> and <strong>minor</strong> axes of an ellipse.  There also needs to be a corresponding image in the <em>GUI\Graphics\Nebula</em> folder with the name <strong>NebulaMAJORxMINOR</strong> where 'MAJOR' and 'MINOR' are replaced with the values of the size of the Nebula.  These values should be placed in a list.  E.g.</p>
+<pre><code>sizes=[(512,128),(384,256)]
+</code></pre>
+<h3 id="pull_min-integer-1">pull_min = integer</h3>
 <p>see pull_max</p>
-
-<h3 id="pull_max-=-integer">pull_max = integer</h3>
-
-<p>These two values correspond to the amount of pull the drag will have on ships.  Larger values mean ships will slow down faster.  It&#39;d best not to make these values higher than the Ship&#39;s Thruster force of 3500.  A random value will be generated between <strong>pull_min</strong> and <strong>pull_max</strong>.  These are typically <strong>1750</strong> and <strong>2500</strong>.  Setting pull to zero, will turn off drag.</p>
-
-<h2 id="[wormhole]"><a name="wormhole"></a>[WormHole]</h2>
-
+<h3 id="pull_max-integer-1">pull_max = integer</h3>
+<p>These two values correspond to the amount of pull the drag will have on ships.  Larger values mean ships will slow down faster.  It'd best not to make these values higher than the Ship's Thruster force of 3500.  A random value will be generated between <strong>pull_min</strong> and <strong>pull_max</strong>.  These are typically <strong>1750</strong> and <strong>2500</strong>.  Setting pull to zero, will turn off drag.</p>
+<h2 id="wormhole"><a name="wormhole"></a>[WormHole]</h2>
 <p>Worm Holes transport ships vast distances instantaneously.  Each particular Worm Hole will always behave in the same manner depending on its type.  It could always teleport you to a random location, a fixed location, or another worm hole entrance.  If exiting near an existing Worm Hole, you must leave its vicinity before entering again.</p>
-
-<p>Extra Worm Holes above the number specified may be generated as two-way &#39;linked&#39; Worm Holes.</p>
-
-<h3 id="types-=-list-of-ints">types = list of ints</h3>
-
+<p>Extra Worm Holes above the number specified may be generated as two-way 'linked' Worm Holes.</p>
+<h3 id="types-list-of-ints">types = list of ints</h3>
 <p>This is a list of the types of Worm Hole exits which should be generated.  The following is a list of numbers and their corresponding type:</p>
-
 <ol>
 <li>Random</li>
 <li>Other Worm Hole</li>
 <li>Fixed Point</li>
 </ol>
-
 <p>For instance the following would create Worm Holes which transport ships to random or fixed locations only:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">types=[1,3]
-</code></pre></div>
-<h3 id="buffer_exit_object-=-int">buffer_exit_object = int</h3>
-
-<h3 id="buffer_exit_edge-=-int">buffer_exit_edge = int</h3>
-
-<p>Amount of space between objects/world edge to leave at exit of random/fixed point worm holes.  See <a href="#spawnmanager">Spawn Manager</a>&#39;s similar properties.</p>
-
-<h2 id="[game]"><a name="game"></a>[Game]</h2>
-
+<pre><code>types=[1,3]
+</code></pre>
+<h3 id="buffer_exit_object-int">buffer_exit_object = int</h3>
+<h3 id="buffer_exit_edge-int">buffer_exit_edge = int</h3>
+<p>Amount of space between objects/world edge to leave at exit of random/fixed point worm holes.  See <a href="#spawnmanager">Spawn Manager</a>'s similar properties.</p>
+<h2 id="game"><a name="game"></a>[Game]</h2>
 <p>Main options for the behavior of the simulation and which tournament rules should be applied.</p>
-
-<h3 id="game-=-string">game = string</h3>
-
+<h3 id="game-string">game = string</h3>
 <p>Name of the game to be played on the server.  See more info in the Competitions chapter about running games.</p>
-
 <p>To just have a standard universe running, use <strong>BasicGame</strong>.</p>
-
-<h3 id="auto_start-=-boolean">auto_start = boolean</h3>
-
+<h3 id="auto_start-boolean">auto_start = boolean</h3>
 <p>When set to true the game/round will automatically start when the server is run.  Otherwise, it will wait for you to press the space key.</p>
-
 <p>This value is set to <em>false</em> if tournament is set to <em>true</em>.</p>
-
-<h3 id="allow_after_start-=-boolean">allow_after_start = boolean</h3>
-
+<h3 id="allow_after_start-boolean">allow_after_start = boolean</h3>
 <p>Can players join the server after the game has already started?</p>
-
-<h3 id="disconnect_on_death-=-boolean">disconnect_on_death = boolean</h3>
-
+<h3 id="disconnect_on_death-boolean">disconnect_on_death = boolean</h3>
 <p>Determines if a player will be completely disconnected from the server when they die.</p>
-
-<h3 id="reset_score_on_death-=-boolean">reset_score_on_death = boolean</h3>
-
-<p>Will a player&#39;s score reset to 0 when they die.</p>
-
-<h3 id="points_lost_on_death-=-positive-integer">points_lost_on_death = positive integer</h3>
-
+<h3 id="reset_score_on_death-boolean">reset_score_on_death = boolean</h3>
+<p>Will a player's score reset to 0 when they die.</p>
+<h3 id="points_lost_on_death-positive-integer">points_lost_on_death = positive integer</h3>
 <p>Number of points a player loses when they die. Should be a <strong>positive</strong> integer or zero.</p>
-
-<h3 id="points_initial-=-positive-integer">points_initial = positive integer</h3>
-
+<h3 id="points_initial-positive-integer">points_initial = positive integer</h3>
 <p>Number of points each player should start with.  Should be a <strong>positive</strong> integer or zero.</p>
-
-<h3 id="primary_victory_attr-=-string">primary_victory_attr = string</h3>
-
-<p>This represents what the primary victory condition should be.  For basic games, this will either be <strong>score</strong> or <strong>bestscore</strong>.  Which either represents their current score or the best score they&#39;ve achieved between deaths.  Other games may have other attributes which can be inspected.</p>
-
-<h3 id="primary_victory_highest-=-boolean">primary_victory_highest = boolean</h3>
-
+<h3 id="primary_victory_attr-string">primary_victory_attr = string</h3>
+<p>This represents what the primary victory condition should be.  For basic games, this will either be <strong>score</strong> or <strong>bestscore</strong>.  Which either represents their current score or the best score they've achieved between deaths.  Other games may have other attributes which can be inspected.</p>
+<h3 id="primary_victory_highest-boolean">primary_victory_highest = boolean</h3>
 <p>Represents if the primary victory condition is sorted from highest to lowest (this is usually the case).</p>
-
-<h3 id="secondary_victory_attr-=-string">secondary_victory_attr = string</h3>
-
+<h3 id="secondary_victory_attr-string">secondary_victory_attr = string</h3>
 <p>This represents what should break ties on the primary victory condition.  For basic games, this is usually <strong>deaths</strong>, but could also be <strong>bestscore</strong> for instance.</p>
-
-<h3 id="secondary_victory_highest-=-boolean">secondary_victory_highest = boolean</h3>
-
+<h3 id="secondary_victory_highest-boolean">secondary_victory_highest = boolean</h3>
 <p>Represents if the secondary victory condition is sorted from highest to lowest.  For instance, if you wanted least deaths to be the tie-breaker, then you would set the secondary victory condition to be <strong>deaths</strong> and this value to be <strong>false</strong>.</p>
-
-<h2 id="[tournament]"><a name="tournament"></a>[Tournament]</h2>
-
+<h2 id="tournament"><a name="tournament"></a>[Tournament]</h2>
 <p>Tournaments are run for more advanced games and divide players into groups to compete for a top score.  Then the top player from each round will advance to a final round.  This section defines settings related to running tournaments.  See more info in the Competitions chapter.</p>
-
-<h3 id="tournament-=-boolean">tournament = boolean</h3>
-
+<h3 id="tournament-boolean">tournament = boolean</h3>
 <p>Should the game be run in a tournament setting where connected players are split into a number of groups.  Each winner of the game in a group proceeds to a final bracket to determine a winner.  Each round will automatically be paired, timed, and calculated.  Just hit space to start each round.</p>
-
-<h3 id="manager-=-string">manager = string</h3>
-
+<h3 id="manager-string">manager = string</h3>
 <p>Name of the Tournament Manager to use for controlling the tournament.  Current options are <strong>BasicTournament</strong> or <strong>WildTournament</strong>.  See <a href="tournaments.html">Tournaments</a> page for more details.</p>
-
-<h3 id="groups-=-integer">groups = integer</h3>
-
+<h3 id="groups-integer">groups = integer</h3>
 <p>How many groups should the number of clients connected be broken into for the tournament?  E.g. Setting this value to 5 and having 30 clients connected would result in 5 rounds of 6 players each and a final round with the winners of each group.  Raising this number to higher values requires more vertical real-estate for the tournament display board.</p>
-
-<h3 id="number_to_final_round-=-integer">number_to_final_round = integer</h3>
-
+<h3 id="number_to_final_round-integer">number_to_final_round = integer</h3>
 <p>How many players from each preliminary round should advance to the final round. i.e. The top X players will be taken into the final round where X is this options value.</p>
-
-<h3 id="round_time-=-integer">round_time = integer</h3>
-
+<h3 id="round_time-integer">round_time = integer</h3>
 <p>How long each game round should last in seconds.</p>
-
-<h3 id="reset_world_each_round-=-boolean">reset_world_each_round = boolean</h3>
-
+<h3 id="reset_world_each_round-boolean">reset_world_each_round = boolean</h3>
 <p>Should the world be cleared of all objects and recreated between each round of play?</p>
 
       </section>
     </div>
 
 
+    
 		<footer>
 		  <div class="container">
 		    <div class="owner">
@@ -556,7 +333,7 @@ spawn_keep_min = 1
               var pageTracker = _gat._getTracker("UA-39650553-3");
             pageTracker._trackPageview();
             } catch(err) {}
-          </script>
+      </script>
 
   </body>
 </html>

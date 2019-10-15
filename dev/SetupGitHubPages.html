@@ -1,12 +1,13 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
   <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
 
+    <link rel="shortcut icon" href="/SpaceBattleArena/favicon.ico">
+
     <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/pygment_trac.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/print.css" media="print">
 
     <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="/SpaceBattleArena/js/main.js"></script>
@@ -32,45 +33,63 @@
 
     <nav>
         <div class="container">
-            
             <span><a href="/SpaceBattleArena/index.html">Home</a></span>
-            
-            
-            
-                
-                    &nbsp<span><a href="index.html">Development</a></span>
-                
-            
-            <span>Setup GitHub Pages</span>
+                                        &nbsp;<span><a href="index.html">Development</a></span>
+                          <span>Setup GitHub Pages</span>
         </div>
     </nav>
     
 
+<aside>
+    <h1>News</h1>
+    <ul>
+        <li><a href="/SpaceBattleArena/2018/04/28/Season-7-Kickoff">TEALS Season 7 Kickoff</a>
+            <br/>
+            <span class="small">Season 7 TEALS Tournament Kickoff.                
+            <br/>- 28 April 2018</span><br/><br/>
+        </li>
+        <li><a href="/SpaceBattleArena/2017/06/04/v1.2.0.1127-Release">v1.2.0.1127 Release</a>
+            <br/>
+            <span class="small">Season 6 HotFix 2 Release.                
+            <br/>- 04 June 2017</span><br/><br/>
+        </li>
+        <li><a href="/SpaceBattleArena/2017/05/14/v1.2.0.1126-Release">v1.2.0.1126 Release</a>
+            <br/>
+            <span class="small">Season 6&#x27;s Bauble Hunt Release.                
+            <br/>- 14 May 2017</span><br/><br/>
+        </li>
+    </ul>
     
-
+    <a href="/SpaceBattleArena/news" class="small">Archive</a>
+</aside>
 
     <div class="container">
       <section id="main_content">
-        <h2 id="installing-jekyll-builder">Installing <a href="http://jekyllrb.com/">Jekyll</a> Builder</h2>
-
+        <h2 id="installing-wyam-doc-builder">Installing <a href="https://wyam.io/">Wyam</a> Doc Builder</h2>
 <ol>
-<li>Install <a href="http://rubyinstaller.org/downloads/">Ruby 2.1.X</a></li>
-<li>Install DevKet for Ruby 2.1.X under C:\Ruby21\DevKit (assuming C:\Ruby21 was Ruby Install Directory)</li>
-<li>Open Command Prompt in C:\Ruby21\DevKit directory</li>
-<li>ruby dk.rb init (ensure says found installed in C:\Ruby21)</li>
-<li>ruby dk.rb review (ensure says C:\Ruby21 as directory)</li>
-<li>ruby dk.rb install</li>
-<li>gem install bundler <a href="http://guides.rubygems.org/ssl-certificate-update/#installing-using-update-packages">SSL Issue Resolution</a></li>
-<li>create <strong>Gemfile</strong> in repository root, with contents
-<pre><code>source &#39;<a href="https://rubygems.org">https://rubygems.org</a>&#39;
-gem &#39;github-pages&#39;</code></pre></li>
-<li>type &#39;bundle install&#39; in repository root</li>
+<li><p>Install Wyam on the command line with <code>dotnet</code> (requires <a href="https://dotnet.microsoft.com/download">.NET Core</a>):</p>
+<pre><code> dotnet tool install -g Wyam.Tool
+</code></pre>
+</li>
+<li><p>Restart command line (or VS Code)</p>
+</li>
+<li><p>Doc system assumes another copy of repo to <code>gh-pages</code> branches has been checked out alongside the repo in a <code>gh-pages</code> directory.</p>
+</li>
+<li><p>Type <code>wyam</code> to build, <strong>clear all non-.git folders in gh-pages folder before-hand if making significant structure changes.</strong></p>
+</li>
+<li><p>To preview the site and watch for changes use:</p>
+<pre><code> wyam -p -w --virtual-dir &quot;/SpaceBattleArena&quot;
+</code></pre>
+</li>
+<li><p>Make 2 branches one off <code>master</code> and one off <code>gh-pages</code> in order to submit two PRs for updates to source docs and generated output.</p>
+</li>
 </ol>
 
       </section>
     </div>
 
 
+    
 		<footer>
 		  <div class="container">
 		    <div class="owner">
@@ -91,7 +110,7 @@ gem &#39;github-pages&#39;</code></pre></li>
               var pageTracker = _gat._getTracker("UA-39650553-3");
             pageTracker._trackPageview();
             } catch(err) {}
-          </script>
+      </script>
 
   </body>
 </html>

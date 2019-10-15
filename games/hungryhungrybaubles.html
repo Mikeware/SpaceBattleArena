@@ -1,12 +1,13 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
   <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
 
+    <link rel="shortcut icon" href="/SpaceBattleArena/favicon.ico">
+
     <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/pygment_trac.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/print.css" media="print">
 
     <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="/SpaceBattleArena/js/main.js"></script>
@@ -32,86 +33,52 @@
 
     <nav>
         <div class="container">
-            
             <span><a href="/SpaceBattleArena/index.html">Home</a></span>
-            
-            
-            
-                
-                    &nbsp<span><a href="index.html">Competitions</a></span>
-                
-                    &nbsp<span><a href="basic.html">Basic Games</a></span>
-                
-            
-            <span>Hungry Hungry Baubles</span>
+                                        &nbsp;<span><a href="index.html">Competitions</a></span>
+                &nbsp;<span><a href="basic.html">Basic Games</a></span>
+                          <span>Hungry Hungry Baubles</span>
         </div>
     </nav>
     
 
-    
-<aside>
-    <h1>Outline</h1>
-    <ul>
-    
-        <li><a href="#overview">Overview</a></li>
-    
-        <li><a href="#config">Configuration</a></li>
-    
-    </ul>
-</aside>
-
-
+    <aside>
+        <h1>Outline</h1>
+        <ul>
+            <li><a href="#overview">Overview</a></span>
+            <li><a href="#config">Configuration</a></span>
+        </ul>
+    </aside>
 
     <div class="container">
       <section id="main_content">
-        <h1 id="hungry-hungry-baubles-[basic-game]">Hungry Hungry Baubles [Basic Game]</h1>
-
+        <h1 id="hungry-hungry-baubles-basic-game">Hungry Hungry Baubles [Basic Game]</h1>
 <h2 id="overview"><a name="overview"></a>Overview</h2>
-
 <p><strong>Hungry Hungry Baubles</strong> is a basic game where you must try and collect as many baubles as you can before time runs out.</p>
-
 <p>Every bauble is worth at least 1 point.</p>
-
 <p>However, every player is also provided the location of a <strong>golden</strong> bauble (added specifically for them outside of spawning parameters).  If they collect it they will earn <strong>5 points</strong> (3 + 2 additional, if enabled).</p>
-
-<p>If they happen to collect someone else&#39;s golden bauble it&#39;s only worth 3 points.</p>
-
+<p>If they happen to collect someone else's golden bauble it's only worth 3 points.</p>
 <p>Red Baubles are worth 5 points (if enabled, see <strong>bauble_percent_red</strong>).</p>
-
 <p>The default configuration also specifies that you lose 4 points when dying. See <a href="../server/config.html#game">[Game] Properties</a>.</p>
-
 <p>Control Bauble spawning behavior by using the standard <a href="../server/config.html#spawnmanager">Spawn Manager</a> properties.</p>
-
 <h2 id="configuration"><a name="config"></a>Configuration</h2>
-
-<h2 id="[baublegame]">[BaubleGame]</h2>
-
-<h3 id="bauble_points-=-list[int]">bauble_points = list[int]</h3>
-
+<p>##[BaubleGame]</p>
+<h3 id="bauble_points-listint">bauble_points = list[int]</h3>
 <p>List of points each progressive bauble is worth. <strong>Note:</strong> <em>modifying the point values requires that adequate images be placed in the GUI/Graphics/Games folder to represent that value.</em></p>
-
-<h3 id="bauble_percent-=-list[float]">bauble_percent = list[float]</h3>
-
+<h3 id="bauble_percent-listfloat">bauble_percent = list[float]</h3>
 <p>The percentage of baubles which should generate as the corresponding value.  Each value should be from [0.0-1.0].  The total of all values provided in this list should equal 1.0.</p>
-
-<h2 id="[hungryhungrybaubles]">[HungryHungryBaubles]</h2>
-
-<h3 id="assign_specific_bauble-=-boolean">assign_specific_bauble = boolean</h3>
-
-<p>Assign each player a golden bauble to retrieve given through <em>getObjectiveLocation()</em> in the environment&#39;s <em>getGameInfo()</em>.  Defaults to true.</p>
-
-<h3 id="bauble_extra_value-=-int">bauble_extra_value = int</h3>
-
-<p>How many points the &#39;golden&#39; bauble is worth if you collect someone else&#39;s.  Only used if <strong>assign_specific_bauble</strong> is turned on.</p>
-
-<h3 id="bauble_points_extra-=-int">bauble_points_extra = int</h3>
-
-<p>How many extra points is your specific golden bauble worth to you (doesn&#39;t require special image).  Only used if <strong>assign_specific_bauble</strong> is turned on.</p>
+<h2 id="hungryhungrybaubles">[HungryHungryBaubles]</h2>
+<h3 id="assign_specific_bauble-boolean">assign_specific_bauble = boolean</h3>
+<p>Assign each player a golden bauble to retrieve given through <em>getObjectiveLocation()</em> in the environment's <em>getGameInfo()</em>.  Defaults to true.</p>
+<h3 id="bauble_extra_value-int">bauble_extra_value = int</h3>
+<p>How many points the 'golden' bauble is worth if you collect someone else's.  Only used if <strong>assign_specific_bauble</strong> is turned on.</p>
+<h3 id="bauble_points_extra-int">bauble_points_extra = int</h3>
+<p>How many extra points is your specific golden bauble worth to you (doesn't require special image).  Only used if <strong>assign_specific_bauble</strong> is turned on.</p>
 
       </section>
     </div>
 
 
+    
 		<footer>
 		  <div class="container">
 		    <div class="owner">
@@ -132,7 +99,7 @@
               var pageTracker = _gat._getTracker("UA-39650553-3");
             pageTracker._trackPageview();
             } catch(err) {}
-          </script>
+      </script>
 
   </body>
 </html>

@@ -1,12 +1,13 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
   <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
 
+    <link rel="shortcut icon" href="/SpaceBattleArena/favicon.ico">
+
     <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/pygment_trac.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/print.css" media="print">
 
     <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="/SpaceBattleArena/js/main.js"></script>
@@ -32,56 +33,34 @@
 
     <nav>
         <div class="container">
-            
             <span><a href="/SpaceBattleArena/index.html">Home</a></span>
-            
-            
-            
-                
-                    &nbsp<span><a href="index.html">Lessons</a></span>
-                
-            
-            <span>Introduction and Connections</span>
+                                        &nbsp;<span><a href="index.html">Lessons</a></span>
+                          <span>Introduction and Connections</span>
         </div>
     </nav>
     
 
-    
-<aside>
-    <h1>Lessons</h1>
-    <ul>
-    
-        <li><a href="#objective">Objective</a></li>
-    
-        <li><a href="#config">Suggested Configuration</a></li>
-    
-        <li><a href="#resources">Resources</a></li>
-    
-        <li><a href="#classroom">Classroom Notes</a></li>
-    
-        <li><a href="#commands">Commands Used</a></li>
-    
-        <li><a href="#api">API Used</a></li>
-    
-    </ul>
-</aside>
-
-
+    <aside>
+        <h1>Lessons</h1>
+        <ul>
+            <li><a href="#objective">Objective</a></span>
+            <li><a href="#config">Suggested Configuration</a></span>
+            <li><a href="#resources">Resources</a></span>
+            <li><a href="#classroom">Classroom Notes</a></span>
+            <li><a href="#commands">Commands Used</a></span>
+            <li><a href="#api">API Used</a></span>
+        </ul>
+    </aside>
 
     <div class="container">
       <section id="main_content">
         <h1 id="introduction-and-connections">Introduction and Connections</h1>
-
-<p>Use the first couple of days of class to get students ramped up with the system.  The goal of this section is to get students familiar with the system and setup to have a ship successfully connect to the server and have it execute a command. </p>
-
+<p>Use the first couple of days of class to get students ramped up with the system.  The goal of this section is to get students familiar with the system and setup to have a ship successfully connect to the server and have it execute a command.</p>
 <h2 id="objective"><a name="objective"></a>Objective</h2>
-
-<p>Make sure each student can successfully register a ship and appear on the server before continuing. </p>
-
+<p>Make sure each student can successfully register a ship and appear on the server before continuing.</p>
 <h2 id="suggested-configuration"><a name="config"></a>Suggested Configuration</h2>
-
 <p>It is a useful first exercise for the teacher to understand a little bit about how Space Battle configuration works.  To do so, you can simply modify the machine_fullscreen.cfg file included with the server to add additional sections to increase the number of objects in the world:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">[Asteroid]
+<pre><code>[Asteroid]
 number = 8
 
 [Planet]
@@ -92,43 +71,32 @@ number = 1
 
 [Nebula]
 number = 2
-</code></pre></div>
+</code></pre>
 <p>This helps create a greater visual impact when first introducing students to Space Battle.  This can then be used on the command-line:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">SBA_Serv machine_fullscreen.cfg
-</code></pre></div>
+<pre><code>SBA_Serv machine_fullscreen.cfg
+</code></pre>
 <h2 id="resources"><a name="resources"></a>Resources</h2>
-
 <ul>
-<li><a href="../client/index.html">Client Setup</a>
-
-<ul>
+<li><a href="../client/index.html">Client Setup</a></li>
 <li><a href="../client/jGRASP/index.html">jGRASP</a></li>
 <li><a href="../client/Eclipse/index.html">Eclipse</a></li>
-</ul></li>
 <li><a href="../server/setup.html">Server Setup</a></li>
 <li><a href="../server/config.html">Server Configuration</a></li>
 </ul>
-
 <h2 id="classroom-notes"><a name="classroom"></a>Classroom Notes</h2>
-
-<p>First, get students to start the IDE and add the jars to their classpath (see Client Setup Instruction supplemental document for more info). </p>
-
-<p>Then introduce the BasicSpaceship abstract class and have students implement the registerShip method and the getNextCommand method (return an IdleCommand at first). </p>
-
-<p>After most students have connected, introduce the RotateCommand and start talking about the dynamics of how the system calls the ship responds with a command for the server to execute. </p>
-
+<p>First, get students to start the IDE and add the jars to their classpath (see Client Setup Instruction supplemental document for more info).</p>
+<p>Then introduce the BasicSpaceship abstract class and have students implement the registerShip method and the getNextCommand method (return an IdleCommand at first).</p>
+<p>After most students have connected, introduce the RotateCommand and start talking about the dynamics of how the system calls the ship responds with a command for the server to execute.</p>
 <h2 id="commands-used"><a name="commands"></a>Commands Used</h2>
-
 <p><a href="http://mikeware.github.io/SpaceBattleArena/client/java_doc/ihs/apcs/spacebattle/commands/IdleCommand.html">IdleCommand</a>, <a href="http://mikeware.github.io/SpaceBattleArena/client/java_doc/ihs/apcs/spacebattle/commands/RotateCommand.html">RotateCommand</a></p>
-
 <h2 id="api-used"><a name="api"></a>API Used</h2>
-
 <p><a href="http://mikeware.github.io/SpaceBattleArena/client/java_doc/ihs/apcs/spacebattle/BasicSpaceship.html">BasicSpaceship</a>, <a href="http://mikeware.github.io/SpaceBattleArena/client/java_doc/ihs/apcs/spacebattle/TextClient.html">TextClient</a></p>
 
       </section>
     </div>
 
 
+    
 		<footer>
 		  <div class="container">
 		    <div class="owner">
@@ -149,7 +117,7 @@ number = 2
               var pageTracker = _gat._getTracker("UA-39650553-3");
             pageTracker._trackPageview();
             } catch(err) {}
-          </script>
+      </script>
 
   </body>
 </html>

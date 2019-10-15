@@ -1,12 +1,13 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
   <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
 
+    <link rel="shortcut icon" href="/SpaceBattleArena/favicon.ico">
+
     <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/pygment_trac.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/print.css" media="print">
 
     <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="/SpaceBattleArena/js/main.js"></script>
@@ -32,66 +33,69 @@
 
     <nav>
         <div class="container">
-            
             <span><a href="/SpaceBattleArena/index.html">Home</a></span>
-            
-            
-            
-                
-                    &nbsp<span><a href="index.html">Space Battle Academy</a></span>
-                
-            
-            <span>Space Coordinates</span>
+                                        &nbsp;<span><a href="index.html">Space Battle Academy</a></span>
+                          <span>Space Coordinates</span>
         </div>
     </nav>
     
 
+<aside>
+    <h1>News</h1>
+    <ul>
+        <li><a href="/SpaceBattleArena/2018/04/28/Season-7-Kickoff">TEALS Season 7 Kickoff</a>
+            <br/>
+            <span class="small">Season 7 TEALS Tournament Kickoff.                
+            <br/>- 28 April 2018</span><br/><br/>
+        </li>
+        <li><a href="/SpaceBattleArena/2017/06/04/v1.2.0.1127-Release">v1.2.0.1127 Release</a>
+            <br/>
+            <span class="small">Season 6 HotFix 2 Release.                
+            <br/>- 04 June 2017</span><br/><br/>
+        </li>
+        <li><a href="/SpaceBattleArena/2017/05/14/v1.2.0.1126-Release">v1.2.0.1126 Release</a>
+            <br/>
+            <span class="small">Season 6&#x27;s Bauble Hunt Release.                
+            <br/>- 14 May 2017</span><br/><br/>
+        </li>
+    </ul>
     
-
+    <a href="/SpaceBattleArena/news" class="small">Archive</a>
+</aside>
 
     <div class="container">
       <section id="main_content">
-        <h1 id="space:-the-final-frontier">Space: The Final Frontier</h1>
-
+        <h1 id="space-the-final-frontier">Space: The Final Frontier</h1>
 <p>In order to navigate your spaceship, you must be familiar with how to navigate within space.  There are a few different spatial concepts you should be aware of when navigating your ship through space:</p>
-
 <ul>
 <li>Position</li>
 <li>Direction</li>
 <li>Orientation</li>
 <li>Speed</li>
 </ul>
-
 <p>Your <strong>position</strong> determines your location from the top-left of the universe.  That is your x coordinate increases to the right and your y coordinate increases down.</p>
-
-<p><img src="/SpaceBattleArena/img/coordinates.png" alt="Coordinate System" class="left indent"/> </p>
-
-<p>The <strong>direction</strong> of your spaceship doesn&#39;t have to match the <strong>orientation</strong> of it (i.e. you can be moving in one direction and facing to fire or thrust in another direction).  This allows for complex maneuvers and combat.  The angle for these two values will always be in degrees.  </p>
-
-<p><img src="/SpaceBattleArena/img/DirectionOrientation.png" alt="Direction vs. Orientation" class="left indent"/> </p>
-
-<blockquote>
-<p>0 degrees faces right.  </p>
-
+<img src="img/coordinates.png" alt="Coordinate System" class="left indent"/> 
+<p>The <strong>direction</strong> of your spaceship doesn't have to match the <strong>orientation</strong> of it (i.e. you can be moving in one direction and facing to fire or thrust in another direction).  This allows for complex maneuvers and combat.  The angle for these two values will always be in degrees.</p>
+<img src="img/DirectionOrientation.png" alt="Direction vs. Orientation" class="left indent"/> 
+<blockquote class="blockquote">
+<p>0 degrees faces right.</p>
+</blockquote>
+<blockquote class="blockquote">
 <p>Counter-clockwise movement is positive, clockwise movement is negative.</p>
 </blockquote>
-
-<p>The ship&#39;s <strong>speed</strong> is always relative to its direction.  It is given in a value per second.  </p>
-
-<blockquote>
-<p>E.g.  If you&#39;re at position (100,100) and moving in direction 0 (right) at a speed of 10, after 5 seconds (assuming no acceleration or deceleration or other factors), you&#39;d be approximately at position (150, 100).</p>
+<p>The ship's <strong>speed</strong> is always relative to its direction.  It is given in a value per second.</p>
+<blockquote class="blockquote">
+<p>E.g.  If you're at position (100,100) and moving in direction 0 (right) at a speed of 10, after 5 seconds (assuming no acceleration or deceleration or other factors), you'd be approximately at position (150, 100).</p>
 </blockquote>
-
-<p>Due to the real-time nature of the system, networking factors, and delays in processing, it will be impossible to know your exact location, react to an exact location, or precisely time maneuvers.  It is best to remember this when planning how to instruct your ship to react to different scenarios and how to plan out complex sets of instructions.  </p>
-
+<p>Due to the real-time nature of the system, networking factors, and delays in processing, it will be impossible to know your exact location, react to an exact location, or precisely time maneuvers.  It is best to remember this when planning how to instruct your ship to react to different scenarios and how to plan out complex sets of instructions.</p>
 <p>After you are capable of handling basic ship manuevers, if you want to better perfect combatative scenarios, think about anticipating the locations of moving targets.</p>
-
-<p>The other thing to note is that Space has no boundaries.  You can travel infinitely in any direction.  However,  you will &#39;loop&#39; and encounter the same objects if you traverse parallel to an axis.   This is simulated by making Space a <a href="https://en.wikipedia.org/wiki/Torus">torus</a>.  Thus, if you encounter the minimum or maximum boundary of a dimension, you will immediately travel to the other side of that dimension.</p>
+<p>The other thing to note is that Space has no boundaries.  You can travel infinitely in any direction.  However,  you will 'loop' and encounter the same objects if you traverse parallel to an axis.   This is simulated by making Space a <a href="https://en.wikipedia.org/wiki/Torus">torus</a>.  Thus, if you encounter the minimum or maximum boundary of a dimension, you will immediately travel to the other side of that dimension.</p>
 
       </section>
     </div>
 
 
+    
 		<footer>
 		  <div class="container">
 		    <div class="owner">
@@ -112,7 +116,7 @@
               var pageTracker = _gat._getTracker("UA-39650553-3");
             pageTracker._trackPageview();
             } catch(err) {}
-          </script>
+      </script>
 
   </body>
 </html>

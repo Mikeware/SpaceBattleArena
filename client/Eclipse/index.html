@@ -1,12 +1,13 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
   <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
 
+    <link rel="shortcut icon" href="/SpaceBattleArena/favicon.ico">
+
     <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/pygment_trac.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="/SpaceBattleArena/css/print.css" media="print">
 
     <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="/SpaceBattleArena/js/main.js"></script>
@@ -32,130 +33,108 @@
 
     <nav>
         <div class="container">
-            
             <span><a href="/SpaceBattleArena/index.html">Home</a></span>
-            
-            
-            
-                
-                    &nbsp<span><a href="../index.html">Client Setup</a></span>
-                
-            
-            <span>Eclipse Client Environment Setup</span>
+                                        &nbsp;<span><a href="../index.html">Client Setup</a></span>
+                          <span>Eclipse Client Environment Setup</span>
         </div>
     </nav>
     
 
-    
-<aside>
-    <h1>Outline</h1>
-    <ul>
-    
-        <li><a href="#overview">Overview</a></li>
-    
-        <li><a href="#environment">Initial Environment Setup</a></li>
-    
-        <li><a href="#classsetup">Class Setup</a></li>
-    
-        <li><a href="#execution">Execution Instructions</a></li>
-    
-    </ul>
-</aside>
-
-
+    <aside>
+        <h1>Outline</h1>
+        <ul>
+            <li><a href="#overview">Overview</a></span>
+            <li><a href="#environment">Initial Environment Setup</a></span>
+            <li><a href="#classsetup">Class Setup</a></span>
+            <li><a href="#execution">Execution Instructions</a></span>
+        </ul>
+    </aside>
 
     <div class="container">
       <section id="main_content">
         <h1 id="eclipse-client-environment-setup">Eclipse Client Environment Setup</h1>
-
 <h2 id="overview"><a name="overview"></a>Overview</h2>
-
 <p>This document provides instructions for setting up the Java environment for developing code which controls a ship in the <a href="http://battlearena.mikeware.com/">Space Battle Arena</a> (SBA) programming game.</p>
-
 <p>These instructions were prepared for <a href="http://www.eclipse.org/">Eclipse</a> Luna Service Release 2 (4.4.2) and above.</p>
-
 <h2 id="initial-environment-setup"><a name="environment"></a>Initial Environment Setup</h2>
-
 <ol>
 <li><p>Create a new <strong>Java Project</strong> in the <em>Package Exploerer</em>:</p>
-
-<p><img src="NewJavaProject.png" alt="Add Java Project"></p></li>
+<p><img src="NewJavaProject.png" class="img-fluid" alt="Add Java Project" /></p>
+</li>
 <li><p>Make sure to give your Project a name and to select <strong>Use project folder as root for sources and class files</strong>:</p>
-
-<p><img src="NewJavaProjectDialog1.png" alt="Project Settings"></p></li>
-<li><p>Click <strong>Next</strong>.</p></li>
-<li><p>Click on the <strong>Libraries</strong> tab.  </p></li>
-<li><p>Click on <strong>Add External JARs</strong>.</p></li>
-<li><p>Select both the <strong><a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.2.0.1127/gson-2.2.jar">gson-2.2.jar</a></strong> and <strong><a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.2.0.1127/SpaceBattle.jar">SpaceBattle.jar</a></strong> which you should have downloaded:</p>
-
-<p><img src="NewJavaProjectDialog2.png" alt="Libraries Tab"></p></li>
-<li><p>Click <strong>Finish</strong></p></li>
+<p><img src="NewJavaProjectDialog1.png" class="img-fluid" alt="Project Settings" /></p>
+</li>
+<li><p>Click <strong>Next</strong>.</p>
+</li>
+<li><p>Click on the <strong>Libraries</strong> tab.</p>
+</li>
+<li><p>Click on <strong>Add External JARs</strong>.</p>
+</li>
+<li><p>Select both the <strong>[gson-2.2.jar]({{ site.releasepath }}/gson-2.2.jar)</strong> and <strong>[SpaceBattle.jar]({{ site.releasepath }}/SpaceBattle.jar)</strong> which you should have downloaded:</p>
+<p><img src="NewJavaProjectDialog2.png" class="img-fluid" alt="Libraries Tab" /></p>
+</li>
+<li><p>Click <strong>Finish</strong></p>
+</li>
 </ol>
-
 <h2 id="class-setup"><a name="classsetup"></a>Class Setup</h2>
-
 <ol>
 <li><p>Right-click and add a new <strong>Class</strong> to your new project:</p>
-
-<p><img src="AddClass.png" alt="Add Class"></p></li>
+<p><img src="AddClass.png" class="img-fluid" alt="Add Class" /></p>
+</li>
 <li><p>Give you Ship a Name and select the <strong>BasicSpaceship</strong> as the Superclass:</p>
-
-<p><img src="AddClassDialog.png" alt="Add Class Dialog"></p></li>
-<li><p>Click <strong>Finish</strong></p></li>
+<p><img src="AddClassDialog.png" class="img-fluid" alt="Add Class Dialog" /></p>
+</li>
+<li><p>Click <strong>Finish</strong></p>
+</li>
 </ol>
-
 <p>Fill in some basics to your Spaceship class:</p>
-
 <pre><code>import java.awt.Color;
 
 import ihs.apcs.spacebattle.*;
 import ihs.apcs.spacebattle.commands.*;
 
 public class ExampleShip extends BasicSpaceship {
-    @Override
+    &#64;Override
     public RegistrationData registerShip(int numImages, int worldWidth, int worldHeight)
     {
         return new RegistrationData("Example Ship", new Color(255, 255, 255), 0);
     }
     
-    @Override
+    &#64;Override
     public ShipCommand getNextCommand(BasicEnvironment env)
     {
         return new IdleCommand(0.1);
     }
 }
 </code></pre>
-    
-
 <h2 id="execution-instructions"><a name="execution"></a>Execution Instructions</h2>
-
-<p><strong>Note: Do not terminate the program through the Eclipse UI; instead, click in the console window and type &#39;QUIT&#39; to gracefully close the connection.</strong></p>
-
+<p><strong>Note: Do not terminate the program through the Eclipse UI; instead, click in the console window and type 'QUIT' to gracefully close the connection.</strong></p>
 <ol>
 <li><p>Open up your <strong>Run Configurations</strong>:</p>
-
-<p><img src="RunConfigurations.png" alt="Run Configurations"></p></li>
+<p><img src="RunConfigurations.png" class="img-fluid" alt="Run Configurations" /></p>
+</li>
 <li><p>Create a new configuration under Java Application:</p>
-
-<p><img src="NewConfiguration.png" alt="New Configuration"></p></li>
+<p><img src="NewConfiguration.png" class="img-fluid" alt="New Configuration" /></p>
+</li>
 <li><p>Select a <strong>Main class</strong> of <em>ihs.apcs.spacebattle.TextClient</em>:</p>
-
-<p><img src="RunConfigurationDialog.png" alt="Run Configuration Main Class"></p></li>
+<p><img src="RunConfigurationDialog.png" class="img-fluid" alt="Run Configuration Main Class" /></p>
+</li>
 <li><p>Click the <strong>Arguments</strong> tab and enter the IP address of the server and your <em>Java Class</em> name with a space in-between:</p>
-
-<p><img src="RunArguments.png" alt="Program Arguments"></p>
-
-<p>e.g. 127.0.0.1 MyFirstShip</p></li>
-<li><p>Click <strong>Apply</strong> and <strong>Run</strong>.</p></li>
-<li><p>Type &#39;QUIT&#39; in the <strong>Console</strong> window to disconnect your ship:</p>
-
-<p><img src="Disconnect.png" alt="Output Window"></p></li>
+<p><img src="RunArguments.png" class="img-fluid" alt="Program Arguments" /></p>
+<p>e.g. 127.0.0.1 MyFirstShip</p>
+</li>
+<li><p>Click <strong>Apply</strong> and <strong>Run</strong>.</p>
+</li>
+<li><p>Type 'QUIT' in the <strong>Console</strong> window to disconnect your ship:</p>
+<p><img src="Disconnect.png" class="img-fluid" alt="Output Window" /></p>
+</li>
 </ol>
 
       </section>
     </div>
 
 
+    
 		<footer>
 		  <div class="container">
 		    <div class="owner">
@@ -176,7 +155,7 @@ public class ExampleShip extends BasicSpaceship {
               var pageTracker = _gat._getTracker("UA-39650553-3");
             pageTracker._trackPageview();
             } catch(err) {}
-          </script>
+      </script>
 
   </body>
 </html>
