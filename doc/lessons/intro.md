@@ -48,6 +48,7 @@ This helps create a greater visual impact when first introducing students to Spa
     * [Command Line](client/CmdLine/index.html)
     * [Eclipse](client/Eclipse/index.html)
     * [jGRASP](client/jGRASP/index.html)
+    * [VS Code](client/vscode/index.html)
  * <a href="client/java_doc/" target="_blank">Java Docs</a>
  * [Server Setup](../server/setup.html)
  * [Server Configuration](../server/config.html)

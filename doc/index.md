@@ -33,6 +33,7 @@ Documentation
     * [Command Line](client/CmdLine/index.html)
     * [Eclipse](client/Eclipse/index.html)
     * [jGRASP](client/jGRASP/index.html)
+    * [VS Code](client/vscode/index.html)
 * <a href="client/java_doc/" target="_blank">Java Docs</a>
 * [Guides](client/guides/index.html)
     * [Coordinates](client/guides/space.html)

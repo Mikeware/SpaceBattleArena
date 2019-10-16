@@ -6,6 +6,7 @@ outline:
  - { url: "CmdLine/index.html", title: "Command Line" }
  - { url: "Eclipse/index.html", title: "Eclipse" }
  - { url: "jGRASP/index.html", title: "jGRASP" }
+ - { url: "vscode/index.html", title: "VS Code" }
 ---
 
 Client Setup
