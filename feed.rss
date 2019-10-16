@@ -5,8 +5,20 @@
 		<link>https://mikeware.github.io/SpaceBattleArena</link>
 		<description>Space Battle Arena is a ‘Programming Game‘ where you must write code (in Java) to autonomously control a space ship to accomplish specified objectives.</description>
 		<copyright>2019</copyright>
-		<pubDate>Tue, 15 Oct 2019 01:48:42 GMT</pubDate>
-		<lastBuildDate>Tue, 15 Oct 2019 01:48:42 GMT</lastBuildDate>
+		<pubDate>Wed, 16 Oct 2019 06:40:06 GMT</pubDate>
+		<lastBuildDate>Wed, 16 Oct 2019 06:40:06 GMT</lastBuildDate>
+		<item>
+			<title>Wyam! New Site (sort of)</title>
+			<link>https://mikeware.github.io/SpaceBattleArena/2019/10/14/New-Site</link>
+			<description>&lt;p&gt;Today we updated the Space Battle Arena site to use the &lt;a href="https://wyam.io/"&gt;Wyam&lt;/a&gt; static site generator.  However, it should still look the same to you!&lt;/p&gt;</description>
+			<guid>https://mikeware.github.io/SpaceBattleArena/2019/10/14/New-Site</guid>
+			<pubDate>Mon, 14 Oct 2019 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;Today we updated the Space Battle Arena site to use the &lt;a href="https://wyam.io/"&gt;Wyam&lt;/a&gt; static site generator.  However, it should still look the same to you!&lt;/p&gt;
+&lt;p&gt;This was to reduce the overhead needed to setup and build the site.  Hopefully, eventually we can automatically build the site when a doc item gets changed, but this will be a step towards that possibility for now.&lt;/p&gt;
+&lt;p&gt;We've also taken the time in this transition to add a few more resources to the site, enjoy!&lt;/p&gt;
+&lt;p&gt;Please report to us on &lt;a href="http://github.com/mikeware/SpaceBattleArena/issues"&gt;GitHub&lt;/a&gt; if you see any issues or have questions. Thanks!&lt;/p&gt;
+</content:encoded>
+		</item>
 		<item>
 			<title>TEALS Season 7 Kickoff</title>
 			<link>https://mikeware.github.io/SpaceBattleArena/2018/04/28/Season-7-Kickoff</link>

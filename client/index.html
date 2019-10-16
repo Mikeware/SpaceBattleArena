@@ -42,10 +42,11 @@
     <aside>
         <h1>IDE Tutorials</h1>
         <ul>
-            <li><a href="jGRASP/index.html">jGRASP</a></span>
-            <li><a href="Eclipse/index.html">Eclipse</a></span>
             <li><a href="BlueJ/index.html">BlueJ</a></span>
             <li><a href="CmdLine/index.html">Command Line</a></span>
+            <li><a href="Eclipse/index.html">Eclipse</a></span>
+            <li><a href="jGRASP/index.html">jGRASP</a></span>
+            <li><a href="vscode/index.html">VS Code</a></span>
         </ul>
     </aside>
 
@@ -56,17 +57,24 @@
 <p>We typically use <a href="http://www.jgrasp.org/">jGRASP</a> or <a href="https://eclipse.org/">Eclipse</a>.  Look to the <strong>right</strong> for some walk-throughs on setting up Space Battle using different IDEs.</p>
 <p>The general process involves:</p>
 <ol>
-<li>Adding both the Gson and SpaceBattle .jar files to your classpath.</li>
-<li>Creating a Ship class which either extends the BasicSpaceship abstract class OR<br />
-implements the Spaceship&lt;?&gt; interface.</li>
-<li>Execute the TextClient's main method from the SpaceBattle.jar file with the following arguments:
+<li><p>Adding both the Gson and SpaceBattle .jar files to your classpath.</p>
+</li>
+<li><p>Creating a Ship class which either extends the BasicSpaceship abstract class OR<br />
+implements the Spaceship&lt;?&gt; interface.</p>
+</li>
+<li><p>Execute the TextClient's run method with the following arguments:</p>
 <ol>
 <li>IP address of the server</li>
-<li>name of your Java Ship class</li>
+<li>An instance of your Java Ship class</li>
 </ol>
+<pre><code>public static void main(String[] args)
+{
+    TextClient.run(&quot;127.0.0.1&quot;, new ExampleShip());
+}
+</code></pre>
 </li>
 </ol>
-<p>Alternatively, to the third step above, create a main method which calls the <em>run</em> method on TextClient with the IP Address and an instance of your Ship class.</p>
+<p>Alternatively, to the third step above, execute the TextClient's main method from within SpaceBattle.jar passing the IP Address and a string with the name of your Ship class.</p>
 <p>If you need to run ships via the Command Line see <a href="CmdLine/index.html">these instructions</a>.</p>
 <p>We also have a complete set of <a href="java_doc/" target="_blank">Java Docs</a> available.</p>
 

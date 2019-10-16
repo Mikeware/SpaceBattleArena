@@ -35,7 +35,7 @@
         <div class="container">
             <span><a href="/SpaceBattleArena/index.html">Home</a></span>
                                         &nbsp;<span><a href="../index.html">Client Setup</a></span>
-                          <span>jGRASP Client Environment Setup</span>
+                          <span>VS Code Client Environment Setup</span>
         </div>
     </nav>
     
@@ -44,25 +44,66 @@
         <h1>Outline</h1>
         <ul>
             <li><a href="#overview">Overview</a></span>
+            <li><a href="#java">Initial Java Setup</a></span>
             <li><a href="#environment">Initial Environment Setup</a></span>
+            <li><a href="#classsetup">Class Setup</a></span>
             <li><a href="#execution">Execution Instructions</a></span>
         </ul>
     </aside>
 
     <div class="container">
       <section id="main_content">
-        <h1 id="jgrasp-client-environment-setup">jGRASP Client Environment Setup</h1>
+        <h1 id="vs-code-client-environment-setup">VS Code Client Environment Setup</h1>
 <h2 id="overview"><a name="overview"></a>Overview</h2>
 <p>This document provides instructions for setting up the Java environment for developing code which controls a ship in the <a href="http://battlearena.mikeware.com/">Space Battle Arena</a> (SBA) programming game.</p>
-<p>These instructions were prepared for <a href="http://www.jgrasp.org/">jGRASP</a> 1.8 and above.</p>
+<p>These instructions were prepared for <a href="http://code.visualstudio.com/">VS Code</a> 1.39 and above.</p>
+<h2 id="initial-java-setup"><a name="java"></a>Initial Java Setup</h2>
+<p>If you already have Java installed and the <strong>JAVA_HOME</strong> environment variable set, proceed to the next section.</p>
+<ol>
+<li><p>Install the <strong>Java Extension Pack</strong> in VS Code: <code>vscjava.vscode-java-pack</code></p>
+<p><img src="JavaExtension.png" class="img-fluid" alt="Java Extension" /></p>
+</li>
+<li><p>It should open the Configure Java Runtime after installed, if not use F1 to get the command: &quot;Java: Configure Java Runtime&quot;</p>
+</li>
+<li><p>See if it has detected your Java installation or not:</p>
+<p><img src="JavaConfiguration.png" class="img-fluid" alt="Java Environment Detection" /></p>
+</li>
+<li><p>If not, select &quot;OpenJDK 8&quot; and click the &quot;Download&quot; button.</p>
+</li>
+<li><p>VS Code will prompt if you want to open the link, click the &quot;Open Link&quot; button.</p>
+</li>
+<li><p>Download and Run the MSI installer for OpenJDK from your browser.</p>
+</li>
+<li><p>Proceed through the installer to the &quot;Custom Setup&quot; page and change the <strong>JAVA_HOME</strong> option in the dropdown to be installed:</p>
+<p><img src="JavaSetup.png" class="img-fluid" alt="Java Home Installer Step" /></p>
+</li>
+<li><p>Click Next after changing the setting and click <strong>Install</strong>.</p>
+</li>
+<li><p>Click the <strong>Reload Window</strong> button in VS Code beneath the Download button you used.</p>
+</li>
+</ol>
 <h2 id="initial-environment-setup"><a name="environment"></a>Initial Environment Setup</h2>
-<p>Create a Spaceship class:</p>
+<ol>
+<li><p>Bootstrap the project by using <a href="https://git-scm.com/download">git</a> to clone our quickstart project:</p>
+<pre><code> git clone https://github.com/Mikeware/SBA-VSCode-Java.git
+</code></pre>
+<p>This includes all the client library dependencies as well as project and classpath files setup for you.</p>
+</li>
+</ol>
+<h2 id="class-setup"><a name="classsetup"></a>Class Setup</h2>
+<ol>
+<li><p>Open up the <strong>ExampleShip.java</strong> file under the <strong>src</strong> directory.</p>
+</li>
+<li><p>It should look something like this:</p>
+</li>
+</ol>
 <pre><code>import java.awt.Color;
 
 import ihs.apcs.spacebattle.*;
 import ihs.apcs.spacebattle.commands.*;
 
 public class ExampleShip extends BasicSpaceship {
+	
     public static void main(String[] args)
     {
         TextClient.run("127.0.0.1", new ExampleShip());
@@ -81,23 +122,23 @@ public class ExampleShip extends BasicSpaceship {
     }
 }
 </code></pre>
-<ol>
-<li><p>Adjust Workspace Classpath under Settings -&gt; PATH/CLASSPATH -&gt; Workspace:</p>
-<p><img src="Classpath.png" class="img-fluid" alt="Classpath Settings" /></p>
-</li>
-<li><p>Add the <a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.2.0.1127/gson-2.2.jar">gson-2.2.jar</a> and <a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.2.0.1127/SpaceBattle.jar">SpaceBattle.jar</a> under the PATH -&gt; CLASSPATHS tab using the New button:</p>
-<p><img src="AddJars.png" class="img-fluid" alt="Jars in Classpath" /></p>
-</li>
-<li><p>Save and Compile your class.</p>
-</li>
-</ol>
 <h2 id="execution-instructions"><a name="execution"></a>Execution Instructions</h2>
-<p><strong>Note: Do not terminate the program through the jGRASP UI; instead, click in the console window and type 'QUIT' to gracefully close the connection.</strong></p>
+<p><strong>Note: Do not terminate the program through the VS Code UI; instead, click in the Terminal window and type 'QUIT' to gracefully close the connection.</strong></p>
 <ol>
-<li><p>Compile and run your class as normal.</p>
+<li><p>In your <strong>ExampleShip.java</strong> file, edit the IP address in the call to TextClient.run to point it to the location of your server.</p>
+<pre><code> TextClient.run(&quot;127.0.0.1&quot;, new ExampleShip());
+</code></pre>
 </li>
-<li><p>Type 'QUIT' in the output window to disconnect your ship:</p>
-<p><img src="Disconnect.png" class="img-fluid" alt="Output Window" /></p>
+<li><p>Hit F5 to launch the ship.</p>
+</li>
+<li><p>You may need to allow the Java client access through the Windows Firewall:</p>
+<p><img src="JavaFirewall.png" class="img-fluid" alt="Windows Firewall" /></p>
+<p>This will be a one-time operation.</p>
+</li>
+<li><p>Type 'QUIT' in the <strong>Terminal</strong> pane to disconnect your ship:</p>
+<p><img src="JavaTerminate.png" class="img-fluid" alt="VS Code Terminal" /></p>
+<pre><code> Note: You will NOT see the output of your typing until you hit enter.
+</code></pre>
 </li>
 </ol>
 
