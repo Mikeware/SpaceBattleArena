@@ -34,6 +34,7 @@ Documentation
     * [Eclipse](client/Eclipse/index.html)
     * [jGRASP](client/jGRASP/index.html)
     * [VS Code](client/vscode/index.html)
+    * [VS Code (CSharp)](client/vscode/csharp.html) [Community Driven]
 * <a href="client/java_doc/" target="_blank">Java Docs</a>
 * [Guides](client/guides/index.html)
     * [Coordinates](client/guides/space.html)
