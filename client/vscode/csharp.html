@@ -35,7 +35,7 @@
         <div class="container">
             <span><a href="/SpaceBattleArena/index.html">Home</a></span>
                                         &nbsp;<span><a href="../index.html">Client Setup</a></span>
-                          <span>BlueJ Client Environment Setup</span>
+                          <span>VS Code C Sharp Client Environment Setup</span>
         </div>
     </nav>
     
@@ -44,6 +44,7 @@
         <h1>Outline</h1>
         <ul>
             <li><a href="#overview">Overview</a></span>
+            <li><a href="#csharp">Initial C# Setup</a></span>
             <li><a href="#environment">Initial Environment Setup</a></span>
             <li><a href="#classsetup">Class Setup</a></span>
             <li><a href="#execution">Execution Instructions</a></span>
@@ -52,76 +53,82 @@
 
     <div class="container">
       <section id="main_content">
-        <h1 id="bluej-client-environment-setup">BlueJ Client Environment Setup</h1>
+        <h1 id="vs-code-c-client-environment-setup">VS Code C# Client Environment Setup</h1>
 <h2 id="overview"><a name="overview"></a>Overview</h2>
-<p>This document provides instructions for setting up the Java environment for developing code which controls a ship in the <a href="http://battlearena.mikeware.com/">Space Battle Arena</a> (SBA) programming game.</p>
-<p>These instructions were prepared for <a href="http://www.bluej.org/">BlueJ</a> (3.1.5) and above.</p>
+<p>This document provides instructions for setting up the C# environment for developing code which controls a ship in the <a href="http://battlearena.mikeware.com/">Space Battle Arena</a> (SBA) programming game.</p>
+<p><strong>This initial C# support was added by the community and is built by them, it is not yet officially supported by Mikeware, use at your own risk.</strong> <a href="https://github.com/Mikeware/SpaceBattleArena/issues/162">See Issue #162</a></p>
+<p>These instructions were prepared for <a href="http://code.visualstudio.com/">VS Code</a> 1.39 and above.</p>
+<h2 id="initial-c-setup"><a name="csharp"></a>Initial C# Setup</h2>
+<p>These instructions were tested with <a href="https://dotnet.microsoft.com/download">.NET Core 3.0</a></p>
+<ol>
+<li><p>Download and install the <a href="https://dotnet.microsoft.com/download">.NET 3 Core SDK</a>, if you haven't already.</p>
+</li>
+<li><p>Open VS Code and Install the <strong>C#</strong> extension: <code>ms-vscode.csharp</code></p>
+</li>
+</ol>
 <h2 id="initial-environment-setup"><a name="environment"></a>Initial Environment Setup</h2>
 <ol>
-<li><p>From the <strong>Tools</strong> menu select <strong>Preferences</strong> in the main window:</p>
-<p><img src="PreferencesMenu.png" class="img-fluid" alt="Tools Preferences" /></p>
+<li><p>Create a new folder and open it in VS Code.</p>
 </li>
-<li><p>Click on the <strong>Libraries</strong> tab.</p>
+<li><p>Open the Terminal and type:</p>
+<pre><code> dotnet new console
+</code></pre>
 </li>
-<li><p>Click on <strong>Add</strong>.</p>
-</li>
-<li><p>Select both the <a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.2.0.1127/gson-2.2.jar">gson-2.2.jar</a> and <a href="https://github.com/Mikeware/SpaceBattleArena/releases/download/v1.2.0.1127/SpaceBattle.jar">SpaceBattle.jar</a> which you should have downloaded:</p>
-<p><img src="LibrariesTab.png" class="img-fluid" alt="Libraries Tab" /></p>
-</li>
-<li><p>Click <strong>OK</strong></p>
-</li>
-<li><p>Click <strong>OK</strong> on the warning that pops up:</p>
-<p><img src="Warning.png" class="img-fluid" alt="Warning" /></p>
-</li>
-<li><p><strong>Close and re-open BlueJ</strong>.</p>
+<li><p>Then add the SBA NuGet package:</p>
+<pre><code> dotnet add package SBA_Client.Net
+</code></pre>
 </li>
 </ol>
 <h2 id="class-setup"><a name="classsetup"></a>Class Setup</h2>
 <ol>
-<li><p>Click the <strong>New Class...</strong> button to add one to your project:</p>
-<p><img src="AddClass.png" class="img-fluid" alt="Add Class" /></p>
+<li><p>Open up the <strong>Program.cs</strong> file.</p>
 </li>
-<li><p>Double-click the new class to bring up the editor and extend BasicSpaceship, like the example below:</p>
+<li><p>Modify it to look like this:</p>
 </li>
 </ol>
-<pre><code>import java.awt.Color;
+<pre><code>using System;
+using System.Collections.Generic;
+using System.Drawing;
+using SpaceBattleArena;
 
-import ihs.apcs.spacebattle.*;
-import ihs.apcs.spacebattle.commands.*;
+namespace APCS
+{    
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            TextClient<BasicGameInfo>.run("127.0.0.1", new MyShip(), 2012);
+        }
+    }
 
-public class ExampleShip extends BasicSpaceship {
-    public static void main(String[] args)
+    class MyShip : BasicSpaceship 
     {
-        TextClient.run("127.0.0.1", new ExampleShip());
+	    override public RegistrationData registerShip(int numImages, int worldWidth, int worldHeight)
+        {
+            return new RegistrationData("Example Ship", Color.White, 0);
+        }
+
+    	override public ShipCommand getNextCommand(BasicEnvironment env)
+        {
+            return new IdleCommand(1);
+        }
     }
-    
-    &#64;Override
-    public RegistrationData registerShip(int numImages, int worldWidth, int worldHeight)
-    {
-        return new RegistrationData("Example Ship", new Color(255, 255, 255), 0);
-    }
-    
-    &#64;Override
-    public ShipCommand getNextCommand(BasicEnvironment env)
-    {
-        return new IdleCommand(0.1);
-    }
-    
 }
+
 </code></pre>
-<p>You should be able to go to Tools -&gt; Compile (Ctrl-K) and have no errors.</p>
 <h2 id="execution-instructions"><a name="execution"></a>Execution Instructions</h2>
-<p><strong>Note: Do not terminate the program through the BlueJ UI; instead, click in the console window and type 'QUIT' to gracefully close the connection.</strong></p>
+<p><strong>Note: Do not terminate the program through the VS Code UI; instead, click in the Terminal window and use 'Ctrl+C' to gracefully close the connection.</strong></p>
 <ol>
-<li><p>Go to your main window and right-click on your class.</p>
+<li><p>In your <strong>Program.cs</strong> file, edit the IP address in the call to TextClient.run to point it to the location of your server.</p>
+<pre><code> TextClient&lt;BasicGameInfo&gt;.run(&quot;127.0.0.1&quot;, new MyShip(), 2012);
+</code></pre>
 </li>
-<li><p>Select the main method:</p>
-<p><img src="RunMain.png" class="img-fluid" alt="Run main" /></p>
+<li><p>Open the Terminal and use:</p>
+<pre><code> dotnet run
+</code></pre>
+<p>To start the application.</p>
 </li>
-<li><p>Click OK in the Method Call dialog which appears.</p>
-</li>
-<li><p>When done, type 'QUIT' in the <strong>Console</strong> window to disconnect your ship:</p>
-<p><img src="Disconnect.png" class="img-fluid" alt="Output Window" /></p>
+<li><p>Type 'Ctrl+C' in the <strong>Terminal</strong> pane to disconnect your ship.</p>
 </li>
 </ol>
 
