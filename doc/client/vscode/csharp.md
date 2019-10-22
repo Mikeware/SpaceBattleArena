@@ -56,37 +56,37 @@ These instructions were tested with [.NET Core 3.0](https://dotnet.microsoft.com
 
 2. Modify it to look like this:	
 
-<pre><code>using System;
-using System.Collections.Generic;
-using System.Drawing;
-using SpaceBattleArena;
+    ```csharp
+    using System;
+    using System.Collections.Generic;
+    using System.Drawing;
+    using SpaceBattleArena;
 
-namespace APCS
-{    
-    class Program
-    {
-        static void Main(string[] args)
+    namespace APCS
+    {    
+        class Program
         {
-            TextClient<BasicGameInfo>.run("127.0.0.1", new MyShip(), 2012);
+            static void Main(string[] args)
+            {
+                TextClient<BasicGameInfo>.run("127.0.0.1", new MyShip(), 2012);
+            }
+        }
+
+        class MyShip : BasicSpaceship 
+        {
+            override public RegistrationData registerShip(int numImages, int worldWidth, int worldHeight)
+            {
+                return new RegistrationData("Example Ship", Color.White, 0);
+            }
+
+            override public ShipCommand getNextCommand(BasicEnvironment env)
+            {
+                return new IdleCommand(1);
+            }
         }
     }
+    ```
 
-    class MyShip : BasicSpaceship 
-    {
-	    override public RegistrationData registerShip(int numImages, int worldWidth, int worldHeight)
-        {
-            return new RegistrationData("Example Ship", Color.White, 0);
-        }
-
-    	override public ShipCommand getNextCommand(BasicEnvironment env)
-        {
-            return new IdleCommand(1);
-        }
-    }
-}
-
-</code></pre>
-	
 <a name="execution"></a>Execution Instructions
 -------------------------
 

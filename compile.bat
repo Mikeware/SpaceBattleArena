@@ -22,5 +22,5 @@ cd..
 
 echo GENERATE DOCS
 javadoc -public -sourcepath src -classpath "*;bin" -d ..\doc\client\java_doc -windowtitle "IHS AP CS Space Battle" -doctitle "IHS AP CS Space Battle" ihs.apcs.spacebattle ihs.apcs.spacebattle.commands ihs.apcs.spacebattle.games
-
 cd..
+wyam

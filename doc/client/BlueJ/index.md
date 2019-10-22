@@ -52,31 +52,32 @@ These instructions were prepared for [BlueJ](http://www.bluej.org/) (3.1.5) and 
 	
 2. Double-click the new class to bring up the editor and extend BasicSpaceship, like the example below:
 
-<pre><code>import java.awt.Color;
+    ```java
+    import java.awt.Color;
 
-import ihs.apcs.spacebattle.*;
-import ihs.apcs.spacebattle.commands.*;
+    import ihs.apcs.spacebattle.*;
+    import ihs.apcs.spacebattle.commands.*;
 
-public class ExampleShip extends BasicSpaceship {
-    public static void main(String[] args)
-    {
-        TextClient.run("127.0.0.1", new ExampleShip());
+    public class ExampleShip extends BasicSpaceship {
+        public static void main(String[] args)
+        {
+            TextClient.run("127.0.0.1", new ExampleShip());
+        }
+        
+        @Override
+        public RegistrationData registerShip(int numImages, int worldWidth, int worldHeight)
+        {
+            return new RegistrationData("Example Ship", new Color(255, 255, 255), 0);
+        }
+        
+        @Override
+        public ShipCommand getNextCommand(BasicEnvironment env)
+        {
+            return new IdleCommand(0.1);
+        }
+        
     }
-    
-    @Override
-    public RegistrationData registerShip(int numImages, int worldWidth, int worldHeight)
-    {
-        return new RegistrationData("Example Ship", new Color(255, 255, 255), 0);
-    }
-    
-    @Override
-    public ShipCommand getNextCommand(BasicEnvironment env)
-    {
-        return new IdleCommand(0.1);
-    }
-    
-}
-</code></pre>
+    ```
 
 You should be able to go to Tools -> Compile (Ctrl-K) and have no errors.
 	
