@@ -22,42 +22,43 @@ These instructions were prepared for [jGRASP](http://www.jgrasp.org/) 1.8 and ab
 <a name="environment"></a>Initial Environment Setup
 -----------------------------
 
-Create a Spaceship class:
+1. Create a Spaceship class:
 
-<pre><code>import java.awt.Color;
+    ```java
+    import java.awt.Color;
 
-import ihs.apcs.spacebattle.*;
-import ihs.apcs.spacebattle.commands.*;
+    import ihs.apcs.spacebattle.*;
+    import ihs.apcs.spacebattle.commands.*;
 
-public class ExampleShip extends BasicSpaceship {
-    public static void main(String[] args)
-    {
-        TextClient.run("127.0.0.1", new ExampleShip());
+    public class ExampleShip extends BasicSpaceship {
+        public static void main(String[] args)
+        {
+            TextClient.run("127.0.0.1", new ExampleShip());
+        }
+
+        @Override
+        public RegistrationData registerShip(int numImages, int worldWidth, int worldHeight)
+        {
+            return new RegistrationData("Example Ship", new Color(255, 255, 255), 0);
+        }
+        
+        @Override
+        public ShipCommand getNextCommand(BasicEnvironment env)
+        {
+            return new IdleCommand(0.1);
+        }
     }
+    ```
 
-    @Override
-    public RegistrationData registerShip(int numImages, int worldWidth, int worldHeight)
-    {
-        return new RegistrationData("Example Ship", new Color(255, 255, 255), 0);
-    }
-    
-    @Override
-    public ShipCommand getNextCommand(BasicEnvironment env)
-    {
-        return new IdleCommand(0.1);
-    }
-}
-</code></pre>
-
-1. Adjust Workspace Classpath under Settings -> PATH/CLASSPATH -> Workspace:
+2. Adjust Workspace Classpath under Settings -> PATH/CLASSPATH -> Workspace:
 
 	![Classpath Settings](Classpath.png)
 	
-2. Add the <?# ReleasePathLink "gson-2.2.jar" /?> and <?# ReleasePathLink "SpaceBattle.jar" /?> under the PATH -> CLASSPATHS tab using the New button:
+3. Add the <?# ReleasePathLink "gson-2.2.jar" /?> and <?# ReleasePathLink "SpaceBattle.jar" /?> under the PATH -> CLASSPATHS tab using the New button:
 
 	![Jars in Classpath](AddJars.png)
 	
-3. Save and Compile your class.
+4. Save and Compile your class.
 
 <a name="execution"></a>Execution Instructions
 -------------------------

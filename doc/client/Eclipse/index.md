@@ -56,27 +56,28 @@ These instructions were prepared for [Eclipse](http://www.eclipse.org/) Luna Ser
 	
 3. Click **Finish**
 	
-Fill in some basics to your Spaceship class:
+4. Fill in some basics to your Spaceship class:
 
-<pre><code>import java.awt.Color;
+	```java
+	import java.awt.Color;
 
-import ihs.apcs.spacebattle.*;
-import ihs.apcs.spacebattle.commands.*;
+	import ihs.apcs.spacebattle.*;
+	import ihs.apcs.spacebattle.commands.*;
 
-public class ExampleShip extends BasicSpaceship {
-    @Override
-    public RegistrationData registerShip(int numImages, int worldWidth, int worldHeight)
-    {
-        return new RegistrationData("Example Ship", new Color(255, 255, 255), 0);
-    }
-    
-    @Override
-    public ShipCommand getNextCommand(BasicEnvironment env)
-    {
-        return new IdleCommand(0.1);
-    }
-}
-</code></pre>
+	public class ExampleShip extends BasicSpaceship {
+		@Override
+		public RegistrationData registerShip(int numImages, int worldWidth, int worldHeight)
+		{
+			return new RegistrationData("Example Ship", new Color(255, 255, 255), 0);
+		}
+		
+		@Override
+		public ShipCommand getNextCommand(BasicEnvironment env)
+		{
+			return new IdleCommand(0.1);
+		}
+	}
+	```
 	
 <a name="execution"></a>Execution Instructions
 -------------------------
