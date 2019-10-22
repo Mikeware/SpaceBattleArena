@@ -82,9 +82,7 @@
 <p><img src="AddClass.png" class="img-fluid" alt="Add Class" /></p>
 </li>
 <li><p>Double-click the new class to bring up the editor and extend BasicSpaceship, like the example below:</p>
-</li>
-</ol>
-<pre><code>import java.awt.Color;
+<pre><code class="language-java">import java.awt.Color;
 
 import ihs.apcs.spacebattle.*;
 import ihs.apcs.spacebattle.commands.*;
@@ -92,23 +90,25 @@ import ihs.apcs.spacebattle.commands.*;
 public class ExampleShip extends BasicSpaceship {
     public static void main(String[] args)
     {
-        TextClient.run("127.0.0.1", new ExampleShip());
+        TextClient.run(&quot;127.0.0.1&quot;, new ExampleShip());
     }
-    
+
     &#64;Override
     public RegistrationData registerShip(int numImages, int worldWidth, int worldHeight)
     {
-        return new RegistrationData("Example Ship", new Color(255, 255, 255), 0);
+        return new RegistrationData(&quot;Example Ship&quot;, new Color(255, 255, 255), 0);
     }
-    
+
     &#64;Override
     public ShipCommand getNextCommand(BasicEnvironment env)
     {
         return new IdleCommand(0.1);
     }
-    
+
 }
 </code></pre>
+</li>
+</ol>
 <p>You should be able to go to Tools -&gt; Compile (Ctrl-K) and have no errors.</p>
 <h2 id="execution-instructions"><a name="execution"></a>Execution Instructions</h2>
 <p><strong>Note: Do not terminate the program through the BlueJ UI; instead, click in the console window and type 'QUIT' to gracefully close the connection.</strong></p>

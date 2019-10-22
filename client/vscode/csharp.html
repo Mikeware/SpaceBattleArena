@@ -84,9 +84,7 @@
 <li><p>Open up the <strong>Program.cs</strong> file.</p>
 </li>
 <li><p>Modify it to look like this:</p>
-</li>
-</ol>
-<pre><code>using System;
+<pre><code class="language-csharp">using System;
 using System.Collections.Generic;
 using System.Drawing;
 using SpaceBattleArena;
@@ -97,25 +95,26 @@ namespace APCS
     {
         static void Main(string[] args)
         {
-            TextClient<BasicGameInfo>.run("127.0.0.1", new MyShip(), 2012);
+            TextClient&lt;BasicGameInfo&gt;.run(&quot;127.0.0.1&quot;, new MyShip(), 2012);
         }
     }
 
     class MyShip : BasicSpaceship 
     {
-	    override public RegistrationData registerShip(int numImages, int worldWidth, int worldHeight)
+        override public RegistrationData registerShip(int numImages, int worldWidth, int worldHeight)
         {
-            return new RegistrationData("Example Ship", Color.White, 0);
+            return new RegistrationData(&quot;Example Ship&quot;, Color.White, 0);
         }
 
-    	override public ShipCommand getNextCommand(BasicEnvironment env)
+        override public ShipCommand getNextCommand(BasicEnvironment env)
         {
             return new IdleCommand(1);
         }
     }
 }
-
 </code></pre>
+</li>
+</ol>
 <h2 id="execution-instructions"><a name="execution"></a>Execution Instructions</h2>
 <p><strong>Note: Do not terminate the program through the VS Code UI; instead, click in the Terminal window and use 'Ctrl+C' to gracefully close the connection.</strong></p>
 <ol>
