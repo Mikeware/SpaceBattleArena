@@ -86,27 +86,28 @@
 </li>
 <li><p>Click <strong>Finish</strong></p>
 </li>
-</ol>
-<p>Fill in some basics to your Spaceship class:</p>
-<pre><code>import java.awt.Color;
+<li><p>Fill in some basics to your Spaceship class:</p>
+<pre><code class="language-java"> import java.awt.Color;
 
-import ihs.apcs.spacebattle.*;
-import ihs.apcs.spacebattle.commands.*;
+ import ihs.apcs.spacebattle.*;
+ import ihs.apcs.spacebattle.commands.*;
 
-public class ExampleShip extends BasicSpaceship {
-    &#64;Override
-    public RegistrationData registerShip(int numImages, int worldWidth, int worldHeight)
-    {
-        return new RegistrationData("Example Ship", new Color(255, 255, 255), 0);
-    }
-    
-    &#64;Override
-    public ShipCommand getNextCommand(BasicEnvironment env)
-    {
-        return new IdleCommand(0.1);
-    }
-}
+ public class ExampleShip extends BasicSpaceship {
+ 	&#64;Override
+ 	public RegistrationData registerShip(int numImages, int worldWidth, int worldHeight)
+ 	{
+ 		return new RegistrationData(&quot;Example Ship&quot;, new Color(255, 255, 255), 0);
+ 	}
+
+ 	&#64;Override
+ 	public ShipCommand getNextCommand(BasicEnvironment env)
+ 	{
+ 		return new IdleCommand(0.1);
+ 	}
+ }
 </code></pre>
+</li>
+</ol>
 <h2 id="execution-instructions"><a name="execution"></a>Execution Instructions</h2>
 <p><strong>Note: Do not terminate the program through the Eclipse UI; instead, click in the console window and type 'QUIT' to gracefully close the connection.</strong></p>
 <ol>

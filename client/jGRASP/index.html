@@ -56,8 +56,9 @@
 <p>This document provides instructions for setting up the Java environment for developing code which controls a ship in the <a href="http://battlearena.mikeware.com/">Space Battle Arena</a> (SBA) programming game.</p>
 <p>These instructions were prepared for <a href="http://www.jgrasp.org/">jGRASP</a> 1.8 and above.</p>
 <h2 id="initial-environment-setup"><a name="environment"></a>Initial Environment Setup</h2>
-<p>Create a Spaceship class:</p>
-<pre><code>import java.awt.Color;
+<ol>
+<li><p>Create a Spaceship class:</p>
+<pre><code class="language-java">import java.awt.Color;
 
 import ihs.apcs.spacebattle.*;
 import ihs.apcs.spacebattle.commands.*;
@@ -65,15 +66,15 @@ import ihs.apcs.spacebattle.commands.*;
 public class ExampleShip extends BasicSpaceship {
     public static void main(String[] args)
     {
-        TextClient.run("127.0.0.1", new ExampleShip());
+        TextClient.run(&quot;127.0.0.1&quot;, new ExampleShip());
     }
 
     &#64;Override
     public RegistrationData registerShip(int numImages, int worldWidth, int worldHeight)
     {
-        return new RegistrationData("Example Ship", new Color(255, 255, 255), 0);
+        return new RegistrationData(&quot;Example Ship&quot;, new Color(255, 255, 255), 0);
     }
-    
+
     &#64;Override
     public ShipCommand getNextCommand(BasicEnvironment env)
     {
@@ -81,7 +82,7 @@ public class ExampleShip extends BasicSpaceship {
     }
 }
 </code></pre>
-<ol>
+</li>
 <li><p>Adjust Workspace Classpath under Settings -&gt; PATH/CLASSPATH -&gt; Workspace:</p>
 <p><img src="Classpath.png" class="img-fluid" alt="Classpath Settings" /></p>
 </li>
