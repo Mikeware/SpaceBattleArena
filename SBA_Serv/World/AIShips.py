@@ -1,7 +1,7 @@
 
 from World.Messaging import Command
-from WorldCommands import *
-from WorldEntities import Ship
+from .WorldCommands import *
+from .WorldEntities import Ship
 from Game.Players import Player
 
 from Server import MWNL2
@@ -136,5 +136,5 @@ class AIShip_Network_Harness:
             #print "DISCONNECTED"
             logging.info("Disconnected AI Ship %s", self._name)
         elif cmd[0] == MWNL2.MWNL_CMD_ALREADY_CONNECTED:
-            print "Multiple Connections Disallowed"
+            print("Multiple Connections Disallowed")
             logging.error("Multiple Connections Disallowed")

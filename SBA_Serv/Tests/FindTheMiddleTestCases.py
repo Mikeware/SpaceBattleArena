@@ -1,5 +1,5 @@
 
-from TestCaseRigging import SBAGUITestCase
+from .TestCaseRigging import SBAGUITestCase
 
 import World.WorldMap as WorldMap
 from World.WorldEntities import *
@@ -33,7 +33,7 @@ class FindTheMiddleTestCases(SBAGUITestCase):
 
         time.sleep(4.0)
 
-        print self.ship.player.score
+        print(self.ship.player.score)
         logging.debug("Ship Score %d, expected 5", self.ship.player.score)
         self.assertEqual(self.ship.player.score, 5, "Ship Didn't Get Score")
 
@@ -45,7 +45,7 @@ class FindTheMiddleTestCases(SBAGUITestCase):
 
         time.sleep(4.0)
 
-        print self.ship.player.score
+        print(self.ship.player.score)
         logging.debug("Ship Score %d, expected 5", self.ship.player.score)
         self.assertEqual(self.ship.player.score, 5, "Ship Didn't Get Score")
 
@@ -55,7 +55,7 @@ class FindTheMiddleTestCases(SBAGUITestCase):
 
         time.sleep(4.0)
 
-        print self.ship.player.score
+        print(self.ship.player.score)
         logging.debug("Ship Score %d, expected 10", self.ship.player.score)
         self.assertEqual(self.ship.player.score, 10, "Ship doesn't have score of 10")
 
@@ -67,7 +67,7 @@ class FindTheMiddleTestCases(SBAGUITestCase):
 
         time.sleep(4.0)
 
-        print self.ship.player.score
+        print(self.ship.player.score)
         logging.debug("Ship Score %d, expected 5", self.ship.player.score)
         self.assertEqual(self.ship.player.score, 5, "Ship Didn't Get Score")
 
@@ -76,11 +76,11 @@ class FindTheMiddleTestCases(SBAGUITestCase):
 
         time.sleep(0.5)
 
-        print self.ship.player.score
+        print(self.ship.player.score)
         logging.debug("Ship Score %d, expected 0", self.ship.player.score)
         self.assertEqual(self.ship.player.score, 0, "Ship Score Not Reset")
 
-        print self.ship.player.bestscore
+        print(self.ship.player.bestscore)
         logging.debug("Ship Best score %d, expected 5", self.ship.player.bestscore)
         self.assertEqual(self.ship.player.bestscore, 5, "Ship Best Score Not 5")
 

@@ -20,13 +20,13 @@ class ThreadSafeDict(dict):
 class ThreadSafeDictIterator:
     def __init__(self, dict):
         self.__dict = dict
-        self.__keys = dict.keys()
+        self.__keys = list(dict.keys())
         self.__x = -1
     
     def __iter__(self):
         return self
         
-    def next(self):
+    def __next__(self):
         self.__x += 1
         # Check if we've reached the end
         if self.__x == len(self.__keys):
@@ -34,7 +34,7 @@ class ThreadSafeDictIterator:
         # Check if this value still exists in the original dictionary, TODO: Check and Retrieve in lock?
         value = self.__dict.get(self.__keys[self.__x], None)
         if value == None:
-            return self.next()
+            return next(self)
         else:
             return value
 
@@ -55,7 +55,7 @@ class ThreadSafeList(deque):
     def __iter__(self):
         return self
 
-    def next(self):
+    def __next__(self):
         x = self.popleft()
         self.append(x)
         yield x
@@ -142,39 +142,39 @@ if __name__ == "__main__":
          """ 
     t = timeit.Timer(s1, "t = []")
     la1 = t.timeit(number=10)/10
-    print "List Add: %.2f usec/pass" % (100 * la1)
+    print("List Add: %.2f usec/pass" % (100 * la1))
     t = timeit.Timer(s1, "from collections import deque; t = deque()")
     da1 = t.timeit(number=10)/10
-    print "Deque Add: %.2f usec/pass" % (100 * da1)
+    print("Deque Add: %.2f usec/pass" % (100 * da1))
     t = timeit.Timer(s1, "from __main__ import ThreadSafeLinkedList; t = ThreadSafeLinkedList()")
     tslla1 = t.timeit(number=10)/10
-    print "TSLL Add: %.2f usec/pass" % (100 * tslla1)
+    print("TSLL Add: %.2f usec/pass" % (100 * tslla1))
     t = timeit.Timer(s1, "from __main__ import ThreadSafeDict; t = ThreadSafeDict()")
     tsd1 = t.timeit(number=10)/10
-    print "TSD Add: %.2f usec/pass" % (100 * tsd1)	
+    print("TSD Add: %.2f usec/pass" % (100 * tsd1))	
     
     t = timeit.Timer(s2, "t = []")
     la2 = t.timeit(number=10)/10 - la1
-    print "List Rem: %.2f usec/pass" % (100 * la2)
+    print("List Rem: %.2f usec/pass" % (100 * la2))
     t = timeit.Timer(s2, "from collections import deque; t = deque()")
     da2 = t.timeit(number=10)/10 - da1
-    print "Deque Rem: %.2f usec/pass" % (100 * da2)
+    print("Deque Rem: %.2f usec/pass" % (100 * da2))
     t = timeit.Timer(s2, "from __main__ import ThreadSafeLinkedList; t = ThreadSafeLinkedList()")
     tslla2 = t.timeit(number=10)/10 - tslla1
-    print "TSLL Rem: %.2f usec/pass" % (100 * tslla2)
+    print("TSLL Rem: %.2f usec/pass" % (100 * tslla2))
     t = timeit.Timer(s2, "from __main__ import ThreadSafeDict; t = ThreadSafeDict()")
     tsd2 = t.timeit(number=10)/10 - tsd1
-    print "TSD Rem: %.2f usec/pass" % (100 * tsd2)
+    print("TSD Rem: %.2f usec/pass" % (100 * tsd2))
     
     t = timeit.Timer(s3, "t = []")
     la2 = t.timeit(number=10)/10 - la1
-    print "List Iter: %.2f usec/pass" % (100 * la2)
+    print("List Iter: %.2f usec/pass" % (100 * la2))
     t = timeit.Timer(s3, "from collections import deque; t = deque()")
     da2 = t.timeit(number=10)/10 - da1
-    print "Deque Iter: %.2f usec/pass" % (100 * da2)
+    print("Deque Iter: %.2f usec/pass" % (100 * da2))
     t = timeit.Timer(s3, "from __main__ import ThreadSafeLinkedList; t = ThreadSafeLinkedList()")
     tslla2 = t.timeit(number=10)/10 - tslla1
-    print "TSLL Iter: %.2f usec/pass" % (100 * tslla2)	
+    print("TSLL Iter: %.2f usec/pass" % (100 * tslla2))	
     t = timeit.Timer(s3, "from __main__ import ThreadSafeDict; t = ThreadSafeDict()")
     tsd2 = t.timeit(number=10)/10 - tsd1
-    print "TSD Iter: %.2f usec/pass" % (100 * tsd2)
+    print("TSD Iter: %.2f usec/pass" % (100 * tsd2))

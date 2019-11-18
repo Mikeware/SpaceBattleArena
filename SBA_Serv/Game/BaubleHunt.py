@@ -12,8 +12,8 @@ You should have received a copy of the GNU General Public License along with thi
 The full text of the license is available online: http://opensource.org/licenses/GPL-2.0
 """
 
-from BaubleGame import *
-from Utils import CallbackTimer
+from .BaubleGame import *
+from .Utils import CallbackTimer
 from World.Entities import Entity, PhysicalRound
 from World.WorldEntities import Ship
 from GUI.ObjWrappers.GUIEntity import GUIEntity
@@ -24,7 +24,7 @@ from ThreadStuff.ThreadSafe import ThreadSafeDict
 import logging
 import pygame
 import random
-import thread
+import _thread
 from operator import attrgetter
 
 class BaubleHuntGame(BaseBaubleGame):
@@ -61,7 +61,7 @@ class BaubleHuntGame(BaseBaubleGame):
             player.totalcollected = 0            
 
             self.__addHomeBase(player)
-        elif self.__bases.has_key(player.netid):
+        elif player.netid in self.__bases:
             self.__bases[player.netid].newOwner(player.object)
 
     def __addHomeBase(self, player, force=False):
@@ -85,7 +85,7 @@ class BaubleHuntGame(BaseBaubleGame):
                    random.randint(100, self.world.height - 100))
 
             objs = self.world.getObjectsInArea(pos, 200)
-            for i in xrange(len(objs)-1, -1, -1):
+            for i in range(len(objs)-1, -1, -1):
                 if isinstance(objs[i], Bauble):
                     del objs[i]
             n = len(objs)
@@ -124,7 +124,7 @@ class BaubleHuntGame(BaseBaubleGame):
             ship.player.carrying.append(bauble)
             ship.player.sound = "BAUBLE"
 
-            if self.__baubles.has_key(bauble.id):
+            if bauble.id in self.__baubles:
                 del self.__baubles[bauble.id]
 
             bauble.destroyed = True
@@ -160,7 +160,7 @@ class BaubleHuntGame(BaseBaubleGame):
         #self.world.causeExplosion(player.object.body.position, 32, 1000)
 
         # Remove player's base if they're gone
-        if gone and self.__bases.has_key(player.netid):
+        if gone and player.netid in self.__bases:
             self.world.remove(self.__bases[player.netid])
             del self.__bases[player.netid]
 
@@ -206,7 +206,7 @@ class BaubleHuntGame(BaseBaubleGame):
                 text = debugfont().render(repr(len(player.carrying)), False, player.color)
                 surface.blit(text, (obj.body.position[0]+30, obj.body.position[1]-4))
                 # draw line between player and HomeBase
-                if flags["DEBUG"] and self.__bases.has_key(player.netid):
+                if flags["DEBUG"] and player.netid in self.__bases:
                     pygame.draw.line(surface, player.color, intpos(obj.body.position), intpos(self.__bases[player.netid].body.position))
 
         # draw number of baubles carried by player

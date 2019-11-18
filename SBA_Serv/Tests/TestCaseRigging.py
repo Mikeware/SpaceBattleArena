@@ -28,10 +28,10 @@ from Game.KingOfTheBubble import KingOfTheBubbleGame
 from Game.DiscoveryQuest import DiscoveryQuestGame
 from Game.TheHungerBaubles import TheHungerBaublesGame
 
-from ConfigParser import ConfigParser
+from configparser import ConfigParser
 import Server.WorldServer as WorldServer
 
-import thread
+import _thread
 from GUI import main
 from importlib import import_module
 
@@ -111,13 +111,13 @@ class SBAWorldTestCase(unittest.TestCase):
         try:
             import coverage
             coverage.process_startup()
-        except ImportError, EnvironmentError:
+        except ImportError as EnvironmentError:
             pass
 
         try:
             classname = str(self.__class__)        
             classname = classname[classname.find(".")+1:-2]
-            print classname
+            print(classname)
             with open("SBA_Test_"+classname+"_"+self._testMethodName+".log", "w") as file:
                 pass
             logging.basicConfig(level=logging.DEBUG, filename="SBA_Test_"+classname+"_"+self._testMethodName+".log", format='%(asctime)s|%(relativeCreated)d|%(levelname)s|%(threadName)s|%(module)s|%(lineno)d|%(funcName)s|%(message)s')
@@ -135,7 +135,7 @@ class SBAWorldTestCase(unittest.TestCase):
             logging.info("Using Game %s", repr(self.game))
         except:
             logging.error(traceback.format_exc())
-            print traceback.format_exc()
+            print(traceback.format_exc())
             self.fail()
 
     def tearDown(self):
@@ -208,7 +208,7 @@ class SBAGUITestCase(SBAWorldTestCase):
 
         # TODO: Investigate doing this statically, so it remains open for multiple tests in a suite???
         # Start GUI in separate Thread, so test can run
-        thread.start_new_thread(main.startGame, ("Space Battle Tests - " + self._testMethodName, self.game, False, (self.cfg.getint("Application", "horz_res"), self.cfg.getint("Application", "vert_res")), self.cfg, self))
+        _thread.start_new_thread(main.startGame, ("Space Battle Tests - " + self._testMethodName, self.game, False, (self.cfg.getint("Application", "horz_res"), self.cfg.getint("Application", "vert_res")), self.cfg, self))
 
     def tearDown(self):
         self._resultForDoCleanups.printErrors()

@@ -29,15 +29,15 @@ class GraphicsCache(object):
         """
         Returns the maximum number of images found for that key
         """
-        if not self.__maxfound.has_key(key):
+        if key not in self.__maxfound:
             lst = glob.glob(self.__rootdir + key + "*" + self.__ext)
-            for x in xrange(len(lst)):
+            for x in range(len(lst)):
                 lst[x] = int(lst[x][len(self.__rootdir + key):-len(self.__ext)])
             self.__maxfound[key] = max(lst)
         return self.__maxfound[key]
 
     def getImage(self, key):
-        if not self.__cache.has_key(key):
+        if key not in self.__cache:
             self.__cache[key] = {}
             self.__cache[key][0] = pygame.image.load(self.__rootdir + key + self.__ext).convert_alpha()
         return self.__cache[key][0]  
@@ -50,10 +50,10 @@ class GraphicsCache(object):
             angle -= 360
         angle = int(angle / MIN_STEP + 0.5) * MIN_STEP
         image = None
-        if not self.__cache.has_key(key):            
+        if key not in self.__cache:            
             image = self.getImage(key)
         main = self.__cache[key]
-        if not main.has_key(angle):
+        if angle not in main:
             if image == None:
                 image = main[0]
             main[angle] = pygame.transform.rotate(image, angle).convert_alpha()
@@ -64,10 +64,10 @@ class GraphicsCache(object):
         Get's a scaled version of the image, can't have both scaling and rotating images.
         """
         image = None
-        if not self.__cache.has_key(key):
+        if key not in self.__cache:
             image = self.getImage(key)
         main = self.__cache[key]
-        if not main.has_key(scale):
+        if scale not in main:
             if image == None:
                 image = main[0]
             if scale == 1.0:

@@ -1,5 +1,5 @@
 
-from TestCaseRigging import SBAGUITestCase
+from .TestCaseRigging import SBAGUITestCase
 
 import World.WorldMap as WorldMap
 from World.WorldEntities import *
@@ -118,7 +118,7 @@ class KingOfTheBubbleTournamentTestCases(SBAGUITestCase):
 
         time.sleep(0.5)
 
-        for i in xrange(2):
+        for i in range(2):
             self.game.round_start()
 
             time.sleep(0.5)

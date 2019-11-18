@@ -129,6 +129,6 @@ if __name__ == "__main__":
     while time.time() < st + 3:
         pass
 
-    print m
-    print m.getNextMessage()
-    print m
+    print(m)
+    print(m.getNextMessage())
+    print(m)

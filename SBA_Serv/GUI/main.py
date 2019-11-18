@@ -21,21 +21,21 @@ from operator import attrgetter
 # REQUIRED FOR DEPENDENCIES IN LOADING
 from World.WorldMap import GameWorld
 
-from ObjWrappers.ShipWrapper import ShipGUI
-from ObjWrappers.NebulaWrapper import NebulaGUI
-from ObjWrappers.PlanetWrapper import PlanetGUI
-from ObjWrappers.AsteroidWrapper import AsteroidGUI, DragonGUI
-from ObjWrappers.WormHoleWrapper import WormHoleGUI
-from ObjWrappers.WeaponWrappers import TorpedoGUI, SpaceMineGUI
+from .ObjWrappers.ShipWrapper import ShipGUI
+from .ObjWrappers.NebulaWrapper import NebulaGUI
+from .ObjWrappers.PlanetWrapper import PlanetGUI
+from .ObjWrappers.AsteroidWrapper import AsteroidGUI, DragonGUI
+from .ObjWrappers.WormHoleWrapper import WormHoleGUI
+from .ObjWrappers.WeaponWrappers import TorpedoGUI, SpaceMineGUI
 from Game.Utils import SpawnManager
-from GraphicsCache import Cache
+from .GraphicsCache import Cache
 from World.WorldEntities import Ship, Planet, Asteroid, Torpedo, SpaceMine, BlackHole, Nebula, Star, Dragon, WormHole, Constellation
 from Server.MWNL2 import getIPAddress
 from pymunk import Vec2d
-from Helpers import infofont, detect_resolution
+from .Helpers import infofont, detect_resolution
 from ThreadStuff.ThreadSafe import ThreadSafeDict
-import threading, thread, traceback
-from SoundCache import SCache
+import threading, _thread, traceback
+from .SoundCache import SCache
 
 STAR_DENSITY = 75 # Higher = Less Stars
 
@@ -114,7 +114,7 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, cfg=None, t
         objects = ThreadSafeDict()
         trackplayer = None
         def addorremove(obj, added):
-            logging.debug("GUI: Add/Remove Obj %s (%s) [%d]", repr(obj), repr(added), thread.get_ident())
+            logging.debug("GUI: Add/Remove Obj %s (%s) [%d]", repr(obj), repr(added), _thread.get_ident())
             try:
                 if added:
                     # TODO: #18 - Clean-up this by auto creating wrapper on name...
@@ -176,7 +176,7 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, cfg=None, t
                 logging.error("GUI ERROR")
                 logging.info(traceback.format_exc())
                 logging.error(traceback.format_exc())
-                print traceback.format_exc()
+                print(traceback.format_exc())
             #logging.debug("GUI: Add/Remove Done [%d]", thread.get_ident())
         #endregion
 
@@ -251,7 +251,7 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, cfg=None, t
         #endregion
 
         # Get spawnable items in alphabetical order
-        SPAWN_TYPES = SpawnManager.ENTITY_TYPES.keys()
+        SPAWN_TYPES = list(SpawnManager.ENTITY_TYPES.keys())
         SPAWN_TYPES.sort()
 
         while notexit or (testcase != None and not testcase.donetest):
@@ -270,7 +270,7 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, cfg=None, t
             #        worldsurface.blit(spacetexture, (x, y))
 
             # draw background items first in specific z-order
-            for obj in sorted(bgobjects.values(), key=attrgetter('zorder')):
+            for obj in sorted(list(bgobjects.values()), key=attrgetter('zorder')):
                 obj.draw(worldsurface, flags)
                 if obj.dead:
                     del bgobjects[obj._worldobj.id]
@@ -350,7 +350,7 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, cfg=None, t
                             trackplayer = game.game_get_current_leader_list()[-1]
                         else:
                             lst = game.game_get_current_leader_list()
-                            for x in xrange(len(lst) - 1, -1, -1):
+                            for x in range(len(lst) - 1, -1, -1):
                                 if lst[x] == trackplayer:
                                     if x == 0:
                                         x = len(lst)
@@ -361,7 +361,7 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, cfg=None, t
                             trackplayer = game.game_get_current_leader_list()[0]
                         else:
                             lst = game.game_get_current_leader_list()
-                            for x in xrange(len(lst)):
+                            for x in range(len(lst)):
                                 if lst[x] == trackplayer:
                                     if x == len(lst) - 1:
                                         x = -1
@@ -567,7 +567,7 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, cfg=None, t
                 windowSurface.blit(font.render(repr(flags), False, (255, 255, 255)), (0, resolution[1]-12))            
 
                 if logintercept:
-                    for i in xrange(len(mlh.messages)):
+                    for i in range(len(mlh.messages)):
                         if i >= len(mlh.messages): break
                         c = 145 + i*2
                         windowSurface.blit(font.render(mlh.messages[i], False, (c, c, c)), (10, 64 + 12*i))
@@ -577,7 +577,7 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, cfg=None, t
 
             if trackplayer != None:
                 to = trackplayer.object
-                if to != None and objects.has_key(to.id):
+                if to != None and to.id in objects:
                     # if we're tracking a ship, let's print some useful info about it.
                     #windowSurface.blit(font.render(trackplayer.name, False, trackplayer.color), (resolution[0] - 200, resolution[1] - 120))
                     windowSurface.fill((128, 128, 128), Rect(resolution[0] - 310, resolution[1] - 120, 300, 110), pygame.BLEND_ADD)
@@ -636,7 +636,7 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, cfg=None, t
                 windowSurface.blit(ip, (resolution[0]/2-ip.get_width()/2, resolution[1]/2-ip.get_height()/2))
             elif mousemode != None and mousemode[:3] == "Add":
                 x = SPAWN_TYPES.index(mousemode[3:])
-                for i in xrange(x - 1, -1, -1):
+                for i in range(x - 1, -1, -1):
                     c = max(0, 128 + (i - x) * 16)
                     ip = bigfont.render(SPAWN_TYPES[i], False, (c, c, c))
                     windowSurface.blit(ip, (resolution[0]/2 + 35, resolution[1]/2-24-((i - x) * -36)))
@@ -644,7 +644,7 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, cfg=None, t
                 ip = bigfont.render("Click to Add " + mousemode[3:], False, (255, 255, 0))
                 windowSurface.blit(ip, (resolution[0]/2-240, resolution[1]/2-ip.get_height()/2))
 
-                for i in xrange(x + 1, len(SPAWN_TYPES)):
+                for i in range(x + 1, len(SPAWN_TYPES)):
                     c = max(0, 128 - (i - x - 1) * 16)
                     ip = bigfont.render(SPAWN_TYPES[i], False, (c, c, c))
                     windowSurface.blit(ip, (resolution[0]/2 + 35, resolution[1]/2+18+((i - x - 1) * 36)))
@@ -690,13 +690,13 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, cfg=None, t
         game.end()
 
         logging.info("Closing Pygame...")
-        print "Closing Pygame"
+        print("Closing Pygame")
         pygame.quit()
     except:
-        print "EXCEPTION IN GUI"
+        print("EXCEPTION IN GUI")
         logging.exception("FATAL Error in GUI!!!")
         logging.error(traceback.format_exc())
-        print traceback.format_exc()
+        print(traceback.format_exc())
         world.gameerror = True # Flag for Unit Tests
 
     logging.info("GUI Closed")

@@ -12,7 +12,7 @@ You should have received a copy of the GNU General Public License along with thi
 The full text of the license is available online: http://opensource.org/licenses/GPL-2.0
 """
 
-from TestCaseRigging import SBAServerTestCase, SBAGUIWithServerTestCase
+from .TestCaseRigging import SBAServerTestCase, SBAGUIWithServerTestCase
 import Server.MWNL2 as MWNL2
 from World.AIShips import AIShip_Network_Harness
 from World.WorldEntities import Nebula, Ship
@@ -228,8 +228,8 @@ class RadarClientServerTestCase(SBAGUIWithServerTestCase):
 
         self.assertEqual(len(self._env_radar["RADARDATA"]), 1, "Radar Data Doesn't Contain 1 Item")
         self.assertEqual(self._env_radar["RADARDATA"][0]["ID"], tship.id, "Radar Doesn't Contain Target Ship")
-        self.assertFalse(self._env_radar["RADARDATA"][0].has_key("CURENERGY"), "Radar shouldn't contain Target's Energy Level")
-        self.assertFalse(self._env_radar["RADARDATA"][0].has_key("CMDQ"), "Radar shouldn't contain Target's Command Queue")
+        self.assertFalse("CURENERGY" in self._env_radar["RADARDATA"][0], "Radar shouldn't contain Target's Energy Level")
+        self.assertFalse("CMDQ" in self._env_radar["RADARDATA"][0], "Radar shouldn't contain Target's Command Queue")
         
         self.assertIsNone(self._env_target["RADARDATA"], "Target Radar Should Not Contain Data")
         self.assertIsNotNone(self._env_target["SHIPDATA"], "Target Should Contain Ship Data")

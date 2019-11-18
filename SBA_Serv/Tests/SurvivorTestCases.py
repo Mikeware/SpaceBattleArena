@@ -1,5 +1,5 @@
 
-from TestCaseRigging import SBAGUITestCase
+from .TestCaseRigging import SBAGUITestCase
 
 import World.WorldMap as WorldMap
 from World.WorldEntities import *
@@ -50,14 +50,14 @@ class SurvivorTournamentTestCases(SBAGUITestCase):
         numships = 16
         groups = self.cfg.getint("Tournament", "groups")
 
-        for x in xrange(numships):
+        for x in range(numships):
             ships.append(AIShip_SetList("Move", self.game.world.mid_point(random.randint(-400, 400), random.randint(-400, 400)), self.game, [
                 "RotateCommand(self, random.randint(30, 330))",
                 "IdleCommand(self, random.randint(1, 5))",
                 "ThrustCommand(self, 'B', 2.0)",
             ]))
 
-        for x in xrange(groups + 1):
+        for x in range(groups + 1):
             self.assertEqual(len(self.game.world), 0, "Objects in World before round")
             self.assertFalse(self.game.round_get_has_started(), "Game Timer Running")
 
@@ -80,7 +80,7 @@ class SurvivorTournamentTestCases(SBAGUITestCase):
 
             leader = None
             for player in self.game.game_get_current_leader_list():
-                print player.name, player.score
+                print(player.name, player.score)
                 if leader == None:
                     leader = player
                 self.assertGreater(player.score, 10, "Each player should have scored")
@@ -119,14 +119,14 @@ class SurvivorTournamentWildTestCases(SBAGUITestCase):
         numships = 16
         groups = self.cfg.getint("Tournament", "groups")
 
-        for x in xrange(numships):
+        for x in range(numships):
             ships.append(AIShip_SetList("Move", self.game.world.mid_point(random.randint(-400, 400), random.randint(-400, 400)), self.game, [
                 "RotateCommand(self, random.randint(30, 330))",
                 "IdleCommand(self, random.randint(1, 5))",
                 "ThrustCommand(self, 'B', 2.0)",
             ]))
 
-        for x in xrange(groups + 2):
+        for x in range(groups + 2):
             self.assertEqual(len(self.game.world), 0, "Objects in World before round")
             self.assertFalse(self.game.round_get_has_started(), "Game Timer Running")
 
@@ -149,7 +149,7 @@ class SurvivorTournamentWildTestCases(SBAGUITestCase):
 
             leader = None
             for player in self.game.game_get_current_leader_list():
-                print player.name, player.score
+                print(player.name, player.score)
                 if leader == None:
                     leader = player
                 #self.assertGreater(player.score, 10, "Each player should have scored")

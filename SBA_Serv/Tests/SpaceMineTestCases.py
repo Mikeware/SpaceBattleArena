@@ -12,7 +12,7 @@ You should have received a copy of the GNU General Public License along with thi
 The full text of the license is available online: http://opensource.org/licenses/GPL-2.0
 """
 
-from TestCaseRigging import SBAWorldTestCase, SBAGUITestCase
+from .TestCaseRigging import SBAWorldTestCase, SBAGUITestCase
 from unittest import TestCase
 from World.WorldEntities import *
 from World.AIShips import *
@@ -163,7 +163,7 @@ class SpaceMineAutonomousTestCase(SBAGUITestCase):
         time.sleep(5.0)
 
         self.assertLess(mine.body.position[1], start[1], "Mine hasn't moved up")
-        self.failIfAlmostEqual(mine.body.position[1], start[1], None, "Mine near center still", 1)
+        self.assertNotAlmostEqual(mine.body.position[1], start[1], None, "Mine near center still", 1)
 
         self.assertIn(mine, self.game.world, "Mine not in world.")
         self.assertEqual(len(self.game.world), 1, "More than just mine in world.")
@@ -182,7 +182,7 @@ class SpaceMineAutonomousTestCase(SBAGUITestCase):
 
         mines = []
 
-        for i in xrange(5):
+        for i in range(5):
             mines.append(SpaceMine(start, 1.0, 2, 24 + i * 72, i + 1, 10.0))
             self.game.world.append(mines[-1])
 
@@ -190,20 +190,20 @@ class SpaceMineAutonomousTestCase(SBAGUITestCase):
 
         self.assertEqual(len(self.game.world), 5, "Not all mines in world.")
 
-        for i in xrange(5):
+        for i in range(5):
             self.assertAlmostEqual(mines[i].body.position[0], start[0], None, "Mine not near center", 1)
             self.assertAlmostEqual(mines[i].body.position[1], start[1], None, "Mine not near center", 1)
 
         time.sleep(2.5)
 
-        for i in xrange(5):
-            self.failIfAlmostEqual(mines[i].body.position[0], start[0], None, "Mine " + repr(i) + " not near center", 1)
-            self.failIfAlmostEqual(mines[i].body.position[1], start[1], None, "Mine " + repr(i) + " not near center", 1)
+        for i in range(5):
+            self.assertNotAlmostEqual(mines[i].body.position[0], start[0], None, "Mine " + repr(i) + " not near center", 1)
+            self.assertNotAlmostEqual(mines[i].body.position[1], start[1], None, "Mine " + repr(i) + " not near center", 1)
 
         time.sleep(1.0)
 
         s = 0
-        for i in xrange(5):
+        for i in range(5):
             self.assertGreater(mines[i].body.velocity.length, s, "Mine " + repr(i) + " speed not greater than previous mine.")
             s = mines[i].body.velocity.length
 
@@ -233,7 +233,7 @@ class SpaceMineAutonomousTestCase(SBAGUITestCase):
         self.assertEqual(len(self.game.world), 2, "No extra mine in world.")
         self.assertEqual(self.game.world.get_count_of_objects(SpaceMine), 1, "Space Mine didn't spawn.")
 
-        self.failIfAlmostEqual(ship.body.position[0], start[0], None, "Ship should have moved since start. X", 1)
+        self.assertNotAlmostEqual(ship.body.position[0], start[0], None, "Ship should have moved since start. X", 1)
 
         time.sleep(2.5)
 

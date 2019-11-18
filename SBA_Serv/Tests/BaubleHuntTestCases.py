@@ -1,5 +1,5 @@
 
-from TestCaseRigging import SBAGUITestCase
+from .TestCaseRigging import SBAGUITestCase
 
 import World.WorldMap as WorldMap
 from World.WorldEntities import *

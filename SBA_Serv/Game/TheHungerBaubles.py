@@ -12,8 +12,8 @@ You should have received a copy of the GNU General Public License along with thi
 The full text of the license is available online: http://opensource.org/licenses/GPL-2.0
 """
 
-from BaubleGame import *
-from Utils import CallbackTimer
+from .BaubleGame import *
+from .Utils import CallbackTimer
 from World.Entities import Entity, PhysicalRound
 from World.WorldEntities import Ship, Weapon, Torpedo, SpaceMine, Dragon, Asteroid, Planet, WormHole
 from GUI.ObjWrappers.GUIEntity import GUIEntity, wrapcircle
@@ -26,7 +26,7 @@ from World.Messaging import OneTimeCommand
 import logging
 import pygame
 import random
-import thread
+import _thread
 import math
 from operator import attrgetter
 
@@ -49,10 +49,10 @@ class TheHungerBaublesGame(BaseBaubleGame):
         self.__only_drop_weapons = cfgobj.getboolean("TheHungerBaubles", "only_eject_baubles_on_weapon_death")
 
         self.__asteroid_bonus = cfgobj.getfloat("TheHungerBaubles", "asteroid_bauble_percent")
-        self.__asteroid_values = map(int, cfgobj.get("TheHungerBaubles", "asteroid_bauble_points").split(","))
+        self.__asteroid_values = list(map(int, cfgobj.get("TheHungerBaubles", "asteroid_bauble_points").split(",")))
 
         self.__dragon_bonus = cfgobj.getfloat("TheHungerBaubles", "dragon_bauble_percent")
-        self.__dragon_values = map(int, cfgobj.get("TheHungerBaubles", "dragon_bauble_points").split(","))
+        self.__dragon_values = list(map(int, cfgobj.get("TheHungerBaubles", "dragon_bauble_points").split(",")))
 
         self.__bauble_spawner = None
 
@@ -155,12 +155,12 @@ class TheHungerBaublesGame(BaseBaubleGame):
 
     def server_process_network_message(self, ship, cmdname, cmddict={}):
         if cmdname == GAME_CMD_COLLECT:
-            if cmddict.has_key("ID") and isinstance(cmddict["ID"], int) and cmddict["ID"] > 0:
+            if "ID" in cmddict and isinstance(cmddict["ID"], int) and cmddict["ID"] > 0:
                 return CollectCommand(ship, self, cmddict["ID"])
             else:
                 return "The Hunger Baubles Collect Command requires an id."
         elif cmdname == GAME_CMD_EJECT:
-            if cmddict.has_key("ID") and isinstance(cmddict["ID"], int) and cmddict["ID"] > 0:
+            if "ID" in cmddict and isinstance(cmddict["ID"], int) and cmddict["ID"] > 0:
                 return EjectCommand(ship, self, cmddict["ID"])
             else:
                 return "The Hunger Baubles Eject Command requires an id."
@@ -233,7 +233,7 @@ class TheHungerBaublesGame(BaseBaubleGame):
         self.__cornucopia_bauble_spawn(True)
 
         # spawn some dragons
-        for num in xrange(self.cfg.getint("TheHungerBaubles", "cornucopia_spawn_initial_dragons")):
+        for num in range(self.cfg.getint("TheHungerBaubles", "cornucopia_spawn_initial_dragons")):
             pos = (self.__cornucopia_position[0] + random.randint(-64, 64), self.__cornucopia_position[1] + random.randint(-64, 64))
             self.spawnmanager.spawn_entity("Dragon", pos)
 
@@ -306,14 +306,14 @@ class TheHungerBaublesGame(BaseBaubleGame):
             for obj in baubles[:numdel]:
                 self.world.remove(obj)
 
-        values = map(int, self.cfg.get("TheHungerBaubles", "cornucopia_spawn_points").split(","))
+        values = list(map(int, self.cfg.get("TheHungerBaubles", "cornucopia_spawn_points").split(",")))
         
         if init:
             num = self.cfg.getint("TheHungerBaubles", "cornucopia_spawn_initial_num")
         else:
             num = self.__cornucopia_spawn_baubles
 
-        for i in xrange(num):
+        for i in range(num):
             ang = random.randint(0, 359)
             dist = random.randint(0, int(self.__cornucopia_radius / 2))
             pos = (self.__cornucopia_position[0] + math.cos(math.radians(ang)) * dist,

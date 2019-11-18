@@ -13,18 +13,18 @@ The full text of the license is available online: http://opensource.org/licenses
 """
 
 from World.WorldEntities import Ship, BlackHole, Nebula, SpaceMine
-from Players import Player
+from .Players import Player
 import random, logging, time
 from World.WorldMath import friendly_type
 from World.WorldCommands import RaiseShieldsCommand
 from World.WorldMap import GameWorld
 from ThreadStuff.ThreadSafe import ThreadSafeDict
-import pygame, thread
+import pygame, _thread
 from pymunk import Vec2d
 from GUI.Helpers import debugfont
 from operator import attrgetter
-from Utils import *
-from Tournaments import *
+from .Utils import *
+from .Tournaments import *
 
 class BasicGame(object):
     """
@@ -140,7 +140,7 @@ class BasicGame(object):
 
             if self._tournament:
                 if not self._tmanager.is_initialized():
-                    self._tmanager.initialize(self._players.values())
+                    self._tmanager.initialize(list(self._players.values()))
                 else:
                     self._tmanager.next_round()
 
@@ -291,7 +291,7 @@ class BasicGame(object):
         Parameters:
             ship: Ship object - used to register AI Ships to the game world
         """
-        if not self._players.has_key(netid):
+        if netid not in self._players:
             if (self.__started and self.__allowafterstart) or not self.__started:
                 # create new player
                 #
@@ -439,7 +439,7 @@ class BasicGame(object):
                 player.object = None
 
                 if self.__allowreentry:
-                    if self._players.has_key(player.netid):
+                    if player.netid in self._players:
                         del self._players[player.netid] # should be handled by world part
                     return True
 
@@ -450,7 +450,7 @@ class BasicGame(object):
         """
         Retrieves a player by their name.
         """
-        for player in self._players.values():
+        for player in list(self._players.values()):
             if player.name == name:
                 return player
 
@@ -460,7 +460,7 @@ class BasicGame(object):
         """
         Used by the server to retrieve a player by their network id.
         """
-        if self._players.has_key(netid):
+        if netid in self._players:
             return self._players[netid]
         return None
 
@@ -640,7 +640,7 @@ class BasicGame(object):
         para: extra parameters from a previous step, by default collision passes the strength of the collision only
         """
         strength = damage
-        logging.info("Destroying Object: #%d, Force: %d [%d]", dobj.id, strength, thread.get_ident())
+        logging.info("Destroying Object: #%d, Force: %d [%d]", dobj.id, strength, _thread.get_ident())
         dobj.destroyed = True # get rid of object
 
         self.world.causeExplosion(dobj.body.position, dobj.radius * 5, strength, True) #Force in physics step

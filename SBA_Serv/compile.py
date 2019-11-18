@@ -20,8 +20,8 @@ try:
     import pymunk
     from zipfile import ZipFile, ZIP_DEFLATED
     import zlib    
-except ImportError, message:
-    raise SystemExit,  "Unable to load module. %s" % message
+except ImportError as message:
+    raise SystemExit("Unable to load module. %s" % message)
  
 #hack which fixes the pygame mixer and pygame font
 origIsSystemDLL = py2exe.build_exe.isSystemDLL # save the orginal before we edit it
@@ -90,7 +90,7 @@ class BuildExe:
                                   "..\changelog.md", "..\README.md", "..\LICENSE", "..\COPYING"]
         root += glob.glob("*.cfg")
         extra_files += [('', root)]
-        print extra_files
+        print(extra_files)
         self.extra_datas = extra_files
  
         #Extra/excludes python modules
@@ -107,7 +107,7 @@ class BuildExe:
         games.remove('Game\\Utils.py')
         games.remove('Game\\Tournaments.py')
         self.extra_scripts = ",".join(games).replace("\\", ".").replace(".py", "")
-        print self.extra_scripts
+        print(self.extra_scripts)
  
         #Zip file name (None will bundle files in exe instead of zip file)
         self.zipfile_name = "pylib.zip"

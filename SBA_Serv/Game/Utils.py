@@ -42,7 +42,7 @@ class CallbackTimer(Thread):
         self.__cancel = True
 
     def run(self):
-        for sec in xrange(self.time_total, -1, -1):
+        for sec in range(self.time_total, -1, -1):
             time.sleep(1.0)
             self.time_left = sec
             if self.__cancel:
@@ -55,7 +55,7 @@ class CallbackTimer(Thread):
                 self.__done = True
                 self.__callback(self.__parameter)
         except:
-            print traceback.format_exc()
+            print(traceback.format_exc())
             logging.error(traceback.format_exc())
 
 class SpawnConfig:
@@ -158,7 +158,7 @@ class SpawnManager:
             # Auto Load Entity Type Names
             logging.info("Spawn Manager Initializing Game Object Types")
             SpawnManager.ENTITY_TYPES = {}
-            for obj in World.WorldEntities.__dict__.itervalues():
+            for obj in World.WorldEntities.__dict__.values():
                 if isinstance(obj, type) and Entity in obj.__mro__ and \
                     "spawn" in dir(obj): # Is this object an Entity we can spawn
                     SpawnManager.ENTITY_TYPES[obj.__name__] = obj
@@ -166,23 +166,23 @@ class SpawnManager:
             rungame = cfg.get("Game", "game")
             if rungame != "Basic" and rungame != None and rungame.strip() != "":
                 mod = import_module("Game."+rungame)
-                for obj in mod.__dict__.itervalues():
+                for obj in mod.__dict__.values():
                     if isinstance(obj, type) and Entity in obj.__mro__ and obj.__name__ not in SpawnManager.ENTITY_TYPES and \
                         "spawn" in dir(obj): # Is this object an Entity we haven't seen before from the game we can spawn?
                         SpawnManager.ENTITY_TYPES[obj.__name__] = obj
 
-            for obj in World.Entities.__dict__.itervalues():
+            for obj in World.Entities.__dict__.values():
                 if isinstance(obj, type) and Entity in obj.__mro__ and obj.__name__ in SpawnManager.ENTITY_TYPES: # Is this object a base Entity we should ignore?
                     del SpawnManager.ENTITY_TYPES[obj.__name__] # Get rid of physical base entities
 
-            logging.info("Spawn Manager Found Types: %s", repr(SpawnManager.ENTITY_TYPES.keys()))
+            logging.info("Spawn Manager Found Types: %s", repr(list(SpawnManager.ENTITY_TYPES.keys())))
 
             #print SpawnManager.ENTITY_TYPES
 
         self._cfg = cfg
         self._world = world
         self._spawns = {}
-        for entity, ctype in SpawnManager.ENTITY_TYPES.iteritems():
+        for entity, ctype in SpawnManager.ENTITY_TYPES.items():
             # Check each section for the properties we want!
             if cfg.has_section(entity):
                 sc = SpawnConfig(entity, ctype, cfg.getint(entity, "number"))
@@ -223,7 +223,7 @@ class SpawnManager:
         Called when a player is added to the world
         """
         if self._running:
-            for sc in self._spawns.itervalues():
+            for sc in self._spawns.values():
                 if sc.is_player(reason) and self._below_max(sc):
                     self.spawn_entity(sc.name, respawntimer=False, number=sc.player_num)
 
@@ -232,7 +232,7 @@ class SpawnManager:
         Start object spawn timers (if any)
         """
         self._running = True
-        for sc in self._spawns.itervalues():
+        for sc in self._spawns.values():
             if self._should_spawn(sc) and self._below_max(sc):
                 self.add_timer(sc.name)
 
@@ -249,9 +249,9 @@ class SpawnManager:
         return (not sc.is_max() or (sc.is_max() and self._world.get_count_of_objects(sc.type) < sc.num_max))
 
     def add_timer(self, entityname):
-        if self._running and self._spawns.has_key(entityname):
+        if self._running and entityname in self._spawns:
             sc = self._spawns[entityname]
-            if not self._timers.has_key(entityname):
+            if entityname not in self._timers:
                 self._timers[entityname] = []
             logging.info("Adding Spawn Timer for %s", entityname)
             timer = CallbackTimer(sc.get_next_time(), self.spawn_entity, entityname)
@@ -260,10 +260,10 @@ class SpawnManager:
             logging.debug("Now %d Spawn Timers for %s", len(self._timers[entityname]), entityname)
 
     def has_timer(self, entityname):
-        if not self._timers.has_key(entityname):
+        if entityname not in self._timers:
             return False
 
-        for x in xrange(len(self._timers[entityname]) - 1, -1, -1):
+        for x in range(len(self._timers[entityname]) - 1, -1, -1):
             if not self._timers[entityname][x].iscomplete():
                 return True
 
@@ -273,8 +273,8 @@ class SpawnManager:
         """
         Clean up any completed timers for the given entity name
         """
-        if self._timers.has_key(entityname):
-            for x in xrange(len(self._timers[entityname]) - 1, -1, -1):
+        if entityname in self._timers:
+            for x in range(len(self._timers[entityname]) - 1, -1, -1):
                 if self._timers[entityname][x].iscomplete():
                     del self._timers[entityname][x]
 
@@ -287,7 +287,7 @@ class SpawnManager:
         """
         self._running = False
         logging.info("Stopping Spawn Timers")
-        for lst in self._timers.values():
+        for lst in list(self._timers.values()):
             for timer in lst:
                 timer.cancel()
 
@@ -301,7 +301,7 @@ class SpawnManager:
         """
         name = friendly_type(wobj)
         #logging.debug("Checking Number in Spawn Manager for %s - Running: %s Config: %s", name, repr(self._running), repr(self._spawns.has_key(name)))
-        if self._running and self._spawns.has_key(name):
+        if self._running and name in self._spawns:
             sc = self._spawns[name]
 
             #logging.debug("Configured for Points: %s and Has Info %s", repr(sc.is_points()), repr(hasattr(wobj, "killedby")))
@@ -342,7 +342,7 @@ class SpawnManager:
             if number == 1 and respawntimer and sc.is_timed():
                 count = sc.time_num
         
-            for i in xrange(count):
+            for i in range(count):
                 obj = sc.type.spawn(self._world, self._cfg)
                 if sc.is_shortlife(): # TODO: Later see if we can work this into the object's spawn somehow without too much work
                     obj.TTL = sc.get_shortlife()
@@ -362,6 +362,6 @@ class SpawnManager:
         """
         Spawns the configured number of each object into the world.
         """
-        for sc in self._spawns.itervalues():
+        for sc in self._spawns.values():
             self.spawn_entity(sc.name, respawntimer=False, number=sc.num_initial)
 

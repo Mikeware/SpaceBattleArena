@@ -12,7 +12,7 @@ You should have received a copy of the GNU General Public License along with thi
 The full text of the license is available online: http://opensource.org/licenses/GPL-2.0
 """
 
-from Game import BasicGame
+from .Game import BasicGame
 from World.Entities import Entity, PhysicalRound
 from World.WorldEntities import Ship
 from GUI.ObjWrappers.GUIEntity import GUIEntity
@@ -76,7 +76,7 @@ class KingOfTheBubbleGame(BasicGame):
 
     def game_get_extra_environment(self, player):
         bub = []
-        for b in self.__bubbles.values():
+        for b in list(self.__bubbles.values()):
             bub.append(intpos(b.body.position))
 
         env = super(KingOfTheBubbleGame, self).game_get_extra_environment(player)

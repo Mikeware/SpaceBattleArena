@@ -12,7 +12,7 @@ You should have received a copy of the GNU General Public License along with thi
 The full text of the license is available online: http://opensource.org/licenses/GPL-2.0
 """
 
-from TestCaseRigging import SBAWorldTestCase, SBAGUITestCase
+from .TestCaseRigging import SBAWorldTestCase, SBAGUITestCase
 from unittest import TestCase
 from World.WorldEntities import *
 from World.AIShips import *
@@ -59,7 +59,7 @@ class WorldMathTestCases(TestCase):
 
     def test_intpos(self):
         x = intpos((4.4, 5.6))
-        print x
+        print(x)
         self.assertEqual(x, (4, 5), "Not rounded correctly")
 
         x = intpos((6.6, 8.1))
@@ -171,7 +171,7 @@ class WorldVisualShipExplosionTestCase(SBAGUITestCase):
 
         time.sleep(3.0)
 
-        self.failIfAlmostEqual(ship.body.position, start, None, "Free Ship in same place", 2)
+        self.assertNotAlmostEqual(ship.body.position, start, None, "Free Ship in same place", 2)
 
     """
     def test_explosion_force_amount(self):
@@ -219,10 +219,10 @@ class WorldVisualShipRespawnTestCase(SBAGUITestCase):
 
         time.sleep(15.0)
 
-        self.failIfAlmostEqual(ship.body.position, start, None, "Doomed ship should have moved", 5)
+        self.assertNotAlmostEqual(ship.body.position, start, None, "Doomed ship should have moved", 5)
         self.assertAlmostEqual(ship2.body.position, start2, None, "Free Ship not in same place", 2)
 
-        self.failIfAlmostEqual(ship.health.value, health, None, "Doomed ship should have taken damage", 5)
+        self.assertNotAlmostEqual(ship.health.value, health, None, "Doomed ship should have taken damage", 5)
         #self.assertAlmostEqual(planet.body.position, self.game.world.mid_point(0, 0), None, "Planet shouldn't move when hit", 1)
 
     def test_ship_ram_planet_destroyed(self):
@@ -245,10 +245,10 @@ class WorldVisualShipRespawnTestCase(SBAGUITestCase):
 
         time.sleep(15.0)
 
-        self.failIfAlmostEqual(ship.body.position, start, None, "Doomed ship should have moved", 5)
+        self.assertNotAlmostEqual(ship.body.position, start, None, "Doomed ship should have moved", 5)
         self.assertAlmostEqual(ship2.body.position, start2, None, "Free Ship not in same place", 2)
 
-        self.failIfAlmostEqual(ship.health.value, health, None, "Doomed ship should have taken damage", 5)
+        self.assertNotAlmostEqual(ship.health.value, health, None, "Doomed ship should have taken damage", 5)
         self.assertEqual(ship.killedby, planet, "Planet not set as killer")
         #self.assertTrue(ship.destroyed, "Doomed not marked destroyed") # Issue with _game_add_ship_for_player dealing with AI_Ships, moving it and resetting... boo
 
@@ -267,7 +267,7 @@ class WorldVisualShipRespawnTestCase(SBAGUITestCase):
 
         time.sleep(5.0)
 
-        self.failIfAlmostEqual(ship.body.position, start, None, "Doomed ship should have moved", 5)
+        self.assertNotAlmostEqual(ship.body.position, start, None, "Doomed ship should have moved", 5)
         self.assertAlmostEqual(ship2.body.position, start2, None, "Free Ship not in same place", 2)
 
     def test_planet_no_gravity(self):
@@ -356,7 +356,7 @@ class WorldVisualShipRespawnTestCase(SBAGUITestCase):
 
         self.assertTrue(ship in self.game.world, "Bully Ship missing")
         #self.assertFalse(ship2 in self.game.world, "Doomed Ship not destroyed") # BUGBUG: AI setup overwriting this, should redo how AI-Ships 'respawn'?
-        print ship2.killedby
+        print(ship2.killedby)
         self.assertIsNotNone(ship2.killedby, "Ship Killed By Not Set.")
         self.assertTrue(isinstance(ship2.killedby, Torpedo), "Ship not marked as destroyed by Torpedo.")
         self.assertEqual(ship2.killedby.owner, ship, "Torpedo was not marked as belonging to Ship Bully.")
@@ -383,8 +383,8 @@ class WorldVisualShipRespawnTestCase(SBAGUITestCase):
 
         time.sleep(8.0)
 
-        print ship2.body.position[0], " vs ", ship.body.position[0]
-        self.failIfAlmostEqual(ship2.body.position[0], ship.body.position[0], None, "Ship Didn't get Slowed Down By Nebula", 15)
+        print(ship2.body.position[0], " vs ", ship.body.position[0])
+        self.assertNotAlmostEqual(ship2.body.position[0], ship.body.position[0], None, "Ship Didn't get Slowed Down By Nebula", 15)
 
     def test_energy_scoop(self):
         """
@@ -408,8 +408,8 @@ class WorldVisualShipRespawnTestCase(SBAGUITestCase):
 
         time.sleep(9.0)
 
-        print ship2.body.position[0], " vs ", ship.body.position[0]
-        self.failIfAlmostEqual(ship2.body.position[0], ship.body.position[0], None, "Ship Didn't get Slowed Down By Nebula", 15)
+        print(ship2.body.position[0], " vs ", ship.body.position[0])
+        self.assertNotAlmostEqual(ship2.body.position[0], ship.body.position[0], None, "Ship Didn't get Slowed Down By Nebula", 15)
         self.assertGreater(ship.energy.value, ship2.energy.value, "Ship didn't get extra energy")
         self.assertAlmostEqual(ship.energy.value, 100, None, "Ship didn't regain all energy", 5)
 
@@ -473,8 +473,8 @@ class WorldVisualShipDestroyedTestCase(SBAGUITestCase):
 
         time.sleep(1.0)
 
-        self.failIfAlmostEqual(ship.body.position, start, None, "Doomed ship should have moved", 5)
-        self.failIfEqual(ship.health, 100, "Doomed ship did not take damage")
+        self.assertNotAlmostEqual(ship.body.position, start, None, "Doomed ship should have moved", 5)
+        self.assertNotEqual(ship.health, 100, "Doomed ship did not take damage")
 
         self.assertEqual(ship2.health, 100, "Free ship took damage")
         self.assertAlmostEqual(ship2.body.position, start2, None, "Free Ship not in same place", 2)
@@ -482,7 +482,7 @@ class WorldVisualShipDestroyedTestCase(SBAGUITestCase):
         time.sleep(2.5)
 
         self.assertFalse(ship in self.game.world, "Doomed Ship not destroyed")
-        print ship.killedby
+        print(ship.killedby)
         self.assertIsNotNone(ship.killedby, "Ship Killed By Not Set.")
         self.assertTrue(isinstance(ship.killedby, Star), "Ship not marked as destroyed by Star.")
 
@@ -507,8 +507,8 @@ class WorldVisualShipDestroyedTestCase(SBAGUITestCase):
 
         time.sleep(1.0)
 
-        self.failIfAlmostEqual(ship.body.position, start, None, "Doomed ship should have moved", 5)
-        self.failIfEqual(ship.health, 100, "Doomed ship did not take damage")
+        self.assertNotAlmostEqual(ship.body.position, start, None, "Doomed ship should have moved", 5)
+        self.assertNotEqual(ship.health, 100, "Doomed ship did not take damage")
 
         self.assertEqual(ship2.health, 100, "Free ship took damage")
         self.assertAlmostEqual(ship2.body.position, start2, None, "Free Ship not in same place", 2)
@@ -516,7 +516,7 @@ class WorldVisualShipDestroyedTestCase(SBAGUITestCase):
         time.sleep(2.5)
 
         self.assertFalse(ship in self.game.world, "Doomed Ship not destroyed")
-        print ship.killedby
+        print(ship.killedby)
         self.assertIsNotNone(ship.killedby, "Ship Killed By Not Set.")
         self.assertTrue(isinstance(ship.killedby, Torpedo), "Ship not marked as destroyed by Torpedo.")
         self.assertEqual(ship.killedby.owner, ship2, "Torpedo was not marked as belonging to Ship.")
@@ -592,7 +592,7 @@ class WorldVisualShipDestroyedTestCase(SBAGUITestCase):
         speed = dragon.body.velocity.length
         time.sleep(2.5)
 
-        self.failIfAlmostEqual(dragon.body.position, start, None, "Dragon should have moved", 2)
+        self.assertNotAlmostEqual(dragon.body.position, start, None, "Dragon should have moved", 2)
 
         starts = self.game.world.mid_point(50, 0)
         ship = AIShip_SetList("Doomed", starts, self.game, [])        
@@ -604,13 +604,13 @@ class WorldVisualShipDestroyedTestCase(SBAGUITestCase):
 
         self.assertGreater(dragon.body.velocity.length, speed, "Dragon not moving faster")
 
-        print dragon.body.velocity.angle_degrees
-        self.failIfAlmostEqual(dragon.body.position, start, None, "Dragon should have moved", 5)
+        print(dragon.body.velocity.angle_degrees)
+        self.assertNotAlmostEqual(dragon.body.position, start, None, "Dragon should have moved", 5)
         self.assertAlmostEqual(dragon.body.velocity.angle_degrees, -50, None, "Dragon should be facing ship", 15)
 
         time.sleep(3.5)
 
-        self.failIfEqual(ship.health, 100, "Doomed ship did not take damage")
+        self.assertNotEqual(ship.health, 100, "Doomed ship did not take damage")
 
         self.assertEqual(ship2.health, 100, "Free ship took damage")
         self.assertAlmostEqual(ship2.body.position, start2, None, "Free Ship not in same place", 2)
@@ -641,8 +641,8 @@ class WorldVisualShipDestroyedTestCase(SBAGUITestCase):
 
         self.assertGreater(dragon.body.velocity.length, speed, "Dragon not moving faster")
 
-        print dragon.body.velocity.angle_degrees
-        self.failIfAlmostEqual(dragon.body.position, start, None, "Dragon should have moved", 5)
+        print(dragon.body.velocity.angle_degrees)
+        self.assertNotAlmostEqual(dragon.body.position, start, None, "Dragon should have moved", 5)
         self.assertAlmostEqual(dragon.body.velocity.angle_degrees, -50, None, "Dragon should be facing ship", 15)
 
         time.sleep(0.5)
@@ -660,7 +660,7 @@ class WorldVisualShipDestroyedTestCase(SBAGUITestCase):
         direction = dragon.body.velocity.angle_degrees
         time.sleep(2.5)
 
-        self.failIfAlmostEqual(dragon.body.position, start, None, "Dragon should have moved", 2)
+        self.assertNotAlmostEqual(dragon.body.position, start, None, "Dragon should have moved", 2)
 
         starts = self.game.world.mid_point(120, 0)
         ship = AIShip_SetList("Cloaked", starts, self.game, [
@@ -677,18 +677,18 @@ class WorldVisualShipDestroyedTestCase(SBAGUITestCase):
         self.assertAlmostEqual(dragon.body.velocity.length, speed, None, "Dragon increased speed", 5)
         self.assertAlmostEqual(dragon.body.velocity.angle_degrees, direction, None, "Dragon changed direction", 5)
 
-        print dragon.body.velocity.angle_degrees
-        self.failIfAlmostEqual(dragon.body.position, start, None, "Dragon should have moved", 5)
+        print(dragon.body.velocity.angle_degrees)
+        self.assertNotAlmostEqual(dragon.body.position, start, None, "Dragon should have moved", 5)
 
         time.sleep(5)
 
-        print dragon.body.velocity.angle_degrees
+        print(dragon.body.velocity.angle_degrees)
         self.assertGreater(dragon.body.velocity.length, speed, "Dragon should have increased speed")
         self.assertAlmostEqual(dragon.body.velocity.angle_degrees, -60, None, "Dragon should be facing ship", 15)
 
         time.sleep(2.5)
 
-        self.failIfEqual(ship.health, 100, "Doomed ship did not take damage")
+        self.assertNotEqual(ship.health, 100, "Doomed ship did not take damage")
 
         self.assertEqual(ship2.health, 100, "Free ship took damage")
         self.assertAlmostEqual(ship2.body.position, start2, None, "Free Ship not in same place", 2)
@@ -740,7 +740,7 @@ class WorldVisualShipDestroyedTestCase(SBAGUITestCase):
         speed = dragon.body.velocity.length
         time.sleep(2.5)
 
-        self.failIfAlmostEqual(dragon.body.position, start, None, "Dragon should have moved", 2)
+        self.assertNotAlmostEqual(dragon.body.position, start, None, "Dragon should have moved", 2)
 
         starts = self.game.world.mid_point(50, 0)
         ship = AIShip_SetList("Doomed", starts, self.game, [
@@ -755,13 +755,13 @@ class WorldVisualShipDestroyedTestCase(SBAGUITestCase):
 
         self.assertGreater(dragon.body.velocity.length, speed, "Dragon not moving faster")
 
-        print dragon.body.velocity.angle_degrees
-        self.failIfAlmostEqual(dragon.body.position, start, None, "Dragon should have moved", 5)
+        print(dragon.body.velocity.angle_degrees)
+        self.assertNotAlmostEqual(dragon.body.position, start, None, "Dragon should have moved", 5)
         self.assertAlmostEqual(dragon.body.velocity.angle_degrees, -50, None, "Dragon should be facing ship", 15)
 
         time.sleep(3.5)
 
-        self.failIfEqual(ship.health, 100, "Doomed ship did not take damage")
+        self.assertNotEqual(ship.health, 100, "Doomed ship did not take damage")
 
         self.assertEqual(ship2.health, 100, "Free ship took damage")
         self.assertAlmostEqual(ship2.body.position, start2, None, "Free Ship not in same place", 2)
@@ -791,46 +791,46 @@ class WorldVisualShipDestroyedTestCase(SBAGUITestCase):
 
         time.sleep(3.5)
 
-        print ship.health
+        print(ship.health)
         self.assertAlmostEqual(ship.health.value, 50, None, "Player Health not Halved", 1)
         self.assertLess(ship.energy.value, 100, "Player Energy didn't decrease")
 
         time.sleep(10.5)
 
-        print ship.health
+        print(ship.health)
         ship.energy.full() # replenish
         self.assertAlmostEqual(ship.health.value, 25, None, "Player Health not Halved 2", 1)
 
         time.sleep(10.5)
 
-        print ship.health        
+        print(ship.health)        
         self.assertAlmostEqual(ship.health.value, 13, None, "Player Health not Halved 3", 1)
 
         time.sleep(10.5)
 
-        print ship.health
+        print(ship.health)
         ship.energy.full() # replenish
         self.assertAlmostEqual(ship.health.value, 7, None, "Player Health not Halved 4", 1)
 
         time.sleep(10.5)
 
-        print ship.health        
+        print(ship.health)        
         self.assertAlmostEqual(ship.health.value, 4, None, "Player Health not Halved 5", 1)
 
         time.sleep(10.5)
 
-        print ship.health
+        print(ship.health)
         ship.energy.full() # replenish
         self.assertAlmostEqual(ship.health.value, 2, None, "Player Health not Halved 6", 1)
 
         time.sleep(10.5)
 
-        print ship.health        
+        print(ship.health)        
         self.assertAlmostEqual(ship.health.value, 1, None, "Player Health not Halved 7", 1)
 
         time.sleep(11)
 
-        print ship.health
+        print(ship.health)
         self.assertFalse(ship in self.game.world, "Doomed Ship not destroyed")
 
 if __name__ == '__main__':

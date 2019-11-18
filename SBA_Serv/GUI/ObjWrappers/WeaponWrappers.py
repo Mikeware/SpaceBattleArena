@@ -1,7 +1,7 @@
 import pygame
 import math
 
-from GUIEntity import GUIEntity
+from .GUIEntity import GUIEntity
 from World.WorldCommands import ThrustCommand, BrakeCommand, WarpCommand
 from World.WorldMath import intpos
 from GUI.Helpers import wrapcircle, debugfont, namefont

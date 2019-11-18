@@ -1,5 +1,5 @@
 
-from TestCaseRigging import SBAGUITestCase
+from .TestCaseRigging import SBAGUITestCase
 
 import World.WorldMap as WorldMap
 from World.WorldEntities import *
@@ -136,12 +136,12 @@ class HungryHungryBaublesTournamentTestCases(SBAGUITestCase):
         numships = 8
         groups = self.cfg.getint("Tournament", "groups")
 
-        for x in xrange(numships):
+        for x in range(numships):
             ships.append(AIShip_SetList("Move", self.game.world.mid_point(-500 + x * 100, -500 + x * 100), self.game, [
                 "IdleCommand(self, random.randint(1, 5))",
             ]))
 
-        for x in xrange(groups + 1):
+        for x in range(groups + 1):
             self.assertEqual(len(self.game.world), 0, "Objects in World before round")
             self.assertFalse(self.game.round_get_has_started(), "Game Timer Running")
 
@@ -157,7 +157,7 @@ class HungryHungryBaublesTournamentTestCases(SBAGUITestCase):
                     self.assertTrue(player.object in self.game.world, "Player's Ship not in final tournament")
                     self.assertLess(player.score, 1, "Players shouldn't have score entering final round")
 
-            for i in xrange(x + 2):
+            for i in range(x + 2):
                 self.game.world.append(Bauble(intpos(self.game.game_get_current_player_list()[i % 2].object.body.position), 1))
                 time.sleep(0.5)
 
@@ -167,7 +167,7 @@ class HungryHungryBaublesTournamentTestCases(SBAGUITestCase):
 
             leader = None
             for player in self.game.game_get_current_leader_list():
-                print player.name, player.score
+                print(player.name, player.score)
                 if leader == None:
                     leader = player
                 #self.assertGreater(player.score, 10, "Each player should have scored")
@@ -215,12 +215,12 @@ class HungryHungryBaublesTournamentWildTestCases(SBAGUITestCase):
         numships = 8
         groups = self.cfg.getint("Tournament", "groups")
 
-        for x in xrange(numships):
+        for x in range(numships):
             ships.append(AIShip_SetList("Move", self.game.world.mid_point(-500 + x * 100, -500 + x * 100), self.game, [
                 "IdleCommand(self, random.randint(1, 5))",
             ]))
 
-        for x in xrange(groups + 1):
+        for x in range(groups + 1):
             self.assertEqual(len(self.game.world), 0, "Objects in World before round")
             self.assertFalse(self.game.round_get_has_started(), "Game Timer Running")
 
@@ -236,7 +236,7 @@ class HungryHungryBaublesTournamentWildTestCases(SBAGUITestCase):
                     self.assertTrue(player.object in self.game.world, "Player's Ship not in final tournament")
                     self.assertLess(player.score, 1, "Players shouldn't have score entering final round")
 
-            for i in xrange(x + 2):
+            for i in range(x + 2):
                 self.game.world.append(Bauble(intpos(self.game.game_get_current_player_list()[i % 2].object.body.position), 1))
                 time.sleep(0.5)
 
@@ -246,7 +246,7 @@ class HungryHungryBaublesTournamentWildTestCases(SBAGUITestCase):
 
             leader = None
             for player in self.game.game_get_current_leader_list():
-                print player.name, player.score
+                print(player.name, player.score)
                 if leader == None:
                     leader = player
                 #self.assertGreater(player.score, 10, "Each player should have scored")

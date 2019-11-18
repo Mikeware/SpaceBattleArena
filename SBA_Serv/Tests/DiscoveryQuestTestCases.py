@@ -1,5 +1,5 @@
 
-from TestCaseRigging import SBAGUIWithServerTestCase
+from .TestCaseRigging import SBAGUIWithServerTestCase
 
 import World.WorldMap as WorldMap
 from World.WorldEntities import *
@@ -48,9 +48,9 @@ class DiscoveryQuestWarpOffTestCases(SBAGUIWithServerTestCase):
 
         self.assertTrue(self.request_warp, "Client didn't issue Warp Command.")
 
-        print self.remote_ship.body.position[0]
-        self.failUnlessAlmostEqual(self.remote_ship.body.position[0], self.game.world.mid_point(-100, -100)[0], None, "Ship Warped Out of Nebula", 20)
-        self.failUnlessAlmostEqual(self.remote_ship.body.position[1], self.game.world.mid_point(-100, -100)[1], None, "Ship Warped Out of Nebula", 20)
+        print(self.remote_ship.body.position[0])
+        self.assertAlmostEqual(self.remote_ship.body.position[0], self.game.world.mid_point(-100, -100)[0], None, "Ship Warped Out of Nebula", 20)
+        self.assertAlmostEqual(self.remote_ship.body.position[1], self.game.world.mid_point(-100, -100)[1], None, "Ship Warped Out of Nebula", 20)
 
         time.sleep(2.0)
 
@@ -104,8 +104,8 @@ class DiscoveryQuestWarpOnTestCases(SBAGUIWithServerTestCase):
 
         self.assertTrue(self.request_warp, "Client didn't issue Warp Command.")
 
-        print self.remote_ship.body.position[0]
-        self.failIfAlmostEqual(self.remote_ship.body.position, self.game.world.mid_point(-100, -100), None, "Ship Didn't Warp Out of Nebula", 20)
+        print(self.remote_ship.body.position[0])
+        self.assertNotAlmostEqual(self.remote_ship.body.position, self.game.world.mid_point(-100, -100), None, "Ship Didn't Warp Out of Nebula", 20)
 
         time.sleep(2.0)
 

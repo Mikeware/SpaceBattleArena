@@ -18,11 +18,11 @@ import math
 import logging
 import sys
 
-from WorldCommands import RaiseShieldsCommand, CloakCommand
-from Messaging import MessageQueue
-from Commanding import CommandSystem
-from WorldMath import PlayerStat, getPositionAwayFromOtherObjects, cfg_rand_min_max, istypeinlist
-from Entities import PhysicalRound, PhysicalEllipse
+from .WorldCommands import RaiseShieldsCommand, CloakCommand
+from .Messaging import MessageQueue
+from .Commanding import CommandSystem
+from .WorldMath import PlayerStat, getPositionAwayFromOtherObjects, cfg_rand_min_max, istypeinlist
+from .Entities import PhysicalRound, PhysicalEllipse
 from pymunk import Vec2d
 
 class Ship(PhysicalRound):
@@ -168,7 +168,7 @@ class Nebula(CelestialBody, PhysicalEllipse):
     They impose a 'friction' on objects and TODO: reduce radar range?
     """
     def __init__(self, pos, size=(384, 256), pull=2000, mass=-1):
-        if mass == -1: mass = sys.maxint
+        if mass == -1: mass = sys.maxsize
         super(Nebula, self).__init__(size, mass, pos)
 
         self.body.angle = math.radians(random.randint(-30, 30))
@@ -251,7 +251,7 @@ class Planet(Influential, PhysicalRound):
     """
 
     def __init__(self, pos, size=128, pull=15, radius=60, torpedo=False, mass=-1):
-        if mass == -1: mass = sys.maxint
+        if mass == -1: mass = sys.maxsize
         super(Planet, self).__init__(radius, mass, pos)
 
         #self.energyRechargeRate = 1
@@ -372,7 +372,7 @@ class WormHole(CelestialBody, Influential, PhysicalRound):
         if you choose type FIXED_POINT, pass in an exitpos as a position
         if you choose type RANDOM, pass in an exitpos as a function which returns a random point.
         """
-        super(WormHole, self).__init__(radius, sys.maxint, pos)
+        super(WormHole, self).__init__(radius, sys.maxsize, pos)
 
         # Everything in Group 1 won't hit anything else in Group 1
         self.shape.group = 1
@@ -717,7 +717,7 @@ class Constellation(CelestialBody, PhysicalRound):
     """
 
     def __init__(self, pos):
-        super(Constellation, self).__init__(48, sys.maxint, pos)
+        super(Constellation, self).__init__(48, sys.maxsize, pos)
 
         # Everything in Group 1 won't hit anything else in Group 1
         self.shape.group = 1

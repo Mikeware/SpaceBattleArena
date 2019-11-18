@@ -15,14 +15,14 @@ The full text of the license is available online: http://opensource.org/licenses
 import Server.MWNL2, logging, random, time, traceback
 from World.WorldEntities import Ship
 from World.WorldCommands import ConvertNetworkMessageToCommand, RadarCommand
-from NetworkCommands import *
+from .NetworkCommands import *
 
 class WorldServer(object):
     """Space Battle Network Server"""
 
     # TODO take configuration for port, max images
     def __init__(self, port, game):
-        print "Server Started at IP: " + Server.MWNL2.getIPAddress()
+        print("Server Started at IP: " + Server.MWNL2.getIPAddress())
         self.__port = port
         self.__maximages = game.cfg.getint("Application", "ship_images")
         self.__net = Server.MWNL2.MWNL_Init(port, self.__serverCallback)
@@ -81,7 +81,7 @@ class WorldServer(object):
                 self.__game.server_disconnect_player(sender)
             elif cmd[0] == MWNL_CMD_REGISTER:
                 data = cmd[1]
-                if isinstance(data["NAME"], unicode):
+                if isinstance(data["NAME"], str):
                     teamname = data["NAME"][:20]
                 else:
                     teamname = "NOT A STRING " + str(random.randint(0, 999999))
@@ -95,7 +95,7 @@ class WorldServer(object):
                     self.sendErrorMessage(cmd, "Player already playing game.", sender)
                 else:
                     c = []
-                    if isinstance(data["COLOR"], list) and len(data["COLOR"]) == 3 and map(type, data["COLOR"]) == [int] * 3:
+                    if isinstance(data["COLOR"], list) and len(data["COLOR"]) == 3 and list(map(type, data["COLOR"])) == [int] * 3:
                         isgreater128 = False                        
                         for i in data["COLOR"]:
                             if i < 0:
@@ -171,7 +171,7 @@ class WorldServer(object):
                     logging.info("Ship Queue Before #%d %s", ship.id, repr(ship.commandQueue))
                     if ship.commandQueue.isBlockingCommandOnTop():
                         logging.error("CHEAT: %d, %s", ship.id, repr(ship.commandQueue))
-                        print "CHEAT ", ship.id                        
+                        print("CHEAT ", ship.id)                        
                         self.sendErrorMessage(cmd[1], "CHEAT: Can't Place Command When Blocked" + repr(scmd), sender)
                         scmd = None
                     else:
@@ -212,6 +212,6 @@ class WorldServer(object):
             #eif
         except:
             logging.error(traceback.format_exc())
-            print traceback.format_exc()
+            print(traceback.format_exc())
     #e__serverCallback
 #eclass

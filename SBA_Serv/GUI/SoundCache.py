@@ -25,8 +25,8 @@ class SoundCache(object):
         self.__enabled = enabled
 
     def __getitem__(self, key):
-        if not self.__cache.has_key(key):
-            print "Loading Sound " + self.__rootdir + key + self.__ext
+        if key not in self.__cache:
+            print("Loading Sound " + self.__rootdir + key + self.__ext)
             self.__cache[key] = pygame.mixer.Sound(self.__rootdir + key + self.__ext)
         return self.__cache[key]  
    

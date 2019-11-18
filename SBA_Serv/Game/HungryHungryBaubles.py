@@ -12,8 +12,8 @@ You should have received a copy of the GNU General Public License along with thi
 The full text of the license is available online: http://opensource.org/licenses/GPL-2.0
 """
 
-from BaubleGame import *
-from Utils import CallbackTimer
+from .BaubleGame import *
+from .Utils import CallbackTimer
 from World.WorldEntities import Ship
 from World.WorldMath import intpos, friendly_type, PlayerStat, aligninstances, getPositionAwayFromOtherObjects
 from GUI.GraphicsCache import Cache
@@ -66,11 +66,11 @@ class HungryHungryBaublesGame(BaseBaubleGame):
             ship.player.sound = "COLLECT"
             # add new bauble
             self.__addBauble(ship.player, True)
-        elif self.__assign_specific_bauble and bauble in self.__baubles.values():
+        elif self.__assign_specific_bauble and bauble in list(self.__baubles.values()):
             logging.info("Collected Gold Bauble #%d", ship.id)
             # someone else's bauble
-            for key, value in self.__baubles.iteritems():
-                if self._players.has_key(key) and value == bauble:
+            for key, value in self.__baubles.items():
+                if key in self._players and value == bauble:
                     self.__addBauble(self._players[key], True)
                 elif value == bauble:
                     # Gold Bauble no longer owned, add back a regular one
@@ -98,6 +98,6 @@ class HungryHungryBaublesGame(BaseBaubleGame):
         if self.__assign_specific_bauble:
             for player in self.game_get_current_player_list():
                 obj = player.object
-                if obj != None and self.__baubles.has_key(player.netid):
+                if obj != None and player.netid in self.__baubles:
                     # draw line between player and Bauble
                     pygame.draw.line(surface, player.color, intpos(obj.body.position), intpos(self.__baubles[player.netid].body.position))

@@ -31,7 +31,7 @@ class BasicTournament(object):
         """
         logging.info("[Tournament] Initialized with %d players", len(players))
         self._groups = []
-        for x in xrange(self._numgroups):
+        for x in range(self._numgroups):
             self._groups.append([])
         #next
         x = 0
@@ -53,7 +53,7 @@ class BasicTournament(object):
         """
         if not self._finalround:
             # get winner(s)
-            for x in xrange(self.cfg.getint("Tournament", "number_to_final_round")):
+            for x in range(self.cfg.getint("Tournament", "number_to_final_round")):
                 logging.info("Adding player to final round %s stats: %s", players[x].name, stats[x])
                 self._finalgroup.append(players[x])
             #next
@@ -96,7 +96,7 @@ class BasicTournament(object):
 
         # draw first Bracket
         y = 100
-        for x in xrange(self._numgroups):
+        for x in range(self._numgroups):
             py = y
             for player in self._groups[x]:
                 c = (128, 128, 128)

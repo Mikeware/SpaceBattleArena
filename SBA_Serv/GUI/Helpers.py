@@ -48,15 +48,15 @@ def detect_resolution(cfg):
         user32 = ctypes.windll.user32
 
         if not cfg.getboolean("Application", "dpi_aware"):
-            print "Disabling DPI Awareness"
+            print("Disabling DPI Awareness")
             user32.SetProcessDPIAware()
         else:
             hwnd = pygame.display.get_wm_info()["window"]
             dpi = user32.GetDpiForWindow(hwnd)
-            print "Current DPI: ", dpi
+            print("Current DPI: ", dpi)
             if rez == None:
                 rez = (user32.GetSystemMetricsForDpi(0, dpi), user32.GetSystemMetricsForDpi(1, dpi))
-                print "Scaled Resolution: ", rez
+                print("Scaled Resolution: ", rez)
 
     if rez == None:    
         rez = pygame.display.list_modes()[0]

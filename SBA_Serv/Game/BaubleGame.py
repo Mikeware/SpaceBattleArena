@@ -12,7 +12,7 @@ You should have received a copy of the GNU General Public License along with thi
 The full text of the license is available online: http://opensource.org/licenses/GPL-2.0
 """
 
-from Game import BasicGame
+from .Game import BasicGame
 from GUI.ObjWrappers.GUIEntity import GUIEntity, debugfont
 from GUI.GraphicsCache import Cache
 from World.WorldMath import intpos, friendly_type, PlayerStat, aligninstances, getPositionAwayFromOtherObjects
@@ -33,11 +33,11 @@ class BaseBaubleGame(BasicGame):
     INVERTWEIGHT_TABLE = []
 
     def __init__(self, cfgobj):
-        percents = map(float, cfgobj.get("BaubleGame", "bauble_percent").split(","))
-        points = map(int, cfgobj.get("BaubleGame", "bauble_points").split(","))
+        percents = list(map(float, cfgobj.get("BaubleGame", "bauble_percent").split(",")))
+        points = list(map(int, cfgobj.get("BaubleGame", "bauble_points").split(",")))
 
-        weights = map(int, cfgobj.get("BaubleGame", "bauble_weights").split(","))
-        weight_percents = map(float, cfgobj.get("BaubleGame", "bauble_weight_percent").split(","))
+        weights = list(map(int, cfgobj.get("BaubleGame", "bauble_weights").split(",")))
+        weight_percents = list(map(float, cfgobj.get("BaubleGame", "bauble_weight_percent").split(",")))
 
         # Create list of values/percents
         BaseBaubleGame.VALUE_TABLE = []

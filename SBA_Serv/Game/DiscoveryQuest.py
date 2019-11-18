@@ -12,7 +12,7 @@ You should have received a copy of the GNU General Public License along with thi
 The full text of the license is available online: http://opensource.org/licenses/GPL-2.0
 """
 
-from Game import BasicGame
+from .Game import BasicGame
 from World.Entities import PhysicalEllipse
 from World.WorldEntities import Nebula
 from GUI.ObjWrappers.GUIEntity import GUIEntity
@@ -66,7 +66,7 @@ class DiscoveryQuestGame(BasicGame):
             player.mission = []
             player.scanned = []
             player.failed = False
-            for i in xrange(cfg_rand_min_max(self.cfg, "DiscoveryQuest", "mission_num")):
+            for i in range(cfg_rand_min_max(self.cfg, "DiscoveryQuest", "mission_num")):
                 player.mission.append(random.choice(self._missions)) # TODO: validate that this player can still scan those types of objects
 
     def player_added(self, player, reason):
@@ -84,7 +84,7 @@ class DiscoveryQuestGame(BasicGame):
 
     def player_get_start_position(self, force = False):
         # pick a random outpost to spawn the player besides
-        out = intpos(random.choice(self._outposts.values()).body.position)
+        out = intpos(random.choice(list(self._outposts.values())).body.position)
 
         pos = (random.randint(out[0]-self.outpostdist, out[0]+self.outpostdist),
                random.randint(out[1]-self.outpostdist, out[1]+self.outpostdist))
@@ -188,7 +188,7 @@ class DiscoveryQuestGame(BasicGame):
             return a server 'Command' object, a string indicating an error, or None
         """
         if cmdname == GAME_CMD_SCAN:
-            if cmddict.has_key("TARGET") and isinstance(cmddict["TARGET"], int) and cmddict["TARGET"] > 0:
+            if "TARGET" in cmddict and isinstance(cmddict["TARGET"], int) and cmddict["TARGET"] > 0:
                 return ScanCommand(ship, self, cmddict["TARGET"])
             else:
                 return "Discovery Quest Scan Command requires a target id."
@@ -260,7 +260,7 @@ class DiscoveryQuestGame(BasicGame):
         # check timeout of scan duration (if enabled)
         if self.scanduration > 0:
             for player in self.game_get_current_player_list():
-                for id in player.scantimes.keys():
+                for id in list(player.scantimes.keys()):
                     player.scantimes[id] += t                    
                     if player.scantimes[id] >= self.scanduration:
                         obj = self.world[id]
@@ -294,7 +294,7 @@ class DiscoveryQuestGame(BasicGame):
                             wrapcircle(surface, (255, 0, 0), intpos(obj.body.position), obj.radius + 6, self.world.size, 2)
 
             # Draw Circles around scanned entities
-            for id, scantime in trackplayer.scantimes.iteritems():
+            for id, scantime in trackplayer.scantimes.items():
                 obj = self.world[id]
                 #if trackplayer in obj.scanned_by:
                 if self.scanduration > 0:

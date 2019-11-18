@@ -1,6 +1,6 @@
 import socket
 import time
-import thread, threading, atexit, logging, json, traceback
+import _thread, threading, atexit, logging, json, traceback
 import errno
 
 # Mikeware Network Lib
@@ -57,7 +57,7 @@ class MWNL_Init:
         return (self.__id == -2)
 
     def haveID(self):
-        return (self.__id <> -1)
+        return (self.__id != -1)
     #END haveID
     
     def getID(self):
@@ -69,11 +69,11 @@ class MWNL_Init:
     #END IF
     
     def numClients(self):
-        return len(self.__connections.values())
+        return len(list(self.__connections.values()))
     #END numConnections
     
     def getClientIDs(self):
-        return self.__connections.keys()
+        return list(self.__connections.keys())
     #END getClientIDs
 
     # Takes Dictionary with Keys = Current IDs and Values = New IDs
@@ -81,7 +81,7 @@ class MWNL_Init:
         # Rearrange Host's Dictionary & Sends New IDS to Clients
         
         # First Off Send Client's New IDs
-        for curID in newIDdict.keys():
+        for curID in list(newIDdict.keys()):
             logging.info("Sending " + str(curID) + " new ID of " + str(newIDdict[curID]))
             self.send(MWNL_CMD_ASSIGN_ID, newIDdict[curID], curID)
         #END FOR
@@ -90,7 +90,7 @@ class MWNL_Init:
         olddict = self.__connections.copy()
 
         # Rearrange Connections In Place
-        for curID in newIDdict.keys():
+        for curID in list(newIDdict.keys()):
             self.__connections[newIDdict[curID]] = olddict[curID]
             self.__connections[newIDdict[curID]]._setID(newIDdict[curID])
         #END FOR
@@ -199,7 +199,7 @@ class MWNL_Init:
         
         if self.__id != -2:
             # Close All Connections
-            for conn in self.__connections.values():
+            for conn in list(self.__connections.values()):
                 conn.close()
             #END FOR
 
@@ -279,13 +279,13 @@ class MWNL_Init:
                 #eif
             else:
                 # Broadcast Message
-                for conn in self.__connections.values():
+                for conn in list(self.__connections.values()):
                     logging.debug("Broadcasting to " + repr(conn.getAddress()))
                     conn.send(info, command, data)
                 #END FOR
             #END IF
         # Client
-        elif self.__connections.has_key(self.__id):
+        elif self.__id in self.__connections:
             logging.debug("Sending message to host")
             # Send To Host
             self.__connections[self.__id].send(info, command, data)
@@ -323,7 +323,7 @@ class MWNL_Init:
             # Wait For New Connection
             try:
                 newconn = self.__socket.accept()
-                if newconn[0] <> None:
+                if newconn[0] != None:
                     logging.info("New Connection From: %s", repr(newconn[1]))
                     
                     # Temp Assign Connection ID
@@ -333,7 +333,7 @@ class MWNL_Init:
                     if not self.__allowallremoteconnections:
                         # check if connection already exists
                         found = False
-                        for conn in self.__connections.values():
+                        for conn in list(self.__connections.values()):
                             if conn.getAddress()[0] == newconn[1][0]: # (ip, port)
                                 logging.warning("Client Already Connected")
                                 # temp add so we can send via regular methods
@@ -359,7 +359,7 @@ class MWNL_Init:
                 pass
             except:
                 logging.error(traceback.format_exc())
-                print traceback.format_exc()
+                print(traceback.format_exc())
             #END TRY/EXCEPT
         #END WHILE
 
@@ -374,7 +374,7 @@ class MWNL_Init:
     # Callback from Client Threads When Complete Tag Received
     def __gotTag(self, datalist):              
         # Do We Have Anything?
-        if datalist <> None and isinstance(datalist, list) and len(datalist) >= 2 and len(datalist[0]) == 2:
+        if datalist != None and isinstance(datalist, list) and len(datalist) >= 2 and len(datalist[0]) == 2:
             logging.debug("Got Data: %s", repr(datalist[2:]))
 
             # Break into Readable Vars
@@ -394,10 +394,10 @@ class MWNL_Init:
             if cmd == MWNL_CMD_PING:
                 logging.info("pinged...ponging")
                 self.send(MWNL_CMD_PONG, sendto=sender)
-                print "PING!!!"
+                print("PING!!!")
             elif cmd == MWNL_CMD_PONG:
                 logging.info("received pong")
-                print "PONG!!!"
+                print("PONG!!!")
             elif cmd == MWNL_CMD_DISCONNECT:
                 # If Host, Client Died
                 if self.ishost():
@@ -428,7 +428,7 @@ class MWNL_Init:
                 # Make Sure On Client
                 if not self.ishost():
                     # Swap Socket To New ID
-                    if newID <> self.__id:
+                    if newID != self.__id:
                         self.__connections[newID] = self.__connections[self.__id]
                         del self.__connections[self.__id]
                         #print "newdic = " + repr(self.__connections)
@@ -450,7 +450,7 @@ class MWNL_Init:
     #END __gotTag
 
     def __disconnectClient(self, id):
-        if self.__connections.has_key(id):
+        if id in self.__connections:
             logging.info("Trying to Disconnect Client %d", id)
             try:
                 threading.Thread(None, self.__connections[id].close, "Close Specific Connection %d" % id).start()
@@ -583,7 +583,7 @@ class MWNL_Connection:
             try:
                 blk = self.__socket.recv(self.__blocksize)
 
-                if blk <> "":
+                if blk != "":
                     #print repr(self.__address) + "listen start"
                     #print "recv = " + blk
 
@@ -617,7 +617,7 @@ class MWNL_Connection:
                         #eif
                 
                         # If We Have A Complete Tag, Process It
-                        if retval <> "":
+                        if retval != "":
                             #atedata = 0
 
                             logging.debug("Making callback for command: %s", retval)
@@ -646,12 +646,12 @@ class MWNL_Connection:
                 else:
                     logging.info(traceback.format_exc())
                     logging.error(traceback.format_exc())
-                    print traceback.format_exc()
+                    print(traceback.format_exc())
                 #END IF
             except:
                 logging.info(traceback.format_exc())
                 logging.error(traceback.format_exc())
-                print traceback.format_exc()
+                print(traceback.format_exc())
             #END TRY/EXCEPT
         #END WHILE
         
@@ -659,7 +659,7 @@ class MWNL_Connection:
         
         self.__threadsalive -= 1
         
-        thread.exit()
+        _thread.exit()
     #END __THREAD__listen
 
     # Sends Data in Buffer
@@ -710,7 +710,7 @@ class MWNL_Connection:
                     logging.error("Error Sending Data")
                     logging.info(traceback.format_exc())
                     logging.error(traceback.format_exc())
-                    print traceback.format_exc()
+                    print(traceback.format_exc())
                 #END IF
             except:
                 self.__connalive = False
@@ -718,7 +718,7 @@ class MWNL_Connection:
                 logging.error("Error Sending Data")
                 logging.info(traceback.format_exc())
                 logging.error(traceback.format_exc())
-                print traceback.format_exc()
+                print(traceback.format_exc())
                 self.__callback([(self.__id, 0), MWNL_CMD_DISCONNECT])
             
             self.__outlock.release()
@@ -730,6 +730,6 @@ class MWNL_Connection:
 
         self.__threadsalive -= 1
 
-        thread.exit()
+        _thread.exit()
     #END __THREAD__send
 #END MWNL_Connection

@@ -16,8 +16,8 @@ import logging
 import random
 import math
 from pymunk import Vec2d
-from WorldMath import intpos
-import WorldEntities
+from .WorldMath import intpos
+from . import WorldEntities
 #from Entities import Torpedo
 
 #TODO: Have Command Definition? List parameters?
@@ -43,17 +43,17 @@ SHIP_CMD_CLOAK = "CLOAK"
 SHIP_CMD_REPAIR = "REP"
 SHIP_CMD_SCOOP = "SCOOP"
 
-from Messaging import Command, OneTimeCommand
+from .Messaging import Command, OneTimeCommand
 
 def ConvertNetworkMessageToCommand(ship, cmdname, cmddict):
     # Sanitize Network Input and Convert to Game Command
-    if isinstance(cmdname, unicode) and isinstance(cmddict, dict):
+    if isinstance(cmdname, str) and isinstance(cmddict, dict):
         if cmdname == SHIP_CMD_THRUST:
-            if cmddict.has_key("DIR") and cmddict["DIR"] in [u'L',u'F',u'R',u'B']:
-                if cmddict.has_key("DUR") and isinstance(cmddict["DUR"], float) and cmddict["DUR"] >= 0.1:
-                    if cmddict.has_key("PER"):
+            if "DIR" in cmddict and cmddict["DIR"] in ['L','F','R','B']:
+                if "DUR" in cmddict and isinstance(cmddict["DUR"], float) and cmddict["DUR"] >= 0.1:
+                    if "PER" in cmddict:
                         if isinstance(cmddict["PER"], float) and 0.1 <= cmddict["PER"] <= 1.0:
-                            if cmddict.has_key("BLOCK") and isinstance(cmddict["BLOCK"], bool):
+                            if "BLOCK" in cmddict and isinstance(cmddict["BLOCK"], bool):
                                 return ThrustCommand(ship, cmddict["DIR"], cmddict["DUR"], cmddict["PER"], cmddict["BLOCK"])
                             else:
                                 return ThrustCommand(ship, cmddict["DIR"], cmddict["DUR"], cmddict["PER"])
@@ -69,9 +69,9 @@ def ConvertNetworkMessageToCommand(ship, cmdname, cmddict):
                 return "Direction Missing or Should Be L, F, R, or B"
             #eif
         elif cmdname == SHIP_CMD_RADAR:
-            if cmddict.has_key("LVL") and isinstance(cmddict["LVL"], int) and 0 < cmddict["LVL"] <= 5:
+            if "LVL" in cmddict and isinstance(cmddict["LVL"], int) and 0 < cmddict["LVL"] <= 5:
                 if cmddict["LVL"] == 3:
-                    if cmddict.has_key("TARGET") and isinstance(cmddict["TARGET"], int) and cmddict["TARGET"] > 0:
+                    if "TARGET" in cmddict and isinstance(cmddict["TARGET"], int) and cmddict["TARGET"] > 0:
                         return RadarCommand(ship, cmddict["LVL"], cmddict["TARGET"])
                     else:
                         return "Target Missing or Should be Positive Int"
@@ -81,7 +81,7 @@ def ConvertNetworkMessageToCommand(ship, cmdname, cmddict):
             else:
                 return "Level Missing or Should be Int 0 < Arg <= 5"
         elif cmdname == SHIP_CMD_BRAKE:
-            if cmddict.has_key("PER"):
+            if "PER" in cmddict:
                 if isinstance(cmddict["PER"], float) and 0.0 <= cmddict["PER"] < 1.0:
                     return BrakeCommand(ship, cmddict["PER"])
                 else:
@@ -92,22 +92,22 @@ def ConvertNetworkMessageToCommand(ship, cmdname, cmddict):
         elif cmdname == SHIP_CMD_ALL_STOP:
             return AllStopCommand(ship)
         elif cmdname == SHIP_CMD_WARP:
-            if cmddict.has_key("DIST") and isinstance(cmddict["DIST"], float) and cmddict["DIST"] > 0 and cmddict["DIST"] <= WarpCommand.MAXWARPDISTANCE:
+            if "DIST" in cmddict and isinstance(cmddict["DIST"], float) and cmddict["DIST"] > 0 and cmddict["DIST"] <= WarpCommand.MAXWARPDISTANCE:
                 return WarpCommand(ship, cmddict["DIST"])
-            elif cmddict.has_key("DIST"):
+            elif "DIST" in cmddict:
                 return "Distance must be a positive Float less than or equal to " + repr(WarpCommand.MAXWARPDISTANCE)
             else:
                 return WarpCommand(ship)
             #eif
         elif cmdname == SHIP_CMD_ROTATE:
-            if cmddict.has_key("DEG") and isinstance(cmddict["DEG"], int):
+            if "DEG" in cmddict and isinstance(cmddict["DEG"], int):
                 return RotateCommand(ship, cmddict["DEG"])
             else:
                 return "Degrees Missing or Should Be Integer"
             #eif
         elif cmdname == SHIP_CMD_STEER:
-            if cmddict.has_key("DEG") and isinstance(cmddict["DEG"], int):
-                if cmddict.has_key("BLOCK") and isinstance(cmddict["BLOCK"], bool):
+            if "DEG" in cmddict and isinstance(cmddict["DEG"], int):
+                if "BLOCK" in cmddict and isinstance(cmddict["BLOCK"], bool):
                     return SteerCommand(ship, cmddict["DEG"], cmddict["BLOCK"])
                 else:
                     return SteerCommand(ship, cmddict["DEG"])
@@ -115,7 +115,7 @@ def ConvertNetworkMessageToCommand(ship, cmdname, cmddict):
                 return "Degrees Missing or Should Be Integer"
             #eif
         elif cmdname == SHIP_CMD_IDLE:
-            if cmddict.has_key("DUR"):
+            if "DUR" in cmddict:
                 if isinstance(cmddict["DUR"], float) and cmddict["DUR"] >= 0.1:
                     return IdleCommand(ship, cmddict["DUR"])
                 else:
@@ -128,17 +128,17 @@ def ConvertNetworkMessageToCommand(ship, cmdname, cmddict):
         elif cmdname == SHIP_CMD_DESTROY_ALL_BEACONS:
             return DestroyAllLaserBeaconsCommand(ship)
         elif cmdname == SHIP_CMD_TORPEDO:
-            if cmddict.has_key("DIR") and cmddict["DIR"] in [u'F',u'B']:
+            if "DIR" in cmddict and cmddict["DIR"] in ['F','B']:
                 return FireTorpedoCommand(ship, cmddict["DIR"])
             else:
                 return "Firing a torpedo requires a direction 'F'orward or 'B'ackwards"
             #eif
         elif cmdname == SHIP_CMD_SPACEMINE:
-            if cmddict.has_key("MODE") and cmddict.has_key("DELAY") and isinstance(cmddict["DELAY"], float) and cmddict["DELAY"] > 0 and cmddict["DELAY"] <= 10:
+            if "MODE" in cmddict and "DELAY" in cmddict and isinstance(cmddict["DELAY"], float) and cmddict["DELAY"] > 0 and cmddict["DELAY"] <= 10:
                 if cmddict["MODE"] not in [WorldEntities.SpaceMine.STATIONARY, WorldEntities.SpaceMine.AUTONOMOUS, WorldEntities.SpaceMine.HOMING]:
                     return "Invalid Mine Mode, use 1, 2, or 3"
                 elif cmddict["MODE"] == WorldEntities.SpaceMine.AUTONOMOUS:
-                    if cmddict.has_key("SPEED") and cmddict.has_key("DUR") and cmddict.has_key("DIR"):
+                    if "SPEED" in cmddict and "DUR" in cmddict and "DIR" in cmddict:
                         if isinstance(cmddict["SPEED"], int) and isinstance(cmddict["DUR"], float) and isinstance(cmddict["DIR"], int):
                             if cmddict["SPEED"] > 0 and cmddict["SPEED"] <= 5:
                                 if cmddict["DUR"] > 0 and cmddict["DUR"] <= 10:
@@ -156,12 +156,12 @@ def ConvertNetworkMessageToCommand(ship, cmdname, cmddict):
             else:
                 return "Mines need a mode and positive float delay less than or equal to 10 seconds."
         elif cmdname == SHIP_CMD_REPAIR:
-            if cmddict.has_key("AMT") and isinstance(cmddict["AMT"], int) and cmddict["AMT"] > 0 and cmddict["AMT"] < 100:
+            if "AMT" in cmddict and isinstance(cmddict["AMT"], int) and cmddict["AMT"] > 0 and cmddict["AMT"] < 100:
                 return RepairCommand(ship, cmddict["AMT"])
             else:
                 return "Repair amount must be a positive integer less than 100"
         elif cmdname == SHIP_CMD_SCOOP:
-            if cmddict.has_key("SHORT") and isinstance(cmddict["SHORT"], bool):
+            if "SHORT" in cmddict and isinstance(cmddict["SHORT"], bool):
                 if cmddict["SHORT"]:
                     return LowerEnergyScoopCommand(ship)
                 else:
@@ -169,13 +169,13 @@ def ConvertNetworkMessageToCommand(ship, cmdname, cmddict):
             else:
                 return "LowerEnergyScoop expects a boolean to indicate if short or long duration is requested"
         elif cmdname == SHIP_CMD_CLOAK:
-            if cmddict.has_key("DUR") and isinstance(cmddict["DUR"], float) and cmddict["DUR"] > 0:
+            if "DUR" in cmddict and isinstance(cmddict["DUR"], float) and cmddict["DUR"] > 0:
                 return CloakCommand(ship, cmddict["DUR"])
             else:
                 return "Cloak Command Needs a Positive Float for Duration"
             #eif
         elif cmdname == SHIP_CMD_SHIELD:
-            if cmddict.has_key("DUR") and isinstance(cmddict["DUR"], float) and cmddict["DUR"] > 0:
+            if "DUR" in cmddict and isinstance(cmddict["DUR"], float) and cmddict["DUR"] > 0:
                 return RaiseShieldsCommand(ship, cmddict["DUR"])
             else:
                 return "Shield Command Needs a Positive Float for Duration"

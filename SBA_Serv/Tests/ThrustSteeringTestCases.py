@@ -12,7 +12,7 @@ You should have received a copy of the GNU General Public License along with thi
 The full text of the license is available online: http://opensource.org/licenses/GPL-2.0
 """
 
-from TestCaseRigging import SBAGUITestCase
+from .TestCaseRigging import SBAGUITestCase
 
 import World.WorldMap as WorldMap
 from World.WorldEntities import *
@@ -69,7 +69,7 @@ class SteeringTestCase(SBAGUITestCase):
         time.sleep(0.5)
 
         ang = abs(self.ship.body.velocity.angle_degrees) # +/-180
-        print ang
+        print(ang)
         
         while len(self.ship.cmdlist) > 0:
             time.sleep(0.02)
@@ -80,7 +80,7 @@ class SteeringTestCase(SBAGUITestCase):
         nang = -self.ship.body.velocity.angle_degrees
         if nang < 0: 
             nang += 360
-        print nang # should be 270
+        print(nang) # should be 270
         logging.debug("Ship Angle %d, expected %d", nang, ang + 90)
         self.assertAlmostEqual(ang + 90, nang, None, "Ship Didn't Steer 90 Degrees", 3)
 
@@ -114,7 +114,7 @@ class SteeringTestCase(SBAGUITestCase):
         time.sleep(0.5)
 
         ang = abs(self.ship.body.velocity.angle_degrees) # +/-180
-        print ang
+        print(ang)
         
         while len(self.ship.cmdlist) > 0 or len(self.ship2.cmdlist) > 0 or len(self.ship3.cmdlist) > 0:
             time.sleep(0.02)
@@ -125,7 +125,7 @@ class SteeringTestCase(SBAGUITestCase):
         nang = -self.ship.body.velocity.angle_degrees
         if nang <= 3: 
             nang += 360
-        print nang # should be 360
+        print(nang) # should be 360
         logging.debug("Ship Angle %d, expected %d", nang, ang + 180)
         self.assertAlmostEqual(ang + 180, nang, None, "Ship Didn't Steer 180 Degrees", 3)
 
@@ -146,7 +146,7 @@ class SteeringTestCase(SBAGUITestCase):
 
         time.sleep(3)
 
-        print center, self.ship.body.position
+        print(center, self.ship.body.position)
         logging.debug("Ship Position %s, expected position %s", repr(self.ship.body.position), repr(center))
         self.assertAlmostEqual(float(self.ship.body.position[0]), center[0], None, "Ship X not the same as Start", 20)
         self.assertAlmostEqual(float(self.ship.body.position[1]), center[1], None, "Ship Y not the same as Start", 3)

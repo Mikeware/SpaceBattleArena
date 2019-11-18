@@ -3,9 +3,9 @@ import pymunk
 import math
 import logging
 
-from Messaging import MessageQueue
-from Commanding import CommandSystem
-from WorldMath import PlayerStat
+from .Messaging import MessageQueue
+from .Commanding import CommandSystem
+from .WorldMath import PlayerStat
 
 class Entity(object):
     """Describes the basic properties for any entities in the game world.
@@ -190,7 +190,7 @@ class PhysicalEllipse(PhysicalPoly):
         self.radius = b + int((a - b) / 2) # HACK: expect all objects to have radius
         points = []
         ang = math.pi * 2 / segments
-        for seg in xrange(0, segments):
+        for seg in range(0, segments):
             points.append((a * math.cos(seg * ang), b * math.sin(seg * ang)))
 
         super(PhysicalEllipse, self).__init__(points, mass, pos)

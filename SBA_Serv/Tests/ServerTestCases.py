@@ -12,7 +12,7 @@ You should have received a copy of the GNU General Public License along with thi
 The full text of the license is available online: http://opensource.org/licenses/GPL-2.0
 """
 
-from TestCaseRigging import SBAServerTestCase, SBAGUIWithServerTestCase
+from .TestCaseRigging import SBAServerTestCase, SBAGUIWithServerTestCase
 import Server.MWNL2 as MWNL2
 from World.AIShips import AIShip_Network_Harness
 from World.WorldCommands import *
@@ -65,7 +65,7 @@ class ServerConnectTestCase(SBAServerTestCase):
 
         self.ships = []
 
-        for x in xrange(numclients):
+        for x in range(numclients):
             self.ships.append(AIShip_Network_Harness("Add Me " + str(x), self.__bad_thrust_ship))
 
             self.assertTrue(self.ships[-1].connect(self.cfg.getint("Server", "port")), "Didn't connect to server.")
@@ -80,14 +80,14 @@ class ServerConnectTestCase(SBAServerTestCase):
 
         time.sleep(10)
 
-        print threading.enumerate()
+        print(threading.enumerate())
 
         self.assertFalse(self.server.isrunning(), "Server still running after disconnect.")
 
-        for x in xrange(numclients):
+        for x in range(numclients):
             self.assertFalse(self.ships[x].isconnected(), "Client still connected to server after disconnect.")
 
-        print threading.enumerate()
+        print(threading.enumerate())
         self.assertEqual(len(threading.enumerate()), 1, "More than main thread running.")
 
     def __bad_thrust_ship(self, ship, env):
@@ -507,13 +507,13 @@ class ServerGUITournamentRemoteTestCase(SBAGUIWithServerTestCase):
         numships = 8
         groups = self.cfg.getint("Tournament", "groups")
 
-        for x in xrange(numships):
+        for x in range(numships):
             ships.append(AIShip_Network_Harness("Move", self.__target_ship))
             self.assertTrue(ships[-1].connect(self.cfg.getint("Server", "port")), "Ship " + repr(x) + " Didn't connect to server.")    
             time.sleep(0.2)
             self.assertTrue(ships[-1].isconnected(), "Target Client not connected to server.")
 
-        for x in xrange(groups + 1):
+        for x in range(groups + 1):
             self.assertEqual(len(self.game.world), 0, "Objects in World before round")
             self.assertFalse(self.game.round_get_has_started(), "Game Timer Running")
 
@@ -528,7 +528,7 @@ class ServerGUITournamentRemoteTestCase(SBAGUIWithServerTestCase):
                     self.assertTrue(player.object in self.game.world, "Player's Ship not in final tournament")
                     self.assertLess(player.score, 1, "Players shouldn't have score entering final round")
 
-            for i in xrange(x + 2):
+            for i in range(x + 2):
                 self.game.world.append(Bauble(intpos(self.game.game_get_current_player_list()[i % 2].object.body.position), 1))
                 time.sleep(0.5)
 
@@ -538,7 +538,7 @@ class ServerGUITournamentRemoteTestCase(SBAGUIWithServerTestCase):
 
             leader = None
             for player in self.game.game_get_current_leader_list():
-                print player.name, player.score
+                print(player.name, player.score)
                 if leader == None:
                     leader = player
                 #self.assertGreater(player.score, 10, "Each player should have scored")

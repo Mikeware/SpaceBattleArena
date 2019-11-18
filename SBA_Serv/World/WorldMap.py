@@ -13,12 +13,12 @@ The full text of the license is available online: http://opensource.org/licenses
 """
 
 import logging
-import thread, threading, time, math
+import _thread, threading, time, math
 import pymunk
 import traceback
-from WorldMath import in_circle, wrappos, intpos, friendly_type
+from .WorldMath import in_circle, wrappos, intpos, friendly_type
 from World.WorldEntities import Influential, Ship, Nebula
-from WorldCommands import CloakCommand
+from .WorldCommands import CloakCommand
 from ThreadStuff.ThreadSafe import ThreadSafeDict
 
 MINIMUM_GAMESTEP_TIME = 0.02 #50fps
@@ -107,7 +107,7 @@ class GameWorld(object):
             self.__game.world_physics_end_collision( arbiter.shapes[0].world_object, arbiter.shapes[1].world_object )
         
     def causeExplosion(self, origin, radius, strength, force=False):
-        logging.debug("Start Explosion %s, %d, %d [%d]", origin, radius, strength, thread.get_ident())
+        logging.debug("Start Explosion %s, %d, %d [%d]", origin, radius, strength, _thread.get_ident())
         origin = pymunk.Vec2d(origin)
         for obj in self.__objects:
             if obj.explodable:
@@ -135,19 +135,19 @@ class GameWorld(object):
         return self.__objects.__setitem__(key, value)
 
     def has_key(self, key):
-        return self.__objects.has_key(key)
+        return key in self.__objects
 
     def append(self, item, pys=False):
         """
         Call to add an object to the game world from threads outside the game loop
         """
-        logging.debug("Append Object to World %s [%d]", repr(item), thread.get_ident())
+        logging.debug("Append Object to World %s [%d]", repr(item), _thread.get_ident())
         for objListener in self.__objectListener:
             objListener(item, True)
 
-        logging.debug("SEMAPHORE ACQ append [%d]", thread.get_ident())
+        logging.debug("SEMAPHORE ACQ append [%d]", _thread.get_ident())
         self.__addremovesem.acquire()
-        if not self.__objects.has_key(item.id):
+        if item.id not in self.__objects:
             self.__objects[item.id] = item
             if pys:
                 item.addToSpace(self.__space)
@@ -159,7 +159,7 @@ class GameWorld(object):
             if isinstance(item, Influential) and item.influence_range > 0:
                 self.__influential.append(item)
         self.__addremovesem.release()
-        logging.debug("SEMAPHORE REL append [%d]", thread.get_ident())                
+        logging.debug("SEMAPHORE REL append [%d]", _thread.get_ident())                
 
     def remove(self, item):
         """
@@ -171,16 +171,16 @@ class GameWorld(object):
         self.__delitem__(item, True)
         
     def __delitem__(self, key, pys=False):
-        logging.debug("Removing Object from World %s [%d]", repr(key), thread.get_ident())
+        logging.debug("Removing Object from World %s [%d]", repr(key), _thread.get_ident())
         # Notify each item this may be in that it's no longer colliding
         # HACK: Get around issue with PyMunk not telling us shapes when object removed already before separate callback
         if len(key.in_celestialbody) > 0:
             for item in key.in_celestialbody[:]:
                 item.collide_end(key)
 
-        logging.debug("SEMAPHORE ACQ delitem [%d]", thread.get_ident())
+        logging.debug("SEMAPHORE ACQ delitem [%d]", _thread.get_ident())
         self.__addremovesem.acquire()            
-        if self.__objects.has_key(key.id):
+        if key.id in self.__objects:
             if pys:
                 key.removeFromSpace(self.__space)
             elif key in self.__toadd:
@@ -192,7 +192,7 @@ class GameWorld(object):
             if key in self.__influential:
                 self.__influential.remove(key)
         self.__addremovesem.release()           
-        logging.debug("SEMAPHORE REL delitem [%d]", thread.get_ident())
+        logging.debug("SEMAPHORE REL delitem [%d]", _thread.get_ident())
         
         # Notify after removed, in case re-add same object
         for objListener in self.__objectListener:
@@ -240,7 +240,7 @@ class GameWorld(object):
                 # update time
                 lasttime = time.time() - tstamp
                            
-                logging.debug("SEMAPHORE ACQ gameloop [%d]", thread.get_ident())
+                logging.debug("SEMAPHORE ACQ gameloop [%d]", _thread.get_ident())
                 self.__addremovesem.acquire()
                 # NOTE ISSUE #68 - If server is slow, can be adding and removing object in same step... add first, so we can immediately remove instead of crash
                 # TODO: just look for common set between two lists and remove... or have each list check the other first before adding to the lists...
@@ -259,7 +259,7 @@ class GameWorld(object):
                     
                 self.__toremove = []
                 self.__addremovesem.release()
-                logging.debug("SEMAPHORE REL gameloop [%d]", thread.get_ident())
+                logging.debug("SEMAPHORE REL gameloop [%d]", _thread.get_ident())
                     
                 # minimum to conserve resources
                 if lasttime < MINIMUM_GAMESTEP_TIME:
@@ -270,11 +270,11 @@ class GameWorld(object):
                 #eif
             #wend
         except:
-            print "EXCEPTION IN GAMELOOP"
+            print("EXCEPTION IN GAMELOOP")
             logging.exception("FATAL Error in game loop!!!")
             logging.info(traceback.format_exc())
             logging.error(traceback.format_exc())
-            print traceback.format_exc()
+            print(traceback.format_exc())
             self.gameerror = True
         logging.debug("Gameloop Ended")
 
@@ -282,9 +282,9 @@ class GameWorld(object):
         """
         Returns objects within the given radius from the position (even wrapping around edge of world), pass radar = True if for environment
         """
-        logging.debug("Get Objects In Area %s %d [%d]", repr(pos), radius, thread.get_ident())
+        logging.debug("Get Objects In Area %s %d [%d]", repr(pos), radius, _thread.get_ident())
         objList = []
-        for obj in self.__objects.values():
+        for obj in list(self.__objects.values()):
             for point in wrappos(obj.body.position, radius, self.size):
                 if in_circle(pos, radius, point):
                     objList.append(obj)
@@ -297,7 +297,7 @@ class GameWorld(object):
     def get_count_of_objects(self, type):
         tname = type.__name__
         count = 0
-        for obj in self.__objects.values():
+        for obj in list(self.__objects.values()):
             if obj.__class__.__name__ == tname:
                 count += 1
             #eif
@@ -342,7 +342,7 @@ class GameWorld(object):
 
             # remove ships with cloak or in Nebula
             # TODO: Should there be an 'invisible' flag?  Would need more testing.  Would a degradation/range be useful?
-            for x in xrange(len(objs) - 1, -1, -1):
+            for x in range(len(objs) - 1, -1, -1):
                 if isinstance(objs[x], Ship) and (objs[x].commandQueue.containstype(CloakCommand) \
                                              or any(isinstance(y, Nebula) for y in objs[x].in_celestialbody)):
                     del objs[x]
@@ -352,7 +352,7 @@ class GameWorld(object):
             if radarlevel == 1:
                 # number of objects
                 radardata = []
-                for i in xrange(len(objs)):
+                for i in range(len(objs)):
                     radardata.append({})
             elif radarlevel == 2:
                 # (pos, id) list

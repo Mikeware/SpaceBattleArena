@@ -12,7 +12,7 @@ You should have received a copy of the GNU General Public License along with thi
 The full text of the license is available online: http://opensource.org/licenses/GPL-2.0
 """
 
-from TestCaseRigging import SBAWorldTestCase, SBAGUITestCase
+from .TestCaseRigging import SBAWorldTestCase, SBAGUITestCase
 from unittest import TestCase
 from World.WorldEntities import *
 from World.AIShips import *
@@ -113,7 +113,7 @@ class WormHoleVisualShipOneWayTestCase(SBAGUITestCase):
 
         time.sleep(6.0)
 
-        self.failIfAlmostEqual(ship.body.position[0], wormhole.body.position[0]+300, None, "Not Doomed ship should have continued moving after teleport. X", 96)
+        self.assertNotAlmostEqual(ship.body.position[0], wormhole.body.position[0]+300, None, "Not Doomed ship should have continued moving after teleport. X", 96)
 
     def test_wormhole_travel_back(self):
         """
@@ -157,7 +157,7 @@ class WormHoleVisualShipOneWayTestCase(SBAGUITestCase):
 
         time.sleep(5.5)
 
-        self.failIfAlmostEqual(ship.body.position[0], wormhole.body.position[0]+200, None, "Not Doomed ship should have continued moving after teleport. X", 48)
+        self.assertNotAlmostEqual(ship.body.position[0], wormhole.body.position[0]+200, None, "Not Doomed ship should have continued moving after teleport. X", 48)
 
     def test_wormhole_other_wormhole_one_way(self):
         """
@@ -198,7 +198,7 @@ class WormHoleVisualShipOneWayTestCase(SBAGUITestCase):
 
         time.sleep(5.0)
 
-        self.failIfAlmostEqual(ship.body.position[0], wormhole.body.position[0]-300, None, "Warped ship didn't move away. X", 64)
+        self.assertNotAlmostEqual(ship.body.position[0], wormhole.body.position[0]-300, None, "Warped ship didn't move away. X", 64)
 
         time.sleep(5.0)
 
@@ -242,7 +242,7 @@ class WormHoleVisualShipOneWayTestCase(SBAGUITestCase):
 
         time.sleep(6.0)
 
-        self.failIfAlmostEqual(ship.body.position[0], wormhole.body.position[0]+350, None, "Doomed ship should have continued moving after teleport. X", 96)
+        self.assertNotAlmostEqual(ship.body.position[0], wormhole.body.position[0]+350, None, "Doomed ship should have continued moving after teleport. X", 96)
         self.assertLess(ship.health.value, health - 5, "Doomed ship should have taken damage.")
 
 class WormHoleVisualShipTwoWayTestCase(SBAGUITestCase):
@@ -287,7 +287,7 @@ class WormHoleVisualShipTwoWayTestCase(SBAGUITestCase):
 
         time.sleep(5.0)
 
-        self.failIfAlmostEqual(ship.body.position[0], wormhole.body.position[0]+300, None, "Warped ship didn't move away. X", 64)
+        self.assertNotAlmostEqual(ship.body.position[0], wormhole.body.position[0]+300, None, "Warped ship didn't move away. X", 64)
 
         time.sleep(5.0)
 
@@ -303,7 +303,7 @@ class WormHoleVisualShipTwoWayTestCase(SBAGUITestCase):
         self.assertAlmostEqual(ship.body.position[1], wormhole.body.position[1], None, "Warped ship didn't teleport to the right location x2. Y", 96)
 
         time.sleep(6.0)
-        self.failIfAlmostEqual(ship.body.position[0], wormhole.body.position[0], None, "Warped ship didn't move away. X", 96)
+        self.assertNotAlmostEqual(ship.body.position[0], wormhole.body.position[0], None, "Warped ship didn't move away. X", 96)
 
 
 # Need to test not warping back until left (or randomly warped into another wormhole?)

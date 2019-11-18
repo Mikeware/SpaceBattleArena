@@ -1,6 +1,6 @@
 import pygame, random, math
 
-from GUIEntity import GUIEntity
+from .GUIEntity import GUIEntity
 from World.WorldMath import intpos
 from GUI.Helpers import wrapcircle, debugfont
 from World.WorldEntities import Dragon

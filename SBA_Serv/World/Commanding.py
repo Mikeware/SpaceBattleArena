@@ -13,8 +13,7 @@ The full text of the license is available online: http://opensource.org/licenses
 """
 
 import logging, threading
-from exceptions import NotImplementedError
-from Messaging import MessageQueue, Message, Command
+from .Messaging import MessageQueue, Message, Command
 
 class CommandInterface(object):
     def __init__(self):
@@ -74,7 +73,7 @@ class CommandSystem(object):
     def update(self, t):
         self.__queueSemaphore.acquire()
         thrust = self.__parent.thrusterForce
-        for i in xrange(len(self)-1, -1, -1):
+        for i in range(len(self)-1, -1, -1):
             cmd = self.__queue[i]
             if cmd.initialrequiredenergy > 0 and self.__parent.energy.value < cmd.initialrequiredenergy:
                 logging.info("#%d Not Enough Energy To Start: %s", self.__parent.id, repr(self.__queue[i]))
