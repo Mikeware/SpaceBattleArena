@@ -17,7 +17,7 @@ class NebulaGUI(GUIEntity):
             self._imageName = "Nebula/Nebula"
         self._imageName += repr(int(nebula.major) * 2) + "x" + repr(int(nebula.minor) * 2) + "-"
         self._imageName += str(random.randint(1, Cache().getMaxImages(self._imageName)))
-        self._dist = nebula.minor
+        self._dist = int(nebula.minor)
         self.zorder = -5
 
     def draw(self, surface, flags):              

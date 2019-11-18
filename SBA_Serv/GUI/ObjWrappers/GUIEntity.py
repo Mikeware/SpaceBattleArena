@@ -17,7 +17,7 @@ class GUIEntity(object):
         self._points = None
         if "points" in self._worldobj.__dict__:
             self._dist = int(max(self._worldobj.points[0]))
-            self._points = self._worldobj.shape.get_points()
+            self._points = self._worldobj.shape.get_vertices()
             self._lp = intpos(self._worldobj.body.position)
         elif "radius" in self._worldobj.__dict__:
             self._dist = int(self._worldobj.radius)

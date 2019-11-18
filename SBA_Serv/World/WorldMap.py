@@ -42,7 +42,13 @@ class GameWorld(object):
         self.height = worldsize[1]
         self.__space = pymunk.Space()
         #self.__space.add_collision_handler(0, 0, post_solve=self.collideShipStellarObject)
-        self.__space.set_default_collision_handler(begin=self.__beginCollideObject, post_solve=self.__collideObject, separate=self.__endCollideObject)
+                
+        #self.__space.set_default_collision_handler(begin=self.__beginCollideObject, post_solve=self.__collideObject, separate=self.__endCollideObject)
+        ch = self.__space.add_default_collision_handler()
+        ch.begin = self.__beginCollideObject
+        ch.post_solve = self.__collideObject
+        ch.separate = self.__endCollideObject        
+
         self.__objects = ThreadSafeDict()
         self.__addremovesem = threading.Semaphore()
         self.__influential = []
@@ -81,7 +87,7 @@ class GameWorld(object):
         
         self.__pys = True
         
-    def __beginCollideObject(self, space, arbiter):
+    def __beginCollideObject(self, arbiter, space, data):
         if arbiter.is_first_contact:
             r = self.__game.world_physics_pre_collision( arbiter.shapes[0].world_object, arbiter.shapes[1].world_object )
             if r != None:
@@ -93,7 +99,8 @@ class GameWorld(object):
 
         return True       
         
-    def __collideObject(self, space, arbiter):        
+    # post_solve
+    def __collideObject(self, arbiter, space, data):
         if arbiter.is_first_contact:
             r = self.__game.world_physics_collision( arbiter.shapes[0].world_object, arbiter.shapes[1].world_object, arbiter.total_impulse.length / 250.0 )
             if r != None:
@@ -101,7 +108,8 @@ class GameWorld(object):
                     space.add_post_step_callback(i[0], i[1], i[2])
         #eif
 
-    def __endCollideObject(self, space, arbiter):
+    # separate
+    def __endCollideObject(self, arbiter, space, data):
         # when object is destroyed in callback, arbiter may be empty
         if hasattr(arbiter, "shapes"):            
             self.__game.world_physics_end_collision( arbiter.shapes[0].world_object, arbiter.shapes[1].world_object )

@@ -281,7 +281,8 @@ class Planet(Influential, PhysicalRound):
     def apply_influence(self, otherobj, mapped_pos, t):
         # apply 'gravity' pull amount force towards planet's center if not a Torpedo (hard math) or another Planet thing (fixed)
         if self.effect_weapon or not isinstance(otherobj, Weapon):
-            otherobj.body.apply_impulse((mapped_pos - self.body.position) * -self.pull * t, (0,0))
+            #TODO: Should we use apply_force_at_local_point? or apply_force_at_world_point from planet's center? Would that mean we wouldn't need distance calculation?
+            otherobj.body.apply_impulse_at_local_point((mapped_pos - self.body.position) * -self.pull * t, (0,0))
 
     @staticmethod
     def spawn(world, cfg, pos=None):
