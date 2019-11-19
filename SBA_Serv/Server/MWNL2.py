@@ -581,7 +581,7 @@ class MWNL_Connection:
 
         while self.__connalive:
             try:
-                blk = self.__socket.recv(self.__blocksize)
+                blk = self.__socket.recv(self.__blocksize).decode('ascii')
 
                 if blk != "":
                     #print repr(self.__address) + "listen start"
@@ -685,13 +685,13 @@ class MWNL_Connection:
                     
                         #print "sendingb = " + sending
                         logging.debug("Sending Chunk " + repr(len(sending)) + " bytes")
-                        self.__socket.send(sending)
+                        self.__socket.send(sending.encode('ascii'))
                     #END WHILE
                     
                     if self.__connalive and len(self.__outgoingdata) > 0:
                         #print "sending = " + self.__outgoingdata
                         logging.debug("Sending " + repr(len(self.__outgoingdata)) + " bytes")
-                        self.__socket.send(self.__outgoingdata) #Error if socket closed?
+                        self.__socket.send(self.__outgoingdata.encode('ascii')) #Error if socket closed?
                         self.__outgoingdata = ""
     
                         #print "ogd = " + self.__outgoingdata
