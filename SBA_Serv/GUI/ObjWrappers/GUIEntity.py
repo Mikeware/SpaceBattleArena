@@ -33,7 +33,7 @@ class GUIEntity(object):
             bp = intpos(self._worldobj.body.position)
             if self._points != None and bp != self._lp:
                 self._lp = bp
-                self._points = self._worldobj.shape.get_points()
+                self._points = self._worldobj.shape.get_vertices()
         else:
             bp = intpos(sp)
 

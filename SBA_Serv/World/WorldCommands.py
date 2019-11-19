@@ -216,7 +216,7 @@ class ThrustCommand(Command):
         """
 
     def execute(self, t):
-        self._obj.body.apply_impulse(self.getForceVector(self._obj.thrusterForce, self._obj.rotationAngle, t), (0,0))
+        self._obj.body.apply_impulse_at_local_point(self.getForceVector(self._obj.thrusterForce, self._obj.rotationAngle, t), (0,0))
         #logging.debug("Executing Thrust on %s for %f", repr(obj), t)
         
     def __repr__(self):

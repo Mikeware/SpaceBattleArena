@@ -607,8 +607,8 @@ class Torpedo(Weapon):
 
         #self.shape.group = 1
         v = 15000
-        self.body.apply_impulse((math.cos(math.radians(-direction)) * v,
-                                 math.sin(math.radians(-direction)) * v), (0,0))
+        self.body.apply_impulse_at_local_point((math.cos(math.radians(-direction)) * v,
+                                                math.sin(math.radians(-direction)) * v), (0,0))
                                  
     def getExtraInfo(self, objData, player):
         objData["OWNERID"] = self.owner.id
@@ -660,8 +660,8 @@ class SpaceMine(CelestialBody, Influential, Weapon):
                 self.TTL = self.timealive - 1
             elif self.mode == SpaceMine.AUTONOMOUS and not self.active:
                 v = 500 * self.speed
-                self.body.apply_impulse((math.cos(math.radians(-self.direction)) * v,
-                                         math.sin(math.radians(-self.direction)) * v), (0,0))
+                self.body.apply_impulse_at_local_point((math.cos(math.radians(-self.direction)) * v,
+                                                        math.sin(math.radians(-self.direction)) * v), (0,0))
                 self.TTL = self.timealive + self.duration
             elif self.mode == SpaceMine.HOMING:
                 if self.target != None:
@@ -689,8 +689,8 @@ class SpaceMine(CelestialBody, Influential, Weapon):
                         nang = 0
                     else:
                         nang = self.body.velocity.get_angle_degrees_between(mapped_pos - self.body.position)
-                    self.body.apply_impulse((math.cos(math.radians(nang)) * self.attack_speed * 100,
-                                             math.sin(math.radians(nang)) * self.attack_speed * 100), (0,0))
+                    self.body.apply_impulse_at_local_point((math.cos(math.radians(nang)) * self.attack_speed * 100,
+                                                            math.sin(math.radians(nang)) * self.attack_speed * 100), (0,0))
                 else:
                     self.body.velocity.length += self.attack_speed
                 self.lv = self.body.velocity.normalized()

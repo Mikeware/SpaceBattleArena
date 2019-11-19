@@ -122,7 +122,7 @@ class GameWorld(object):
                 for point in wrappos(obj.body.position, radius, self.size):
                     if in_circle(origin, radius, point):                        
                         logging.debug("Applying Explosion Force of strength %d impulse %s to #%d", strength, repr((point - origin) * strength), obj.id)
-                        obj.body.apply_impulse((point - origin) * strength, (0,0))
+                        obj.body.apply_impulse_at_local_point((point - origin) * strength, (0,0))
                         break        
         logging.debug("Done Explosion") 
         
