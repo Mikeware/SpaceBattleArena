@@ -314,8 +314,7 @@ class WarpCommand(Command):
             elif self._obj.rotationAngle > 360: self._obj.rotationAngle -= 360
         elif self.__stage == 0:
             self._obj.player.sound = "WARP"
-            self._obj.body.position[0] += self.__dest[0]
-            self._obj.body.position[1] += self.__dest[1]
+            self._obj.body.position = self._obj.body.position.x + self.__dest[0], self._obj.body.position.y + self.__dest[1]
             self.__stage = 1
             self.__time = 1
         elif self.__time - 1 >= self.__cooldown:

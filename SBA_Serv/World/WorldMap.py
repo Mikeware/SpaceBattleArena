@@ -208,24 +208,35 @@ class GameWorld(object):
 
     def __THREAD__gameloop(self):
         lasttime = MINIMUM_GAMESTEP_TIME
+        moved = False
+
         try:
             while self.__active:
                 if self.__pys:
                     self.__space.step(MINIMUM_GAMESTEP_TIME) # Advance Physics Engine
                 
-                tstamp = time.time()
+                tstamp = time.time()                
 
                 # update all game objects
                 for obj in self: # self is dictionary
+                    moved = False
+
                     # Wrap Object in World
-                    if obj.body.position[0] < 0:
-                        obj.body.position[0] += self.width
-                    elif obj.body.position[0] > self.width:
-                        obj.body.position[0] -= self.width
-                    if obj.body.position[1] < 0:
-                        obj.body.position[1] += self.height
-                    elif obj.body.position[1] > self.height:
-                        obj.body.position[1] -= self.height
+                    if obj.body.position.x < 0:
+                        moved = True
+                        obj.body.position = obj.body.position.x + self.width, obj.body.position.y
+                    elif obj.body.position.x > self.width:
+                        moved = True
+                        obj.body.position = obj.body.position.x - self.width, obj.body.position.y
+                    if obj.body.position.y < 0:
+                        moved = True
+                        obj.body.position = obj.body.position.x, obj.body.position.y + self.height
+                    elif obj.body.position.y > self.height:
+                        moved = True
+                        obj.body.position = obj.body.position.x, obj.body.position.y - self.height
+
+                    if moved:
+                        self.__space.reindex_shapes_for_body(obj.body)
 
                     # Apply Gravity for Planets
                     if obj.gravitable:
