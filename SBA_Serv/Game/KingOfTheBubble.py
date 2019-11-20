@@ -22,6 +22,7 @@ from GUI.Helpers import debugfont, wrapcircle, namefont
 import logging, random
 import pygame
 from operator import attrgetter
+from pymunk import ShapeFilter
 
 # 'Bubbles' appear in the world.  Players earn points while in the bubble.
 # Points are distributed across the players in the bubble (so more players = less points)
@@ -120,7 +121,7 @@ class Bubble(PhysicalRound):
         self.shape.elasticity = 0.8
         self.health = PlayerStat(0)
 
-        self.shape.group = 1
+        self.shape.filter = ShapeFilter(group=1)
         
         self.explodable = False
         self.gravitable = False

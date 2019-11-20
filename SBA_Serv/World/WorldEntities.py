@@ -23,7 +23,7 @@ from .Messaging import MessageQueue
 from .Commanding import CommandSystem
 from .WorldMath import PlayerStat, getPositionAwayFromOtherObjects, cfg_rand_min_max, istypeinlist
 from .Entities import PhysicalRound, PhysicalEllipse
-from pymunk import Vec2d
+from pymunk import Vec2d, ShapeFilter
 
 class Ship(PhysicalRound):
     """
@@ -174,7 +174,7 @@ class Nebula(CelestialBody, PhysicalEllipse):
         self.body.angle = math.radians(random.randint(-30, 30))
 
         # Everything in Group 1 won't hit anything else in Group 1
-        self.shape.group = 1
+        self.shape.filter = ShapeFilter(group=1)
         
         # Nebulas can't be moved by explosions
         self.explodable = False
@@ -258,7 +258,7 @@ class Planet(Influential, PhysicalRound):
         #self.energy = PlayerStat(random.randint(50, 200))
 
         # Everything in Group 1 won't hit anything else in Group 1
-        self.shape.group = 1
+        self.shape.filter = ShapeFilter(group=1)
         
         # Planets can't be moved by explosions
         self.explodable = False
@@ -376,7 +376,7 @@ class WormHole(CelestialBody, Influential, PhysicalRound):
         super(WormHole, self).__init__(radius, sys.maxsize, pos)
 
         # Everything in Group 1 won't hit anything else in Group 1
-        self.shape.group = 1
+        self.shape.filter = ShapeFilter(group=1)
 
         self.health = PlayerStat(0)
         self.influence_range = size # just used for consistency
@@ -462,7 +462,7 @@ class Asteroid(PhysicalRound):
         self.shape.elasticity = 0.8
         self.health = PlayerStat(self.mass / 15.0)
 
-        self.shape.group = 1
+        self.shape.filter = ShapeFilter(group=1)
 
         # initial movement
         ang = random.randint(0, 359)
@@ -490,7 +490,7 @@ class Dragon(CelestialBody, Influential, PhysicalRound):
         self.shape.elasticity = 0.8
         self.health = PlayerStat(health)
 
-        self.shape.group = 1
+        self.shape.filter = ShapeFilter(group=1)
 
         self.influence_range = attack_range
         self.attack_speed = attack_speed
@@ -605,7 +605,7 @@ class Torpedo(Weapon):
         self.owner = owner
         self.explodable = False
 
-        #self.shape.group = 1
+        #self.shape.filter = ShapeFilter(group=1)
         v = 15000
         self.body.apply_impulse_at_local_point((math.cos(math.radians(-direction)) * v,
                                                 math.sin(math.radians(-direction)) * v), (0,0))
@@ -721,7 +721,7 @@ class Constellation(CelestialBody, PhysicalRound):
         super(Constellation, self).__init__(48, sys.maxsize, pos)
 
         # Everything in Group 1 won't hit anything else in Group 1
-        self.shape.group = 1
+        self.shape.filter = ShapeFilter(group=1)
         
         # Constellations can't be moved by explosions
         self.explodable = False

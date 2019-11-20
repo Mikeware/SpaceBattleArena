@@ -20,7 +20,7 @@ from World.WorldCommands import RaiseShieldsCommand
 from World.WorldMap import GameWorld
 from ThreadStuff.ThreadSafe import ThreadSafeDict
 import pygame, _thread
-from pymunk import Vec2d
+from pymunk import Vec2d, ShapeFilter
 from GUI.Helpers import debugfont
 from operator import attrgetter
 from .Utils import *
@@ -376,7 +376,7 @@ class BasicGame(object):
         self._players[netid].roundover = False
 
         if not self.cfg.getboolean("World", "collisions"):
-            self._players[netid].object.shape.group = 1
+            self._players[netid].object.shape.filter = ShapeFilter(group=1)
 
         if roundstart:
             self.player_added(self._players[netid], BasicGame._ADD_REASON_START_)

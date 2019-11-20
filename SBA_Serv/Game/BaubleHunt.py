@@ -26,6 +26,7 @@ import pygame
 import random
 import _thread
 from operator import attrgetter
+from pymunk import ShapeFilter
 
 class BaubleHuntGame(BaseBaubleGame):
     def __init__(self, cfgobj):
@@ -252,7 +253,7 @@ class Outpost(PhysicalRound):
 
         self.body.velocity_limit = 0
         
-        self.shape.group = 1
+        self.shape.filter = ShapeFilter(group=1)
 
         self.owner = owner
         self.stored = 0

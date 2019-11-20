@@ -21,6 +21,7 @@ import random
 import logging
 import pygame
 from operator import attrgetter
+from pymunk import ShapeFilter
 
 class BaseBaubleGame(BasicGame):
     """
@@ -96,7 +97,7 @@ class Bauble(PhysicalRound):
         self.shape.elasticity = 0.8
         self.health = PlayerStat(0)
 
-        self.shape.group = 1
+        self.shape.filter = ShapeFilter(group=1)
 
         self.value = value
         self.weight = weight

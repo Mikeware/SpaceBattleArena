@@ -23,6 +23,7 @@ from ThreadStuff.ThreadSafe import ThreadSafeDict
 from World.WorldCommands import WarpCommand
 from World.Commanding import Command
 import logging, random
+from pymunk import ShapeFilter
 
 GAME_CMD_SCAN = "DQSCN"
 
@@ -385,7 +386,7 @@ class Outpost(PhysicalEllipse):
 
         self.body.velocity_limit = 0
         
-        self.shape.group = 1
+        self.shape.filter = ShapeFilter(group=1)
 
         self.home_for = []
 
