@@ -118,7 +118,7 @@ class BaubleHuntGame(BaseBaubleGame):
     def get_player_cargo_weight(self, player):
         return sum(b.weight for b in player.carrying)
 
-    def collectBaubles(self, ship, bauble):
+    def collectBaubles(self, space, ship, bauble):
         logging.info("Collected Baubles Ship #%d", ship.id)
         if self.get_player_cargo_weight(ship.player) + bauble.weight <= self.__maxcarry:
             ship.player.carrying.append(bauble)
@@ -136,7 +136,7 @@ class BaubleHuntGame(BaseBaubleGame):
         #eif
         logging.info("Done Collecting Baubles #%d", ship.id)
 
-    def depositBaubles(self, ship, home):
+    def depositBaubles(self, space, ship, home):
         logging.info("Player Depositing Baubles #%d", ship.id)
         for b in ship.player.carrying:
             ship.player.update_score(b.value)

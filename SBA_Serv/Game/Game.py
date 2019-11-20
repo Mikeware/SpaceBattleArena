@@ -630,7 +630,7 @@ class BasicGame(object):
         if r == []: return None
         return r
 
-    def world_physics_post_collision(self, dobj, damage):
+    def world_physics_post_collision(self, space, dobj, damage):
         """
         Setup and called by world_physics_collision to process objects which have been destroyed as a result of taking too much damage.
 

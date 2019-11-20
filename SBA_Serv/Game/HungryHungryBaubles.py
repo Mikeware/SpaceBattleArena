@@ -57,7 +57,7 @@ class HungryHungryBaublesGame(BaseBaubleGame):
 
         return super(HungryHungryBaublesGame, self).world_physics_pre_collision(obj1, obj2)
 
-    def collectBaubles(self, ship, bauble):
+    def collectBaubles(self, space, ship, bauble):
         logging.info("Collected Baubles Ship #%d", ship.id)
         # collect own Bauble?
         if self.__assign_specific_bauble and bauble == self.__baubles[ship.player.netid]:
