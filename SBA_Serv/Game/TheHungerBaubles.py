@@ -211,7 +211,7 @@ class TheHungerBaublesGame(BaseBaubleGame):
             obj = player.object
             if obj != None:
                 # draw number of objects carried
-                bp = intpos(obj.body.position)
+                bp = obj.body.position.int_tuple
                 text = debugfont().render(repr(len(player.carrying)), False, player.color)
                 surface.blit(text, (bp[0]-36, bp[1]-4))
                 text = debugfont().render(repr(self.get_player_cargo_weight(player)), False, player.color)

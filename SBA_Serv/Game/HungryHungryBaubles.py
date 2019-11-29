@@ -90,7 +90,7 @@ class HungryHungryBaublesGame(BaseBaubleGame):
     def game_get_extra_environment(self, player):
         env = super(HungryHungryBaublesGame, self).game_get_extra_environment(player)
         if self.__assign_specific_bauble:
-            env["POSITION"] = intpos(self.__baubles[player.netid].body.position)
+            env["POSITION"] = self.__baubles[player.netid].body.position.int_tuple
 
         return env
 
@@ -100,4 +100,4 @@ class HungryHungryBaublesGame(BaseBaubleGame):
                 obj = player.object
                 if obj != None and player.netid in self.__baubles:
                     # draw line between player and Bauble
-                    pygame.draw.line(surface, player.color, intpos(obj.body.position), intpos(self.__baubles[player.netid].body.position))
+                    pygame.draw.line(surface, player.color, obj.body.position.int_tuple, self.__baubles[player.netid].body.position.int_tuple)

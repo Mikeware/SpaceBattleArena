@@ -24,9 +24,12 @@ class ShipGUI(GUIEntity):
             ShipGUI._shieldsurface = Cache().getImage("Ships/Shield")
             ShipGUI._shieldhudsurface = Cache().getImage("HUD/Shield")
 
-    def draw(self, surface, flags, sp=None):
-        if sp == None:
-            sp = self._worldobj.body.position
+    def draw(self, surface, flags, pos_override = None):
+        if pos_override != None:
+            bp = pos_override
+        else:
+            bp = self._worldobj.body.position.int_tuple
+
         # Check if Thrusting or Braking
         state = 0
 
@@ -71,21 +74,20 @@ class ShipGUI(GUIEntity):
             scaled = newimg
         rotimg = pygame.transform.rotate(scaled, self._worldobj.rotationAngle - 90)
         w, h = rotimg.get_rect().size
-        bp = intpos(sp)
-        pos = intpos(sp - (w/2, h/2))
+        pos = (bp[0] - int(w/2), bp[1] - int(h/2))
 
-        if len(self._worldobj.lasernodes) > 0 and sp == self._worldobj.body.position:
+        if len(self._worldobj.lasernodes) > 0:
             for i in range(0, len(self._worldobj.lasernodes)+1, 2):
                 if i < len(self._worldobj.lasernodes)-1:
                     pygame.draw.line(surface, self._worldobj.player.color, self._worldobj.lasernodes[i], self._worldobj.lasernodes[i+1], 3)
                 elif i < len(self._worldobj.lasernodes):
-                    pygame.draw.line(surface, self._worldobj.player.color, self._worldobj.lasernodes[i], intpos(self._worldobj.body.position), 3)
+                    pygame.draw.line(surface, self._worldobj.player.color, self._worldobj.lasernodes[i], self._worldobj.body.position.int_tuple, 3)
                 #eif
 
         # Draw
         surface.blit(rotimg, pos)
 
-        gp = (sp[0] - 32, sp[1] - 32) #adjusted fixed graphic size
+        gp = (bp[0] - 32, bp[1] - 32) #adjusted fixed graphic size
         # Draw shield
         if self._worldobj.commandQueue.containstype(RaiseShieldsCommand) and self._worldobj.shield.value > 0:
             surface.blit(ShipGUI._shieldsurface, gp)
@@ -118,4 +120,4 @@ class ShipGUI(GUIEntity):
         if flags["GAME"] and self._worldobj.player.score > 0:
             surface.blit(infofont().render(("%.1f" % self._worldobj.player.score) + " Pts", False, (0, 255, 255)), (bp[0]-24, bp[1] + 32))
 
-        super(ShipGUI, self).draw(surface, flags, sp)
+        super(ShipGUI, self).draw(surface, flags, pos_override)

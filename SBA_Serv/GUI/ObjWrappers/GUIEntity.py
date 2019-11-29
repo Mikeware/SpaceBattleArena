@@ -17,8 +17,8 @@ class GUIEntity(object):
         self._points = None
         if "points" in self._worldobj.__dict__:
             self._dist = int(max(self._worldobj.points[0]))
-            self._points = self._worldobj.shape.get_vertices()
-            self._lp = intpos(self._worldobj.body.position)
+            self._points = self.get_world_points(self._worldobj)
+            self._lp = self._worldobj.body.position.int_tuple
         elif "radius" in self._worldobj.__dict__:
             self._dist = int(self._worldobj.radius)
         else:
@@ -28,14 +28,15 @@ class GUIEntity(object):
             GUIEntity._healthbar = Cache().getImage("HUD/Health")
             GUIEntity._energybar = Cache().getImage("HUD/Energy")
 
-    def draw(self, surface, flags, sp=None):
-        if sp == None:
-            bp = intpos(self._worldobj.body.position)
-            if self._points != None and bp != self._lp:
-                self._lp = bp
-                self._points = self._worldobj.shape.get_vertices()
+    def draw(self, surface, flags, pos_override = None): # pos_override for ship debug tracker in GUI
+        if pos_override != None:
+            bp = pos_override
         else:
-            bp = intpos(sp)
+            bp = self._worldobj.body.position.int_tuple
+
+        if self._points != None and bp != self._lp:
+            self._lp = bp
+            self._points = self.get_world_points(self._worldobj)
 
         if flags["DEBUG"]:
             # position text
@@ -72,8 +73,16 @@ class GUIEntity(object):
             surface.blit(GUIEntity._energybar, (bp[0]-15, bp[1] + 27), pygame.Rect(0, 0, 30 * self._worldobj.energy.percent, 3))
 
     def draw_poly(self, surface, color, position, points, width=1):
-        points += [points[0]]
         pygame.draw.lines(surface, color, False, points, width)
+
+    def get_world_points(self, worldobj):
+        points = []
+        # rotate to world coordinates http://www.pymunk.org/en/latest/pymunk.html#pymunk.Poly.get_vertices
+        for vertex in worldobj.shape.get_vertices():
+            points += [(vertex.rotated(worldobj.body.angle) + worldobj.body.position).int_tuple]
+        points += [points[0]] # close loop
+
+        return points
 
     def __eq__(self, other):
         if isinstance(self, GUIEntity) and isinstance(other, GUIEntity):

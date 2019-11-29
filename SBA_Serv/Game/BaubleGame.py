@@ -81,7 +81,7 @@ class BaubleWrapper(GUIEntity):
         surface.blit(self.surface, intpos((self._worldobj.body.position[0] - self.adjust, self._worldobj.body.position[1] - self.adjust)))
 
         if flags["DEBUG"] and self._worldobj.weight > 1:
-            bp = intpos(self._worldobj.body.position)
+            bp = self._worldobj.body.position.int_tuple
             # id text
             surface.blit(debugfont().render(str(self._worldobj.weight), False, (192, 192, 192)), (bp[0]+self.adjust, bp[1]-4))
 

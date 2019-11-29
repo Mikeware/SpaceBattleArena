@@ -13,7 +13,7 @@ class TorpedoGUI(GUIEntity):
         self.surface = Cache().getImage("Ships/Torpedo")
 
     def draw(self, surface, flags):
-        bp = intpos(self._worldobj.body.position)
+        bp = self._worldobj.body.position.int_tuple
         surface.blit(self.surface, (bp[0] - 4, bp[1] - 4))
         
         if flags["DEBUG"]:                        
@@ -33,7 +33,7 @@ class SpaceMineGUI(GUIEntity):
             SpaceMineGUI._mine_surface = Cache().getImage("Mines/Mine")
 
     def draw(self, surface, flags):
-        bp = intpos(self._worldobj.body.position)
+        bp = self._worldobj.body.position.int_tuple
         surface.blit(SpaceMineGUI._mine_surface.subsurface(pygame.Rect(16 * (self._worldobj.active + (self._worldobj.target != None)), 0, 16, 16)), (bp[0] - 8, bp[1] - 8))
         
         if flags["DEBUG"]:                        

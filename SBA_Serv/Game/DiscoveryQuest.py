@@ -273,7 +273,7 @@ class DiscoveryQuestGame(BasicGame):
         for player in self.game_get_current_player_list():
             obj = player.object
             if obj != None:
-                bp = intpos(obj.body.position)
+                bp = obj.body.position.int_tuple
                 wrapcircle(surface, (0, 255, 255), bp, self.scanrange, self.world.size, 1) # Scan Range
                 if self.usemissions:
                     text = debugfont().render("%s [%s]" % (repr(player.mission), player.failed), False, (0, 255, 255))
@@ -289,10 +289,10 @@ class DiscoveryQuestGame(BasicGame):
                     if isinstance(cmd, ScanCommand):
                         if cmd.success:
                             obj = self.world[cmd.target]
-                            wrapcircle(surface, (255, 255, 0), intpos(obj.body.position), obj.radius + 6, self.world.size, 2)
+                            wrapcircle(surface, (255, 255, 0), obj.body.position.int_tuple, obj.radius + 6, self.world.size, 2)
                         else:
                             obj = self.world[cmd.target]
-                            wrapcircle(surface, (255, 0, 0), intpos(obj.body.position), obj.radius + 6, self.world.size, 2)
+                            wrapcircle(surface, (255, 0, 0), obj.body.position.int_tuple, obj.radius + 6, self.world.size, 2)
 
             # Draw Circles around scanned entities
             for id, scantime in trackplayer.scantimes.items():
@@ -302,7 +302,7 @@ class DiscoveryQuestGame(BasicGame):
                     c = 160 * (scantime / self.scanduration)
                 else:
                     c = 0
-                wrapcircle(surface, (0, 255 - c, 255 - c), intpos(obj.body.position), obj.radius + 4, self.world.size, 4)                    
+                wrapcircle(surface, (0, 255 - c, 255 - c), obj.body.position.int_tuple, obj.radius + 4, self.world.size, 4)                    
 
 class ScanCommand(Command):
     """
