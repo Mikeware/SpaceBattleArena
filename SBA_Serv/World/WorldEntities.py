@@ -194,7 +194,9 @@ class Nebula(CelestialBody, PhysicalEllipse):
         if self.pull > 0:
             for obj in self.in_celestialbody:
                 if obj.body.velocity.length > 0.1:
-                    obj.body.velocity.length -= (self.pull / obj.mass) * t
+                    v = obj.body.velocity
+                    v.length -= (self.pull / obj.mass) * t
+                    obj.body.velocity = v
 
         super(Nebula, self).update(t)
 
@@ -527,7 +529,9 @@ class Dragon(CelestialBody, Influential, PhysicalRound):
                     if self.body.velocity.length == 0:
                         self.body.velocity = self.lv * self.attack_speed
                     else:
-                        self.body.velocity.length += self.attack_speed
+                        v = self.body.velocity
+                        v.length += self.attack_speed
+                        self.body.velocity = v
                     self.lv = self.body.velocity.normalized()
                 self.target = (pymunk.Vec2d(mapped_pos), otherobj)
             elif self.target[1] == otherobj:
@@ -549,19 +553,25 @@ class Dragon(CelestialBody, Influential, PhysicalRound):
         if self.target != None and self.target[1] not in self.see:
             self.target = None
             if self.body.velocity.length > self.attack_speed:
-                self.body.velocity.length -= self.attack_speed * 0.9 # TODO: make this 'rage retainer' a config value???
+                v = self.body.velocity
+                v.length -= self.attack_speed * 0.9 # TODO: make this 'rage retainer' a config value???
+                self.body.velocity = v
         self.see = []
 
         if self.target != None:
             # turn towards target
             nang = self.body.velocity.get_angle_degrees_between(self.target[0] - self.body.position)
-            self.body.velocity.angle_degrees += nang * t
+            v = self.body.velocity            
+            v.angle_degrees += nang * t
+            self.body.velocity = v
 
             # clear target as we'll reaquire to 'readjust course' for moving object...
             dist = self.body.position.get_dist_sqrd(self.target[0])
             if dist < self.radius * 1.5 and self.target[1].body.velocity.length < self.body.velocity.length or self.target[1].health <= 0:
                 if self.body.velocity.length > self.attack_speed:
-                    self.body.velocity.length -= self.attack_speed
+                    v = self.body.velocity
+                    v.length -= self.attack_speed
+                    self.body.velocity = v
             if dist > self.influence_range * self.influence_range * 1.1 or self.target[1].health <= 0:
                 self.target = None
 
@@ -667,12 +677,16 @@ class SpaceMine(CelestialBody, Influential, Weapon):
                 if self.target != None:
                     # turn towards target
                     nang = self.body.velocity.get_angle_degrees_between(self.target - self.body.position)
-                    self.body.velocity.angle_degrees += nang * t
+                    v = self.body.velocity
+                    v.angle_degrees += nang * t
+                    self.body.velocity = v
 
                     # clear target as we'll reaquire to 'readjust course' for moving object...
                     if self.body.position.get_dist_sqrd(self.target) < 300:
                         if self.body.velocity.length > self.attack_speed:
-                            self.body.velocity.length -= self.attack_speed
+                            v = self.body.velocity
+                            v.length -= self.attack_speed
+                            self.body.velocity = v
                         self.target = None
             self.active = True
 
@@ -692,7 +706,9 @@ class SpaceMine(CelestialBody, Influential, Weapon):
                     self.body.apply_impulse_at_local_point((math.cos(math.radians(nang)) * self.attack_speed * 100,
                                                             math.sin(math.radians(nang)) * self.attack_speed * 100), (0,0))
                 else:
-                    self.body.velocity.length += self.attack_speed
+                    v = self.body.velocity
+                    v.length += self.attack_speed
+                    self.body.velocity = v
                 self.lv = self.body.velocity.normalized()
             self.target = pymunk.Vec2d(mapped_pos)
                                    

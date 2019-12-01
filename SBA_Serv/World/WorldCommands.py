@@ -392,7 +392,9 @@ class SteerCommand(Command):
             amt = self._obj.rotationSpeed * t / 4
             if amt > self.__deg: amt = self.__deg
         self.__deg -= amt
-        self._obj.body.velocity.angle_degrees += amt
+        v = self._obj.body.velocity
+        v.angle_degrees += amt
+        self._obj.body.velocity = v
         #logging.debug("Executing Steering on #%d for %f", self._obj.id, t)
         
     def __repr__(self):
@@ -531,7 +533,9 @@ class LowerEnergyScoopCommand(Command):
                 bpull = body.pull
                 break
         if self._obj.body.velocity.length > 0.1:
-            self._obj.body.velocity.length -= (bpull / self._obj.mass) * t
+            v = self._obj.body.velocity
+            v.length -= (bpull / self._obj.mass) * t
+            self._obj.body.velocity = v
 
 class CloakCommand(Command):
     NAME = SHIP_CMD_CLOAK
