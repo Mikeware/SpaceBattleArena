@@ -37,9 +37,9 @@ Space Battle was built against the following versions of libraries:
 * Java Client
     * [Gson 2.2](https://github.com/google/gson)
 * Python Server
-    * [Python 2.7.12](https://www.python.org/downloads/release/python-2712/)
-    * [PyMunk 3.0.0](https://pypi.python.org/pypi/pymunk/3.0.0)
-    * [PyGame 1.9.1](http://www.pygame.org/download.shtml)
+    * [Python 3.8.0](https://www.python.org/downloads/release/python-380/)
+    * [PyMunk 5.0.0](https://pypi.org/project/pymunk/5.6.0/)
+    * [PyGame 1.9.6](https://pypi.org/project/pygame/1.9.6/)
     * [Py2Exe 0.6.9](http://sourceforge.net/projects/py2exe/files/py2exe/0.6.9/) (for server executable build)
 
 See the [Development Guide](http://mikeware.github.io/SpaceBattleArena/dev/) for more information on extending Space Battle Arena.
