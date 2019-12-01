@@ -1,3 +1,2 @@
-pymunk==3.0.0
-# pygame latest - version 1.9.1 will not compile on Mac OS X
-hg+http://bitbucket.org/pygame/pygame
+pymunk == 5.6.0
+pygame == 1.9.6
