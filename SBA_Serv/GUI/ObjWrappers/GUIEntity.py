@@ -45,12 +45,15 @@ class GUIEntity(object):
             surface.blit(debugfont().render("#"+str(self._worldobj.id), False, (192, 192, 192)), (bp[0]-4, bp[1]+self._dist+4))
             # collision circle
             if "points" in self._worldobj.__dict__: #Polygon
-                self.draw_poly(surface, (192, 192, 192), bp, self._points, 2)
+                if len(self._worldobj.in_celestialbody) > 0:
+                    self.draw_poly(surface, (255, 64, 64), bp, self._points, 4)
+                else:
+                    self.draw_poly(surface, (192, 192, 192), bp, self._points, 2)
             else: 
-                wrapcircle(surface, (192, 192, 192), bp, self._dist, self._world.size, 2)
-
-            if len(self._worldobj.in_celestialbody) > 0:
-                wrapcircle(surface, (255, 64, 64), bp, self._dist, self._world.size, 4)
+                if len(self._worldobj.in_celestialbody) > 0:
+                    wrapcircle(surface, (255, 64, 64), bp, self._dist, self._world.size, 4)
+                else:
+                    wrapcircle(surface, (192, 192, 192), bp, self._dist, self._world.size, 2)            
 
             # velocity vector
             pygame.draw.line(surface, (255, 0, 0), bp, self._worldobj.body.velocity + bp) # Velocity
