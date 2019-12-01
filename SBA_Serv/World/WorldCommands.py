@@ -241,9 +241,11 @@ class BrakeCommand(Command):
     def execute(self, t):
         amt = (self._obj.thrusterForce / self._obj.mass) * t
         if amt < self._obj.body.velocity.length:
-            self._obj.body.velocity.length -= amt
+            v = self._obj.body.velocity
+            v.length -= amt # can only modify reference here and need to reset object below for CFFI
+            self._obj.body.velocity = v #OR Vec2d(self._obj.body.velocity.length - amt, 0).rotated(self._obj.body.velocity.angle)
         else:
-            self._obj.body.velocity.length = 0.000001
+            self._obj.body.velocity = Vec2d(0.000001, 0.000001)
             
 class AllStopCommand(OneTimeCommand):
     NAME = SHIP_CMD_ALL_STOP
