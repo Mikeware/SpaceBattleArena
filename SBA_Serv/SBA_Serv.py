@@ -1,7 +1,7 @@
 """
 Space Battle Arena is a Programming Game.
 
-Copyright (C) 2012-2018 Michael A. Hawker and Brett Wortzman
+Copyright (C) 2012-2020 Michael A. Hawker and Brett Wortzman
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 
@@ -13,7 +13,7 @@ The full text of the license is available online: http://opensource.org/licenses
 """
 
 __author__ = "Michael A. Hawker"
-__copyright__ = "Copyright 2012-2018 Mikeware"
+__copyright__ = "Copyright 2012-2020 Mikeware"
 __license__ = "GPLv2"
 __version__ = "1.3.0." + open("buildnum").read()
 __email__ = "questions@mikeware.com"
