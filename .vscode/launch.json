@@ -11,6 +11,14 @@
             "program": "${workspaceFolder}/SBA_Serv/SBA_Serv.py",
             "cwd": "${workspaceFolder}/SBA_Serv/",
             "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: Bundle Server",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/SBA_Serv/compile.py",
+            "cwd": "${workspaceFolder}/SBA_Serv",
+            "console": "integratedTerminal"
         }
     ]
 }
