@@ -136,7 +136,7 @@ class Bauble(PhysicalRound):
                 vi += 1
 
         if cfg.has_option("BaubleGame", "bauble_invert_ratio_percent"):
-            wvr = map(float, cfg.get("BaubleGame", "bauble_invert_ratio_percent").split(","))[vi]
+            wvr = list(map(float, cfg.get("BaubleGame", "bauble_invert_ratio_percent").split(",")))[vi]
         else:
             wvr = 0.0
 
