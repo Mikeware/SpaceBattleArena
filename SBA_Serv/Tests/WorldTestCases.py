@@ -48,6 +48,18 @@ class PlayerStatTestCase(TestCase):
 
         self.assertEqual(p, 100, "division not correct for inverse.")
 
+    def test_floor_division(self):
+        p = PlayerStat(99, 99)
+        p //= 2
+
+        self.assertEqual(p, 49, "division not correct.")
+
+    def test_true_division(self):
+        p = PlayerStat(99, 99)
+        p /= 2
+
+        self.assertEqual(p, 49.5, "division not correct.")
+
 class WorldMathTestCases(TestCase):
     """
     Basic Test cases for the WorldMath functions.

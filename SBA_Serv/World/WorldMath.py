@@ -219,11 +219,18 @@ class PlayerStat(object):
         self.__current = self.__checkbound(self.__current * other)
         return self
 
-    def __div__(self, other):
+    def __truediv__(self, other):
         return PlayerStat(self.__maximum, self.__current / other)
 
-    def __idiv__(self, other):
+    def __itruediv__(self, other):
         self.__current = self.__checkbound(self.__current / other)
+        return self
+
+    def __floordiv__(self, other):
+        return PlayerStat(self.__maximum, self.__current // other)
+
+    def __ifloordiv__(self, other):
+        self.__current = self.__checkbound(self.__current // other)
         return self
 
     def __pow__(self, other, modulo):
