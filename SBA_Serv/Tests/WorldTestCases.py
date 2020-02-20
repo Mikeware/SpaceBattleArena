@@ -477,19 +477,19 @@ class WorldVisualShipDestroyedTestCase(SBAGUITestCase):
         planet = Star(self.game.world.mid_point(0,0), 100, 100) # high pull = faster test for Star
         self.game.world.append(planet)
 
-        start = self.game.world.mid_point(20, -20)
+        start = Vec2d(self.game.world.mid_point(20, -20))
         ship = AIShip_SetList("Doomed", start, self.game, [])
 
-        start2 = self.game.world.mid_point(-50, 250)
+        start2 = Vec2d(self.game.world.mid_point(-50, 250))
         ship2 = AIShip_SetList("Free", start2, self.game, [])
 
-        time.sleep(1.0)
+        time.sleep(1.5)
 
-        self.assertNotAlmostEqual(ship.body.position, start, None, "Doomed ship should have moved", 5)
+        self.assertGreater(ship.body.position.get_distance(start), 4, "Doomed ship should have moved.")
         self.assertNotEqual(ship.health, 100, "Doomed ship did not take damage")
 
         self.assertEqual(ship2.health, 100, "Free ship took damage")
-        self.assertAlmostEqual(ship2.body.position, start2, None, "Free Ship not in same place", 2)
+        self.assertLess(ship2.body.position.get_distance(start2), 1, "Free Ship not in same place.")
 
         time.sleep(2.5)
 
@@ -505,10 +505,10 @@ class WorldVisualShipDestroyedTestCase(SBAGUITestCase):
         planet = Star(self.game.world.mid_point(0,0), 100, 100) # high pull = faster test for Star
         self.game.world.append(planet)
 
-        start = self.game.world.mid_point(30, -20)
+        start = Vec2d(self.game.world.mid_point(30, -20))
         ship = AIShip_SetList("Doomed", start, self.game, [])
 
-        start2 = self.game.world.mid_point(-50, 250)
+        start2 = Vec2d(self.game.world.mid_point(-50, 250))
         ship2 = AIShip_SetList("Free", start2, self.game, [
                 "RotateCommand(self, 70)",
                 "FireTorpedoCommand(self, 'F')",
@@ -517,13 +517,14 @@ class WorldVisualShipDestroyedTestCase(SBAGUITestCase):
                 "FireTorpedoCommand(self, 'F')",
         ])
 
-        time.sleep(1.0)
+        time.sleep(1.75)
 
-        self.assertNotAlmostEqual(ship.body.position, start, None, "Doomed ship should have moved", 5)
+        self.assertGreater(ship.body.position.get_distance(start), 4, "Doomed ship should have moved.")
         self.assertNotEqual(ship.health, 100, "Doomed ship did not take damage")
 
         self.assertEqual(ship2.health, 100, "Free ship took damage")
-        self.assertAlmostEqual(ship2.body.position, start2, None, "Free Ship not in same place", 2)
+
+        self.assertLess(ship2.body.position.get_distance(start2), 1, "Free Ship not in same place.")
 
         time.sleep(2.5)
 
