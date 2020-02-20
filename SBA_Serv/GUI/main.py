@@ -691,7 +691,7 @@ def startGame(windowcaption, game, fullscreen=True, resolution=None, cfg=None, t
 
         logging.info("Closing Pygame...")
         print("Closing Pygame")
-        pygame.quit()
+        pygame.display.quit()
     except:
         print("EXCEPTION IN GUI")
         logging.exception("FATAL Error in GUI!!!")

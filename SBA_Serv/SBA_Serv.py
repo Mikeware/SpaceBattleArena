@@ -42,6 +42,8 @@ if __name__ == "__main__":
     from GUI.GraphicsCache import Cache
     from GUI.Helpers import detect_resolution
 
+    import pygame
+
     parser = OptionParser(usage="Usage: %prog [options] [config_file] [more_config_files...]\n\nYou should pass at least one config file to the server. Additional config files will override/add to the options in the base file.")
     parser.add_option("-n", "--nolog", action="store_true", dest="nolog", default=False,
                       help="turns logging off")
@@ -79,7 +81,7 @@ if __name__ == "__main__":
     defaults = False
     cfg = ConfigParser()
     try:
-        cfg.readfp(open('default.cfg'))
+        cfg.readfp(open('default.cfg')) #TODO: Need to fix? Warning Deprecated
         defaults = True
         logging.info("Loaded Default Configuration File")
     except:
@@ -187,4 +189,6 @@ if __name__ == "__main__":
             for t in tlist:
                 logging.error("Thread Not Cleaned Up %s:%s", t.getName(), repr(t))
                 print(t.getName() + ":" + repr(t))
+        
+        pygame.quit()
     #eif

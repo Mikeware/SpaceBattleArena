@@ -12,3 +12,5 @@ gson-2.2.jar
 *.pyc
 config.wyam.*
 /doc/client/java_doc/
+.vs/
+/SBA_Serv/env/

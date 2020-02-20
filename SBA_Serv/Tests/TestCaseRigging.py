@@ -211,9 +211,10 @@ class SBAGUITestCase(SBAWorldTestCase):
         _thread.start_new_thread(main.startGame, ("Space Battle Tests - " + self._testMethodName, self.game, False, (self.cfg.getint("Application", "horz_res"), self.cfg.getint("Application", "vert_res")), self.cfg, self))
 
     def tearDown(self):
-        self._resultForDoCleanups.printErrors()
+        # TODO: https://stackoverflow.com/questions/4414234/getting-pythons-unittest-results-in-a-teardown-method
+        #self._resultForDoCleanups.printErrors()
 
-        logging.error(self._resultForDoCleanups.errors)
+        #logging.error(self._resultForDoCleanups.errors)
 
         self.donetest = True
 
