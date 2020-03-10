@@ -3,9 +3,20 @@
 	<id>https://mikeware.github.io/SpaceBattleArena</id>
 	<title>Space Battle Arena by Mikeware</title>
 	<link rel="self" href="https://mikeware.github.io/SpaceBattleArena" />
-	<rights>2019</rights>
-	<updated>2019-10-22T01:25:49Z</updated>
+	<rights>2020</rights>
+	<updated>2020-03-10T07:13:32Z</updated>
 	<subtitle>Space Battle Arena is a ‘Programming Game‘ where you must write code (in Java) to autonomously control a space ship to accomplish specified objectives.</subtitle>
+	<entry>
+		<id>https://mikeware.github.io/SpaceBattleArena/2020/03/10/Season-9-Kickoff</id>
+		<title>TEALS Season 9 Kickoff</title>
+		<link href="https://mikeware.github.io/SpaceBattleArena/2020/03/10/Season-9-Kickoff" />
+		<updated>2020-03-10T00:00:00Z</updated>
+		<content>&lt;p&gt;Today we kickoff the TEALS Season 9 cross-school tournament challenge.  We aim for the final mission to be a brand-new challenge built on top of our upcoming Python 3 ported version of Space Battle Arena.  More information will be released in the coming weeks.&lt;/p&gt;
+&lt;p&gt;If your school is planning to use Space Battle this year, please have your instructor use &lt;a href="https://forms.gle/Ek4Ar1Uxy1WaJ6mf6"&gt;this form&lt;/a&gt; to let us know and receive further information about the tournament.&lt;/p&gt;
+&lt;p&gt;Please search and report to us on &lt;a href="http://github.com/mikeware/SpaceBattleArena/issues"&gt;GitHub&lt;/a&gt; if you see any issues or have questions. Thanks!&lt;/p&gt;
+</content>
+		<summary>&lt;p&gt;Today we kickoff the TEALS Season 9 cross-school tournament challenge.  We aim for the final mission to be a brand-new challenge built on top of our upcoming Python 3 ported version of Space Battle Arena.  More information will be released in the coming weeks.&lt;/p&gt;</summary>
+	</entry>
 	<entry>
 		<id>https://mikeware.github.io/SpaceBattleArena/2019/10/14/New-Site</id>
 		<title>Wyam! New Site (sort of)</title>

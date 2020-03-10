@@ -4,9 +4,20 @@
 		<title>Space Battle Arena by Mikeware</title>
 		<link>https://mikeware.github.io/SpaceBattleArena</link>
 		<description>Space Battle Arena is a ‘Programming Game‘ where you must write code (in Java) to autonomously control a space ship to accomplish specified objectives.</description>
-		<copyright>2019</copyright>
-		<pubDate>Tue, 22 Oct 2019 01:25:49 GMT</pubDate>
-		<lastBuildDate>Tue, 22 Oct 2019 01:25:49 GMT</lastBuildDate>
+		<copyright>2020</copyright>
+		<pubDate>Tue, 10 Mar 2020 07:13:32 GMT</pubDate>
+		<lastBuildDate>Tue, 10 Mar 2020 07:13:32 GMT</lastBuildDate>
+		<item>
+			<title>TEALS Season 9 Kickoff</title>
+			<link>https://mikeware.github.io/SpaceBattleArena/2020/03/10/Season-9-Kickoff</link>
+			<description>&lt;p&gt;Today we kickoff the TEALS Season 9 cross-school tournament challenge.  We aim for the final mission to be a brand-new challenge built on top of our upcoming Python 3 ported version of Space Battle Arena.  More information will be released in the coming weeks.&lt;/p&gt;</description>
+			<guid>https://mikeware.github.io/SpaceBattleArena/2020/03/10/Season-9-Kickoff</guid>
+			<pubDate>Tue, 10 Mar 2020 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;Today we kickoff the TEALS Season 9 cross-school tournament challenge.  We aim for the final mission to be a brand-new challenge built on top of our upcoming Python 3 ported version of Space Battle Arena.  More information will be released in the coming weeks.&lt;/p&gt;
+&lt;p&gt;If your school is planning to use Space Battle this year, please have your instructor use &lt;a href="https://forms.gle/Ek4Ar1Uxy1WaJ6mf6"&gt;this form&lt;/a&gt; to let us know and receive further information about the tournament.&lt;/p&gt;
+&lt;p&gt;Please search and report to us on &lt;a href="http://github.com/mikeware/SpaceBattleArena/issues"&gt;GitHub&lt;/a&gt; if you see any issues or have questions. Thanks!&lt;/p&gt;
+</content:encoded>
+		</item>
 		<item>
 			<title>Wyam! New Site (sort of)</title>
 			<link>https://mikeware.github.io/SpaceBattleArena/2019/10/14/New-Site</link>
