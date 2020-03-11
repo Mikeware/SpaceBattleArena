@@ -105,7 +105,7 @@ class DiscoveryQuestWarpOnTestCases(SBAGUIWithServerTestCase):
         self.assertTrue(self.request_warp, "Client didn't issue Warp Command.")
 
         print(self.remote_ship.body.position[0])
-        self.assertNotAlmostEqual(self.remote_ship.body.position, self.game.world.mid_point(-100, -100), None, "Ship Didn't Warp Out of Nebula", 20)
+        self.assertGreater(self.remote_ship.body.position.get_distance(Vec2d(self.game.world.mid_point(-100, -100))), 20, "Ship Didn't Warp Out of Nebula")
 
         time.sleep(2.0)
 
