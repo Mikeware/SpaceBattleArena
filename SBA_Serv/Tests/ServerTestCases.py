@@ -563,7 +563,7 @@ class ServerGUITournamentRemoteTestCase(SBAGUIWithServerTestCase):
             else:
                 # final round
                 self.assertIsNotNone(self.game._tmanager._finalwinners, "Final Winner not marked")
-                self.assertIn(leader, self.game._tmanager._finalwinner, "Incorrect leader chosen")
+                self.assertIn(leader, self.game._tmanager._finalwinners, "Incorrect leader chosen")
                 pass
             #eif
         #next round
