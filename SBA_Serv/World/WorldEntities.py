@@ -36,9 +36,7 @@ class Ship(PhysicalRound):
     def __init__(self, pos, world):
         super(Ship, self).__init__(28, 500, pos)
         self._world = world # NOTE: The ONLY reason this is here/needed is because the ship is creating a Torpedo from it's command system...
-        self.energyRechargeRate = 4
-
-        self.body.velocity_limit = 100
+        self.energyRechargeRate = 4        
 
         # Ship Specific
         self.commandQueue = CommandSystem(self, 4)
@@ -64,6 +62,11 @@ class Ship(PhysicalRound):
 
         # extra state
         self.killed = False # forcibly removed object 'for good'
+
+    def _constructPhysics(self, mass, pos):
+        self.velocity_limit = 100
+
+        super(Ship, self)._constructPhysics(mass, pos)
 
     def setCommandBufferSize(self, size):
         old = self.commandQueue[:]

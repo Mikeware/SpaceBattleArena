@@ -133,6 +133,15 @@ class WorldTestCase(SBAGUITestCase):
 
         # TODO, need to respawn ship! Issue with _game_add_ship_for_player?
 
+    def test_ship_velocity_limit(self):
+        start = self.game.world.mid_point()
+        ship = AIShip_SetList("Free", start, self.game, [
+                "ThrustCommand(self, 'B', 20.0, 1.0)"
+            ])
+
+        time.sleep(20.0)
+
+        self.assertLess(ship.body.velocity.length, 101, "Ship moving too fast")
 
 class WorldNoRespawnTestCase(SBAWorldTestCase):
 

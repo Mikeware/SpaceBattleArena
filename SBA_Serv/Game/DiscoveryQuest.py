@@ -382,13 +382,16 @@ class Outpost(PhysicalEllipse):
     def __init__(self, pos):
         super(Outpost, self).__init__((60, 120), 4000, pos)
         self.shape.elasticity = 0.8
-        self.health = PlayerStat(0)
-
-        self.body.velocity_limit = 0
+        self.health = PlayerStat(0)        
         
         self.shape.filter = ShapeFilter(group=1)
 
         self.home_for = []
+
+    def _constructPhysics(self, mass, pos):
+        self.velocity_limit = 0
+
+        super(Outpost, self)._constructPhysics(mass, pos)
 
     def collide_start(self, otherobj):
         return False

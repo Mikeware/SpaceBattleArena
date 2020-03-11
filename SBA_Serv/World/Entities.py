@@ -30,6 +30,7 @@ class Entity(object):
         self.energyRechargeRate = 0 # Amount of Energy Recovered Per Second
         self.timealive = 0
         self.TTL = None # None means will live 'forever', otherwise if timealive > TTL (time to live), then the object will be automatically cleaned up in gameloop and destroyed.
+        self.velocity_limit = None
 
         self.in_celestialbody = [] # keeps track of celestial bodies this object is in
         self.destroyed = False # keeps track of if the object has been destroyed and needs to be removed from the world in the next gameloop.
@@ -110,9 +111,19 @@ class PhysicsCore(Entity):
         super(PhysicsCore, self).__init__()
         self._constructPhysics(mass, pos)
         self.body.position = pos
+        if self.velocity_limit != None:
+            self.body.velocity_func = self._limit_velocity
                 
         self.explodable = True
         self.gravitable = True
+
+    # from PyMunk 5.6 documentation
+    def _limit_velocity(self, body, gravity, damping, dt):
+        pymunk.Body.update_velocity(body, gravity, damping, dt)
+        l = body.velocity.length
+        if l > self.velocity_limit:
+            scale = self.velocity_limit / l
+            body.velocity = body.velocity * scale
 
     def _constructPhysics(self, mass, pos):
         """To be called by the parent class to define the Physical model of this shape.
