@@ -597,7 +597,7 @@ class WorldVisualShipDestroyedTestCase(SBAGUITestCase):
         """
         Tests a dragon
         """
-        start = self.game.world.mid_point(0,80)
+        start = Vec2d(self.game.world.mid_point(0,80))
         dragon = Dragon(start, 100, 20)
         dragon.body.velocity = Vec2d(0, -5)
         self.game.world.append(dragon)
@@ -605,7 +605,7 @@ class WorldVisualShipDestroyedTestCase(SBAGUITestCase):
         speed = dragon.body.velocity.length
         time.sleep(2.5)
 
-        self.assertNotAlmostEqual(dragon.body.position, start, None, "Dragon should have moved", 2)
+        self.assertGreater(dragon.body.position.get_distance(start), 2, "Dragon should have moved")
 
         starts = self.game.world.mid_point(50, 0)
         ship = AIShip_SetList("Doomed", starts, self.game, [])        
@@ -618,7 +618,7 @@ class WorldVisualShipDestroyedTestCase(SBAGUITestCase):
         self.assertGreater(dragon.body.velocity.length, speed, "Dragon not moving faster")
 
         print(dragon.body.velocity.angle_degrees)
-        self.assertNotAlmostEqual(dragon.body.position, start, None, "Dragon should have moved", 5)
+        self.assertGreater(dragon.body.position.get_distance(start), 5, "Dragon should have moved")
         self.assertAlmostEqual(dragon.body.velocity.angle_degrees, -50, None, "Dragon should be facing ship", 15)
 
         time.sleep(3.5)
@@ -626,7 +626,7 @@ class WorldVisualShipDestroyedTestCase(SBAGUITestCase):
         self.assertNotEqual(ship.health, 100, "Doomed ship did not take damage")
 
         self.assertEqual(ship2.health, 100, "Free ship took damage")
-        self.assertAlmostEqual(ship2.body.position, start2, None, "Free Ship not in same place", 2)
+        self.assertLess(ship2.body.position.get_distance(start2), 1, "Free Ship not in same place")
 
         time.sleep(6.5)
 
@@ -636,7 +636,7 @@ class WorldVisualShipDestroyedTestCase(SBAGUITestCase):
         """
         Tests a dragon
         """
-        start = self.game.world.mid_point(0,80)
+        start = Vec2d(self.game.world.mid_point(0,80))
         dragon = Dragon(start, 100, 20)
         dragon.body.velocity = Vec2d(0, 0)
         self.game.world.append(dragon)
@@ -650,13 +650,13 @@ class WorldVisualShipDestroyedTestCase(SBAGUITestCase):
         start2 = self.game.world.mid_point(-150, 250)
         ship2 = AIShip_SetList("Free", start2, self.game, [])        
 
-        time.sleep(2.5)
+        time.sleep(3.0)
 
         self.assertGreater(dragon.body.velocity.length, speed, "Dragon not moving faster")
 
         print(dragon.body.velocity.angle_degrees)
-        self.assertNotAlmostEqual(dragon.body.position, start, None, "Dragon should have moved", 5)
-        self.assertAlmostEqual(dragon.body.velocity.angle_degrees, -50, None, "Dragon should be facing ship", 15)
+        self.assertGreater(dragon.body.position.get_distance(start), 4, "Dragon should have moved")
+        self.assertAlmostEqual(dragon.body.velocity.angle_degrees, -60, None, "Dragon should be facing ship", 15)
 
         time.sleep(0.5)
 
@@ -664,7 +664,7 @@ class WorldVisualShipDestroyedTestCase(SBAGUITestCase):
         """
         Tests a dragon and his ability (or lack of) to see cloaked ships
         """
-        start = self.game.world.mid_point(0,100)
+        start = Vec2d(self.game.world.mid_point(0,100))
         dragon = Dragon(start, 100, 20)
         dragon.body.velocity = Vec2d(0, -5)
         self.game.world.append(dragon)
@@ -673,7 +673,7 @@ class WorldVisualShipDestroyedTestCase(SBAGUITestCase):
         direction = dragon.body.velocity.angle_degrees
         time.sleep(2.5)
 
-        self.assertNotAlmostEqual(dragon.body.position, start, None, "Dragon should have moved", 2)
+        self.assertGreater(dragon.body.position.get_distance(start), 2, "Dragon should have moved")
 
         starts = self.game.world.mid_point(120, 0)
         ship = AIShip_SetList("Cloaked", starts, self.game, [
@@ -691,7 +691,7 @@ class WorldVisualShipDestroyedTestCase(SBAGUITestCase):
         self.assertAlmostEqual(dragon.body.velocity.angle_degrees, direction, None, "Dragon changed direction", 5)
 
         print(dragon.body.velocity.angle_degrees)
-        self.assertNotAlmostEqual(dragon.body.position, start, None, "Dragon should have moved", 5)
+        self.assertGreater(dragon.body.position.get_distance(start), 4, "Dragon should have moved")
 
         time.sleep(5)
 
@@ -704,7 +704,7 @@ class WorldVisualShipDestroyedTestCase(SBAGUITestCase):
         self.assertNotEqual(ship.health, 100, "Doomed ship did not take damage")
 
         self.assertEqual(ship2.health, 100, "Free ship took damage")
-        self.assertAlmostEqual(ship2.body.position, start2, None, "Free Ship not in same place", 2)
+        self.assertLess(ship2.body.position.get_distance(start2), 1, "Free Ship not in same place")
 
         time.sleep(7)
 
@@ -745,7 +745,7 @@ class WorldVisualShipDestroyedTestCase(SBAGUITestCase):
         """
         Tests a dragon not catching a ship at full speed.
         """
-        start = self.game.world.mid_point(0,80)
+        start = Vec2d(self.game.world.mid_point(0,80))
         dragon = Dragon(start, 100, 20)
         dragon.body.velocity = Vec2d(0, -5)
         self.game.world.append(dragon)
@@ -753,7 +753,7 @@ class WorldVisualShipDestroyedTestCase(SBAGUITestCase):
         speed = dragon.body.velocity.length
         time.sleep(2.5)
 
-        self.assertNotAlmostEqual(dragon.body.position, start, None, "Dragon should have moved", 2)
+        self.assertGreater(dragon.body.position.get_distance(start), 1, "Dragon should have moved")
 
         starts = self.game.world.mid_point(50, 0)
         ship = AIShip_SetList("Doomed", starts, self.game, [
@@ -769,7 +769,7 @@ class WorldVisualShipDestroyedTestCase(SBAGUITestCase):
         self.assertGreater(dragon.body.velocity.length, speed, "Dragon not moving faster")
 
         print(dragon.body.velocity.angle_degrees)
-        self.assertNotAlmostEqual(dragon.body.position, start, None, "Dragon should have moved", 5)
+        self.assertGreater(dragon.body.position.get_distance(start), 4, "Dragon should have moved")
         self.assertAlmostEqual(dragon.body.velocity.angle_degrees, -50, None, "Dragon should be facing ship", 15)
 
         time.sleep(3.5)
@@ -777,7 +777,7 @@ class WorldVisualShipDestroyedTestCase(SBAGUITestCase):
         self.assertNotEqual(ship.health, 100, "Doomed ship did not take damage")
 
         self.assertEqual(ship2.health, 100, "Free ship took damage")
-        self.assertAlmostEqual(ship2.body.position, start2, None, "Free Ship not in same place", 2)
+        self.assertLess(ship2.body.position.get_distance(start2), 1, "Free Ship not in same place")
 
         time.sleep(5.5)
 
