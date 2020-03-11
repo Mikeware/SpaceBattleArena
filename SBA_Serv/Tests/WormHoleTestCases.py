@@ -101,7 +101,7 @@ class WormHoleVisualShipOneWayTestCase(SBAGUITestCase):
 
         self.assertAlmostEqual(ship.body.position, start, None, "Not Doomed ship shouldn't have moved", 2)
 
-        time.sleep(5.9)
+        time.sleep(5.5)
 
         self.assertAlmostEqual(ship.body.position[0], self.game.world.mid_point(0,0)[0], None, "Not Doomed ship should be near center. X", 100)
         self.assertAlmostEqual(ship.body.position[1], self.game.world.mid_point(0,0)[1], None, "Not Doomed ship should be near center. Y", 4)
@@ -135,7 +135,7 @@ class WormHoleVisualShipOneWayTestCase(SBAGUITestCase):
 
         self.assertAlmostEqual(ship.body.position, start, None, "Not Doomed ship shouldn't have moved", 2)
 
-        time.sleep(5.5)
+        time.sleep(5.0)
 
         self.assertAlmostEqual(ship.body.position[0], self.game.world.mid_point(0,0)[0], None, "Not Doomed ship should be near center. X", 100)
         self.assertAlmostEqual(ship.body.position[1], self.game.world.mid_point(0,0)[1], None, "Not Doomed ship should be near center. Y", 4)
@@ -186,7 +186,7 @@ class WormHoleVisualShipOneWayTestCase(SBAGUITestCase):
 
         self.assertAlmostEqual(ship.body.position, start, None, "Warped ship shouldn't have moved", 2)
 
-        time.sleep(6.0)
+        time.sleep(5.5)
 
         self.assertAlmostEqual(ship.body.position[0], self.game.world.mid_point(0,0)[0], None, "Warped ship should be near center. X", 100)
         self.assertAlmostEqual(ship.body.position[1], self.game.world.mid_point(0,0)[1], None, "Warped ship should be near center. Y", 4)
@@ -230,7 +230,7 @@ class WormHoleVisualShipOneWayTestCase(SBAGUITestCase):
 
         self.assertAlmostEqual(ship.body.position, start, None, "Doomed ship shouldn't have moved", 2)
 
-        time.sleep(5.9)
+        time.sleep(5.5)
 
         self.assertAlmostEqual(ship.body.position[0], self.game.world.mid_point(0,0)[0], None, "Doomed ship should be near center. X", 100)
         self.assertAlmostEqual(ship.body.position[1], self.game.world.mid_point(0,0)[1], None, "Doomed ship should be near center. Y", 4)
@@ -275,7 +275,7 @@ class WormHoleVisualShipTwoWayTestCase(SBAGUITestCase):
 
         self.assertAlmostEqual(ship.body.position, start, None, "Warped ship shouldn't have moved", 2)
 
-        time.sleep(5.9)
+        time.sleep(5.5)
 
         self.assertAlmostEqual(ship.body.position[0], self.game.world.mid_point(0,0)[0], None, "Warped ship should be near center. X", 100)
         self.assertAlmostEqual(ship.body.position[1], self.game.world.mid_point(0,0)[1], None, "Warped ship should be near center. Y", 4)
