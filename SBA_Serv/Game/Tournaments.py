@@ -111,12 +111,12 @@ class BasicTournament(object):
             pygame.draw.line(screen, (192, 192, 192), (400, py), (410, py))
             pygame.draw.line(screen, (192, 192, 192), (410, py), (410, y))
             pygame.draw.line(screen, (192, 192, 192), (400, y), (410, y))
-            pygame.draw.line(screen, (192, 192, 192), (410, py + (y - py) / 2), (410, py + (y - py) / 2))
+            pygame.draw.line(screen, (192, 192, 192), (410, py + (y - py) // 2), (410, py + (y - py) // 2))
                                 
             y += 36
 
         # draw Final Bracket
-        y = 96 + ((y - 96) / 2) - len(self._finalgroup) * 16
+        y = 96 + ((y - 96) // 2) - len(self._finalgroup) * 16
         py = y
         for player in self._finalgroup:
             c = (255, 255, 128)
@@ -130,7 +130,7 @@ class BasicTournament(object):
 
         if self._finalwinners:
             for player in self._finalwinners:
-                screen.blit(self._tfont.render(player.name, False, (128, 255, 255)), (835, py + (y - py) / 2))
+                screen.blit(self._tfont.render(player.name, False, (128, 255, 255)), (835, py + (y - py) // 2))
                 y += 36
 
         return y

@@ -72,7 +72,7 @@ class GameWorld(object):
             threading.Thread(None, self.__THREAD__gameloop, "WorldMap_gameloop_" + repr(self)).start()
 
     def mid_point(self, xoff = 0, yoff = 0):
-        return intpos((self.width / 2 + xoff, self.height / 2 + yoff))
+        return intpos((self.width // 2 + xoff, self.height // 2 + yoff))
 
     def endGameLoop(self):
         self.__active = False

@@ -74,7 +74,7 @@ class BaseBaubleGame(BasicGame):
 class BaubleWrapper(GUIEntity):
     def __init__(self, obj, world):
         self.surface = Cache().getScaledImage("Games/Bauble" + str(obj.value), obj.weight ** 0.27)
-        self.adjust = self.surface.get_width() / 2
+        self.adjust = self.surface.get_width() // 2
         super(BaubleWrapper, self).__init__(obj, world)
 
     def draw(self, surface, flags):

@@ -34,13 +34,13 @@ class WormHoleGUI(GUIEntity):
                 pygame.draw.line(surface, (64, 64, 255), intpos(self._worldobj.body.position - (-self._worldobj.influence_range, self._worldobj.influence_range)), intpos(self._worldobj.body.position + (-self._worldobj.influence_range, self._worldobj.influence_range)), 5)
             elif self._worldobj.type == WormHole.FIXED_POINT:
                 pygame.draw.line(surface, (64, 64, 255), bp, intpos(self._worldobj.exit))
-                wrapcircle(surface, (64, 64, 255), intpos(self._worldobj.exit), self._worldobj.radius / 2, self._world.size, 2) # 'target'
+                wrapcircle(surface, (64, 64, 255), intpos(self._worldobj.exit), self._worldobj.radius // 2, self._world.size, 2) # 'target'
             elif self._worldobj.type == WormHole.OTHER_CELESTIALBODY:
                 c = (64, 64, 255)
                 if isinstance(self._worldobj.exit, WormHole) and isinstance(self._worldobj.exit.exit, WormHole) and self._worldobj.exit.exit == self._worldobj:
                     c = (128, 192, 255) # check if linked in both directions - make brighter if two-way wormhole
                 pygame.draw.line(surface, c, bp, intpos(self._worldobj.exit.body.position))
-                wrapcircle(surface, c, intpos(self._worldobj.exit.body.position), self._worldobj.radius / 2, self._world.size, 2) # 'target'
+                wrapcircle(surface, c, intpos(self._worldobj.exit.body.position), self._worldobj.radius // 2, self._world.size, 2) # 'target'
 
         super(WormHoleGUI, self).draw(surface, flags)
 

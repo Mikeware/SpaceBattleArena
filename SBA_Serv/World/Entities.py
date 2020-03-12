@@ -194,13 +194,13 @@ class PhysicalEllipse(PhysicalPoly):
         minor: length of ellipse perpendicular to its angle from the center point to edge
     """
     def __init__(self, size, mass, pos, segments=16):
-        a = size[0] / 2
-        b = size[1] / 2
+        a = size[0] // 2
+        b = size[1] // 2
         self.major = a
         self.minor = b
         self.radius = b + int((a - b) / 2) # HACK: expect all objects to have radius
         points = []
-        ang = math.pi * 2 / segments
+        ang = math.pi * 2 // segments
         for seg in range(0, segments):
             points.append((a * math.cos(seg * ang), b * math.sin(seg * ang)))
 

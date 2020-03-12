@@ -29,7 +29,7 @@ class AsteroidGUI(GUIEntity):
         rotimg = Cache().getRotatedImage(self._imageName, ang)
         w, h = rotimg.get_rect().size
         #TODO: convert world to graphics coordinates
-        surface.blit(rotimg, (self._worldobj.body.position[0] - w / 2 - self.__extra * math.cos(rang), self._worldobj.body.position[1] - h / 2 - self.__extra * math.sin(rang)))
+        surface.blit(rotimg, (self._worldobj.body.position[0] - w // 2 - self.__extra * math.cos(rang), self._worldobj.body.position[1] - h // 2 - self.__extra * math.sin(rang)))
 
         super(AsteroidGUI, self).draw(surface, flags)
 
