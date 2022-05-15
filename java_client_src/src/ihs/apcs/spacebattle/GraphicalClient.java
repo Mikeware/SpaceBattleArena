@@ -72,7 +72,7 @@ public class GraphicalClient implements Runnable, Client {
 			
 			// Create ship
 			this.shipClassname = args[1];
-			Class<?> shipType = Class.forName(this.shipClassname);
+			this.shipType = Class.forName(this.shipClassname);
 			this.logMessage("Creating new " + shipType.getName());
 			this.ship = (Spaceship<?>)shipType.getConstructor().newInstance();
 			
